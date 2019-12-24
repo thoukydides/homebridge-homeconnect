@@ -1,0 +1,59 @@
+{
+    "name": "homebridge-homeconnect",
+    "version": "0.0.1",
+    "description": "Home Connect home appliances plugin for Homebridge",
+    "license": "ISC",
+    "keywords": [
+        "Homebridge",
+        "homebridge-plugin",
+        "HomeConnect",
+        "appliance",
+        "kitchen",
+        "Bosch",
+        "Siemens",
+        "Gaggenau",
+        "NEFF",
+        "Thermador",
+        "cleaningrobot",
+        "coffeemachine",
+        "coffeemaker",
+        "cookprocessor",
+        "cooktop",
+        "dishwasher",
+        "dryer",
+        "freezer",
+        "fridge",
+        "fridgefreezer",
+        "hob",
+        "hood",
+        "oven",
+        "refrigerator",
+        "roxxter",
+        "washer",
+        "washerdryer",
+        "winecooler"
+    ],
+    "author": {
+        "name": "Alexander Thoukydides",
+        "url": "https://www.thouky.co.uk/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/thoukydides/homebridge-homeconnect.git"
+    },
+    "bugs": {
+        "url": "https://github.com/thoukydides/homebridge-homeconnect/issues"
+    },
+    "main": "index.js",
+    "engines": {
+        "homebridge": ">=0.4.50",
+        "node": ">=12.0.0"
+    },
+    "dependencies": {
+        "node-persist": "^0.0.8",
+        "querystring": "^0.2.0",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.8",
+        "url": "^0.11.0"
+    }
+}
