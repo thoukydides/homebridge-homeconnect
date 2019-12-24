@@ -1,5 +1,7 @@
 # homebridge-homeconnect
 
+[![NPM](https://nodei.co/npm/homebridge-homeconnect.png)](https://nodei.co/npm/homebridge-homeconnect/)
+
 Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/homebridge).
 
 [Home Connect](https://www.home-connect.com), [Bosch](https://www.bosch-home.com/), [Siemens](https://www.siemens-home.bsh-group.com/), [Gaggenau](https://www.gaggenau.com/), [NEFF](https://www.neff-home.com/), and [Thermador](https://www.thermador.com/) are trademarks of [BSH Home Appliances](https://www.bsh-group.com).
