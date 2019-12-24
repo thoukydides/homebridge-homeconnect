@@ -74,7 +74,7 @@ The following functionality is supported by this plugin for different appliance 
 
 For events, a `Single Press` is generated when the event occurs and is present, and a `Double Press` after it has been confirmed by the user.
 
-Unfortunately, Apple's Home app (as of iOS 13) does not support custom services, and only shows numeric labels for `StatelessProgrammableSwitch` services. For full functionality use one of the following apps:
+Unfortunately, Apple's Home app (as of iOS 13) does not support custom services, and only shows numeric labels for `Stateless Programmable Switch` services. For full functionality use one of the following apps:
 * Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) *(free and recommended)*.
 * Matthias Hochgatterer's [Home](http://hochgatterer.me/home/)
 
@@ -83,7 +83,7 @@ Unfortunately, Apple's Home app (as of iOS 13) does not support custom services,
 The [Home Connect Developer Agreement](https://developer.home-connect.com/developer_agreement) says (in section 7):
 > Certain additional permissions to those specified at: https://developer.home-connect.com/docs/authorization/scope may be granted to Clients of selected Users upon an individual check by HC and upon agreement of a separate partner agreement between the Parties, which is based on this Agreement.
 
-This is required for the `Hob-Control`, `Oven-Control`, and `FridgeFreezer-Images` scopes. Additionally, the appliance simulator disallows `CookProcessor-Control` and `FridgeFreezer-Control`. These scopes are therefore not supported by this plugin. Control of these appliances is therefore limited to just power on/off.
+This is required for the `Hob-Control`, `Oven-Control`, and `FridgeFreezer-Images` scopes. Additionally, the appliance simulator disallows `CookProcessor-Control` and `FridgeFreezer-Control`. These scopes are therefore not supported by this plugin. Control of these appliances is limited to just power on/off.
 
 Use IFTTT Webhooks (e.g. via [homebridge-ifttt](https://www.npmjs.com/package/homebridge-ifttt)) to control these appliances.
 
