@@ -25,15 +25,14 @@ module.exports.Dishwasher = class ApplianceDishwasher
     }
 }
 
-// A Homebridge accessory for a Home Connect clothes dryer
-module.exports.Dryer = class ApplianceDryer
-                     extends ApplianceGeneric {
+// A Homebridge accessory for a Home Connect washer and/or dryer
+class ApplianceWasherDryer extends ApplianceGeneric {
 
     // Initialise an appliance
     constructor(...args) {
         super(...args);
 
-        // Customise the appliance as a clothes dryer
+        // Customise the appliance as a washer and/or dryer
         this.addDoor();
         this.addEvents({
             'BSH.Common.Event.ProgramFinished':     'program finished',
@@ -44,21 +43,6 @@ module.exports.Dryer = class ApplianceDryer
     }
 }
 
-// A Homebridge accessory for a Home Connect washing machine
-module.exports.Washer = class ApplianceWasher
-                      extends ApplianceGeneric {
-
-    // Initialise an appliance
-    constructor(...args) {
-        super(...args);
-
-        // Customise the appliance as a washing machine
-        this.addDoor();
-        this.addEvents({
-            'BSH.Common.Event.ProgramFinished':     'program finished',
-            'BSH.Common.Event.ProgramAborted':      'program aborted'
-        });
-        this.addProgramRemainingTime();
-        this.addOperationState({ hasError: true });
-    }
-}
+module.exports.WasherDryer = ApplianceWasherDryer;
+module.exports.Dryer       = ApplianceWasherDryer;
+module.exports.Washer      = ApplianceWasherDryer;

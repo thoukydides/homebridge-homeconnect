@@ -130,15 +130,15 @@ class HomeConnectPlatform {
                 Dishwasher:     ApplianceCleaning.Dishwasher,
                 Dryer:          ApplianceCleaning.Dryer,
                 Washer:         ApplianceCleaning.Washer,
+                WasherDryer:    ApplianceCleaning.WasherDryer,
                 // Cooling appliances
+                Freezer:        ApplianceCooling.Freezer,
                 FridgeFreezer:  ApplianceCooling.FridgeFreezer,
+                Refrigerator:   ApplianceCooling.Refrigerator,
                 // Treat everything else generically for now
                 CleaningRobot:  ApplianceGeneric,
                 CookProcessor:  ApplianceGeneric,
-                Freezer:        ApplianceGeneric,
                 Hood:           ApplianceGeneric,
-                Refrigerator:   ApplianceGeneric,
-                WasherDryer:    ApplianceGeneric,
                 WineCooler:     ApplianceGeneric
             }[ha.type];
             if (!applianceConstructor)
