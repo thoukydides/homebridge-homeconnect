@@ -210,6 +210,11 @@ module.exports = class ApplianceGeneric {
             this.haService.updateCharacteristic(
                 Characteristic.RemainingDuration, item.value);
         });
+        this.device.on('BSH.Common.Event.ProgramFinished', item => {
+            this.log('Program finished; 0 seconds remaining');
+            this.haService.updateCharacteristic(
+                Characteristic.RemainingDuration, 0);
+        });
     }
 
     // Add operation state
