@@ -43,7 +43,14 @@ module.exports.Dryer = class ApplianceDryer
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
 
-        // HERE - Customise the appliance as a clothes dryer
+        // Customise the appliance as a clothes dryer
+        this.addDoor();
+        this.addEvents({
+            'BSH.Common.Event.ProgramFinished':     'program finished',
+            'BSH.Common.Event.ProgramAborted':      'program aborted'
+        });
+        this.addProgramRemainingTime();
+        this.addOperationState({ hasError: true });
     }
 }
 
@@ -59,6 +66,13 @@ module.exports.Washer = class ApplianceWasher
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
 
-        // HERE - Customise the appliance as a washing machine
+        // Customise the appliance as a washing machine
+        this.addDoor();
+        this.addEvents({
+            'BSH.Common.Event.ProgramFinished':     'program finished',
+            'BSH.Common.Event.ProgramAborted':      'program aborted'
+        });
+        this.addProgramRemainingTime();
+        this.addOperationState({ hasError: true });
     }
 }

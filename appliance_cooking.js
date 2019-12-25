@@ -19,7 +19,11 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
 
-        // HERE - Customise the appliance as a coffee maker
+        // Customise the appliance as a coffee maker
+        this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
+        this.addDoor();
+        this.addProgramRemainingTime();
+        this.addOperationState({ hasError: true });
     }
 }
 

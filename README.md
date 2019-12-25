@@ -46,17 +46,17 @@ This plugin was developed and tested with a Siemens oven (HB678GBS6B/58), induct
 
 The following functionality is supported by this plugin for different appliance types:
 
-|                            | Dishwasher | Hob    | Oven       | CleaningRobot / CoffeeMaker / CookProcessor / Dryer / Freezer / FridgeFreezer / Hood / Refrigerator / Washer / WasherDryer / WineCooler |
-| -------------------------- | :--------: | :----: | :--------: | :-------------------------------------------------------------------------------------------------------------------------------------: |
-| **Power on/off**           | Read/Write | Read   | Read/Write | Read                                                                                                                                    |
-| **Door open/closed**       | Read       | -      | Read       | -                                                                                                                                       |
-| **Program finished event** | Notify     | Notify | Notify     | -                                                                                                                                       |
-| **Program aborted event**  | Notify     | -      | -          | -                                                                                                                                       |
-| **Timer finished event**   | -          | Notify | Notify     | -                                                                                                                                       |
-| **Preheat finished event** | -          | Notify | Notify     | -                                                                                                                                       |
-| **Program time remaining** | Read       | -      | Read       | -                                                                                                                                       |
-| **Operation state active** | Read       | Read   | Read       | -                                                                                                                                       |
-| **Operation state error**  | -          | Read   | Read       | -                                                                                                                                       |
+|                            | CoffeeMaker | Dishwasher | Dryer  | FridgeFreezer | Hob    | Oven       | Washer | CleaningRobot / CookProcessor / Freezer / Hood / Refrigerator / WasherDryer / WineCooler |
+| -------------------------- | :---------: | :--------: | :----: | :-----------: | :----: | :--------: | :----: | :--------------------------------------------------------------------------------------: |
+| **Power on/off**           | Read/Write  | Read/Write | Read   | Read          | Read   | Read/Write | Read   | Read                                                                                     |
+| **Door open/closed**       | Read        | Read       | Read   | Read          | -      | Read       | Read   | -                                                                                        |
+| **Program finished event** | -           | Notify     | Notify | -             | Notify | Notify     | Notify | -                                                                                        |
+| **Program aborted event**  | -           | Notify     | Notify | -             | -      | -          | Notify | -                                                                                        |
+| **Timer finished event**   | -           | -          | -      | -             | Notify | Notify     | -      | -                                                                                        |
+| **Preheat finished event** | -           | -          | -      | -             | Notify | Notify     | -      | -                                                                                        |
+| **Program time remaining** | Read        | Read       | Read   | -             | -      | Read       | Read   | -                                                                                        |
+| **Operation state active** | Read        | Read       | Read   | -             | Read   | Read       | Read   | -                                                                                        |
+| **Operation state error**  | Read        | -          | Read   | -             | Read   | Read       | Read   | -                                                                                        |
 
 ### HomeKit Services and Characteristics
 

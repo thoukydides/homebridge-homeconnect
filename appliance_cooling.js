@@ -19,6 +19,7 @@ module.exports.FridgeFreezer = class ApplianceFridgeFreezer
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
 
-        // HERE - Customise the appliance as a fridge freezer
+        // Customise the appliance as a fridge freezer
+        this.addDoor();
     }
 }
