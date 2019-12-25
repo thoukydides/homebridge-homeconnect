@@ -6,9 +6,9 @@
 const HomeConnectAPI = require('./homeconnect_api.js');
 const HomeConnectDevice = require('./homeconnect_device.js');
 const ApplianceGeneric = require('./appliance_generic.js');
-const ApplianceDishwasher = require('./appliance_dishwasher.js');
-const ApplianceHob = require('./appliance_hob.js');
-const ApplianceOven = require('./appliance_oven.js');
+const ApplianceCleaning = require('./appliance_cleaning.js');
+const ApplianceCooking = require('./appliance_cooking.js');
+const ApplianceCooling = require('./appliance_cooling.js');
 const CustomServices = require('./custom_services.js');
 const NodePersist = require('node-persist');
 const Path = require('path');
@@ -122,19 +122,22 @@ class HomeConnectPlatform {
         appliances.forEach(ha => {
             // Select a constructor for this appliance
             let applianceConstructor = {
-                Dishwasher:     ApplianceDishwasher,
-                Hob:            ApplianceHob,
-                Oven:           ApplianceOven,
+                // Cooking appliances
+                CoffeeMaker:    ApplianceCooking.CoffeeMaker,
+                Hob:            ApplianceCooking.Hob,
+                Oven:           ApplianceCooking.Oven,
+                // Cleaning appliances
+                Dishwasher:     ApplianceCleaning.Dishwasher,
+                Dryer:          ApplianceCleaning.Dryer,
+                Washer:         ApplianceCleaning.Washer,
+                // Cooling appliances
+                FridgeFreezer:  ApplianceCooling.FridgeFreezer,
                 // Treat everything else generically for now
                 CleaningRobot:  ApplianceGeneric,
-                CoffeeMaker:    ApplianceGeneric,
                 CookProcessor:  ApplianceGeneric,
-                Dryer:          ApplianceGeneric,
                 Freezer:        ApplianceGeneric,
-                FridgeFreezer:  ApplianceGeneric,
                 Hood:           ApplianceGeneric,
                 Refrigerator:   ApplianceGeneric,
-                Washer:         ApplianceGeneric,
                 WasherDryer:    ApplianceGeneric,
                 WineCooler:     ApplianceGeneric
             }[ha.type];
