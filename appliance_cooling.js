@@ -5,8 +5,6 @@
 
 const ApplianceGeneric = require('./appliance_generic.js');
 
-let Service, Characteristic;
-
 // A Homebridge accessory for a Home Connect fridge freezer
 module.exports.FridgeFreezer = class ApplianceFridgeFreezer
                              extends ApplianceGeneric {
@@ -14,10 +12,6 @@ module.exports.FridgeFreezer = class ApplianceFridgeFreezer
     // Initialise an appliance
     constructor(...args) {
         super(...args);
-
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as a fridge freezer
         this.addDoor();

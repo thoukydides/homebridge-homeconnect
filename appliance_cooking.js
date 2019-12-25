@@ -5,8 +5,6 @@
 
 const ApplianceGeneric = require('./appliance_generic.js');
 
-let Service, Characteristic;
-
 // A Homebridge accessory for a Home Connect coffee maker
 module.exports.CoffeeMaker = class ApplianceCoffeeMaker
                            extends ApplianceGeneric {
@@ -14,10 +12,6 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
     // Initialise an appliance
     constructor(...args) {
         super(...args);
-
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as a coffee maker
         this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
@@ -34,10 +28,6 @@ module.exports.Hob = class ApplianceHob
     // Initialise an appliance
     constructor(...args) {
         super(...args);
-
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as a hob (cooktop)
         // (Home Connect requires local power control of hobs)
@@ -57,10 +47,6 @@ module.exports.Oven = class ApplianceOven
     // Initialise an appliance
     constructor(...args) {
         super(...args);
-
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as an oven
         this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');

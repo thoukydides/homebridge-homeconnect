@@ -5,8 +5,6 @@
 
 const ApplianceGeneric = require('./appliance_generic.js');
 
-let Service, Characteristic;
-
 // A Homebridge accessory for a Home Connect dishwasher
 module.exports.Dishwasher = class ApplianceDishwasher
                           extends ApplianceGeneric {
@@ -14,10 +12,6 @@ module.exports.Dishwasher = class ApplianceDishwasher
     // Initialise an appliance
     constructor(...args) {
         super(...args);
-
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as a dishwasher
         this.addPowerOff('BSH.Common.EnumType.PowerState.Off');
@@ -39,10 +33,6 @@ module.exports.Dryer = class ApplianceDryer
     constructor(...args) {
         super(...args);
 
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
-
         // Customise the appliance as a clothes dryer
         this.addDoor();
         this.addEvents({
@@ -61,10 +51,6 @@ module.exports.Washer = class ApplianceWasher
     // Initialise an appliance
     constructor(...args) {
         super(...args);
-
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as a washing machine
         this.addDoor();
