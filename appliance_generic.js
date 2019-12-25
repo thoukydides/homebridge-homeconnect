@@ -202,7 +202,7 @@ module.exports = class ApplianceGeneric {
     async addProgramRemainingTime() {
         // Add a progress position
         this.haService.getCharacteristic(Characteristic.RemainingDuration)
-            .setProps({ maxValue: 24 * 60 * 60 });
+            .setProps({ maxValue: (24 * 60 - 1) * 60 });
         
         // Update the status
         this.device.on('BSH.Common.Option.RemainingProgramTime', item => {
