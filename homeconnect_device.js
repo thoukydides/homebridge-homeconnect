@@ -96,6 +96,42 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
+    // Read the currently selected program
+    async getSelectedProgram() {
+        try {
+            let program = await this.api.getSelectedProgram(this.haId);
+            this.update([{ key:   'BSH.Common.Root.SelectedProgram',
+                           value: program.key }]);
+            // (program.options may be out of date when a program is active)
+            return program;
+        } catch (err) {
+            if ((((err.response || {}).body || {}).error || {}).key
+                == 'SDK.Error.NoProgramSelected') {
+                // Suppress error when there is no selected program
+                return null;
+            }
+            throw this.error('GET selected program', err);
+        }
+    }
+
+    // Read the currently active program (if any)
+    async getActiveProgram() {
+        try {
+            let program = await this.api.getActiveProgram(this.haId);
+            this.update([{ key:   'BSH.Common.Root.ActiveProgram',
+                           value: program.key }]);
+            this.update(program.options);
+            return program;
+        } catch (err) {
+            if ((((err.response || {}).body || {}).error || {}).key
+                == 'SDK.Error.NoProgramActive') {
+                // Suppress error when there is no active program
+                return null;
+            }
+            throw this.error('GET active program', err);
+        }
+    }
+
     // Refresh appliance information when it reconnects
     async onConnected() {
         try {
@@ -108,12 +144,23 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.log('Connected, so reading appliance state...');
             await this.getStatus();
             await this.getSettings();
+
+            // Read the selected and active program
+            if (this.hasPrograms()) {
+                await this.getSelectedProgram();
+                await this.getActiveProgram();
+            }
             
         } catch (err) {
             this.error('Connected update', err);
         } finally {
             this.onConnectedBusy = false;
         }
+    }
+
+    // Does this type of device support programs
+    hasPrograms() {
+        return /^(CleaningRobot|CoffeeMaching|Dishwasher|Dryer|Hob|Hood|Oven|Washer|WasherDryer)$/.test(this.type);
     }
     
     // Start streaming events
