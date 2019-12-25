@@ -562,11 +562,13 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                         // End of event, so issue a notification
                         if (Object.keys(event).length) this.emit(haid, event);
                         event = {};
+                    } else if (/^:/.test(line)) {
+                        // Server-sent events comment
+                        this.log("Event comment '" + line + "'");
                     } else {
                         // More information about the event
                         let data = /^(\w+):\s*(.*)$/.exec(line);
                         if (!data) {
-                            // Simulator outputs ":ok" at start of event stream
                             this.log("Unable to parse event '" + line + "'");
                             return;
                         }
