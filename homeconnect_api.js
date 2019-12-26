@@ -88,13 +88,32 @@ module.exports = class HomeConnectAPI extends EventEmitter {
        return this.requestAppliances('GET', haid);
     }
 
-    // Get the program which is currently being executed (throws error if none)
+    // Get all programs
+    async getPrograms(haid) {
+        let data = await this.requestAppliances('GET', haid, '/programs');
+        return data.programs;
+    }
+
+    // Get a list of the available programs
+    async getAvailablePrograms(haid) {
+        let data = await this.requestAppliances('GET', haid,
+                                                '/programs/available');
+        return data.programs;
+    }
+
+    // Get the details of a specific available programs
+    getAvailableProgram(haid, programKey) {
+        return this.requestAppliances('GET', haid,
+                                      '/programs/available/' + programKey);
+    }
+
+    // Get the program which is currently being executed
     getActiveProgram(haid) {
         return this.requestAppliances('GET', haid, '/programs/active');
     }
 
     // Start a specified program
-    setActiveProgram(haid, programKey, options) {
+    setActiveProgram(haid, programKey, options = []) {
         return this.requestAppliances('PUT', haid, '/programs/active', {
             data: {
                 key:      programKey,
@@ -106,6 +125,39 @@ module.exports = class HomeConnectAPI extends EventEmitter {
     // Stop the active program
     stopActiveProgram(haid) {
         return this.requestAppliances('DELETE', haid, '/programs/active');
+    }
+
+    // Get all options of the active program
+    async getActiveProgramOptions(haid) {
+        let data = await this.requestAppliances('GET', haid,
+                                                '/programs/active/options');
+        return data.options;
+    }
+
+    // Set all options of the active program
+    setActiveProgramOptions(haid, options) {
+        return this.requestAppliances('PUT', haid, '/programs/active/options', {
+            data: {
+                options: options
+            }
+        });
+    }
+
+    // Get a specific option of the active program
+    getActiveProgramOption(haid, optionKey) {
+        return this.requestAppliances('GET', haid,
+                                      '/programs/active/options/' + optionKey);
+    }
+
+    // Set a specific option of the active program
+    setActiveProgramOption(haid, optionKey, value) {
+        return this.requestAppliances('PUT', haid,
+                                      '/programs/active/options/' + optionKey, {
+            data: {
+                key:    optionKey,
+                value:  value
+            }
+        });
     }
 
     // Get the program which is currently selected
@@ -123,17 +175,40 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         });
     }
 
-    // Get a list of the available programs
-    async getAvailablePrograms(haid) {
+    // Get all options of the selected program
+    async getSelectedProgramOptions(haid) {
         let data = await this.requestAppliances('GET', haid,
-                                                '/programs/available');
-        return data.programs;
+                                                '/programs/selected/options');
+        return data.options;
     }
 
-    // Get the details of a specific available programs
-    getAvailableProgram(haid, programKey) {
+    // Set all options of the selected program
+    setSelectedProgramOptions(haid, options) {
+        return this.requestAppliances('PUT', haid,
+                                      '/programs/selected/options', {
+            data: {
+                options: options
+            }
+        });
+    }
+
+    // Get a specific option of the selecgted program
+    getSelectedProgramOption(haid, optionKey) {
         return this.requestAppliances('GET', haid,
-                                      '/programs/available/' + programKey);
+                                      '/programs/selected/options/'
+                                      + optionKey);
+    }
+
+    // Set a specific option of the selected program
+    setSelectedProgramOption(haid, optionKey, value) {
+        return this.requestAppliances('PUT', haid,
+                                      '/programs/selected/options/'
+                                      + optionKey, {
+            data: {
+                key:    optionKey,
+                value:  value
+            }
+        });
     }
 
     // Get the current status
@@ -144,7 +219,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Get a specific status
     getStatusSpecific(haid, statusKey) {
-        return this.requestAppliances('GET', haid, '/status' + '/' + statusKey);
+        return this.requestAppliances('GET', haid, '/status/' + statusKey);
     }
 
     // Get all settings
@@ -423,7 +498,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         
         // Log the request
         let logPrefix = 'Home Connect request #' + ++this.requestCount + ': ';
-        this.log(logPrefix + options.url);
+        this.log(logPrefix + options.method + ' ' + options.url);
         let startTime = Date.now();
 
         // Issue the request
@@ -627,7 +702,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         
         // Log the request
         let logPrefix = 'Home Connect request #' + ++this.requestCount + ': ';
-        this.log(logPrefix + options.url + ' (stream)');
+        this.log(logPrefix + 'STREAM ' + options.url);
         let startTime = Date.now();
 
         // Issue and return the request
@@ -643,11 +718,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                 
                 // Successfully established stream so handle any received data
                 response.on('data', chunk => {
-                    this.log(logPrefix + '(stream data received)'
+                    this.log(logPrefix + 'STREAM DATA'
                              + ' +' + (Date.now() - startTime) + 'ms ');
                     chunk.split(/\r?\n/).forEach(line => callbackLine(line));
                 }).on('end', () => {
-                    this.log(logPrefix + '(stream end)'
+                    this.log(logPrefix + 'STREAM END'
                              + ' +' + (Date.now() - startTime) + 'ms ');
                 });
                 
