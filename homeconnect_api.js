@@ -242,6 +242,16 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             }
         });
     }
+
+    // Issue a command
+    setCommand(haid, commandKey, value = true) {
+        return this.requestAppliances('PUT', haid, '/commands/' + commandKey, {
+            data: {
+                key:    commandKey,
+                value:  value
+            }
+        });
+    }
     
     // Obtain and maintain an access token
     async authorizeClient() {
