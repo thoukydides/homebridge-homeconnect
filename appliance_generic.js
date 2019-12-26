@@ -78,7 +78,7 @@ module.exports = class ApplianceGeneric {
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.WRITE,
                                Characteristic.Perms.NOTIFY]})
-            .on('set', (...args) => this.setPowerOn(...args));
+            .on('set', this.callbackify(this.setPowerOn));
     }
 
     // Connection status has changed (overrides power state when disconnected)
@@ -103,25 +103,18 @@ module.exports = class ApplianceGeneric {
     }
 
     // Set the power state
-    async setPowerOn(value, callback) {
-        try {
-            
-            let powerState = value ? 'BSH.Common.EnumType.PowerState.On'
-                                   : this.powerStateOff;
-            if (!powerState) {
-                // Not all appliances support turning power off
-                this.warn('Appliance does not support being switched off'
-                          + ' via the Home Connect API');
-                throw new Error('Appliance cannot be switched off');
-            }
-            await this.device.setSetting('BSH.Common.Setting.PowerState',
-                                         powerState);
-            callback();
-            
-        } catch (err) {
-            
-            callback(err);
+    async setPowerOn(value) {
+        let powerState = value ? 'BSH.Common.EnumType.PowerState.On'
+                               : this.powerStateOff;
+        if (!powerState) {
+            // Not all appliances support turning power off
+            this.warn('Appliance does not support being switched off'
+                      + ' via the Home Connect API');
+            throw new Error('Appliance cannot be switched off');
         }
+        this.log('SET ' + (value ? 'On' : 'Off'));
+        await this.device.setSetting('BSH.Common.Setting.PowerState',
+                                     powerState);
     }
 
     // Add a door
@@ -265,6 +258,20 @@ module.exports = class ApplianceGeneric {
                 this.haService.updateCharacteristic(Characteristic.StatusFault,
                                                     status.fault ? 1 : 0);
         });
+    }
+
+    // Convert an async function into one that takes a callback
+    // (cannot use util.callbackify because homebridge adds exra parameters)
+    callbackify(fn) {
+        return async (value, callback) => {
+            try {
+                let data = await fn.bind(this)(value);
+                callback(null, data);
+            } catch (err) {
+                this.error(err.message);
+                callback(err);
+            }
+        };
     }
 
     // Logging
