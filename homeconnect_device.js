@@ -36,6 +36,27 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         this.stopped = true;
         this.stopEvents();
     }
+
+    // Describe an item
+    describe(item) {
+        let description = item.key;
+        if ('value' in item) {
+            description += '=' + item.value;
+        }
+        let constraints = item.constraints || {};
+        if ('min' in constraints && 'max' in constraints) {
+            description += '=[' + constraints.min + '..' + constraints.max;
+            if (constraints.step) description += '/' + constraints.step;
+            description += ']';
+        }
+        if (constraints.allowedvalues) {
+            description += '=' + constraints.allowedvalues.join('|');
+        }
+        if (item.unit && item.unit != 'enum') {
+            description += ' ' + item.unit;
+        }
+        return description;
+    }
     
     // Update cached values and notify listeners
     update(items) {
@@ -46,8 +67,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
 
         // Notify listeners for each item
         items.forEach(item => {
-            this.log(item.key + '=' + item.value
-                     + (item.unit ? ' ' + item.unit : '')
+            this.log(this.describe(item)
                      + ' (' + this.listenerCount(item.key) + ' listeners)');
             this.emit(item.key, item);
         });
@@ -96,6 +116,27 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
+    // Read the list of all available programs and their options
+    async getAvailablePrograms() {
+        try {
+            let programs = await this.api.getAvailablePrograms(this.haId);
+            for (let program of programs) {
+                let key = program.key;
+                let detail = await this.api.getAvailableProgram(this.haId, key);
+                Object.assign(program, detail);
+
+                // Ensure that the program has a name
+                if (!program.name) {
+                    let result = /[^\.]*$/.exec(program.key);
+                    program.name = result ? result[0] : program.key;
+                }
+            }
+            return programs;
+        } catch (err) {
+            throw this.error('GET available programs', err);
+        }
+    }
+
     // Read the currently selected program
     async getSelectedProgram() {
         try {
@@ -130,6 +171,72 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             }
             throw this.error('GET active program', err);
         }
+    }
+
+    // Start a program
+    async startProgram(programKey, options = {}) {
+        try {
+            let programOptions = [];
+            for (let key of Object.keys(options)) {
+                programOptions.push({
+                    key:   key,
+                    value: options[key]
+                });
+            }
+            await this.api.setActiveProgram(this.haId, programKey,
+                                            programOptions);
+            this.update([{ key:   'BSH.Common.Root.ActiveProgram',
+                           value: programKey }]);
+            this.update(programOptions);
+        } catch (err) {
+            throw this.error('START active program ' + programKey, err);
+        }
+    }
+
+    // Stop a program
+    async stopProgram() {
+        try {
+            await this.api.stopActiveProgram(this.haId);
+        } catch (err) {
+            throw this.error('STOP active program', err);
+        }
+    }
+
+    // Pause or resume program
+    async pauseProgram(pause = true) {
+        let command = pause ? 'BSH.Common.Command.PauseProgram'
+                            : 'BSH.Common.Command.ResumeProgram';
+        try {
+            return await this.api.setCommand(this.haId, command);
+        } catch (err) {
+            throw this.error('COMMAND ' + command, err);
+        }
+    }
+
+    // Wait for the appliance to enter specific states
+    waitOperationState(states, milliseconds) {
+        // Check whether the appliance is already in the target state
+        if (states.includes(this.items['BSH.Common.Status.OperationState']))
+            return Promise.resolve();
+
+        // Otherwise wait
+        let listener;
+        return new Promise((resolve, reject) => {
+            // Listen for updates to the operation state
+            listener = item => {
+                if (states.includes(item.value)) resolve();
+            };
+            this.on('BSH.Common.Status.OperationState', listener);
+
+            // Wait for the specified timeout, if any
+            if (milliseconds !== undefined)
+                setTimeout(() => {
+                    reject(new Error('Timeout waiting for OperationState'));
+                }, milliseconds);
+        }).finally(() => {
+            // Remove the update listener
+            this.off('BSH.Common.Status.OperationState', listener);
+        });
     }
 
     // Refresh appliance information when it reconnects

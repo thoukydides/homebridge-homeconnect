@@ -27,6 +27,9 @@ module.exports = class ApplianceGeneric {
         // Log errors from the Home Connect API
         device.on('error', err => this.error(err));
 
+        // Clean-up any services or characteristics from earlier versions
+        this.cleanup1();
+
         // Handle the identify request
         accessory.on('identify', (...args) => this.identify(...args));
         
@@ -45,9 +48,11 @@ module.exports = class ApplianceGeneric {
             || accessory.addService(Service.HomeAppliance, this.name);
         
         // Add a characteristic for the power state, initially read-only
+        let subtype = 'power';
         this.powerService =
-            accessory.getService(Service.Switch)
-            || accessory.addService(Service.Switch, this.name + ' power');
+            accessory.getServiceByUUIDAndSubType(Service.Switch, subtype)
+            || accessory.addService(Service.Switch, this.name + ' power',
+                                    subtype);
         this.powerService.getCharacteristic(Characteristic.On)
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.NOTIFY]});
@@ -66,8 +71,40 @@ module.exports = class ApplianceGeneric {
 
     // Identify this appliance
     identify(paired, callback) {
-        this.log('Identify');
+        this.log('Identify: ' + this.device.haId);
+        this.logItems();
+        this.logAvailablePrograms(); // (do not wait for this to complete)
         callback();
+    }
+
+    // Log the cached state
+    logItems() {
+        for (let key of Object.keys(this.device.items).sort()) {
+            this.log(this.device.describe(this.device.items[key]));
+        }
+    }
+
+    // Read and log details of all available programs
+    async logAvailablePrograms() {
+        try {
+            // Read details of the available programs
+            let programs = await this.device.getAvailablePrograms();
+
+            // Log details of each program
+            this.log(programs.length + ' programs available');
+            let json = {
+                [this.device.haId]: programs.map(program => {
+                    return {
+                        name:       program.name,
+                        key:        program.key,
+                        options:    program.options.map(option => this.device.describe(option))
+                    }
+                })
+            };
+            this.log(JSON.stringify(json, null, 4));
+        } catch (err) {
+            this.debug(err);
+        }
     }
 
     // Add power state
@@ -258,6 +295,15 @@ module.exports = class ApplianceGeneric {
                 this.haService.updateCharacteristic(Characteristic.StatusFault,
                                                     status.fault ? 1 : 0);
         });
+    }
+
+    // Clean-up any services or characteristics from earlier versions
+    cleanup1() {
+        // The original implementation only had a single Switch without subtype
+        let switchService = this.accessory.getService(Service.Switch);
+        if (switchService && !switchService.subtype) {
+            this.accessory.removeService(switchService);
+        }
     }
 
     // Convert an async function into one that takes a callback

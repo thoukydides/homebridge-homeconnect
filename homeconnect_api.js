@@ -23,6 +23,9 @@ const SCOPES = ['IdentifyAppliance', 'Monitor', 'Settings',
                 'Hood-Control', 'Refrigerator-Control', 'Washer-Control',
                 'WasherDryer-Control', 'WineCooler-Control'];
 
+// Language to request for localized assets
+const LANGUAGE = 'en-GB';
+
 // Expanded help text for problems with the Client ID
 const CLIENT_HELP_PREFIX1 = 'Unable to authorize Home Connect application; ';
 const CLIENT_HELP_PREFIX2 = '. Visit https://developer.home-connect.com/applications to ';
@@ -469,8 +472,9 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             url:     this.url + '/api/homeappliances',
             json:    true,
             headers: {
-                accept:         'application/vnd.bsh.sdk.v1+json',
-                'content-type': 'application/vnd.bsh.sdk.v1+json'
+                accept:             'application/vnd.bsh.sdk.v1+json',
+                'content-type':     'application/vnd.bsh.sdk.v1+json',
+                'accept-language':  LANGUAGE
             }
         };
         if (haid) options.url += '/' + haid + (path || '');
@@ -619,7 +623,8 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             encoding:   'utf8',
             json:       true,
             headers: {
-                accept: 'text/event-stream'
+                accept:             'text/event-stream',
+                'accept-language':  LANGUAGE
             }
         };
 
