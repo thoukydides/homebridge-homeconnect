@@ -74,7 +74,7 @@ For events, a `Single Press` is generated when the event occurs and is present, 
 
 Unfortunately, Apple's Home app (as of iOS 13) does not support custom services, and only shows numeric labels for `Stateless Programmable Switch` services. For full functionality use one of the following apps:
 * Elgato's [Eve](https://www.elgato.com/en/eve/eve-app) *(free and recommended)*.
-* Matthias Hochgatterer's [Home](http://hochgatterer.me/home/)
+* Matthias Hochgatterer's [Home+](http://hochgatterer.me/home/)
 
 ### No Control of Ovens, Hobs, or Fridge-Freezers
 
