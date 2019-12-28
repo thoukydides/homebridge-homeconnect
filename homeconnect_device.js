@@ -213,6 +213,16 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
+    // Set a specific option of the active program
+    async setActiveProgramOption(optionKey, value) {
+        try {
+            await this.api.setActiveProgramOption(this.haId, optionKey, value);
+            this.update([{ key: optionKey, value: value }]);
+        } catch (err) {
+            throw this.error('SET ' + optionKey + '=' + value, err);
+        }
+    }
+
     // Wait for the appliance to enter specific states
     waitOperationState(states, milliseconds) {
         // Check whether the appliance is already in the target state
