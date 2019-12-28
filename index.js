@@ -125,6 +125,7 @@ class HomeConnectPlatform {
                 // Cooking appliances
                 CoffeeMaker:    ApplianceCooking.CoffeeMaker,
                 Hob:            ApplianceCooking.Hob,
+                Hood:           ApplianceCooking.Hood,
                 Oven:           ApplianceCooking.Oven,
                 // Cleaning appliances
                 Dishwasher:     ApplianceCleaning.Dishwasher,
@@ -138,7 +139,6 @@ class HomeConnectPlatform {
                 // Treat everything else generically for now
                 CleaningRobot:  ApplianceGeneric,
                 CookProcessor:  ApplianceGeneric,
-                Hood:           ApplianceGeneric,
                 WineCooler:     ApplianceGeneric
             }[ha.type];
             if (!applianceConstructor)

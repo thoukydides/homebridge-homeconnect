@@ -40,6 +40,24 @@ module.exports.Hob = class ApplianceHob
     }
 }
 
+// A Homebridge accessory for a Home Connect hood
+module.exports.Hood = class ApplianceHood
+                    extends ApplianceGeneric {
+
+    // Initialise an appliance
+    constructor(...args) {
+        super(...args);
+
+        // Customise the appliance as a hood
+        this.addPowerOff('BSH.Common.EnumType.PowerState.Off');
+        this.addEvents({
+            'BSH.Common.Event.ProgramFinished':     'program finished'
+        });
+        this.addProgramRemainingTime();
+        this.addOperationState();
+    }
+}
+
 // A Homebridge accessory for a Home Connect oven
 module.exports.Oven = class ApplianceOven
                     extends ApplianceGeneric {
