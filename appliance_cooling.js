@@ -4,16 +4,15 @@
 'use strict';
 
 const ApplianceGeneric = require('./appliance_generic.js');
+const HasDoor = require('./has_door.js');
 
 // A Homebridge accessory for a Home Connect fridge and/or freezer
 class ApplianceFridgeFreezer extends ApplianceGeneric {
-
-    // Initialise an appliance
     constructor(...args) {
         super(...args);
 
         // Customise the appliance as a fridge and/or freezer
-        this.addDoor();
+        this.mixin(HasDoor);
     }
 }
 
