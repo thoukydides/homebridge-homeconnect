@@ -109,7 +109,16 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
-    // Read the list of all available programs and their options
+    // Read the list of all programs
+    async getAllPrograms() {
+        try {
+            return await this.api.getPrograms(this.haId);
+        } catch (err) {
+            throw this.error('GET programs', err);
+        }
+    }
+
+    // Read the list of currently available programs and their options
     async getAvailablePrograms() {
         try {
             let programs = await this.api.getAvailablePrograms(this.haId);

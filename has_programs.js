@@ -24,6 +24,7 @@ module.exports = {
     async logPrograms() {
         try {
             // Read details of the available programs
+            let allPrograms = await this.device.getAllPrograms();
             let programs = await this.device.getAvailablePrograms();
 
             // HomeKit restricts the characters allowed in names
@@ -83,8 +84,11 @@ module.exports = {
                     }))
                 }
             };
-            this.log(programs.length + ' programs available\n'
-                     + JSON.stringify(json, null, 4));
+            this.log(programs.length + ' of ' + allPrograms.length
+                     + ' programs available\n' + JSON.stringify(json, null, 4));
+            let missing = allPrograms.length - programs.length;
+            if (0 < missing)
+                this.warn(missing + ' programs not currently available');
         } catch (err) {
             this.warn(err);
         }
