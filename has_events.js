@@ -3,14 +3,12 @@
 
 'use strict';
 
-let Service, Characteristic;
-
 // Add events to an accessory
 module.exports = {
     init(events) {
         // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
+        const Service = this.homebridge.hap.Service;
+        const Characteristic = this.homebridge.hap.Characteristic;
         
         // Create a label service if there are multiple events
         if (1 < Object.keys(events).length) {
@@ -35,7 +33,8 @@ module.exports = {
                     this.name + ' ' + name, event);
 
             // Configure the service
-            const { SINGLE, DOUBLE } = Characteristic.ProgrammableSwitchEvent;
+            const SINGLE = Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS;
+            const DOUBLE = Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS;
             service.getCharacteristic(Characteristic.ProgrammableSwitchEvent)
                 .setProps({ minValue: SINGLE, maxValue: DOUBLE,
                             validValues: [SINGLE, DOUBLE] });
