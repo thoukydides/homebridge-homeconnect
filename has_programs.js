@@ -29,7 +29,7 @@ module.exports = {
 
             // HomeKit restricts the characters allowed in names
             function simplifyName(name) {
-                return name.replace(/[^-a-z0-9.']/ig, '')
+                return name.replace(/[^-a-z0-9.' ]/ig, '')
                            .replace(/^\W/, '')
                            .replace(/\W$/, '');
             }
