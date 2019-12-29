@@ -10,6 +10,7 @@ const HasFan = require('./has_fan.js');
 const HasLight = require('./has_light.js');
 const HasOperation = require('./has_operation.js');
 const HasOperationError = require('./has_operationerror.js');
+const HasPrograms = require('./has_programs.js');
 const HasRemainingTime = require('./has_remainingtime.js');
 
 let Service, Characteristic;
@@ -25,6 +26,7 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         this.mixin(HasDoor);
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
+        this.mixin(HasPrograms);
     }
 }
 
@@ -80,5 +82,6 @@ module.exports.Oven = class ApplianceOven extends ApplianceGeneric {
         });
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
+        // 'Oven-Control' scope would be required for this.mixin(HasPrograms);
     }
 }

@@ -11,12 +11,13 @@ let Service, Characteristic;
 module.exports = class ApplianceGeneric {
 
     // Initialise an appliance
-    constructor(log, homebridge, device, accessory) {
+    constructor(log, homebridge, device, accessory, config) {
         this.logRaw       = log;
         this.homebridge   = homebridge;
         this.device       = device;
         this.accessory    = accessory;
         this.name         = accessory.displayName;
+        this.config       = config;
 
         // Log some basic information about this appliance
         this.log(device.brand + ' ' + device.type
@@ -26,8 +27,8 @@ module.exports = class ApplianceGeneric {
         Service = homebridge.hap.Service;
         Characteristic = homebridge.hap.Characteristic;
 
-        // Log errors from the Home Connect API
-        device.on('error', err => this.error(err));
+        // Log errors from the Home Connect API as warnings
+        device.on('error', err => this.warn(err));
 
         // Handle the identify request
         accessory.on('identify', this.callbackify(this.identify));
@@ -68,33 +69,6 @@ module.exports = class ApplianceGeneric {
         this.log('Identify: ' + this.device.haId);
         for (let key of Object.keys(this.device.items).sort()) {
             this.log(this.device.describe(this.device.items[key]));
-        }
-        this.logAvailablePrograms();
-
-        // Let any mixins or derived classes perform additional actions (async)
-        this.device.emit('identify');
-    }
-
-    // Read and log details of all available programs
-    async logAvailablePrograms() {
-        try {
-            // Read details of the available programs
-            let programs = await this.device.getAvailablePrograms();
-
-            // Log details of each program
-            this.log(programs.length + ' programs available');
-            let json = {
-                [this.device.haId]: programs.map(program => {
-                    return {
-                        name:       program.name,
-                        key:        program.key,
-                        options:    program.options.map(option => this.device.describe(option))
-                    }
-                })
-            };
-            this.log(JSON.stringify(json, null, 4));
-        } catch (err) {
-            this.debug(err);
         }
     }
 

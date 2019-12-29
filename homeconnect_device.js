@@ -42,15 +42,8 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         let description = item.key;
         if ('value' in item) {
             description += '=' + item.value;
-        }
-        let constraints = item.constraints || {};
-        if ('min' in constraints && 'max' in constraints) {
-            description += '=[' + constraints.min + '..' + constraints.max;
-            if (constraints.step) description += '/' + constraints.step;
-            description += ']';
-        }
-        if (constraints.allowedvalues) {
-            description += '=' + constraints.allowedvalues.join('|');
+        } else if ('default' in item) {
+            description += '=' + item.default;
         }
         if (item.unit && item.unit != 'enum') {
             description += ' ' + item.unit;
@@ -263,7 +256,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             await this.getSettings();
 
             // Read the selected and active program
-            if (this.hasPrograms()) {
+            if (this.hasPrograms) {
                 await this.getSelectedProgram();
                 await this.getActiveProgram();
             }
@@ -275,9 +268,9 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
-    // Does this type of device support programs
-    hasPrograms() {
-        return /^(CleaningRobot|CoffeeMaching|Dishwasher|Dryer|Hob|Hood|Oven|Washer|WasherDryer)$/.test(this.type);
+    // Enable polling of selected/active programs when connected
+    pollPrograms(enable = true) {
+        this.hasPrograms = enable;
     }
     
     // Start streaming events

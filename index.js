@@ -164,9 +164,10 @@ class HomeConnectPlatform {
             // Construct an instance of the appliance
             let device = new HomeConnectDevice(
                 msg => this.log.debug(msg), this.homeconnect, ha);
+            let deviceConfig = this.config[ha.haId] || {};
             accessory.appliance =
                 new applianceConstructor(this.log, this.homebridge,
-                                         device, accessory);
+                                         device, accessory, deviceConfig);
         });
         this.homebridge.registerPlatformAccessories(
             PLUGIN_NAME, PLATFORM_NAME, newAccessories);
