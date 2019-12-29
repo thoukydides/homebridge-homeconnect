@@ -90,7 +90,7 @@ module.exports = {
             if (0 < missing)
                 this.warn(missing + ' programs not currently available');
         } catch (err) {
-            this.warn(err);
+            this.warn(err.message);
         }
     }
 }
