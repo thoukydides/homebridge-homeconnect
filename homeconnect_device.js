@@ -198,7 +198,19 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Stop a program
     async stopProgram() {
         try {
-            await this.api.stopActiveProgram(this.haId);
+            // No action required unless a program is active
+            let activeStates = [
+                'BSH.Common.EnumType.OperationState.DelayedStart',
+                'BSH.Common.EnumType.OperationState.Run',
+                'BSH.Common.EnumType.OperationState.Pause',
+                'BSH.Common.EnumType.OperationState.ActionRequired'
+            ];
+            let operationState = this.items['BSH.Common.Status.OperationState'];
+            if (activeStates.includes(operationState.value))
+                await this.api.stopActiveProgram(this.haId);
+            else
+                this.log('Ignoring STOP active program in '
+                         + operationState.value);
         } catch (err) {
             throw this.error('STOP active program', err);
         }
