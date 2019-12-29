@@ -232,7 +232,6 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             return Promise.resolve();
 
         // Otherwise wait
-        //        let listener;
         return new Promise((resolve, reject) => {
             // Listen for updates to the operation state
             let listener = item => {
