@@ -93,7 +93,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         try {
             let item = await this.api.getSetting(this.haId, settingKey);
             this.update([item]);
-            return item.value;
+            return item;
         } catch (err) {
             throw this.error('GET ' + settingKey, err);
         }
@@ -223,6 +223,26 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         } catch (err) {
             throw this.error('SET ' + optionKey + '=' + value, err);
         }
+    }
+
+    // Wait for the appliance to be connected
+    waitConnected(immediate = false) {
+        // Check whether the appliance is already connected
+        if (immediate && (this.items['connected'] || {}).value)
+            return Promise.resolve();
+
+        // Otherwise wait
+        //        let listener;
+        return new Promise((resolve, reject) => {
+            // Listen for updates to the operation state
+            let listener = item => {
+                if (item.value) {
+                    this.off('connected', listener);
+                    resolve();
+                }
+            };
+            this.on('connected', listener);
+        });
     }
 
     // Wait for the appliance to enter specific states

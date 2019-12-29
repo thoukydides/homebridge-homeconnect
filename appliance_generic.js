@@ -72,6 +72,53 @@ module.exports = class ApplianceGeneric {
         }
     }
 
+    // Query the appliance when connected and cache the result
+    async getCached(key, operation) {
+        // Use a cached result if possible
+        let cache = this.accessory.context.cache;
+        if (!cache) cache = this.accessory.context.cache = {};
+        if (key in cache) return cache[key];
+
+        // Perform the operation and cache the result
+        cache[key] = await this.getUncached(operation);
+        return cache[key];
+    }
+
+    // Query the appliance when connected
+    async getUncached(operation) {
+        // Wait until connected before attempting the operation
+        await this.device.waitConnected(true);
+
+        // Repeat the operation until it succeeds
+        while (true) {
+
+            // Attempt the query
+            try {
+
+                return await operation();
+
+            } catch (err) {
+
+                // Whitelist some errors returned by the server
+                const whitelist = [
+                    'SDK.Error.UnsupportedSetting',
+                    'SDK.Simulator.InternalError',
+                ];
+                let key = ((((err.response || {}).body || {}).error) || {}).key;
+                if (whitelist.includes(key)) {
+                    this.warn('Ignoring ' + key + ' error');
+                    return null;
+                }
+
+                // Otherwise ignore the error and try again
+                this.warn('Will retry when next connected: ' + err.message);
+            }
+
+            // Wait for the device to reconnect before trying again
+            await this.device.waitConnected(false);
+        }
+    }
+
     // Convert an async function into one that takes a callback
     // (cannot use util.callbackify because homebridge adds exra parameters)
     callbackify(fn) {
