@@ -24,6 +24,14 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         // Customise the appliance as a coffee maker
         this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
         this.mixin(HasDoor);
+        this.mixin(HasEvents, {
+            'ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty':
+                'bean container empty',
+            'ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty':
+                'water tank empty',
+            'ConsumerProducts.CoffeeMaker.Event.DripTrayFull':
+                'drip tray full'
+        });
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
         this.mixin(HasPrograms);

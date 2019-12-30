@@ -136,10 +136,10 @@ class HomeConnectPlatform {
                 Freezer:        ApplianceCooling.Freezer,
                 FridgeFreezer:  ApplianceCooling.FridgeFreezer,
                 Refrigerator:   ApplianceCooling.Refrigerator,
+                WineCooler:     ApplianceCooling.WineCooler,
                 // Treat everything else generically for now
                 CleaningRobot:  ApplianceGeneric,
-                CookProcessor:  ApplianceGeneric,
-                WineCooler:     ApplianceGeneric
+                CookProcessor:  ApplianceGeneric
             }[ha.type];
             if (!applianceConstructor)
                 return this.log.warn("Appliance type '" + ha.type

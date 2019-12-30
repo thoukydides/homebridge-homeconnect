@@ -38,37 +38,77 @@ To use [simulated appliances](https://developer.home-connect.com/simulator/) set
 
 ## Notes
 
-This plugin was developed and tested with a Siemens oven (HB678GBS6B/58), induction hob (EX677LYV1E/06), and dishwasher (SN678D06TG/53). It should work with all other Home Connect appliances, but functionality is currently more limited for other appliance types.
+This plugin was developed and tested with a Siemens oven (HB678GBS6B/58), induction hob (EX677LYV1E/06), and dishwasher (SN678D06TG/53). Some additional testing was performed using the [Home Connect appliance simulators](https://developer.home-connect.com/simulator). It should work with all other Home Connect appliances, but functionality is currently more limited (and bugs are more likely) for other appliance types.
 
 ### Capabilities
 
-The following functionality is supported by this plugin for different appliance types:
+The following general functionality is supported by this plugin for different appliance types:
 
-|                            | CoffeeMaker | Dishwasher | Dryer/ Washer/ WasherDryer | FridgeFreezer / Freezer / Refrigerator | Hob    | Hood       | Oven       | CleaningRobot / CookProcessor / WineCooler |
-| -------------------------- | :---------: | :--------: | :------------------------: | :------------------------------------: | :----: | :--------: | :--------: | :----------------------------------------: |
-| **Power on/off**           | Read/Write  | Read/Write | Read                       | Read                                   | Read   | Read/Write | Read/Write | Read                                       |
-| **Door open/closed**       | Read        | Read       | Read                       | Read                                   | -      | -          | Read       | -                                          |
-| **Program finished event** | -           | Notify     | Notify                     | -                                      | Notify | Notify     | Notify     | -                                          |
-| **Program aborted event**  | -           | Notify     | Notify                     | -                                      | -      |            | -          | -                                          |
-| **Timer finished event**   | -           | -          | -                          | -                                      | Notify |            | Notify     | -                                          |
-| **Preheat finished event** | -           | -          | -                          | -                                      | Notify |            | Notify     | -                                          |
-| **Program time remaining** | Read        | Read       | Read                       | -                                      | -      | Read       | Read       | -                                          |
-| **Operation state active** | Read        | Read       | Read                       | -                                      | Read   | Read       | Read       | -                                          |
-| **Operation state error**  | Read        | -          | Read                       | -                                      | Read   | -          | Read       | -                                          |
+|                            | CoffeeMaker | Dishwasher | Dryer/ Washer/ WasherDryer | FridgeFreezer / Freezer / Refrigerator / WineCooler | Hob    | Hood       | Oven       | CleaningRobot / CookProcessor |
+| -------------------------- | :---------: | :--------: | :------------------------: | :-------------------------------------------------: | :----: | :--------: | :--------: | :---------------------------: |
+| **Power on/off**           | Read/Write  | Read/Write | Read                       | Read                                                | Read   | Read/Write | Read/Write | Read                          |
+| **Door open/closed**       | Read        | Read       | Read                       | Read                                                | -      | -          | Read       | -                             |
+| **Program finished event** | -           | Notify     | Notify                     | -                                                   | Notify | Notify     | Notify     | -                             |
+| **Program aborted event**  | -           | Notify     | Notify                     | -                                                   | -      |            | -          | -                             |
+| **Program time remaining** | Read        | Read       | Read                       | -                                                   | -      | Read       | Read       | -                             |
+| **Operation state active** | Read        | Read       | Read                       | -                                                   | Read   | Read       | Read       | -                             |
+| **Operation state error**  | Read        | -          | Read                       | -                                                   | Read   | -          | Read       | -                             |
+
+#### Cooking appliances
+
+Some additional functionality is supported for cooking appliances:
+
+|                                | CoffeeMaker | CookProcessor | Hob    | Hood                         | Oven   |
+| ------------------------------ | :---------: | |-----------: | :----: | :--------------------------: | :----: |
+| **Fan speed/auto control**     | -           | -             |        | Read/Write :crossed_fingers: | -      |
+| **Functional light control**   | -           | -             |        | Read/Write :crossed_fingers: | -      |
+| **Ambient light control**      | -           | -             |        | Read/Write :crossed_fingers: | -      |
+| **Timer finished event**       | -           | -             | Notify |                              | Notify |
+| **Preheat finished event**     | -           | -             | Notify |                              | Notify |
+| **Bean container empty event** | Notify      | -             | -      | -                            | -      |
+| **Water tank empty event**     | Notify      | -             | -      | -                            | -      |
+| **Drip tray full event**       | Notify      | -             | -      | -                            | -      |
+
+:crossed_fingers: *Control of Hood appliances has been implemented but not tested. Please add any feedback to issue #2.*
+
+#### Cleaning appliances
+
+Some additional functionality is supported for cleaning appliances:
+
+|    | CleaningRobot | Dishwasher | Dryer | Washer | WasherDryer |
+| -- | :-----------: | :--------: | :---: | :----: | :---------: |
+
+#### Cooling appliances
+
+Some additional functionality is supported for cooling appliances:
+
+|                                     | Freezer | FridgeFreezer | Refrigerator | WineCooler |
+| ----------------------------------- | :-----: | :-----------: | :----------: | :--------: |
+| **Freezer door alarm event**        | Notify  | Notify        | -            | -          |
+| **Refrigerator door alarm event**   | -       | Notify        | Notify       | -          |
+| **Freezer temperature alarm event** | Notify  | Notify        | -            | -          |
 
 ### HomeKit Services and Characteristics
 
 *HomeKit* does not define services and characteristics for home appliances, so the following are used: 
 
-| Service                        | Characteristic              | Used for               |
-| ------------------------------ | --------------------------- | ---------------------- |
-| `Switch`                       | `On`                        | Power on/off           |
-| `Stateless Programmable Switch`| `Programmable Switch Event` | Events                 |
-| `Home Appliance` *(custom)*    | `Current Door State`        | Door open/closed       |
-| `Home Appliance` *(custom)*    | `Remaining Duration`        | Program progress       |
-| `Home Appliance` *(custom)*    | `Active`                    | Operation state active |
-| `Home Appliance` *(custom)*    | `Status Active`             | Operation state active |
-| `Home Appliance` *(custom)*    | `Status Fault`              | Operation state error  |
+| Service                        | Characteristic              | Used for                                      |
+| ------------------------------ | --------------------------- | --------------------------------------------- |
+| `Switch`                       | `On`                        | Power on/off                                  |
+| `Stateless Programmable Switch`| `Programmable Switch Event` | Events                                        |
+| `Fan` *(v2)*                   | `Active`                    | Hood fan on/off control                       |
+| `Fan` *(v2)*                   | `Current Fan State`         | Hood fan on/off indication                    |
+| `Fan` *(v2)*                   | `Target Fan State`          | Hood fan manual/automatic                     |
+| `Fan` *(v2)*                   | `Rotation Speed`            | Hood fan speed                                |
+| `Lightbulb`                    | `On`                        | Hood light on/off (ambient or functional)     |
+| `Lightbulb`                    | `Brightness`                | Hood light brightness (ambient or functional) |
+| `Lightbulb`                    | `Hue`                       | Hood light colour (ambient)                   |
+| `Lightbulb`                    | `Saturation`                | Hood light colour (ambient)                   |
+| `Home Appliance` *(custom)*    | `Current Door State`        | Door open/closed                              |
+| `Home Appliance` *(custom)*    | `Remaining Duration`        | Program progress                              |
+| `Home Appliance` *(custom)*    | `Active`                    | Operation state active                        |
+| `Home Appliance` *(custom)*    | `Status Active`             | Operation state active                        |
+| `Home Appliance` *(custom)*    | `Status Fault`              | Operation state error                         |
 
 For events, a `Single Press` is generated when the event occurs and is present, and a `Double Press` after it has been confirmed by the user.
 
@@ -81,7 +121,7 @@ Unfortunately, Apple's Home app (as of iOS 13) does not support custom services,
 The [Home Connect Developer Agreement](https://developer.home-connect.com/developer_agreement) says (in section 7):
 > Certain additional permissions to those specified at: https://developer.home-connect.com/docs/authorization/scope may be granted to Clients of selected Users upon an individual check by HC and upon agreement of a separate partner agreement between the Parties, which is based on this Agreement.
 
-This is required for the `Hob-Control`, `Oven-Control`, and `FridgeFreezer-Images` scopes. Additionally, the appliance simulator disallows `CookProcessor-Control` and `FridgeFreezer-Control`. These scopes are therefore not supported by this plugin. Control of these appliances is limited to just power on/off.
+This is required for the `Hob-Control`, `Oven-Control`, and `FridgeFreezer-Images` scopes. Additionally, the appliance simulator disallows `CookProcessor-Control` and `FridgeFreezer-Control`. These scopes are therefore not supported by this plugin. Control of these appliances is limited to just power on/off (where supported by the Home Connect API), read-only status, and notification events.
 
 Use IFTTT Webhooks (e.g. via [homebridge-ifttt](https://www.npmjs.com/package/homebridge-ifttt)) to control these appliances.
 
