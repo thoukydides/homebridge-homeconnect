@@ -90,6 +90,6 @@ module.exports.Oven = class ApplianceOven extends ApplianceGeneric {
         });
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
-        if (this.device.hasScope('Control')) this.mixin(HasPrograms);
+        this.mixin(HasPrograms);
     }
 }

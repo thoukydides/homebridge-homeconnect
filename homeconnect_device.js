@@ -112,7 +112,12 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Read the list of all programs
     async getAllPrograms() {
         try {
-            return await this.api.getPrograms(this.haId);
+            let programs = await this.api.getPrograms(this.haId);
+            for (let program of programs) {
+                // Ensure that all programs have names
+                if (!program.name) program.name = this.makeName(program.key);
+            }
+            return programs;
         } catch (err) {
             throw this.error('GET programs', err);
         }
@@ -128,10 +133,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 Object.assign(program, detail);
 
                 // Ensure that the program has a name
-                if (!program.name) {
-                    let result = /[^\.]*$/.exec(program.key);
-                    program.name = result ? result[0] : program.key;
-                }
+                if (!program.name) program.name = this.makeName(program.key);
             }
             return programs;
         } catch (err) {
@@ -317,6 +319,12 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Enable polling of selected/active programs when connected
     pollPrograms(enable = true) {
         this.hasPrograms = enable;
+    }
+
+    // Construct a simple name from a key
+    makeName(key) {
+        let parsed = /[^\.]*$/.exec(key);
+        return parsed ? parsed[0] : key;
     }
     
     // Start streaming events
