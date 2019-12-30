@@ -56,7 +56,7 @@ Unfortunately, Apple's Home app in iOS 13 does not appear to provide an **Identi
 
 The format of the `config.json` file is:
 
-```JSON
+```
     "platforms":
     [{
         "platform":     "HomeConnect",
