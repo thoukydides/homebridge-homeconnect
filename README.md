@@ -59,7 +59,7 @@ The following general functionality is supported by this plugin for different ap
 Some additional functionality is supported for cooking appliances:
 
 |                                | CoffeeMaker | CookProcessor | Hob    | Hood                         | Oven   |
-| ------------------------------ | :---------: | |-----------: | :----: | :--------------------------: | :----: |
+| ------------------------------ | :---------: | :-----------: | :----: | :--------------------------: | :----: |
 | **Fan speed/auto control**     | -           | -             |        | Read/Write :crossed_fingers: | -      |
 | **Functional light control**   | -           | -             |        | Read/Write :crossed_fingers: | -      |
 | **Ambient light control**      | -           | -             |        | Read/Write :crossed_fingers: | -      |
@@ -75,8 +75,9 @@ Some additional functionality is supported for cooking appliances:
 
 Some additional functionality is supported for cleaning appliances:
 
-|    | CleaningRobot | Dishwasher | Dryer | Washer | WasherDryer |
-| -- | :-----------: | :--------: | :---: | :----: | :---------: |
+|                    | CleaningRobot | Dishwasher | Dryer | Washer | WasherDryer |
+| ------------------ | :-----------: | :--------: | :---: | :----: | :---------: |
+| *(None currently)* | -             | -          | -     | -      | -           |
 
 #### Cooling appliances
 
