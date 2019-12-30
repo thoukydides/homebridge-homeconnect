@@ -308,6 +308,12 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
+    // Check whether a particular scope has been authorized
+    hasScope(scope) {
+        return this.api.hasScope(scope)
+            || this.api.hasScope(this.type + '-' + scope);
+    }
+
     // Enable polling of selected/active programs when connected
     pollPrograms(enable = true) {
         this.hasPrograms = enable;

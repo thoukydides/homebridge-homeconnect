@@ -22,6 +22,9 @@ const SCOPES = ['IdentifyAppliance', 'Monitor', 'Settings',
                 'Dishwasher-Control', 'Dryer-Control', 'Freezer-Control',
                 'Hood-Control', 'Refrigerator-Control', 'Washer-Control',
                 'WasherDryer-Control', 'WineCooler-Control'];
+const SCOPES_LIVE = [...SCOPES, 'CookProcessor-Control',
+                     'FridgeFreezer-Control'];
+const SCOPES_SIMULATOR = SCOPES;
 
 // Language to request for localized assets
 const LANGUAGE = 'en-GB';
@@ -65,8 +68,9 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         this.log = log || console.log;
         this.requestCount = 0;
 
-        // Select the appropriate API
-        this.url = simulator ? URL_SIMULATOR : URL_LIVE;
+        // Select the appropriate API and scopes
+        this.url    = simulator ? URL_SIMULATOR    : URL_LIVE;
+        this.scopes = simulator ? SCOPES_SIMULATOR : SCOPES_LIVE;
 
         // Pending promises
         this.authResolve = [];
@@ -267,6 +271,8 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                                        ? this.authCodeGrantFlow()
                                        : this.authDeviceFlow());
                     this.tokenSave(token);
+                } else if (this.savedAuth[this.clientID].scopes) {
+                    this.scopes = this.savedAuth[this.clientID].scopes;
                 }
 
                 // Refresh the access token before it expires
@@ -327,17 +333,35 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         return 'Bearer ' + token;
     }
 
+    // Check whether a particular scope has been authorized
+    hasScope(scope) {
+        // Check for the specific scope requested
+        if (this.scopes.includes(scope)) return true;
+
+        // Check for row or column scopes that include the requested scope
+        let parsedScope = /^([^-]+)-([^-]+)$/.exec(scope);
+        if (parsedScope) {
+            let [, row, column] = parsedScope;
+            if (this.scopes.includes(row)) return true;
+            if (this.scopes.includes(column)) return true;
+        }
+
+        // Scope has not been authorized
+        return false;
+    }
+
     // A new access token has been obtained
     tokenSave(token) {
         this.log('Refresh token ' + token.refresh_token);
         this.log('Access token  ' + token.access_token
                  + ' (expires after ' + token.expires_in + ' seconds)');
 
-        // Save the refresh and access tokens
+        // Save the refresh and access tokens, plus the authenticated scopes
         this.savedAuth[this.clientID] = {
             refreshToken:   token.refresh_token,
             accessToken:    token.access_token,
-            accessExpires:  Date.now() + token.expires_in * MS
+            accessExpires:  Date.now() + token.expires_in * MS,
+            scopes:         this.scopes
         };
         this.emit('auth_save', this.savedAuth);
     }
@@ -352,7 +376,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             json:    true,
             form:    {
                 client_id:  this.clientID,
-                scope:      SCOPES.join(' ')
+                scope:      this.scopes.join(' ')
             }
         });
         this.emit('auth_uri', resp.verification_uri_complete);
@@ -397,7 +421,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             qs:      {
                 client_id:      this.clientID,
                 response_type:  'code',
-                scope:          SCOPES.join(' '),
+                scope:          this.scopes.join(' '),
                 user:           'me' // (can be anything non-zero length)
             },
         });
