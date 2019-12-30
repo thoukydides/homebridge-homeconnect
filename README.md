@@ -69,7 +69,7 @@ Some additional functionality is supported for cooking appliances:
 | **Water tank empty event**     | Notify      | -             | -      | -                            | -      |
 | **Drip tray full event**       | Notify      | -             | -      | -                            | -      |
 
-:crossed_fingers: *Control of Hood appliances has been implemented but not tested. Please add any feedback to issue #2.*
+:crossed_fingers: *Control of the fan and light in Hood appliances has been implemented but not tested. Please add any feedback to [issue #2](https://github.com/thoukydides/homebridge-homeconnect/issues/2).*
 
 #### Cleaning appliances
 
