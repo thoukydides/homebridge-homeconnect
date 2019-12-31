@@ -41,7 +41,7 @@ To use [simulated appliances](https://developer.home-connect.com/simulator/) set
 This plugin can start and stop programs on CoffeeMaker, Dishwasher, Dryer, Washer, and WasherDryer appliances. It is also capable of monitoring (but not controlling; [see below](#no-control-of-ovens-hobs-or-fridge-freezers)) the active program on Oven appliances.
 
 By default this plugin creates a `Switch` for each program that the appliance supports:
-* Turning a switch on attempts to start the corresponding program with its default options. Most appliances need to be powered on without any active program for this to work.
+* Turning a switch on attempts to start the corresponding program with its default options. Most appliances need to be powered on without any active program for this to work. Remote program start also needs to be enabled on the appliance.
 * Turning a switch off stops the program.
 
 However, it is possible to use the `config.json` file to select which programs should be presented (including none), and to provide options (e.g. for a CoffeeMaker it is possible to specify the temperature, strength, and amount of water).
@@ -101,7 +101,7 @@ The format of the `config.json` file is:
     }]
 }
 ```
-The *Home Appliance ID* is a string used by the Home Connect API to uniquely identify each appliance. It is comprised of the manufacturer's name, the appliance model number (E-Nr), and a twelve-digit hexadecimal number, each separated by hyphens (e.g. `BOSCH-HCS06COM1-846D1E984F70`). This value can be found from the **Identify** log output (or from almost any part of this plugin's log when debug is enabled by starting Homebridge with the `-D` option).
+The *Home Appliance ID* (`haID`) is a string used by the Home Connect API to uniquely identify each appliance. It is comprised of the manufacturer's name, the appliance model number (E-Nr), and a twelve-digit hexadecimal number, each separated by hyphens (e.g. `BOSCH-HCS06COM1-846D1E984F70`). This value can be found from the **Identify** log output (or from almost any part of this plugin's log when debug is enabled by starting Homebridge with the `-D` option).
 
 Each appliance to be customised should have an object with a single `program` key. Its value should be an array of objects, each describing a single program. The `program` array can be empty to prevent `Switch` services being added for any programs.
 
