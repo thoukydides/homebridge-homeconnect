@@ -43,7 +43,7 @@ module.exports = {
     addFan() {
         // Add a fan (v2) service
         let service = this.accessory.getService(Service.Fanv2)
-                      || this.accessory.addService(Service.Fanv2, this.name);
+            || this.accessory.addService(Service.Fanv2, this.name + ' fan');
 
         // Control the fan, reading missing parameters from the characteristics
         const { INACTIVE: OFF, ACTIVE }       = Characteristic.Active;
