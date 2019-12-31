@@ -120,6 +120,71 @@ module.exports = class ApplianceGeneric {
         }
     }
 
+    // Coalesce and serialise operations triggered by multiple characteristics
+    serialise(operation, options) {
+        // Find any existing operations for this function
+        if (!this.serialiseOps) this.serialiseOps = [];
+        let op = this.serialiseOps.find(op => op.operation === operation);
+        if (!op) {
+            op = { operation: operation };
+            this.serialiseOps.push(op);
+        }
+
+        // Update or create a pending request
+        if (op.pending) {
+            this.debug('Coalescing serialised request ('
+                       + (op.pending.resolve.length + 1) + ' pending)');
+            Object.assign(op.pending.options, options);
+        } else {
+            this.debug('Creating new serialised request');
+            op.pending = {
+                operation:  operation,
+                options:    options,
+                resolve:    [],
+                reject:     []
+            };
+        }
+        this.debug(JSON.stringify(op.pending.options));
+
+        // Schedule the operation
+        let doOperation = async (op) => {
+            try {
+                // Make this operation active (so more can be queued)
+                op.active = op.pending;
+                delete op.pending;
+
+                // Perform the operation
+                this.debug('Performing serialised request');
+                let result = await op.active.operation(op.active.options);
+
+                // Resolve all queued promises
+                this.debug('Serialised request successful');
+                for (let resolve of op.active.resolve) resolve(result);
+            } catch (err) {
+                // Reject all queued promises
+                this.debug('Serialised request failed: ' + err.message);
+                for (let reject of op.active.reject) reject(err);
+            } finally {
+                // Trigger another operation if pending
+                delete op.active;
+                if (op.pending) {
+                    this.debug('Scheduling overlapping serialised request');
+                    op.pending.scheduled = setTimeout(() => doOperation(op));
+                }
+            }
+        };
+        if (!op.pending.scheduled && !op.active) {
+            this.debug('Scheduling serialised request');
+            op.pending.scheduled = setTimeout(() => doOperation(op));
+        }
+
+        // Create and return a promise for this request
+        return new Promise((resolve, reject) => {
+            op.pending.resolve.push(resolve);
+            op.pending.reject.push(reject);
+        });
+    }
+
     // Convert an async function into one that takes a callback
     // (cannot use util.callbackify because homebridge adds exra parameters)
     callbackify(fn) {

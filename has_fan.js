@@ -66,9 +66,8 @@ module.exports = {
 
         // Add the fan state characteristics
         service.getCharacteristic(Characteristic.Active)
-            .on('set', this.callbackify(async value => {
-                return setFanProxy({ active: value });
-            }));
+            .on('set', this.callbackify(
+                value => this.serialise(setFanProxy, { active: value })));
         service.getCharacteristic(Characteristic.CurrentFanState);
         service.getCharacteristic(Characteristic.TargetFanState)
             .setProps(this.fanPrograms.auto
@@ -76,17 +75,15 @@ module.exports = {
                           validValues: [MANUAL, AUTO] }
                       : { minValue: MANUAL, maxValue: MANUAL,
                           validValues: [MANUAL]})
-            .on('set', this.callbackify(value => {
-                return setFanProxy({ auto: value });
-            }));
+            .on('set', this.callbackify(
+                value => this.serialise(setFanProxy, { auto: value })));
 
         // Add a rotation speed characteristic
         let step = 100 / (this.fanLevels.length - 1);
         service.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({ minValue: 0, maxValue: 100, minStep: step })
-            .on('set', this.callbackify(async value => {
-                return setFanProxy({ percent: value });
-            }));
+            .on('set', this.callbackify(
+                value => this.serialise(setFanProxy, { percent: value })));
 
         // Update the status
         this.device.on('Cooking.Common.Option.Hood.VentingLevel', item => {
