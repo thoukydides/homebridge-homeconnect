@@ -210,18 +210,12 @@ module.exports = {
                     .setProps(perms);
             }
         };
-        if (this.device.hasScope('Control')) {
-            // Update based on whether remote control start is allowed
-            this.device.on('BSH.Common.Status.RemoteControlStartAllowed',
-                           item => {
-                this.log('Remote control start '
-                         + (this.value ? 'has been activated' : 'disabled'));
-                allowWrite(this.value);
-            });
-        } else if (programs.length) {
+        if (programs.length && !this.device.hasScope('Control')) {
             // Control of this appliance has not been authorized
             this.warn('Programs cannot be controlled without Control scope');
             allowWrite(false);
+        } else {
+            allowWrite(true);
         }
     },
 
