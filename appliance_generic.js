@@ -101,8 +101,9 @@ module.exports = class ApplianceGeneric {
 
                 // Whitelist some errors returned by the server
                 const whitelist = [
+                    'BSH.Common.Error.InvalidUIDValue',
                     'SDK.Error.UnsupportedSetting',
-                    'SDK.Simulator.InternalError',
+                    'SDK.Simulator.InternalError'
                 ];
                 let key = ((((err.response || {}).body || {}).error) || {}).key;
                 if (whitelist.includes(key)) {
