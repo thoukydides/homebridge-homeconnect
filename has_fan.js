@@ -128,13 +128,23 @@ module.exports = {
             this.log('SET fan automatic');
             await this.device.startProgram(this.fanPrograms.auto.key);
         } else {
-            // Start the manual program at the requested speed
             let level = this.fromFanSpeedPercent(percent);
             let snapPercent = this.toFanSpeedPercent(level);
             this.log('SET fan manual ' + Math.round(snapPercent) + '%');
-            await this.device.startProgram(this.fanPrograms.manual.key, {
-                'Cooking.Common.Option.Hood.VentingLevel': level
-            });
+            if (this.device.items['BSH.Common.Status.OperationState'].value
+                == 'BSH.Common.EnumType.OperationState.Run'
+                && this.device.items['BSH.Common.Root.ActiveProgram'].value
+                   == this.fanPrograms.manual.key) {
+                // Try changing the options for the current program
+                await this.device.setActiveProgramOption(
+                    'Cooking.Common.Option.Hood.VentingLevel', level);
+            }
+            else {
+                // Start the manual program at the requested speed
+                await this.device.startProgram(this.fanPrograms.manual.key, {
+                    'Cooking.Common.Option.Hood.VentingLevel': level
+                });
+            }
         }
     },
 
