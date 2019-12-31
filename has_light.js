@@ -41,11 +41,7 @@ module.exports = {
         }
 
         // Add the light
-        let service = this.addLight(type, settings);
-        if (settings.brightness)
-            this.addLightBrightness(type, settings, service);
-        if (settings.colour)
-            this.addLightColour(type, settings, service);
+        this.addLight(type, settings);
     },
 
     // Add a light
@@ -56,23 +52,54 @@ module.exports = {
             || this.accessory.addService(Service.Lightbulb,
                                          this.name + ' ' + type, type);
 
+        // Control the light
+        let setLightProxy = async options => {
+            if ('on' in options) {
+                await this.setLightOn(type, settings, options.on);
+                if (!options.on) return;
+            }
+            if ('brightness' in options) {
+                await this.setLightBrightness(type, settings,
+                                              options.brightness);
+            }
+            if ('hue' in options || 'saturation' in options) {
+                await this.setLightColour(type, settings, service,
+                                          options.hue, options.saturation);
+            }
+        };
+
+        // Add the appropriate characteristics
+        this.addLightOn(type, settings, service, setLightProxy);
+        if (settings.brightness)
+            this.addLightBrightness(type, settings, service, setLightProxy);
+        if (settings.colour)
+            this.addLightColour(type, settings, service, setLightProxy);
+    },
+
+    // Add on/off control of a light
+    addLightOn(type, settings, service, setLightProxy) {
+
         // Update whether the light is on or off
         this.device.on(settings.on.key, item => {
             this.log('Light ' + type + ' ' + (item.value ? 'on' : 'off'));
             service.updateCharacteristic(Characteristic.On, item.value);
         });
         service.getCharacteristic(Characteristic.On)
-            .on('set', this.callbackify(async value => {
-                this.log('SET Light ' + type + ' ' + (value ? 'on' : 'off'));
-                await this.device.setSetting(settings.on.key, value);
-            }));
+            .on('set', this.callbackify(
+                value => this.serialise(setLightProxy, { on: value })));
 
         // Return the service
         return service;
     },
 
+    // Set whether a light is on
+    async setLightOn(type, settings, on) {
+        this.log('SET Light ' + type + ' ' + (on ? 'on' : 'off'));
+        await this.device.setSetting(settings.on.key, on);
+    },
+
     // Add brightness control of a light
-    addLightBrightness(type, settings, service) {
+    addLightBrightness(type, settings, service, setLightProxy) {
         // Set the supported brightness range
         let constraints = settings.brightness.constraints || {};
         service.getCharacteristic(Characteristic.Brightness)
@@ -87,43 +114,55 @@ module.exports = {
             service.updateCharacteristic(Characteristic.Brightness, percent);
         });
         service.getCharacteristic(Characteristic.Brightness)
-            .on('set', this.callbackify(async value => {
-                this.log('SET Light ' + type + ' ' + value + '% brightness');
-                await this.device.setSetting(settings.brightness.key, value);
-            }));
+            .on('set', this.callbackify(
+                value => this.serialise(setLightProxy, { brightness: value })));
+    },
+
+    // Set the brightness of a light
+    async setLightBrightness(type, settings, brightness) {
+        this.log('SET Light ' + type + ' ' + brightness + '% brightness');
+        await this.device.setSetting(settings.brightness.key, brightness);
     },
 
     // Add colour control of a light
-    addLightColour(type, settings, service) {
+    addLightColour(type, settings, service, setLightProxy) {
         // Convert fromHome Connect's RGB to HomeKit's hue and saturation
         // (ignore changes to 'BSH.Common.Setting.AmbientLightColor')
         this.device.on(settings.custom.key, item => {
             let { hue, saturation } = this.fromRGB(item.value);
-            this.log('Light ' + rgb
-                     + '(hue=' + hue + ', saturation=' + saturation + '%)');
+            this.log('Light ' + type + ' ' + rgb
+                     + ' (hue=' + hue + ', saturation=' + saturation + '%)');
             service.updateCharacteristic(Characteristic.Hue, hue);
             service.updateCharacteristic(Characteristic.Saturation, saturation);
         });
 
         // Convert from HomeKit's hue and saturation to Home Connect's RGB
         let applyColour = async (hue, saturation) => {
-            let rgb = this.toRGB(hue, saturation);
-            this.log('SET Light ' + rgb
-                     + '(hue=' + hue + ', saturation=' + saturation + '%)');
-            await this.device.setSetting(settings.colour.key,
-                  'BSH.Common.EnumType.AmbientLightColor.CustomColor');
-            await this.device.setSetting(settings.custom.key, value);
+            this.setLightColour(type, settings, hue, saturation);
         }
         service.getCharacteristic(Characteristic.Hue)
-            .on('set', this.callbackify(value => {
-                let saturation = service.getCharacteristic(Characteristic.Saturation).value;
-                return applyColour(value, saturation);
-            }));
+            .on('set', this.callbackify(
+                value => this.serialise(setLightProxy, { hue: value })));
         service.getCharacteristic(Characteristic.Saturation)
-            .on('set', this.callbackify(value => {
-                let hue = service.getCharacteristic(Characteristic.Hue).value;
-                return applyColour(hue, value);
-            }));
+            .on('set', this.callbackify(
+                value => this.serialise(setLightProxy, { saturation: value })));
+    },
+
+    // Set the colour of a light
+    async setLightColour(type, settings, service, hue, saturation) {
+        // Read any missing parameters from the characteristics
+        if (hue === undefined)
+            hue = service.getCharacteristic(Characteristic.Hue).value;
+        if (saturation === undefined)
+            saturation = service.getCharacteristic(Characteristic.Saturation).value;
+
+        // Set the colour
+        let rgb = this.toRGB(hue, saturation);
+        this.log('SET Light ' + type + ' ' + rgb
+                 + ' (hue=' + hue + ', saturation=' + saturation + '%)');
+        const custom = 'BSH.Common.EnumType.AmbientLightColor.CustomColor';
+        await this.device.setSetting(settings.colour.key, custom);
+        await this.device.setSetting(settings.custom.key, rgb);
     },
 
     // Convert a colour from from hue/saturation to RGB
