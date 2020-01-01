@@ -44,7 +44,7 @@ The functionality supported by this plugin with different appliances types is de
 
 Support for Hood appliances is currently experimental. Please provide feedback (whether good or bad) to [issue #2](https://github.com/thoukydides/homebridge-homeconnect/issues/2).
 
-Oven appliances cannot be controlled due to missing [Home Connect Authorisation Scopes](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes).
+Oven appliances cannot be controlled due to the required [Home Connect Authorisation Scopes](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being granted.
 
 Apple's Home app does not support all of the features of this plugin. Use one of the alternative [Recommended HomeKit Apps](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Apps) instead.
 
