@@ -11,20 +11,29 @@ module.exports = {
         // Shortcuts to useful HAP objects
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
-        
+
+        // Add any lights that the appliance supports
+        this.addSupportedLights();
+    },
+
+    // Add functional and/or ambient lights
+    async addSupportedLights() {
         // Add a functional light
-        this.addLightIfSupported('functional light', {
+        let functional = await this.addLightIfSupported('functional light', {
             on:         'Cooking.Common.Setting.Lighting',
             brightness: 'Cooking.Common.Setting.LightingBrightness'
         });
 
         // Add an ambient light
-        this.addLightIfSupported('ambient light', {
+        let ambient = await this.addLightIfSupported('ambient light', {
             on:         'BSH.Common.Setting.AmbientLightEnabled',
             brightness: 'BSH.Common.Setting.AmbientLightBrightness',
             colour:     'BSH.Common.Setting.AmbientLightColor',
             custom:     'BSH.Common.Setting.AmbientLightCustomColor'
         });
+
+        // If both lights are supported then link their services
+        if (functional && ambient) functional.addLinkedService(ambient);
     },
 
     // Check whether the appliance supports a light and then add it
@@ -41,7 +50,7 @@ module.exports = {
         }
 
         // Add the light
-        this.addLight(type, settings);
+        return this.addLight(type, settings);
     },
 
     // Add a light
@@ -74,6 +83,9 @@ module.exports = {
             this.addLightBrightness(type, settings, service, setLightProxy);
         if (settings.colour)
             this.addLightColour(type, settings, service, setLightProxy);
+
+        // Return the service
+        return service;
     },
 
     // Add on/off control of a light
