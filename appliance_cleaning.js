@@ -6,7 +6,6 @@
 const ApplianceGeneric = require('./appliance_generic.js');
 const HasDoor = require('./has_door.js');
 const HasEvents = require('./has_events.js');
-const HasOperation = require('./has_operation.js');
 const HasOperationError = require('./has_operationerror.js');
 const HasPrograms = require('./has_programs.js');
 const HasRemainingTime = require('./has_remainingtime.js');
@@ -24,7 +23,7 @@ module.exports.Dishwasher = class ApplianceDishwasher extends ApplianceGeneric {
             'BSH.Common.Event.ProgramAborted':      'program aborted'
         });
         this.mixin(HasRemainingTime);
-        this.mixin(HasOperation);
+        this.mixin(HasOperationError);
         this.mixin(HasPrograms);
     }
 }
