@@ -85,6 +85,7 @@ module.exports.Oven = class ApplianceOven extends ApplianceGeneric {
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',
+            'BSH.Common.Event.ProgramAborted':      'program aborted',
             'BSH.Common.Event.AlarmClockElapsed':   'timer finished',
             'Cooking.Oven.Event.PreheatFinished':   'preheat finished'
         });
