@@ -3,6 +3,7 @@
 
 'use strict';
 
+const requestErrors = require('request-promise-native/errors');
 const HasPower = require('./has_power.js');
 
 let Service, Characteristic;
@@ -228,9 +229,13 @@ module.exports = class ApplianceGeneric {
         if (this.lastError !== err) {
             this.lastError = err;
 
-            // Log this error (with stack backtrace at lower priority)
-            if (op) this.error(op);
+            // Log this error with some context
             this.error(err.message);
+            if (op) this.error(op);
+            if (err instanceof requestErrors.StatusCodeError)
+                this.error(err.options.method + ' ' + err.options.url);
+
+            // Log any stack backtrace at lower priority
             if (err.stack) this.debug(err.stack);
         }
         return err;
