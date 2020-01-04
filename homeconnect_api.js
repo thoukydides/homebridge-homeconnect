@@ -250,6 +250,12 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         });
     }
 
+    // Get a list of supported commands
+    async getCommands(haid) {
+        let data = await this.requestAppliances('GET', haid, '/commands');
+        return data.commands;
+    }
+
     // Issue a command
     setCommand(haid, commandKey, value = true) {
         return this.requestAppliances('PUT', haid, '/commands/' + commandKey, {
