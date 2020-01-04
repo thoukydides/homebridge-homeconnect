@@ -60,9 +60,14 @@ module.exports = class HomeConnectDevice extends EventEmitter {
 
         // Notify listeners for each item
         items.forEach(item => {
-            this.log(this.describe(item)
+            let description = this.describe(item);
+            this.log(description
                      + ' (' + this.listenerCount(item.key) + ' listeners)');
-            this.emit(item.key, item);
+            try {
+                this.emit(item.key, item);
+            } catch (err) {
+                this.reportError(err, 'Update emit ' + description);
+            }
         });
     }
     
@@ -73,7 +78,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.update(status);
             return status;
         } catch (err) {
-            throw this.error('GET status', err);
+            throw this.reportError(err, 'GET status');
         }
     }
 
@@ -84,7 +89,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.update(settings);
             return settings;
         } catch (err) {
-            throw this.error('GET settings', err);
+            throw this.reportError(err, 'GET settings');
         }
     }
 
@@ -95,7 +100,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.update([item]);
             return item;
         } catch (err) {
-            throw this.error('GET ' + settingKey, err);
+            throw this.reportError(err, 'GET ' + settingKey);
         }
     }
 
@@ -105,7 +110,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             await this.api.setSetting(this.haId, settingKey, value);
             this.update([{ key: settingKey, value: value }]);
         } catch (err) {
-            throw this.error('SET ' + settingKey + '=' + value, err);
+            throw this.reportError(err, 'SET ' + settingKey + '=' + value);
         }
     }
 
@@ -119,7 +124,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             }
             return programs;
         } catch (err) {
-            throw this.error('GET programs', err);
+            throw this.reportError(err, 'GET programs');
         }
     }
 
@@ -137,7 +142,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             }
             return programs;
         } catch (err) {
-            throw this.error('GET available programs', err);
+            throw this.reportError(err, 'GET available programs');
         }
     }
 
@@ -155,7 +160,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 // Suppress error when there is no selected program
                 return null;
             }
-            throw this.error('GET selected program', err);
+            throw this.reportError(err, 'GET selected program');
         }
     }
 
@@ -185,7 +190,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 // Suppress error when there is no active program
                 return null;
             }
-            throw this.error('GET active program', err);
+            throw this.reportError(err, 'GET active program');
         }
     }
 
@@ -205,7 +210,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                            value: programKey }]);
             this.update(programOptions);
         } catch (err) {
-            throw this.error('START active program ' + programKey, err);
+            throw this.reportError(err, 'START active program ' + programKey);
         }
     }
 
@@ -226,7 +231,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 this.log('Ignoring STOP active program in '
                          + operationState.value);
         } catch (err) {
-            throw this.error('STOP active program', err);
+            throw this.reportError(err, 'STOP active program');
         }
     }
 
@@ -239,7 +244,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 // Suppress error when the API is not supported
                 return [];
             }
-            throw this.error('GET commands', err);
+            throw this.reportError(err, 'GET commands');
         }
     }
 
@@ -250,7 +255,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         try {
             return await this.api.setCommand(this.haId, command);
         } catch (err) {
-            throw this.error('COMMAND ' + command, err);
+            throw this.reportError(err, 'COMMAND ' + command);
         }
     }
 
@@ -260,7 +265,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             await this.api.setActiveProgramOption(this.haId, optionKey, value);
             this.update([{ key: optionKey, value: value }]);
         } catch (err) {
-            throw this.error('SET ' + optionKey + '=' + value, err);
+            throw this.reportError(err, 'SET ' + optionKey + '=' + value);
         }
     }
 
@@ -329,7 +334,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             }
             
         } catch (err) {
-            this.error('Connected update', err);
+            this.reportError(err, 'Connected update');
         } finally {
             this.onConnectedBusy = false;
         }
@@ -376,7 +381,8 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 this.update(event.data.items);
                 break;
             default:
-                this.error('Unsupported event type: ' + event.event);
+                this.reportError(new Error('Unsupported event type: '
+                                           + event.event));
                 break;
             }
         };
@@ -387,7 +393,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             try {
                 await this.api.getEvents(this.haId);
             } catch (err) {
-                this.error('STREAM', err);
+                this.reportError(err, 'STREAM');
             }
         }
 
@@ -400,13 +406,13 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         try {
             this.api.stopEvents(this.haId);
         } catch (err) {
-            this.error('STREAM stop', err);
+            this.reportError(err, 'STREAM stop');
         }
     }
 
     // Report an error
-    error(msg, err) {
-        this.emit('error', 'Error ' + msg + (err ? ': ' + err.message : ''));
+    reportError(err, op) {
+        this.emit('error', err, op);
         return err;
     }
 }

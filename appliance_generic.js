@@ -28,7 +28,7 @@ module.exports = class ApplianceGeneric {
         Characteristic = homebridge.hap.Characteristic;
 
         // Log errors from the Home Connect API as warnings
-        device.on('error', err => this.warn(err));
+        device.on('error', (...args) => this.reportError(...args));
 
         // Handle the identify request
         accessory.on('identify', this.callbackify(this.identify));
@@ -50,6 +50,7 @@ module.exports = class ApplianceGeneric {
         // Update reachability when connection status changes
         device.on('connected', item => {
             this.log(item.value ? 'Connected' : 'Disconnected');
+            throw new Error('testing fubar');
             this.accessory.updateReachability(item.value);
         });
 
@@ -193,7 +194,7 @@ module.exports = class ApplianceGeneric {
                 let data = await fn.bind(this)(value);
                 callback(null, data);
             } catch (err) {
-                this.error(err.message);
+                this.reportError(err);
                 callback(err);
             }
         };
@@ -220,6 +221,20 @@ module.exports = class ApplianceGeneric {
                   + this.device.brand + ' ' + this.device.type
                   + ' (E-Nr: ' + this.device.enumber + ')\n'
                   + JSON.stringify(data, null, 4));
+    }
+
+    // Report an error
+    reportError(err, op) {
+        // Suppress duplicate reports
+        if (this.lastError !== err) {
+            this.lastError = err;
+
+            // Log this error (with stack backtrace at lower priority)
+            if (op) this.error(op);
+            this.error(err.message);
+            if (err.stack) this.debug(err.stack);
+        }
+        return err;
     }
 
     // Logging
