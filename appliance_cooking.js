@@ -12,6 +12,7 @@ const HasOperation = require('./has_operation.js');
 const HasOperationError = require('./has_operationerror.js');
 const HasPrograms = require('./has_programs.js');
 const HasRemainingTime = require('./has_remainingtime.js');
+const HasRemoteControl = require('./has_remotecontrol.js');
 
 let Service, Characteristic;
 
@@ -34,6 +35,7 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         });
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
+        this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }
 }
@@ -51,6 +53,7 @@ module.exports.Hob = class ApplianceHob extends ApplianceGeneric {
             'Cooking.Oven.Event.PreheatFinished':   'preheat finished'
         });
         this.mixin(HasOperationError);
+        this.mixin(HasRemoteControl);
     }
 }
 
@@ -72,6 +75,7 @@ module.exports.Hood = class ApplianceHood extends ApplianceGeneric {
         this.mixin(HasFan);
         this.mixin(HasLight);
         this.mixin(HasOperation);
+        this.mixin(HasRemoteControl);
     }
 }
 
@@ -91,6 +95,7 @@ module.exports.Oven = class ApplianceOven extends ApplianceGeneric {
         });
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
+        this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }
 }

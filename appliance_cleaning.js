@@ -9,6 +9,7 @@ const HasEvents = require('./has_events.js');
 const HasOperationError = require('./has_operationerror.js');
 const HasPrograms = require('./has_programs.js');
 const HasRemainingTime = require('./has_remainingtime.js');
+const HasRemoteControl = require('./has_remotecontrol.js');
 
 // A Homebridge accessory for a Home Connect dishwasher
 module.exports.Dishwasher = class ApplianceDishwasher extends ApplianceGeneric {
@@ -24,6 +25,7 @@ module.exports.Dishwasher = class ApplianceDishwasher extends ApplianceGeneric {
         });
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
+        this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }
 }
@@ -41,6 +43,7 @@ class ApplianceWasherDryer extends ApplianceGeneric {
         });
         this.mixin(HasRemainingTime);
         this.mixin(HasOperationError);
+        this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }
 }
