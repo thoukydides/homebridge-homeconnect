@@ -28,6 +28,12 @@ module.exports = {
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.NOTIFY]});
 
+        // Mark this as the primary service (after linked to HAP Accessory)
+        setTimeout(() => {
+            this.accessory._associatedHAPAccessory
+                .setPrimaryService(this.powerService);
+        }, 0);
+
         // Update the state
         this.device.on('BSH.Common.Setting.PowerState', item => {
             let isOn = item.value == 'BSH.Common.EnumType.PowerState.On';
