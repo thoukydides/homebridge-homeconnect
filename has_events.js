@@ -50,6 +50,7 @@ module.exports = {
             this.device.on(event, item => {
                 switch (item.value) {
                 case 'BSH.Common.EnumType.EventPresentState.Present':
+                case 'BSH.Common.EnumType.DoorState.Open':
                     this.log('Event ' + name);
                     service.updateCharacteristic(
                         Characteristic.ProgrammableSwitchEvent, SINGLE);
@@ -60,6 +61,9 @@ module.exports = {
                         Characteristic.ProgrammableSwitchEvent, DOUBLE);
                     break;
                 case 'BSH.Common.EnumType.EventPresentState.Off':
+                    break;
+                default:
+                    this.warn("Unsupported event status '" + item.value + "'");
                     break;
                 }
             });
