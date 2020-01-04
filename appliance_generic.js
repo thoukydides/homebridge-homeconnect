@@ -50,7 +50,6 @@ module.exports = class ApplianceGeneric {
         // Update reachability when connection status changes
         device.on('connected', item => {
             this.log(item.value ? 'Connected' : 'Disconnected');
-            throw new Error('testing fubar');
             this.accessory.updateReachability(item.value);
         });
 
