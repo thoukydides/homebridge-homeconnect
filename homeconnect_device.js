@@ -162,11 +162,23 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Read the currently active program (if any)
     async getActiveProgram() {
         try {
-            let program = await this.api.getActiveProgram(this.haId);
-            this.update([{ key:   'BSH.Common.Root.ActiveProgram',
-                           value: program.key }]);
-            this.update(program.options);
-            return program;
+            // Only request the active program if one might be active
+            let inactiveStates = [
+                'BSH.Common.EnumType.OperationState.Inactive',
+                'BSH.Common.EnumType.OperationState.Ready'
+            ];
+            let operationState = this.items['BSH.Common.Status.OperationState'];
+            if (!inactiveStates.includes(operationState.value)) {
+                let program = await this.api.getActiveProgram(this.haId);
+                this.update([{ key:   'BSH.Common.Root.ActiveProgram',
+                               value: program.key }]);
+                this.update(program.options);
+                return program;
+            } else {
+                this.log('Ignoring GET active program in '
+                         + operationState.value);
+                return null;
+            }
         } catch (err) {
             if ((((err.response || {}).body || {}).error || {}).key
                 == 'SDK.Error.NoProgramActive') {
