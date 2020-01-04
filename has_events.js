@@ -34,10 +34,9 @@ module.exports = {
 
             // Configure the service
             const SINGLE = Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS;
-            const DOUBLE = Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS;
             service.getCharacteristic(Characteristic.ProgrammableSwitchEvent)
-                .setProps({ minValue: SINGLE, maxValue: DOUBLE,
-                            validValues: [SINGLE, DOUBLE] });
+                .setProps({ minValue: SINGLE, maxValue: SINGLE,
+                            validValues: [SINGLE] });
 
             // If there are multiple events then add a service label index
             if (this.labelService) {
@@ -56,11 +55,10 @@ module.exports = {
                         Characteristic.ProgrammableSwitchEvent, SINGLE);
                     break;
                 case 'BSH.Common.EnumType.EventPresentState.Confirmed':
-                    this.log('Event ' + name + ' confirmed by user');
-                    service.updateCharacteristic(
-                        Characteristic.ProgrammableSwitchEvent, DOUBLE);
+                    this.log('Event ' + name + ' confirmed (ignored)');
                     break;
                 case 'BSH.Common.EnumType.EventPresentState.Off':
+                    this.log('Event ' + name + ' off (ignored)');
                     break;
                 default:
                     this.warn("Unsupported event status '" + item.value + "'");
