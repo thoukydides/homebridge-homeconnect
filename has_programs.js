@@ -278,7 +278,7 @@ module.exports = {
         return service;
     },
 
-    //
+    // Check whether the appliance supports pause and resume
     async addPauseResumeIfSupported() {
         // Check whether control of the appliance has been authorised
         if (!this.device.hasScope('Control')) return;
