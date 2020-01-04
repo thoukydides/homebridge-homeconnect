@@ -21,6 +21,7 @@ module.exports = hap => {
             this.addOptionalCharacteristic(Characteristic.Active);
             this.addOptionalCharacteristic(Characteristic.StatusActive);
             this.addOptionalCharacteristic(Characteristic.StatusFault);
+            this.addOptionalCharacteristic(Characteristic.ProgramMode);
         }
     };
     Service.HomeAppliance.UUID =
