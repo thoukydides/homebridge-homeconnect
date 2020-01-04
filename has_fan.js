@@ -154,7 +154,15 @@ module.exports = {
     // Convert from a program to a rotation speed percentage
     toFanSpeedPercent(key) {
         let index = this.fanLevels.indexOf(key);
-        if (index == -1) throw new Error('Unsupported VentingLevel: ' + key);
+        if (index == -1) {
+            this.error('Unsupported VentingLevel: ' + key);
+            this.logIssue(2, {
+                ventingLevel: key,
+                fanPrograms:  this.fanPrograms,
+                fanLevels:    this.fanLevels
+            });
+            index = 0;
+        }
         return index * 100 / (this.fanLevels.length - 1);
     }
 }
