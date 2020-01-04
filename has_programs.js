@@ -28,6 +28,9 @@ module.exports = {
             // Add a service for each program supported by the appliance
             this.addAllPrograms();
         }
+
+        // Add pause and resume if supported by the appliance
+        this.addPauseResumeIfSupported();
     },
 
     // Read and log details of all available programs
@@ -178,6 +181,7 @@ module.exports = {
         // Add a service for each program
         this.log('Adding services for ' + programs.length + ' programs');
         let services = [];
+        let prevService;
         for (let program of programs) {
             // Log information about this program
             this.log("    '" + program.name + "' (" + program.key + ')');
@@ -189,6 +193,11 @@ module.exports = {
             let service = this.addProgram(program);
             services.push(service);
             saved[service.subtype] = program.name;
+
+            // Link the program services
+            this.haService.addLinkedService(service);
+            if (prevService) prevService.addLinkedService(service);
+            prevService = service;
         }
 
         // Delete any services that are no longer required
@@ -261,6 +270,38 @@ module.exports = {
 
         // Return the service
         return service;
+    },
+
+    //
+    async addPauseResumeIfSupported() {
+        // Check whether control of the appliance has been authorized
+        if (!this.device.hasScope('Control')) return;
+
+        // Read the list of supported commands
+        let commands = await this.getCached('commands',
+                                            () => this.device.getCommands());
+        if (!commands.length) return this.log('No commands supported');
+        this.logIssue(8, commands);
+
+        // Add pause and resume support
+        this.addPauseResume();
+    },
+
+    // Add the ability to pause and resume programs
+    addPauseResume() {
+        // Make the (Operation State) Active characteristic writable
+        const { INACTIVE, ACTIVE } = Characteristic.Active;
+        this.haService.getCharacteristic(Characteristic.Active)
+            .setProps({perms: [Characteristic.Perms.READ,
+                               Characteristic.Perms.WRITE,
+                               Characteristic.Perms.NOTIFY]})
+            .on('set', this.callbackify(async value => {
+                let pause = value == INACTIVE;
+                this.log((pause ? 'PAUSE' : 'RESUME') + ' Program');
+                await this.device.pauseProgram(pause);
+            }));
+
+        // Status update is performed by the normal Operation State handler
     },
 
     // HomeKit restricts the characters allowed in names

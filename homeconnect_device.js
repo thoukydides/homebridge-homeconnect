@@ -218,6 +218,19 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
+    // Get a list of supported commands
+    async getCommands() {
+        try {
+            return await this.api.getCommands(this.haId);
+        } catch (err) {
+            if ((((err.response || {}).body || {}).error || {}).key == '404') {
+                // Suppress error when the API is not supported
+                return [];
+            }
+            throw this.error('GET commands', err);
+        }
+    }
+
     // Pause or resume program
     async pauseProgram(pause = true) {
         let command = pause ? 'BSH.Common.Command.PauseProgram'

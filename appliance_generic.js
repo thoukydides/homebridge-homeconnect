@@ -213,6 +213,15 @@ module.exports = class ApplianceGeneric {
         if (obj.init) obj.init.bind(this)(...args);
     }
 
+    // Log information for an issue
+    logIssue(issue, data) {
+        const url = 'https://github.com/thoukydides/homebridge-homeconnect/issues/' + issue;
+        this.warn('Please copy the following to ' + url + '\n'
+                  + this.device.brand + ' ' + this.device.type
+                  + ' (E-Nr: ' + this.device.enumber + ')\n'
+                  + JSON.stringify(data, null, 4));
+    }
+
     // Logging
     logPrefix() { return '[' + this.name + '] '; }
     error(msg)  { this.logRaw.error(this.logPrefix() + msg); }
