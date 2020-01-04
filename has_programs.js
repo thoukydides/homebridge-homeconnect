@@ -44,15 +44,14 @@ module.exports = {
             function optionValue(option) {
                 // If the option has an actual or default value then use that
                 let value = null;
-                if ('value' in option) {
-                    value = option.value;
-                } else if ('default' in option) {
-                    value = option.default;
-                }
+                if ('value' in option) value = option.value;
 
                 // Use any additional information to generate a helpful comment
                 let comment;
                 if (option.constraints) {
+                    if (value === null && 'default' in option.constraints) {
+                        value = option.constraints.default;
+                    }
                     if (option.constraints.allowedvalues) {
                         let {allowedvalues} = option.constraints;
                         if (value === null) value = allowedvalues[0];
@@ -69,6 +68,12 @@ module.exports = {
                         if (unit) commentParts.push(unit);
                         comment = commentParts.join(' ');
                     }
+                }
+
+                // Special handling of boolean types
+                if (option.type == 'Boolean') {
+                    if (value === null) value = 'false';
+                    if (!comment) comment = [true, false];
                 }
 
                 // Return the value and comment
@@ -90,6 +95,7 @@ module.exports = {
                     }))
                 }
             };
+            this.log(JSON.stringify(programs, null, 4));
             this.log(programs.length + ' of ' + allPrograms.length
                      + ' programs available\n' + JSON.stringify(json, null, 4));
             let missing = allPrograms.length - programs.length;

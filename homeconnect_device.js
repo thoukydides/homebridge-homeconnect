@@ -42,8 +42,8 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         let description = item.key;
         if ('value' in item) {
             description += '=' + item.value;
-        } else if ('default' in item) {
-            description += '=' + item.default;
+        } else if ('default' in (item.constraints || {})) {
+            description += '=' + item.constraints.default;
         }
         if (item.unit && item.unit != 'enum') {
             description += ' ' + item.unit;
