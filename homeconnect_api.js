@@ -30,7 +30,7 @@ const SCOPES_SIMULATOR = SCOPES;
 const LANGUAGE = 'en-GB';
 
 // Expanded help text for problems with the Client ID
-const CLIENT_HELP_PREFIX1 = 'Unable to authorize Home Connect application; ';
+const CLIENT_HELP_PREFIX1 = 'Unable to authorise Home Connect application; ';
 const CLIENT_HELP_PREFIX2 = '. Visit https://developer.home-connect.com/applications to ';
 const CLIENT_HELP_EXTRA = {
     'request rejected by client authorization authority (developer portal)':
@@ -40,10 +40,10 @@ const CLIENT_HELP_EXTRA = {
     'client has no redirect URI defined':
         "edit the application (or register a new one) to set a 'Success Redirect' web page address.",
     'client has limited user list - user not assigned to client':
-        "edit the application (or register a new one) to set the 'Home Connect User Account for Testing' to match the one being authorized."
+        "edit the application (or register a new one) to set the 'Home Connect User Account for Testing' to match the one being authorised."
 };
 
-// Interval between authorization retries
+// Interval between authorisation retries
 const AUTH_RETRY_DELAY    = 60; // (seconds)
 const REFRESH_RETRY_DELAY = 5;  // (seconds)
 
@@ -81,7 +81,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         this.earliestRetry = Date.now();
 
         // Obtain and maintain an access token
-        this.authorizeClient();
+        this.authoriseClient();
     }
 
     // Get a list of paired home appliances
@@ -267,11 +267,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
     }
     
     // Obtain and maintain an access token
-    async authorizeClient() {
+    async authoriseClient() {
         while (true) {
             try {
                 
-                // Authorize this client if there is no saved authorization
+                // authorise this client if there is no saved authorisation
                 if (!this.savedAuth[this.clientID]) {
                     let token = await (this.simulator
                                        ? this.authCodeGrantFlow()
@@ -290,7 +290,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                                     - TOKEN_REFRESH_WINDOW * MS;
                     if (auth.accessToken && 0 < refreshIn) {
                         
-                        // Resolve any promises awaiting authorization
+                        // Resolve any promises awaiting authorisation
                         for (let resolve of this.authResolve) resolve();
                         this.authResolve = [];
                     
@@ -311,7 +311,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                 this.tokenInvalidate();
                 this.log(err.message);
 
-                // Delay before retrying authorization
+                // Delay before retrying authorisation
                 let retryIn = this.savedAuth[this.clientID]
                               ? REFRESH_RETRY_DELAY : AUTH_RETRY_DELAY;
                 this.log('Retrying client authentication in ' + retryIn
@@ -322,8 +322,8 @@ module.exports = class HomeConnectAPI extends EventEmitter {
     }
 
     // Wait until an access token has been obtained
-    waitUntilAuthorized() {
-        // Resolve immediately if already authorized, otherwise add to queue
+    waitUntilAuthorised() {
+        // Resolve immediately if already authorised, otherwise add to queue
         let auth = this.savedAuth[this.clientID];
         if (auth && auth.accessToken && Date.now() < auth.accessExpires) {
             return Promise.resolve();
@@ -332,14 +332,14 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         }
     }
 
-    // Obtain the current access token (or throw an error if not authorized)
-    getAuthorization() {
+    // Obtain the current access token (or throw an error if not authorised)
+    getAuthorisation() {
         let token = this.savedAuth[this.clientID].accessToken;
-        if (!token) throw new Error('Home Connect client is not authorized');
+        if (!token) throw new Error('Home Connect client is not authorised');
         return 'Bearer ' + token;
     }
 
-    // Check whether a particular scope has been authorized
+    // Check whether a particular scope has been authorised
     hasScope(scope) {
         // Check for the specific scope requested
         if (this.scopes.includes(scope)) return true;
@@ -352,7 +352,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             if (this.scopes.includes(column)) return true;
         }
 
-        // Scope has not been authorized
+        // Scope has not been authorised
         return false;
     }
 
@@ -372,10 +372,10 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         this.emit('auth_save', this.savedAuth);
     }
 
-    // Device authorization flow (used for the live server)
+    // Device authorisation flow (used for the live server)
     async authDeviceFlow() {
         // Obtain verification URI
-        this.log('Requesting Home Connect authorization using the Device Flow');
+        this.log('Requesting Home Connect authorisation using the Device Flow');
         let resp = await this.requestRaw({
             method:  'POST',
             url:     this.url + '/security/oauth/device_authorization',
@@ -386,12 +386,12 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             }
         });
         this.emit('auth_uri', resp.verification_uri_complete);
-        this.log('Waiting for completion of Home Connect authorization'
+        this.log('Waiting for completion of Home Connect authorisation'
                  + ' (poll every ' + resp.interval + ' seconds,'
                  + ' device code ' + resp.device_code + ' expires'
                  + ' after ' + resp.expires_in + ' seconds)...');
 
-        // Wait for the user to authorize access (or expiry of device code)
+        // Wait for the user to authorise access (or expiry of device code)
         let token;
         while (!token)
         {
@@ -415,10 +415,10 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         return token;
     }
     
-    // Authorization code grant flow (used for the simulator)
+    // Authorisation code grant flow (used for the simulator)
     async authCodeGrantFlow() {
-        // Request authorization, skipping the user interaction steps
-        this.log('Attempting to short-circuit Authorization Code Grant Flow '
+        // Request authorisation, skipping the user interaction steps
+        this.log('Attempting to short-circuit authorisation Code Grant Flow '
                  + 'for the Home Connect appliance simulator');
         let location = await this.requestRaw({
             method:         'GET',
@@ -432,11 +432,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             },
         });
 
-        // Extract the authorization code from the redirection URL
+        // Extract the authorisation code from the redirection URL
         let code = querystring.parse(url.parse(location).query).code;
-        this.log('Using authorization code ' + code + ' to request token');
+        this.log('Using authorisation code ' + code + ' to request token');
 
-        // Convert the authorization code into an access token
+        // Convert the authorisation code into an access token
         let token = await this.requestRaw({
             method:  'POST',
             url:     this.url + '/security/oauth/token',
@@ -466,8 +466,8 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             }
         });
 
-        // Request returns null if authorization is pending (shouldn't happen)
-        if (!token) throw new Error('Authorization pending');
+        // Request returns null if authorisation is pending (shouldn't happen)
+        if (!token) throw new Error('authorisation pending');
 
         // Return the refreshed access token
         return token;
@@ -496,7 +496,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Issue a normal home appliances API request
     async requestAppliances(method, haid, path, body) {
-        // Construct request (excluding authorization header which may change)
+        // Construct request (excluding authorisation header which may change)
         let options = {
             method:  method,
             url:     this.url + '/api/homeappliances',
@@ -524,7 +524,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             // Try issuing the request
             try {
                 
-                options.headers['authorization'] = this.getAuthorization();
+                options.headers['authorization'] = this.getAuthorisation();
                 let body = await this.requestRaw(options);
                 return body && body.data;
                 
@@ -569,14 +569,14 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                                         : this.parseJSON(err.response.body);
                 if (body && body.error_description) {
 
-                    // Authorization (OAuth) error response
+                    // Authorisation (OAuth) error response
                     status = body.error_description + ' [' + body.error + ']';
 
-                    // Special handling for some authorization errors
+                    // Special handling for some authorisation errors
                     switch (body.error) {
                     case 'authorization_pending':
                         // User has not yet completed the user interaction steps
-                        status = 'Authorization pending';
+                        status = 'Authorisation pending';
                         return null;
                         break;
                         
@@ -591,7 +591,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                         // fallthrough
                     case 'invalid_grant':
                     case 'expired_token':
-                        // Refresh token not valid; restart whole authorization
+                        // Refresh token not valid; restart whole authorisation
                         this.authInvalidate();
                         break;
                         
@@ -646,7 +646,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Get events stream for one appliance
     async getEvents(haid) {
-        // Construct request (excluding authorization header which may change)
+        // Construct request (excluding authorisation header which may change)
         let options = {
             method:     'GET',
             url:        this.url + '/api/homeappliances/' + haid + '/events',
@@ -672,7 +672,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             // Try issuing the request
             try {
                 
-                options.headers['authorization'] = this.getAuthorization();
+                options.headers['authorization'] = this.getAuthorisation();
                 this.log('Starting events stream for ' + haid);
                 let event = {};
                 return await this.requestStream(options, haid, line => {

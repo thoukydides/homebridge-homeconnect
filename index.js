@@ -46,7 +46,7 @@ class HomeConnectPlatform {
         // Define custom HomeKit services
         CustomServices(homebridge.hap);
 
-        // Create persistent storage for the authorization data
+        // Create persistent storage for the authorisation data
         let persistDir = Path.join(homebridge.user.storagePath(), PLUGIN_NAME);
         this.persist = NodePersist.create({ dir: persistDir });
         this.persist.initSync();
@@ -90,9 +90,9 @@ class HomeConnectPlatform {
             this.persist.getItem('token')
         ).on('auth_save', token => {
             this.persist.setItemSync('token', token);
-            this.log('Home Connect authorization token saved');
+            this.log('Home Connect authorisation token saved');
         }).on('auth_uri', msg => {
-            this.log.error('Home Connect authorization required: ' + msg);
+            this.log.error('Home Connect authorisation required: ' + msg);
         });
 
         // Obtain a list of Home Connect home appliances
@@ -103,7 +103,7 @@ class HomeConnectPlatform {
     async updateAppliances() {
         while (true) {
             try {
-                await this.homeconnect.waitUntilAuthorized();
+                await this.homeconnect.waitUntilAuthorised();
                 let appliances = await this.homeconnect.getAppliances();
                 this.log.debug('Found ' + appliances.length + ' appliances');
                 this.addRemoveAccessories(appliances);

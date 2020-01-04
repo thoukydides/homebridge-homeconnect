@@ -20,7 +20,7 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 1. Install this plugin using: `npm install -g homebridge-homeconnect`
 1. Edit `config.json` and add the HomeConnect platform (see example below).
 1. Run [Homebridge](https://github.com/nfarina/homebridge).
-1. The Homebridge log output will include an authorization URL. Copy the listed URL into a web browser and login to your Home Connect account.
+1. The Homebridge log output will include an authorisation URL. Copy the listed URL into a web browser and login to your Home Connect account.
  
 ### Example `config.json`
 ```JSON
@@ -46,9 +46,11 @@ Support for Hood appliances is currently experimental. Please provide feedback (
 
 Oven appliances cannot be controlled due to the required [Home Connect Authorisation Scopes](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being granted.
 
-Apple's Home app does not support all of the features of this plugin. Use one of the alternative [Recommended HomeKit Apps](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Apps) instead.
-
 This plugin has only been tested with a Siemens [Dishwasher](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436388) (SN678D06TG/53), [Hob](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436379) (EX677LYV1E/06), and [Oven](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004401572) (HB678GBS6B/58). See [Tested Appliances](https://github.com/thoukydides/homebridge-homeconnect/wiki/Testing).
+
+## HomeKit Apps
+
+Apple's Home app does not support all of the features of this plugin. Use one of the alternative [Recommended HomeKit Apps](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Apps) instead.
 
 ## License
 

@@ -226,7 +226,7 @@ module.exports = {
             }
         };
         if (programs.length && !this.device.hasScope('Control')) {
-            // Control of this appliance has not been authorized
+            // Control of this appliance has not been authorised
             this.warn('Programs cannot be controlled without Control scope');
             allowWrite(false);
         } else {
@@ -280,7 +280,7 @@ module.exports = {
 
     //
     async addPauseResumeIfSupported() {
-        // Check whether control of the appliance has been authorized
+        // Check whether control of the appliance has been authorised
         if (!this.device.hasScope('Control')) return;
 
         // Read the list of supported commands
