@@ -55,7 +55,6 @@ module.exports = {
         let setting = await this.getCached('power',
                  () => this.device.getSetting('BSH.Common.Setting.PowerState'));
         let values = setting.constraints.allowedvalues;
-        this.warn(JSON.stringify(values));
 
         // Add the ability to switch off or to standby if supported
         if (values.includes('BSH.Common.EnumType.PowerState.Off')) {
