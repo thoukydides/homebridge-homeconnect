@@ -22,7 +22,8 @@ module.exports = {
                                  () => this.device.getAvailablePrograms());
         if (!programs) return this.warn('Does not support fan programs');
 
-        // Only interested in the Venting and Automatic programs
+        // Identify the Venting and/or Automatic programs
+        // (DelatedShutOff (fan run-on) not currently supported by this plugin)
         let findProgram = key => programs.find(p => p.key == key);
         this.fanPrograms = {
             manual: findProgram('Cooking.Common.Program.Hood.Venting'),
@@ -30,12 +31,53 @@ module.exports = {
         };
         if (!this.fanPrograms.manual)
             return this.warn('Does not support manual fan program');
-        let optionLevel = this.fanPrograms.manual.options.find(
-            o => o.key == 'Cooking.Common.Option.Hood.VentingLevel');
-        this.fanLevels = optionLevel.constraints.allowedvalues;
-        if (!this.fanLevels) return this.warn('Does not support fan speeds');
+
+        // Determine the supported fan speeds
+        let findOption = key => {
+            let option = this.fanPrograms.manual.options
+                             .find(o => o.key == key);
+            if (!option) return [];
+            return option.constraints.allowedvalues
+                         .filter(v => !v.endsWith('Off'))
+                         .map(v => ({ key: key, value: v }));
+        };
+        let levels = {
+            venting:   findOption('Cooking.Common.Option.Hood.VentingLevel'),
+            intensive: findOption('Cooking.Common.Option.Hood.IntensiveLevel')
+        }
+        this.fanLevels = [...levels.venting, ...levels.intensive];
+        if (!this.fanLevels.length) return this.warn('No fan speed levels');
+
+        // Select an appropriate rotation speed step size (suitable for Siri)
+        // (allow low=25%, medium=50%, and high=100% for Siri)
+        this.fanLevelsPercentStep = this.fanLevels.length <= 2
+                                    ? 100 / this.fanLevels.length
+                                    : (this.fanLevels.length <= 4 ? 25 : 5);
+
+        // Check what will happen with the levels that Siri uses
+        const siriLevels = { low: 25, medium: 50, high: 100 };
+        for (let level of Object.keys(siriLevels)) {
+            let percent = siriLevels[level];
+            let option = this.fromFanSpeedPercent(percent);
+            let percent2 = this.toFanSpeedPercent(option);
+            this.log("Siri '" + level + "' (" + percent + '%): '
+                     + option.value + ' (' + percent2 + '%)');
+        }
+
+        // Verify that the fan speed mapping is stable
+        for (let level of this.fanLevels) {
+            let percent = this.toFanSpeedPercent(level);
+            let option = this.fromFanSpeedPercent(percent);
+            if (level.value != option.value) {
+                this.error('Unstable fan speed mapping: ' + level.value
+                           + ' -> ' + percent + '% -> ' + option.value);
+            }
+        }
 
         // Add the fan service
+        this.log('Fan suppports ' + levels.venting.length + ' venting levels + '
+                 + levels.intensive.length + ' intensive levels'
+                 + (this.fanPrograms.auto ? ' + auto mode' : ''));
         this.addFan();
     },
 
@@ -61,6 +103,7 @@ module.exports = {
             let percent = read(options.percent, Characteristic.RotationSpeed);
 
             // Configure the fan
+            if (auto != AUTO && percent == 0) active = INACTIVE;
             return this.setFan(active == ACTIVE, auto == AUTO, percent);
         }
 
@@ -79,27 +122,26 @@ module.exports = {
                 value => this.serialise(setFanProxy, { auto: value })));
 
         // Add a rotation speed characteristic
-        let step = 100 / (this.fanLevels.length - 1);
         service.getCharacteristic(Characteristic.RotationSpeed)
-            .setProps({ minValue: 0, maxValue: 100, minStep: step })
+            .setProps({ minValue: 0, maxValue: 100,
+                        minStep: this.fanLevelsPercentStep })
             .on('set', this.callbackify(
                 value => this.serialise(setFanProxy, { percent: value })));
 
         // Update the status
-        this.device.on('Cooking.Common.Option.Hood.VentingLevel', item => {
-            let percent = this.toFanSpeedPercent(item.value);
-            this.log('Fan ' + Math.round(percent) + '%');
+        let newLevel = item => {
+            let percent = this.toFanSpeedPercent(item);
+            if (!percent) return;
+            this.log('Fan ' + percent + '%');
             service.updateCharacteristic(Characteristic.RotationSpeed, percent);
-        });
+        }
+        this.device.on('Cooking.Common.Option.Hood.VentingLevel', newLevel);
+        this.device.on('Cooking.Common.Option.Hood.IntensiveLevel', newLevel);
         this.device.on('BSH.Common.Root.ActiveProgram', item => {
-            const autoPrograms = [
-                'Cooking.Common.Program.Hood.Automatic',
-                'Cooking.Common.Program.Hood.DelayedShutOff'
-            ];
-            let auto = autoPrograms.includes(item.value);
-            this.log('Fan ' + (auto ? 'automatic' : 'manual') + ' control');
+            let manual = item.value == this.fanPrograms.manual.key;
+            this.log('Fan ' + (manual ? 'manual' : 'automatic') + ' control');
             service.updateCharacteristic(Characteristic.TargetFanState,
-                                         auto ? AUTO : MANUAL);
+                                         manual ? MANUAL : AUTO);
         });
         this.device.on('BSH.Common.Status.OperationState', item => {
             const activeStates = [
@@ -125,44 +167,42 @@ module.exports = {
             this.log('SET fan automatic');
             await this.device.startProgram(this.fanPrograms.auto.key);
         } else {
-            let level = this.fromFanSpeedPercent(percent);
-            let snapPercent = this.toFanSpeedPercent(level);
-            this.log('SET fan manual ' + Math.round(snapPercent) + '%');
+            let option = this.fromFanSpeedPercent(percent);
+            let snapPercent = this.toFanSpeedPercent(option);
+            this.log('SET fan manual ' + snapPercent + '%');
             if (this.device.items['BSH.Common.Status.OperationState'].value
                 == 'BSH.Common.EnumType.OperationState.Run'
                 && this.device.items['BSH.Common.Root.ActiveProgram'].value
                    == this.fanPrograms.manual.key) {
                 // Try changing the options for the current program
-                await this.device.setActiveProgramOption(
-                    'Cooking.Common.Option.Hood.VentingLevel', level);
+                await this.device.setActiveProgramOption(option.key,
+                                                         option.value);
             }
             else {
                 // Start the manual program at the requested speed
-                await this.device.startProgram(this.fanPrograms.manual.key, {
-                    'Cooking.Common.Option.Hood.VentingLevel': level
-                });
+                await this.device.startProgram(this.fanPrograms.manual.key,
+                                               { [option.key]: options.value });
             }
         }
     },
 
-    // Convert from a rotation speed percentage to a program
+    // Convert from a rotation speed percentage to a program option
     fromFanSpeedPercent(percent) {
-        let index = Math.round(percent * (this.fanLevels.length - 1) / 100);
+        if (!percent) throw new Error('Attempted to convert 0% to fan program');
+        let index = Math.ceil(percent * this.fanLevels.length / 100) - 1;
         return this.fanLevels[index];
     },
 
-    // Convert from a program to a rotation speed percentage
-    toFanSpeedPercent(key) {
-        let index = this.fanLevels.indexOf(key);
-        if (index == -1) {
-            this.error('Unsupported VentingLevel: ' + key);
-            this.logIssue(2, {
-                ventingLevel: key,
-                fanPrograms:  this.fanPrograms,
-                fanLevels:    this.fanLevels
-            });
-            index = 0;
-        }
-        return index * 100 / (this.fanLevels.length - 1);
+    // Convert from a program option to a rotation speed percentage
+    toFanSpeedPercent(option) {
+        // Attempt to convert option to an index into the supported fan levels
+        let index = this.fanLevels.findIndex(o => o.key == option.key
+                                                  && o.value == option.value);
+        if (index == -1) return 0; // (presumably FanOff or IntensiveStageOff)
+
+        // Convert the index into a percentage and round down to the step size
+        let percent = (index + 1) * 100 / this.fanLevels.length;
+        return Math.floor(percent / this.fanLevelsPercentStep)
+               * this.fanLevelsPercentStep;
     }
 }
