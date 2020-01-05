@@ -12,7 +12,7 @@ const HasRemainingTime = require('./has_remainingtime.js');
 const HasRemoteControl = require('./has_remotecontrol.js');
 
 // A Homebridge accessory for a Home Connect cleaning robot (Roxxter)
-module.exports.CleaningRobot = class Appliance CleaningRobot
+module.exports.CleaningRobot = class ApplianceCleaningRobot
                              extends ApplianceGeneric {
         super(...args);
 
