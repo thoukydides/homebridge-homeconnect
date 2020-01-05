@@ -47,6 +47,9 @@ module.exports = {
         }
         this.fanLevels = [...levels.venting, ...levels.intensive];
         if (!this.fanLevels.length) return this.warn('No fan speed levels');
+        this.log('Fan suppports ' + levels.venting.length + ' venting levels + '
+                 + levels.intensive.length + ' intensive levels'
+                 + (this.fanPrograms.auto ? ' + auto mode' : ''));
 
         // Select an appropriate rotation speed step size (suitable for Siri)
         // (allow low=25%, medium=50%, and high=100% for Siri)
@@ -54,30 +57,37 @@ module.exports = {
                                     ? 100 / this.fanLevels.length
                                     : (this.fanLevels.length <= 4 ? 25 : 5);
 
-        // Check what will happen with the levels that Siri uses
-        const siriLevels = { low: 25, medium: 50, high: 100 };
-        for (let level of Object.keys(siriLevels)) {
-            let percent = siriLevels[level];
+        // Convert each rotation speed to a percentage
+        this.fanLevels.forEach((level, index) => {
+            let percent = (index + 1) * 100 / this.fanLevels.length;
+            let rounded = Math.floor(percent / this.fanLevelsPercentStep)
+                          * this.fanLevelsPercentStep;
+            level.percent = rounded;
+        });
+
+        // Override the percentage values to match Siri
+        const siriPercent = { low: 25, medium: 50, high: 100 };
+        for (let siri of Object.keys(siriPercent)) {
+            let percent = siriPercent[siri];
             let option = this.fromFanSpeedPercent(percent);
-            let percent2 = this.toFanSpeedPercent(option);
-            this.log("Siri '" + level + "' (" + percent + '%): '
-                     + option.value + ' (' + percent2 + '%)');
+            let level = this.fanLevels.find(o => o.key == option.key
+                                                 && o.value == option.value);
+            level.siri = siri;
+            level.percent = percent;
         }
 
         // Verify that the fan speed mapping is stable
         for (let level of this.fanLevels) {
-            let percent = this.toFanSpeedPercent(level);
-            let option = this.fromFanSpeedPercent(percent);
+            let option = this.fromFanSpeedPercent(level.percent);
             if (level.value != option.value) {
                 this.error('Unstable fan speed mapping: ' + level.value
-                           + ' -> ' + percent + '% -> ' + option.value);
+                           + ' -> ' + level.percent + '% -> ' + option.value);
             }
+            this.log('    ' + level.percent + '% (' + level.value + ')'
+                     + (level.siri ? " = Siri '" + level.siri + "'" : ''));
         }
 
         // Add the fan service
-        this.log('Fan suppports ' + levels.venting.length + ' venting levels + '
-                 + levels.intensive.length + ' intensive levels'
-                 + (this.fanPrograms.auto ? ' + auto mode' : ''));
         this.addFan();
     },
 
@@ -124,7 +134,8 @@ module.exports = {
         // Add a rotation speed characteristic
         service.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({ minValue: 0, maxValue: 100,
-                        minStep: this.fanLevelsPercentStep })
+                        minStep: this.fanLevelsPercentStep,
+                        validValues: this.fanLevels.map(l => l.percent)})
             .on('set', this.callbackify(
                 value => this.serialise(setFanProxy, { percent: value })));
 
@@ -182,7 +193,7 @@ module.exports = {
             else {
                 // Start the manual program at the requested speed
                 await this.device.startProgram(this.fanPrograms.manual.key,
-                                               { [option.key]: options.value });
+                                               { [option.key]: option.value });
             }
         }
     },
@@ -197,13 +208,9 @@ module.exports = {
     // Convert from a program option to a rotation speed percentage
     toFanSpeedPercent(option) {
         // Attempt to convert option to an index into the supported fan levels
-        let index = this.fanLevels.findIndex(o => o.key == option.key
-                                                  && o.value == option.value);
-        if (index == -1) return 0; // (presumably FanOff or IntensiveStageOff)
-
-        // Convert the index into a percentage and round down to the step size
-        let percent = (index + 1) * 100 / this.fanLevels.length;
-        return Math.floor(percent / this.fanLevelsPercentStep)
-               * this.fanLevelsPercentStep;
+        let level = this.fanLevels.find(o => o.key == option.key
+                                             && o.value == option.value);
+        if (!level) return 0; // (presumably FanOff or IntensiveStageOff)
+        return level.percent;
     }
 }
