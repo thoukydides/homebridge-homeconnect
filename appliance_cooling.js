@@ -8,7 +8,8 @@ const HasDoor = require('./has_door.js');
 const HasEvents = require('./has_events.js');
 
 // A Homebridge accessory for a Home Connect freezer
-module.exports.Freezer = class ApplianceFreezer extends ApplianceGeneric {
+module.exports.Freezer = class ApplianceFreezer
+                       extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -58,7 +59,8 @@ module.exports.Refrigerator = class ApplianceRefrigerator
 }
 
 // A Homebridge accessory for a Home Connect wine cooler
-module.exports.WineCooler = class ApplianceWineCooler extends ApplianceGeneric {
+module.exports.WineCooler = class ApplianceWineCooler
+                          extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
