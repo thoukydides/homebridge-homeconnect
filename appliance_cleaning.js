@@ -14,6 +14,7 @@ const HasRemoteControl = require('./has_remotecontrol.js');
 // A Homebridge accessory for a Home Connect cleaning robot (Roxxter)
 module.exports.CleaningRobot = class ApplianceCleaningRobot
                              extends ApplianceGeneric {
+    constructor(...args) {
         super(...args);
 
         // Customise the appliance as a cleaning robot
@@ -32,6 +33,7 @@ module.exports.CleaningRobot = class ApplianceCleaningRobot
         });
         this.mixin(HasOperationError);
         this.mixin(HasPrograms);
+    }
 }
 
 // A Homebridge accessory for a Home Connect dishwasher
