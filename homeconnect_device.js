@@ -70,10 +70,17 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             }
         });
     }
+
+    // Get a cached item's value
+    getItem(key) {
+        let item = this.items[key] || {};
+        return item.value;
+    }
     
     // Read current status
     async getStatus() {
         try {
+            this.requireMonitor();
             let status = await this.api.getStatus(this.haId);
             this.update(status);
             return status;
@@ -85,6 +92,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Read current settings
     async getSettings() {
         try {
+            this.requireSettings();
             let settings = await this.api.getSettings(this.haId);
             this.update(settings);
             return settings;
@@ -96,6 +104,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Read a single setting
     async getSetting(settingKey) {
         try {
+            this.requireSettings();
             let item = await this.api.getSetting(this.haId, settingKey);
             this.update([item]);
             return item;
@@ -107,6 +116,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Write a single setting
     async setSetting(settingKey, value) {
         try {
+            this.requireSettings();
             await this.api.setSetting(this.haId, settingKey, value);
             this.update([{ key: settingKey, value: value }]);
         } catch (err) {
@@ -117,6 +127,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Read the list of all programs
     async getAllPrograms() {
         try {
+            this.requireMonitor();
             let programs = await this.api.getPrograms(this.haId);
             for (let program of programs) {
                 // Ensure that all programs have names
@@ -131,6 +142,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Read the list of currently available programs and their options
     async getAvailablePrograms() {
         try {
+            this.requireMonitor();
             let programs = await this.api.getAvailablePrograms(this.haId);
             for (let program of programs) {
                 let key = program.key;
@@ -149,6 +161,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Read the currently selected program
     async getSelectedProgram() {
         try {
+            this.requireMonitor();
             let program = await this.api.getSelectedProgram(this.haId);
             this.update([{ key:   'BSH.Common.Root.SelectedProgram',
                            value: program.key }]);
@@ -172,8 +185,10 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 'BSH.Common.EnumType.OperationState.Inactive',
                 'BSH.Common.EnumType.OperationState.Ready'
             ];
-            let operationState = this.items['BSH.Common.Status.OperationState'];
-            if (!inactiveStates.includes(operationState.value)) {
+            let operationState =
+                this.getItem('BSH.Common.Status.OperationState');
+            if (!inactiveStates.includes(operationState)) {
+                this.requireMonitor();
                 let program = await this.api.getActiveProgram(this.haId);
                 this.update([{ key:   'BSH.Common.Root.ActiveProgram',
                                value: program.key }]);
@@ -181,7 +196,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 return program;
             } else {
                 this.log('Ignoring GET active program in '
-                         + operationState.value);
+                         + operationState);
                 return null;
             }
         } catch (err) {
@@ -197,6 +212,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Start a program
     async startProgram(programKey, options = {}) {
         try {
+            this.requireRemoteStart();
             let programOptions = [];
             for (let key of Object.keys(options)) {
                 programOptions.push({
@@ -224,12 +240,15 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 'BSH.Common.EnumType.OperationState.Pause',
                 'BSH.Common.EnumType.OperationState.ActionRequired'
             ];
-            let operationState = this.items['BSH.Common.Status.OperationState'];
-            if (activeStates.includes(operationState.value))
+            let operationState =
+                this.getItem('BSH.Common.Status.OperationState');
+            if (activeStates.includes(operationState)) {
+                this.requireRemoteControl();
                 await this.api.stopActiveProgram(this.haId);
-            else
+            } else {
                 this.log('Ignoring STOP active program in '
-                         + operationState.value);
+                         + operationState);
+            }
         } catch (err) {
             throw this.reportError(err, 'STOP active program');
         }
@@ -238,6 +257,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Get a list of supported commands
     async getCommands() {
         try {
+            this.requireControl();
             return await this.api.getCommands(this.haId);
         } catch (err) {
             if ((((err.response || {}).body || {}).error || {}).key == '404') {
@@ -253,6 +273,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         let command = pause ? 'BSH.Common.Command.PauseProgram'
                             : 'BSH.Common.Command.ResumeProgram';
         try {
+            this.requireRemoteControl();
             return await this.api.setCommand(this.haId, command);
         } catch (err) {
             throw this.reportError(err, 'COMMAND ' + command);
@@ -262,6 +283,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Set a specific option of the active program
     async setActiveProgramOption(optionKey, value) {
         try {
+            this.requireRemoteControl();
             await this.api.setActiveProgramOption(this.haId, optionKey, value);
             this.update([{ key: optionKey, value: value }]);
         } catch (err) {
@@ -272,7 +294,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Wait for the appliance to be connected
     waitConnected(immediate = false) {
         // Check whether the appliance is already connected
-        if (immediate && (this.items['connected'] || {}).value)
+        if (immediate && this.getItem('connected'))
             return Promise.resolve();
 
         // Otherwise wait
@@ -291,7 +313,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     // Wait for the appliance to enter specific states
     waitOperationState(states, milliseconds) {
         // Check whether the appliance is already in the target state
-        if (states.includes(this.items['BSH.Common.Status.OperationState']))
+        if (states.includes(this.getItem('BSH.Common.Status.OperationState')))
             return Promise.resolve();
 
         // Otherwise wait
@@ -338,6 +360,50 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         } finally {
             this.onConnectedBusy = false;
         }
+    }
+
+    // Ensure that the appliance is connected
+    requireConnected() {
+        if (!this.getItem('connected'))
+            throw new Error('The appliance is offline');
+    }
+
+    // Ensure that Monitor scope has been authorised
+    requireMonitor() {
+        if (!this.hasScope('Monitor'))
+            throw new Error('Monitor scope has not been authorised');
+        this.requireConnected();
+    }
+
+    // Ensure that Settings scope has been authorised
+    requireSettings() {
+        if (!this.hasScope('Settings'))
+            throw new Error('Settings scope has not been authorised');
+        this.requireConnected();
+    }
+
+    // Ensure that Control scope has been authorised
+    requireControl() {
+        if (!this.hasScope('Control'))
+            throw new Error('Control scope has not been authorised');
+        this.requireConnected();
+    }
+
+    // Ensure that remote control is currently allowed
+    requireRemoteControl() {
+        this.requireControl();
+        if (this.getItem('BSH.Common.Status.LocalControlActive'))
+            throw new Error('Appliance is being manually controlled locally');
+        if (this.getItem('BSH.Common.Status.RemoteControlActive') === false)
+            throw new Error('Remote control not enabled on the appliance');
+    }
+
+    // Ensure that remote start is currently allowed
+    requireRemoteStart() {
+        this.requireRemoteControl();
+        if (this.getItem('BSH.Common.Status.RemoteControlStartAllowed')
+            === false)
+            throw new Error('Remote start not enabled on the appliance');
     }
 
     // Check whether a particular scope has been authorised

@@ -171,9 +171,9 @@ module.exports = {
             let option = this.fromFanSpeedPercent(percent);
             let snapPercent = this.toFanSpeedPercent(option);
             this.log('SET fan manual ' + snapPercent + '%');
-            if (this.device.items['BSH.Common.Status.OperationState'].value
+            if (this.device.getItem('BSH.Common.Status.OperationState')
                 == 'BSH.Common.EnumType.OperationState.Run'
-                && this.device.items['BSH.Common.Root.ActiveProgram'].value
+                && this.device.getItem('BSH.Common.Root.ActiveProgram')
                    == this.fanPrograms.manual.key) {
                 // Try changing the options for the current program
                 await this.device.setActiveProgramOption(option.key,
