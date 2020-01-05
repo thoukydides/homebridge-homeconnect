@@ -18,7 +18,6 @@ module.exports.CleaningRobot = class ApplianceCleaningRobot
         super(...args);
 
         // Customise the appliance as a cleaning robot
-        this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':
                 'program finished',
@@ -37,12 +36,12 @@ module.exports.CleaningRobot = class ApplianceCleaningRobot
 }
 
 // A Homebridge accessory for a Home Connect dishwasher
-module.exports.Dishwasher = class ApplianceDishwasher extends ApplianceGeneric {
+module.exports.Dishwasher = class ApplianceDishwasher
+                          extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
         // Customise the appliance as a dishwasher
-        this.addPowerOff('BSH.Common.EnumType.PowerState.Off');
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',

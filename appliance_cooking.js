@@ -23,7 +23,6 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         super(...args);
 
         // Customise the appliance as a coffee maker
-        this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty':
@@ -47,7 +46,6 @@ module.exports.CookProcessor = class ApplianceCookProcessor
         super(...args);
 
         // Customise the appliance as a cook processor
-        this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',
             'BSH.Common.Event.ProgramAborted':      'program aborted'
@@ -58,7 +56,8 @@ module.exports.CookProcessor = class ApplianceCookProcessor
 }
 
 // A Homebridge accessory for a Home Connect hob (cooktop)
-module.exports.Hob = class ApplianceHob extends ApplianceGeneric {
+module.exports.Hob = class ApplianceHob
+                   extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -75,7 +74,8 @@ module.exports.Hob = class ApplianceHob extends ApplianceGeneric {
 }
 
 // A Homebridge accessory for a Home Connect hood
-module.exports.Hood = class ApplianceHood extends ApplianceGeneric {
+module.exports.Hood = class ApplianceHood
+                    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -84,7 +84,6 @@ module.exports.Hood = class ApplianceHood extends ApplianceGeneric {
         Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as a hood
-        this.addPowerOff('BSH.Common.EnumType.PowerState.Off');
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished'
         });
@@ -97,12 +96,12 @@ module.exports.Hood = class ApplianceHood extends ApplianceGeneric {
 }
 
 // A Homebridge accessory for a Home Connect oven
-module.exports.Oven = class ApplianceOven extends ApplianceGeneric {
+module.exports.Oven = class ApplianceOven
+                    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
         // Customise the appliance as an oven
-        this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',

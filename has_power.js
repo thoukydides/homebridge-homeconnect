@@ -45,6 +45,28 @@ module.exports = {
         this.device.on('connected', item => {
             this.powerService.updateCharacteristic(Characteristic.On, false);
         });
+
+        // Check whether the appliance supports off or standby
+        this.getPowerOffStandby();
+    },
+
+    // Check whether the appliance supports off or standby
+    async getPowerOffStandby() {
+        let setting = await this.getCached('power',
+                 () => this.device.getSetting('BSH.Common.Setting.PowerState'));
+        let values = setting.constraints.allowedvalues;
+        this.warn(JSON.stringify(values));
+
+        // Add the ability to switch off or to standby if supported
+        if (values.includes('BSH.Common.EnumType.PowerState.Off')) {
+            this.log('Can be switched off');
+            this.addPowerOff('BSH.Common.EnumType.PowerState.Off');
+        } else if (values.includes('BSH.Common.EnumType.PowerState.Standby')) {
+            this.log('Can be placed in standby');
+            this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
+        } else {
+            this.log('Cannot be switched off');
+        }
     },
 
     // Add the ability to switch the power off (or to standby)
