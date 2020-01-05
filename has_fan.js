@@ -138,6 +138,7 @@ module.exports = {
         this.device.on('Cooking.Common.Option.Hood.VentingLevel', newLevel);
         this.device.on('Cooking.Common.Option.Hood.IntensiveLevel', newLevel);
         this.device.on('BSH.Common.Root.ActiveProgram', item => {
+            if (!item.value) return;
             let manual = item.value == this.fanPrograms.manual.key;
             this.log('Fan ' + (manual ? 'manual' : 'automatic') + ' control');
             service.updateCharacteristic(Characteristic.TargetFanState,
