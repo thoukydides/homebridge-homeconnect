@@ -124,10 +124,12 @@ class HomeConnectPlatform {
             let applianceConstructor = {
                 // Cooking appliances
                 CoffeeMaker:    ApplianceCooking.CoffeeMaker,
+                CookProcessor:  ApplianceCooking.CookProcessor,
                 Hob:            ApplianceCooking.Hob,
                 Hood:           ApplianceCooking.Hood,
                 Oven:           ApplianceCooking.Oven,
                 // Cleaning appliances
+                CleaningRobot:  ApplianceCleaning.CleaningRobot,
                 Dishwasher:     ApplianceCleaning.Dishwasher,
                 Dryer:          ApplianceCleaning.Dryer,
                 Washer:         ApplianceCleaning.Washer,
@@ -136,10 +138,7 @@ class HomeConnectPlatform {
                 Freezer:        ApplianceCooling.Freezer,
                 FridgeFreezer:  ApplianceCooling.FridgeFreezer,
                 Refrigerator:   ApplianceCooling.Refrigerator,
-                WineCooler:     ApplianceCooling.WineCooler,
-                // Treat everything else generically for now
-                CleaningRobot:  ApplianceGeneric,
-                CookProcessor:  ApplianceGeneric
+                WineCooler:     ApplianceCooling.WineCooler
             }[ha.type];
             if (!applianceConstructor)
                 return this.log.warn("Appliance type '" + ha.type

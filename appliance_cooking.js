@@ -40,6 +40,23 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
     }
 }
 
+// A Homebridge accessory for a Home Connect cook processor
+module.exports.CookProcessor = class ApplianceCookProcessor
+                             extends ApplianceGeneric {
+    constructor(...args) {
+        super(...args);
+
+        // Customise the appliance as a cook processor
+        this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
+        this.mixin(HasEvents, {
+            'BSH.Common.Event.ProgramFinished':     'program finished',
+            'BSH.Common.Event.ProgramAborted':      'program aborted'
+        });
+        this.mixin(HasRemainingTime);
+        this.mixin(HasOperationError);
+    }
+}
+
 // A Homebridge accessory for a Home Connect hob (cooktop)
 module.exports.Hob = class ApplianceHob extends ApplianceGeneric {
     constructor(...args) {

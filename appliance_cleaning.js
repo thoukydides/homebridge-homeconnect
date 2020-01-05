@@ -11,6 +11,29 @@ const HasPrograms = require('./has_programs.js');
 const HasRemainingTime = require('./has_remainingtime.js');
 const HasRemoteControl = require('./has_remotecontrol.js');
 
+// A Homebridge accessory for a Home Connect cleaning robot (Roxxter)
+module.exports.CleaningRobot = class Appliance CleaningRobot
+                             extends ApplianceGeneric {
+        super(...args);
+
+        // Customise the appliance as a cleaning robot
+        this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
+        this.mixin(HasEvents, {
+            'BSH.Common.Event.ProgramFinished':
+                'program finished',
+            'BSH.Common.Event.ProgramAborted':
+                'program aborted',
+            'ConsumerProducts.CleaningRobot.Event.EmptyDustBoxAndCleanFilter':
+                'dust box full',
+            'ConsumerProducts.CleaningRobot.Event.RobotIsStuck':
+                'stuck',
+            'ConsumerProducts.CleaningRobot.Event.DockingStationNotFound':
+                'lost'
+        });
+        this.mixin(HasOperationError);
+        this.mixin(HasPrograms);
+}
+
 // A Homebridge accessory for a Home Connect dishwasher
 module.exports.Dishwasher = class ApplianceDishwasher extends ApplianceGeneric {
     constructor(...args) {
