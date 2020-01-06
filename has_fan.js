@@ -134,8 +134,7 @@ module.exports = {
         // Add a rotation speed characteristic
         service.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({ minValue: 0, maxValue: 100,
-                        minStep: this.fanLevelsPercentStep,
-                        validValues: this.fanLevels.map(l => l.percent)})
+                        minStep: this.fanLevelsPercentStep })
             .on('set', this.callbackify(
                 value => this.serialise(setFanProxy, { percent: value })));
 
