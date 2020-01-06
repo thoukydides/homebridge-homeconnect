@@ -190,7 +190,8 @@ module.exports = {
         let prevService;
         for (let program of programs) {
             // Log information about this program
-            this.log("    '" + program.name + "' (" + program.key + ')');
+            this.log("    '" + program.name + "' (" + program.key + ')'
+                     + (program.selectonly ? ', select only' : ''));
             let options = program.options || {};
             for (let key of Object.keys(options))
                 this.log('        ' + key + '=' + options[key]);
@@ -235,7 +236,7 @@ module.exports = {
     },
 
     // Add a single program
-    addProgram({name, key, options}) {
+    addProgram({name, key, selectonly, options}) {
         // Add a switch service for this program
         let subtype = 'program ' + name;
         let service =
@@ -243,15 +244,28 @@ module.exports = {
             || this.accessory.addService(Service.Switch,
                                          this.name + ' ' + name, subtype);
 
-        // Start or stop the active program
+        // Either select the program, or start/stop the active program
         service.getCharacteristic(Characteristic.On)
             .on('set', this.callbackify(async value => {
-                if (value) {
-                    this.log("START Program '" + name + "' (" + key + ')');
-                    await this.device.startProgram(key, options);
+                if (selectonly) {
+                    // Select this program and its options
+                    if (value) {
+                        this.log("SELECT Program '" + name + "' (" + key + ')');
+                        await this.device.setSelectedProgram(key, options);
+                        setTimeout(() => {
+                            service.updateCharacteristic(Characteristic.On,
+                                                         false);
+                        }, 0);
+                    }
                 } else {
-                    this.log("STOP Program '" + name + "' (" + key + ')');
-                    await this.device.stopProgram();
+                    // Attempt to start or stop the program
+                    if (value) {
+                        this.log("START Program '" + name + "' (" + key + ')');
+                        await this.device.startProgram(key, options);
+                    } else {
+                        this.log("STOP Program '" + name + "' (" + key + ')');
+                        await this.device.stopProgram();
+                    }
                 }
             }));
 

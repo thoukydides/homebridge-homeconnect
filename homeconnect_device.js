@@ -177,6 +177,27 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
     }
 
+    // Select a program
+    async setSelectedProgram(programKey, options = {}) {
+        try {
+            this.requireRemoteControl();
+            let programOptions = [];
+            for (let key of Object.keys(options)) {
+                programOptions.push({
+                    key:   key,
+                    value: options[key]
+                });
+            }
+            await this.api.setSelectedProgram(this.haId, programKey,
+                                              programOptions);
+            this.update([{ key:   'BSH.Common.Root.SelectedProgram',
+                           value: programKey }]);
+            this.update(programOptions);
+        } catch (err) {
+            throw this.reportError(err, 'SET selected program ' + programKey);
+        }
+    }
+
     // Read the currently active program (if any)
     async getActiveProgram() {
         try {
