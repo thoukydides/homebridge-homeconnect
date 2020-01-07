@@ -4,6 +4,7 @@
 'use strict';
 
 const ApplianceGeneric = require('./appliance_generic.js');
+const HasCooling = require('./has_cooling.js');
 const HasDoor = require('./has_door.js');
 const HasEvents = require('./has_events.js');
 
@@ -21,6 +22,7 @@ module.exports.Freezer = class ApplianceFreezer
             'Refrigeration.FridgeFreezer.Event.TemperatureAlarmFreezer':
                 'freezer temperature alarm'
         });
+        this.mixin(HasCooling);
     }
 }
 
@@ -40,6 +42,7 @@ module.exports.FridgeFreezer = class ApplianceFridgeFreezer
             'Refrigeration.FridgeFreezer.Event.TemperatureAlarmFreezer':
                 'freezer temperature alarm'
         });
+        this.mixin(HasCooling);
     }
 }
 
@@ -55,6 +58,7 @@ module.exports.Refrigerator = class ApplianceRefrigerator
             'Refrigeration.FridgeFreezer.Event.DoorAlarmRefrigerator':
                 'refrigerator door alarm'
         });
+        this.mixin(HasCooling);
     }
 }
 
@@ -66,5 +70,6 @@ module.exports.WineCooler = class ApplianceWineCooler
 
         // Customise the appliance as a wine cooler
         this.mixin(HasDoor);
+        this.mixin(HasCooling);
     }
 }
