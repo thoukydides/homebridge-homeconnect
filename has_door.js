@@ -11,15 +11,17 @@ module.exports = {
         const { OPEN, CLOSED } = Characteristic.CurrentDoorState;
         
         // Add the door state characteristic
-        this.haService.getCharacteristic(Characteristic.CurrentDoorState)
+        this.powerService
+            .addOptionalCharacteristic(Characteristic.CurrentDoorState);
+        this.powerService.getCharacteristic(Characteristic.CurrentDoorState)
             .setProps({ validValues: [OPEN, CLOSED] });
 
         // Update the door status
         this.device.on('BSH.Common.Status.DoorState', item => {
             let isClosed = item.value == 'BSH.Common.EnumType.DoorState.Closed';
             this.log('Door ' + (isClosed ? 'closed' : 'open'));
-            this.haService.updateCharacteristic(Characteristic.CurrentDoorState,
-                                                isClosed ? CLOSED : OPEN);
+            this.powerService.updateCharacteristic(
+                Characteristic.CurrentDoorState, isClosed ? CLOSED : OPEN);
         });
     }
 }

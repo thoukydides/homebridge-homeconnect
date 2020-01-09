@@ -9,7 +9,6 @@ const ApplianceGeneric = require('./appliance_generic.js');
 const ApplianceCleaning = require('./appliance_cleaning.js');
 const ApplianceCooking = require('./appliance_cooking.js');
 const ApplianceCooling = require('./appliance_cooling.js');
-const CustomServices = require('./custom_services.js');
 const NodePersist = require('node-persist');
 const Path = require('path');
 
@@ -42,9 +41,6 @@ class HomeConnectPlatform {
 
         // Shortcuts to useful HAP objects
         UUID = homebridge.hap.uuid;
-
-        // Define custom HomeKit services
-        CustomServices(homebridge.hap);
 
         // Create persistent storage for the authorisation data
         let persistDir = Path.join(homebridge.user.storagePath(), PLUGIN_NAME);

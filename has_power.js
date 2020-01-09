@@ -11,19 +11,8 @@ module.exports = {
         // Shortcuts to useful HAP objects
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
-        
-        // The original implementation only had a single Switch without subtype
-        let switchService = this.accessory.getService(Service.Switch);
-        if (switchService && !switchService.subtype) {
-            this.accessory.removeService(switchService);
-        }
 
         // Add a characteristic for the power state, initially read-only
-        let subtype = 'power';
-        this.powerService =
-            this.accessory.getServiceByUUIDAndSubType(Service.Switch, subtype)
-            || this.accessory.addService(Service.Switch, this.name + ' power',
-                                         subtype);
         this.powerService.getCharacteristic(Characteristic.On)
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.NOTIFY]});

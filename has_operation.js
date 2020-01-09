@@ -5,21 +5,14 @@
 
 // Add operation state to an accessory
 module.exports = {
-    init(removeStatusActive = true) {
+    init() {
         // Shortcuts to useful HAP objects
         const Characteristic = this.homebridge.hap.Characteristic;
 
-        // The original implementation had a StatusActive characteristic
-        if (removeStatusActive) {
-            let characteristic = this.haService.characteristics.find(
-                c => c.UUID == Characteristic.StatusActive.UUID);
-            if (characteristic)
-                this.haService.removeCharacteristic(characteristic);
-        }
-
         // Add a read-only active characteristic
         const { INACTIVE, ACTIVE } = Characteristic.Active;
-        this.haService.getCharacteristic(Characteristic.Active)
+        this.powerService.addOptionalCharacteristic(Characteristic.Active);
+        this.powerService.getCharacteristic(Characteristic.Active)
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.NOTIFY]});
 
@@ -32,8 +25,8 @@ module.exports = {
             ];
             let active = activeStates.includes(item.value)
                          ? ACTIVE : INACTIVE;
-            this.haService.updateCharacteristic(Characteristic.Active, active);
-
+            this.powerService.updateCharacteristic(
+                Characteristic.Active, active);
             this.log(active == ACTIVE ? 'Active' : 'Inactive');
         });
     }

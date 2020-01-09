@@ -10,18 +10,20 @@ module.exports = {
         const Characteristic = this.homebridge.hap.Characteristic;
         
         // Add a progress position
-        this.haService.getCharacteristic(Characteristic.RemainingDuration)
+        this.powerService
+            .addOptionalCharacteristic(Characteristic.RemainingDuration);
+        this.powerService.getCharacteristic(Characteristic.RemainingDuration)
             .setProps({ maxValue: (24 * 60 - 1) * 60 });
         
         // Update the status
         this.device.on('BSH.Common.Option.RemainingProgramTime', item => {
             this.log('Program ' + item.value + ' seconds remaining');
-            this.haService.updateCharacteristic(
+            this.powerService.updateCharacteristic(
                 Characteristic.RemainingDuration, item.value);
         });
         this.device.on('BSH.Common.Event.ProgramFinished', item => {
             this.log('Program finished; 0 seconds remaining');
-            this.haService.updateCharacteristic(
+            this.powerService.updateCharacteristic(
                 Characteristic.RemainingDuration, 0);
         });
         this.device.on('BSH.Common.Status.OperationState', item => {
@@ -32,7 +34,7 @@ module.exports = {
             ];
             if (inactiveStates.includes(item.value)) {
                 this.log('Program inactive; 0 seconds remaining');
-                this.haService.updateCharacteristic(
+                this.powerService.updateCharacteristic(
                     Characteristic.RemainingDuration, 0);
             }
         });

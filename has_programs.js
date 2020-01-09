@@ -202,7 +202,6 @@ module.exports = {
             saved[service.subtype] = program.name;
 
             // Link the program services
-            this.haService.addLinkedService(service);
             if (prevService) prevService.addLinkedService(service);
             prevService = service;
         }
@@ -311,7 +310,7 @@ module.exports = {
     addPauseResume() {
         // Make the (Operation State) Active characteristic writable
         const { INACTIVE, ACTIVE } = Characteristic.Active;
-        this.haService.getCharacteristic(Characteristic.Active)
+        this.powerService.getCharacteristic(Characteristic.Active)
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.WRITE,
                                Characteristic.Perms.NOTIFY]})

@@ -5,13 +5,15 @@
 
 // Add local and remote control state to an accessory
 module.exports = {
-    init(removeStatusActive = true) {
+    init() {
         // Shortcuts to useful HAP objects
         const Characteristic = this.homebridge.hap.Characteristic;
 
         // Use ProgramMode characteristic to indicate local and remote control
         const { NO_PROGRAM_SCHEDULED, PROGRAM_SCHEDULED, PROGRAM_SCHEDULED_MANUAL_MODE_ } = Characteristic.ProgramMode;
-        this.haService.getCharacteristic(Characteristic.ProgramMode);
+        this.powerService
+            .addOptionalCharacteristic(Characteristic.ProgramMode);
+        this.powerService.getCharacteristic(Characteristic.ProgramMode);
 
         // Update the status
         let state = {};
@@ -32,8 +34,8 @@ module.exports = {
                 this.log('Remote control/start allowed');
                 programMode = PROGRAM_SCHEDULED;
             }
-            this.haService.updateCharacteristic(Characteristic.ProgramMode,
-                                                programMode);
+            this.powerService.updateCharacteristic(
+                Characteristic.ProgramMode, programMode);
         };
         this.device.on('BSH.Common.Status.RemoteControlActive',       update);
         this.device.on('BSH.Common.Status.RemoteControlStartAllowed', update);

@@ -6,7 +6,7 @@
 const requestErrors = require('request-promise-native/errors');
 const HasPower = require('./has_power.js');
 
-let Service, Characteristic;
+let Service, Characteristic, UUID;
 
 // A Homebridge accessory for a generic Home Connect home appliance
 module.exports = class ApplianceGeneric {
@@ -27,6 +27,10 @@ module.exports = class ApplianceGeneric {
         // Shortcuts to useful HAP objects
         Service = homebridge.hap.Service;
         Characteristic = homebridge.hap.Characteristic;
+        UUID = homebridge.hap.uuid;
+
+        // Remove any services or characteristics that are no longer required
+        this.cleanup();
 
         // Log errors from the Home Connect API as warnings
         device.on('error', (...args) => this.reportError(...args));
@@ -43,10 +47,11 @@ module.exports = class ApplianceGeneric {
             .setCharacteristic(Characteristic.SerialNumber, device.haId)
             .setCharacteristic(Characteristic.FirmwareRevision, '0');
 
-        // Add a Home Appliance service
-        this.haService =
-            accessory.getService(Service.HomeAppliance)
-            || accessory.addService(Service.HomeAppliance, this.name);
+        // Add a power Switch service to host the appliance's main characteristics
+        let subtype = 'power';
+        this.powerService =
+            this.accessory.getServiceByUUIDAndSubType(Service.Switch, subtype)
+            || this.accessory.addService(Service.Switch, this.name, subtype);
         
         // Update reachability when connection status changes
         device.on('connected', item => {
@@ -56,6 +61,27 @@ module.exports = class ApplianceGeneric {
 
         // All appliances have power state
         this.mixin(HasPower);
+    }
+
+    // Tidy-up after earlier versions of this plugin
+    cleanup() {
+        // The original implementation only had a single Switch without subtype
+        let switchService = this.accessory.getService(Service.Switch);
+        if (switchService && !switchService.subtype) {
+            this.warn('Replacing HomeKit Switch service');
+            this.accessory.removeService(switchService);
+        }
+
+        // A non-standard Home Appliance was used for extra characteristics;
+        // these are now added to the power Switch service instead
+        class HomeAppliance {};
+        HomeAppliance.UUID =
+            UUID.generate('homebridge-homeconnect:Service:HomeAppliance');
+        let homeApplianceService = this.accessory.getService(HomeAppliance);
+        if (homeApplianceService) {
+            this.warn('Removing HomeKit Home Appliance service');
+            this.accessory.removeService(homeApplianceService);
+        }
     }
 
     // The appliance no longer exists so stop updating it
