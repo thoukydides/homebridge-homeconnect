@@ -24,6 +24,9 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.update([{ key: 'connected', value: this.connected }]);
         });
 
+        // Disable warning for more than 10 listeners on an event
+        this.setMaxListeners(0);
+
         // Read information from this appliance when it connects
         this.on('connected', item => { if (item.value) this.onConnected(); });
         
