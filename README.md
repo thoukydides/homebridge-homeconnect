@@ -41,16 +41,21 @@ For more advanced options refer to [Customising Appliance Programs](https://gith
 The functionality supported by this plugin with different appliances types is described in:
 * [Supported Home Connect Functionality](https://github.com/thoukydides/homebridge-homeconnect/wiki/Functionality)
 * [HomeKit Services and Characteristics](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Mapping)
+* [If This Then That (IFTTT) Comparison](https://github.com/thoukydides/homebridge-homeconnect/wiki/IFTTT)
 
 Support for Hood appliances is currently experimental. Please provide feedback (whether good or bad) to [issue #2](https://github.com/thoukydides/homebridge-homeconnect/issues/2).
 
-Oven appliances cannot be controlled due to the required [Home Connect Authorisation Scopes](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being granted.
+Oven appliances cannot be controlled due to the required [Home Connect Authorisation Scopes](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being granted. However, they can be switched on and off, and their operation monitored.
 
-This plugin has only been tested with a Siemens [Dishwasher](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436388) (SN678D06TG/53), [Hob](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436379) (EX677LYV1E/06), and [Oven](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004401572) (HB678GBS6B/58). See [Tested Appliances](https://github.com/thoukydides/homebridge-homeconnect/wiki/Testing).
+This plugin has only been tested by the developer with a Siemens [Dishwasher](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436388) (SN678D06TG/53), [Hob](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436379) (EX677LYV1E/06), and [Oven](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004401572) (HB678GBS6B/58). See [Tested Appliances](https://github.com/thoukydides/homebridge-homeconnect/wiki/Testing).
 
 ## HomeKit Apps
 
 Apple's Home app does not support all of the features of this plugin. Use one of the alternative [Recommended HomeKit Apps](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Apps) instead.
+
+## Changelog
+
+All notable changes to this project will be documented in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
