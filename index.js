@@ -11,6 +11,7 @@ const ApplianceCooking = require('./appliance_cooking.js');
 const ApplianceCooling = require('./appliance_cooling.js');
 const NodePersist = require('node-persist');
 const Path = require('path');
+const fsPromises = require('fs').promises;
 
 let UUID;
 
@@ -42,11 +43,6 @@ class HomeConnectPlatform {
         // Shortcuts to useful HAP objects
         UUID = homebridge.hap.uuid;
 
-        // Create persistent storage for the authorisation data
-        let persistDir = Path.join(homebridge.user.storagePath(), PLUGIN_NAME);
-        this.persist = NodePersist.create({ dir: persistDir });
-        this.persist.initSync();
-
         // Wait for Homebridge to restore cached accessories
         this.homebridge.on('didFinishLaunching',
                            () => this.finishedLaunching());
@@ -59,7 +55,7 @@ class HomeConnectPlatform {
     }
 
     // Update list of Home Connect appliances after cache has been restored
-    finishedLaunching() {
+    async finishedLaunching() {
         let restored = Object.keys(this.accessories).length;
         if (restored) {
             this.log('Restored ' + Object.keys(this.accessories).length
@@ -77,15 +73,35 @@ class HomeConnectPlatform {
                                   + " is missing 'clientid' property");
         }
 
+        // Create persistent storage for this plugin
+        let persistDir = Path.join(this.homebridge.user.storagePath(),
+                                   PLUGIN_NAME, 'persist');
+        this.persist = NodePersist.create({ dir: persistDir });
+        await this.persist.init();
+
+        // Retrieve any saved authorisation token
+        let savedToken = await this.persist.getItem('token');
+        if (!savedToken) {
+            try {
+                // Attempt to load any old auth data saved by node-persist 0.0.8
+                let tokenFile = Path.join(this.homebridge.user.storagePath(),
+                                          PLUGIN_NAME, 'token');
+                let data = await fsPromises.readFile(tokenFile);
+                savedToken = JSON.parse(data);
+                this.log.warn('Old format authorsation data retrieved');
+            } catch (err) {}
+            if (!savedToken) this.log.warn('No saved authorisation data found');
+        }
+
         // Connect to the Home Connect cloud
         this.homeconnect = new HomeConnectAPI(
             msg => this.log.debug(msg),
             // User options from config.json
             this.config['clientid'], this.config['simulator'],
             // Saved access and refresh tokens
-            this.persist.getItem('token')
-        ).on('auth_save', token => {
-            this.persist.setItemSync('token', token);
+            savedToken
+        ).on('auth_save', async token => {
+            await this.persist.setItem('token', token);
             this.log('Home Connect authorisation token saved');
         }).on('auth_uri', msg => {
             this.log.error('Home Connect authorisation required: ' + msg);
