@@ -95,7 +95,6 @@ module.exports = {
                     }))
                 }
             };
-            this.log(JSON.stringify(programs, null, 4));
             this.log(programs.length + ' of ' + allPrograms.length
                      + ' programs available\n' + JSON.stringify(json, null, 4));
             let missing = allPrograms.length - programs.length;
@@ -325,8 +324,8 @@ module.exports = {
 
     // HomeKit restricts the characters allowed in names
     simplifyProgramName(name) {
-        return name.replace(/[^-a-z0-9.' ]/ig, '')
-                   .replace(/^\W/, '')
-                   .replace(/\W$/, '');
+        return name.replace(/[^\p{L}\p{N}.' -]/ug, '')
+                   .replace(/^[^\p{L}\p{N}]*/u, '')
+                   .replace(/[^\p{L}\p{N}]*$/u, '');
     }
 }

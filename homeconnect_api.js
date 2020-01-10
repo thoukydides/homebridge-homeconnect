@@ -26,9 +26,6 @@ const SCOPES_LIVE = [...SCOPES, 'CookProcessor-Control',
                      'FridgeFreezer-Control'];
 const SCOPES_SIMULATOR = SCOPES;
 
-// Language to request for localized assets
-const LANGUAGE = 'en-GB';
-
 // Expanded help text for problems with the Client ID
 const CLIENT_HELP_PREFIX1 = 'Unable to authorise Home Connect application; ';
 const CLIENT_HELP_PREFIX2 = '. Visit https://developer.home-connect.com/applications to ';
@@ -56,21 +53,22 @@ const MS = 1000;
 module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Create a new API object
-    constructor(log, clientID, simulator, savedAuth) {
+    constructor(options) {
         super();
         
         // Store the options, applying defaults for missing options
-        this.clientID = clientID;
-        this.simulator = simulator || false;
-        this.savedAuth = savedAuth || {};
+        this.clientID  = options.clientID;
+        this.simulator = options.simulator || false;
+        this.savedAuth = options.savedAuth || {};
+        this.language  = options.language  || 'en-GB';
 
         // Logging
-        this.log = log || console.log;
+        this.log = options.log || console.log;
         this.requestCount = 0;
 
         // Select the appropriate API and scopes
-        this.url    = simulator ? URL_SIMULATOR    : URL_LIVE;
-        this.scopes = simulator ? SCOPES_SIMULATOR : SCOPES_LIVE;
+        this.url    = options.simulator ? URL_SIMULATOR    : URL_LIVE;
+        this.scopes = options.simulator ? SCOPES_SIMULATOR : SCOPES_LIVE;
 
         // Pending promises
         this.authResolve = [];
@@ -504,7 +502,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             headers: {
                 accept:             'application/vnd.bsh.sdk.v1+json',
                 'content-type':     'application/vnd.bsh.sdk.v1+json',
-                'accept-language':  LANGUAGE
+                'accept-language':  this.language
             }
         };
         if (haid) options.url += '/' + haid + (path || '');
@@ -654,7 +652,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             json:       true,
             headers: {
                 accept:             'text/event-stream',
-                'accept-language':  LANGUAGE
+                'accept-language':  this.language
             }
         };
 

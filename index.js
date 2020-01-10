@@ -94,13 +94,15 @@ class HomeConnectPlatform {
         }
 
         // Connect to the Home Connect cloud
-        this.homeconnect = new HomeConnectAPI(
-            msg => this.log.debug(msg),
+        this.homeconnect = new HomeConnectAPI({
+            log:        msg => this.log.debug(msg),
             // User options from config.json
-            this.config['clientid'], this.config['simulator'],
+            clientID:   this.config.clientid,
+            simulator:  this.config.simulator,
+            language:   (this.config.language || {}).api,
             // Saved access and refresh tokens
-            savedToken
-        ).on('auth_save', async token => {
+            savedAuth:  savedToken
+        }).on('auth_save', async token => {
             await this.persist.setItem('token', token);
             this.log('Home Connect authorisation token saved');
         }).on('auth_uri', msg => {
