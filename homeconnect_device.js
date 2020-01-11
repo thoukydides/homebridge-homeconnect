@@ -112,6 +112,12 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.update([item]);
             return item;
         } catch (err) {
+            let key = (((err.response || {}).body || {}).error || {}).key;
+            if (key == 'SDK.Error.UnsupportedSetting'
+                || key == 'SDK.Simulator.InternalError') {
+                // Suppress error when the setting is unsupported
+                return null;
+            }
             throw this.reportError(err, 'GET ' + settingKey);
         }
     }

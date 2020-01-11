@@ -130,23 +130,8 @@ module.exports = class ApplianceGeneric {
 
             // Attempt the query
             try {
-
                 return await operation();
-
             } catch (err) {
-
-                // Whitelist some errors returned by the server
-                const whitelist = [
-                    'SDK.Error.UnsupportedSetting',
-                    'SDK.Simulator.InternalError'
-                ];
-                let key = ((((err.response || {}).body || {}).error) || {}).key;
-                if (whitelist.includes(key)) {
-                    this.warn('Ignoring ' + key + ' error');
-                    return null;
-                }
-
-                // Otherwise ignore the error and try again
                 this.warn('Will retry when next connected: ' + err.message);
             }
 
