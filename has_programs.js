@@ -83,16 +83,22 @@ module.exports = {
             // Log details of each program
             let json = {
                 [this.device.haId]: {
-                    programs:       programs.map(program => ({
-                        name:       this.simplifyProgramName(program.name),
-                        key:        program.key,
-                        options:    program.options.reduce((result, option) => {
-                            let [value, comment] = optionValue(option);
-                            result[option.key] = value;
-                            if (comment) result['_' + option.key] = comment;
-                            return result;
-                        }, {})
-                    }))
+                    programs:       programs.map(program => {
+                        let config = {
+                            name:   this.simplifyProgramName(program.name),
+                            key:    program.key
+                        };
+                        if (this.device.hasScope('Control')) {
+                            config.options = {};
+                            for (let option of program.options) {
+                                let [value, comment] = optionValue(option);
+                                config.options[option.key] = value;
+                                if (comment)
+                                    config.options['_' + option.key] = comment;
+                            }
+                        }
+                        return config;
+                    })
                 }
             };
             this.log(programs.length + ' of ' + allPrograms.length
