@@ -112,7 +112,7 @@ module.exports = class ApplianceGeneric {
         // HERE - Need to make unique per accessory!
         let persistKey = this.device.haId + ' cache ' + key
         let value = await this.persist.getItem(persistKey);
-        if (value !== undefined) return cached;
+        if (value !== undefined) return value;
 
         // Perform the operation and cache the result
         value = await this.getUncached(operation);
@@ -137,7 +137,6 @@ module.exports = class ApplianceGeneric {
 
                 // Whitelist some errors returned by the server
                 const whitelist = [
-                    'BSH.Common.Error.InvalidUIDValue',
                     'SDK.Error.UnsupportedSetting',
                     'SDK.Simulator.InternalError'
                 ];

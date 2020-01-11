@@ -138,6 +138,11 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             }
             return programs;
         } catch (err) {
+            if ((((err.response || {}).body || {}).error || {}).key
+                == 'BSH.Common.Error.InvalidUIDValue') {
+                // Incorrectly returned by Thermador Oven PRD486WDHU/01
+                return [];
+            }
             throw this.reportError(err, 'GET programs');
         }
     }
