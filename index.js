@@ -180,6 +180,7 @@ class HomeConnectPlatform {
             let deviceConfig = this.config[ha.haId] || {};
             accessory.appliance =
                 new applianceConstructor(this.log, this.homebridge,
+                                         this.persist,
                                          device, accessory, deviceConfig);
         });
         this.homebridge.registerPlatformAccessories(

@@ -8,13 +8,17 @@ const HasPower = require('./has_power.js');
 
 let Service, Characteristic, UUID;
 
+// Length of time to cache API responses
+const CACHE_TTL = 24 * 60 * 60 * 1000; // (24 hours in milliseconds)
+
 // A Homebridge accessory for a generic Home Connect home appliance
 module.exports = class ApplianceGeneric {
 
     // Initialise an appliance
-    constructor(log, homebridge, device, accessory, config) {
+    constructor(log, homebridge, persist, device, accessory, config) {
         this.logRaw       = log;
         this.homebridge   = homebridge;
+        this.persist      = persist;
         this.device       = device;
         this.accessory    = accessory;
         this.name         = accessory.displayName;
@@ -65,6 +69,9 @@ module.exports = class ApplianceGeneric {
 
     // Tidy-up after earlier versions of this plugin
     cleanup() {
+        // Response cache has been moved from the accessory to node-persist
+        delete this.accessory.context.cache;
+
         // The original implementation only had a single Switch without subtype
         let switchService = this.accessory.getService(Service.Switch);
         if (switchService && !switchService.subtype) {
@@ -102,13 +109,15 @@ module.exports = class ApplianceGeneric {
     // Query the appliance when connected and cache the result
     async getCached(key, operation) {
         // Use a cached result if possible
-        let cache = this.accessory.context.cache;
-        if (!cache) cache = this.accessory.context.cache = {};
-        if (key in cache) return cache[key];
+        // HERE - Need to make unique per accessory!
+        let persistKey = this.device.haId + ' cache ' + key
+        let value = await this.persist.getItem(persistKey);
+        if (value !== undefined) return cached;
 
         // Perform the operation and cache the result
-        cache[key] = await this.getUncached(operation);
-        return cache[key];
+        value = await this.getUncached(operation);
+        await this.persist.setItem(persistKey, value, { ttl: CACHE_TTL });
+        return value;
     }
 
     // Query the appliance when connected
