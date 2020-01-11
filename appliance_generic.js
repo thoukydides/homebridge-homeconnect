@@ -51,7 +51,7 @@ module.exports = class ApplianceGeneric {
             .setCharacteristic(Characteristic.SerialNumber, device.haId)
             .setCharacteristic(Characteristic.FirmwareRevision, '0');
 
-        // Add a power Switch service to host the appliance's main characteristics
+        // Add power Switch service to host the appliance's main characteristics
         let subtype = 'power';
         this.powerService =
             this.accessory.getServiceByUUIDAndSubType(Service.Switch, subtype)
