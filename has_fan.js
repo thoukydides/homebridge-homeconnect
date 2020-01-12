@@ -12,6 +12,9 @@ module.exports = {
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
 
+        // Enable polling of selected/active programs when connected
+        this.device.pollPrograms();
+
         // Read the fan program details
         this.getFanPrograms();
     },
