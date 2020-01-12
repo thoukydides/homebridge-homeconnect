@@ -55,5 +55,15 @@
         "request": "^2.88.0",
         "request-promise-native": "^1.0.8",
         "url": "^0.11.0"
-    }
+    },
+    "devDependencies": {
+        "pre-commit": "^1.2.2"
+    },
+    "scripts": {
+        "make-schema": "node config_schema.js",
+        "prepare": "npm run make-schema"
+    },
+    "pre-commit": [
+        "make-schema"
+    ]
 }

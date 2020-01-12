@@ -9,6 +9,7 @@ const ApplianceGeneric = require('./appliance_generic.js');
 const ApplianceCleaning = require('./appliance_cleaning.js');
 const ApplianceCooking = require('./appliance_cooking.js');
 const ApplianceCooling = require('./appliance_cooling.js');
+const ConfigSchema = require('./config_schema.js');
 const NodePersist = require('node-persist');
 const Path = require('path');
 const fsPromises = require('fs').promises;
@@ -93,6 +94,9 @@ class HomeConnectPlatform {
             if (!savedToken) this.log.warn('No saved authorisation data found');
         }
 
+        // Prepare a configuration schema
+        this.schema = new ConfigSchema(this.log, this.persist);
+
         // Connect to the Home Connect cloud
         this.homeconnect = new HomeConnectAPI({
             log:        msg => this.log.debug(msg),
@@ -103,10 +107,12 @@ class HomeConnectPlatform {
             // Saved access and refresh tokens
             savedAuth:  savedToken
         }).on('auth_save', async token => {
+            this.schema.setAuthorised();
             await this.persist.setItem('token', token);
             this.log('Home Connect authorisation token saved');
-        }).on('auth_uri', msg => {
-            this.log.error('Home Connect authorisation required: ' + msg);
+        }).on('auth_uri', uri => {
+            this.schema.setAuthorisationURI(uri);
+            this.log.error('Home Connect authorisation required: ' + uri);
         });
 
         // Obtain a list of Home Connect home appliances
@@ -120,7 +126,7 @@ class HomeConnectPlatform {
                 await this.homeconnect.waitUntilAuthorised();
                 let appliances = await this.homeconnect.getAppliances();
                 this.log.debug('Found ' + appliances.length + ' appliances');
-                this.addRemoveAccessories(appliances);
+                await this.addRemoveAccessories(appliances);
             } catch (err) {
                 this.log.error('Failed to read list of'
                                + ' home appliances: ' + err);
@@ -130,7 +136,10 @@ class HomeConnectPlatform {
     }
 
     // Add or remove accessories to match the available appliances
-    addRemoveAccessories(appliances) {
+    async addRemoveAccessories(appliances) {
+        // Update the configuration schema
+        await this.schema.setAppliances(appliances);
+
         // Add a Homebridge accessory for each new appliance
         let newAccessories = [];
         appliances.forEach(ha => {
@@ -179,9 +188,10 @@ class HomeConnectPlatform {
                 msg => this.log.debug(msg), this.homeconnect, ha);
             let deviceConfig = this.config[ha.haId] || {};
             accessory.appliance =
-                new applianceConstructor(this.log, this.homebridge,
-                                         this.persist,
-                                         device, accessory, deviceConfig);
+                new applianceConstructor(
+                    this.log, this.homebridge, this.persist,
+                    this.schema.getAppliance(ha.haId),
+                    device, accessory, deviceConfig);
         });
         this.homebridge.registerPlatformAccessories(
             PLUGIN_NAME, PLATFORM_NAME, newAccessories);

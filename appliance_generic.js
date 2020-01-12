@@ -15,10 +15,11 @@ const CACHE_TTL = 24 * 60 * 60 * 1000; // (24 hours in milliseconds)
 module.exports = class ApplianceGeneric {
 
     // Initialise an appliance
-    constructor(log, homebridge, persist, device, accessory, config) {
+    constructor(log, homebridge, persist, schema, device, accessory, config) {
         this.logRaw       = log;
         this.homebridge   = homebridge;
         this.persist      = persist;
+        this.schema       = schema;
         this.device       = device;
         this.accessory    = accessory;
         this.name         = accessory.displayName;

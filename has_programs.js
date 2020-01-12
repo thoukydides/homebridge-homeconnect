@@ -20,14 +20,7 @@ module.exports = {
         this.accessory.on('identify', () => this.logPrograms());
 
         // Add services to monitor or control programs
-        let config = this.config.programs;
-        if (config && Array.isArray(config)) {
-            // Add the programs specified in the configuration file
-            this.addConfiguredPrograms(config);
-        } else {
-            // Add a service for each program supported by the appliance
-            this.addAllPrograms();
-        }
+        this.addProgramsIfSupported();
 
         // Add pause and resume if supported by the appliance
         this.addPauseResumeIfSupported();
@@ -39,6 +32,10 @@ module.exports = {
             // Read details of the available programs
             let allPrograms = await this.device.getAllPrograms();
             let programs = await this.device.getAvailablePrograms();
+
+            // Update the configuration schema
+            this.setSchemaPrograms(allPrograms);
+            for (let program of programs) this.setSchemaProgramOptions(program);
 
             // Convert an option into a form that can be used in config.json
             function optionValue(option) {
@@ -111,32 +108,38 @@ module.exports = {
         }
     },
 
-    // Add a service for each program supported by the appliance
-    async addAllPrograms() {
+    // Add services to monitor or control programs
+    async addProgramsIfSupported() {
         // Obtain a list of all programs
-        let allPrograms = await this.getCached('programs',
-                                            () => this.device.getAllPrograms());
+        let allPrograms = await this.getCached(
+            'programs', () => this.device.getAllPrograms());
         if (!allPrograms || !allPrograms.length) {
             this.warn('Does not support any programs');
             allPrograms = [];
         }
 
-        // Convert to the configuration format
-        let config = allPrograms.map(program => ({
-            name:   this.simplifyProgramName(program.name),
-            key:    program.key
-        }));
+        // Update the configuration schema
+        this.setSchemaPrograms(allPrograms);
 
-        // Add a service for each supported program
-        this.addPrograms(config);
+        // Add the appropriate services
+        let config = this.config.programs;
+        if (config && Array.isArray(config)) {
+            // Add the programs specified in the configuration file
+            this.addConfiguredPrograms(allPrograms, config);
+        } else {
+            // Convert to the configuration format
+            let config = allPrograms.map(program => ({
+                name:   this.simplifyProgramName(program.name),
+                key:    program.key
+            }));
+
+            // Add a service for each supported program
+            this.addPrograms(config);
+        }
     },
 
     // Add the programs specified in the configuration file
-    async addConfiguredPrograms(config) {
-        // Obtain a list of all programs
-        let allPrograms = await this.getCached('programs',
-                                            () => this.device.getAllPrograms());
-
+    async addConfiguredPrograms(allPrograms, config) {
         // Perform some validation of the configuration
         let names = [];
         config = config.filter(program => {
@@ -326,6 +329,66 @@ module.exports = {
             }));
 
         // Status update is performed by the normal Operation State handler
+    },
+
+    // Update the configuration schema with the latest program list
+    setSchemaPrograms(allPrograms) {
+        this.schema.setPrograms(allPrograms.map(program => ({
+            name:   this.makeName(program.name, program.key),
+            key:    program.key
+        })));
+    },
+
+    // Update the configuration schema with the options for a single program
+    setSchemaProgramOptions(program) {
+        this.schema.setProgramOptions(
+            program.key, program.options.map(option => {
+                // Common mappings from Home Connect to JSON schema
+                let schema = {
+                    key:    option.key,
+                    name:   this.makeName(option.name, option.key)
+                };
+                let constraints = option.constraints || {};
+                if ('min' in constraints) schema.minimum = constraints.min;
+                if ('max' in constraints) schema.maximum = constraints.max;
+                if (constraints.stepsize) {
+                    schema.multipleOf = constraints.stepsize;
+                }
+                if (option.unit && option.unit != 'enum') {
+                    schema.suffix = option.unit;
+                }
+                if ('default' in constraints) {
+                    schema['default'] = constraints['default'];
+                }
+
+                // Type-specific mappings
+                schema.type = {
+                    Double:     'number',
+                    Int:        'integer',
+                    Boolean:    'boolean'
+                }[option.type];
+                if (!schema.type) schema.type = 'string';
+
+                // Construct a mapping for enum and boolean types
+                if (constraints.allowedvalues) {
+                    let keys = constraints.allowedvalues;
+                    let names = constraints.displayvalues || [];
+                    schema.values = keys.map((key, i) => ({
+                        key:    key,
+                        name:   this.makeName(names[i], key)
+                    }));
+                }
+
+                // Return the mapped option
+                return schema;
+            }));
+    },
+
+    // Select a name for a program or an option
+    makeName(name, key) {
+        if (name) return name;
+        let parsed = /[^\.]*$/.exec(key);
+        return parsed ? parsed[0] : key;
     },
 
     // HomeKit restricts the characters allowed in names
