@@ -73,11 +73,32 @@ module.exports = class ApplianceGeneric {
         // Response cache has been moved from the accessory to node-persist
         delete this.accessory.context.cache;
 
-        // The original implementation only had a single Switch without subtype
+        // Versions before 0.4.0 had a single Switch without subtype
         let switchService = this.accessory.getService(Service.Switch);
         if (switchService && !switchService.subtype) {
             this.warn('Replacing HomeKit Switch service');
             this.accessory.removeService(switchService);
+        }
+
+        // Version 0.13.0 had extra characteristics on its 'power' Switch
+        let powerService =
+            this.accessory.getServiceByUUIDAndSubType(Service.Switch, 'power');
+        if (powerService) {
+             const obsoleteCharacteristics = [
+                Characteristic.Active,
+                Characteristic.StatusActive,
+                Characteristic.StatusFault,
+                Characteristic.RemainingDuration
+            ];
+            let removeCharacteristics = obsoleteCharacteristics
+                .filter(c => powerService.testCharacteristic(c))
+                .map(c => powerService.getCharacteristic(c));
+            if (removeCharacteristics.length) {
+                this.warn('Removing ' + removeCharacteristics.length
+                          + ' characteristics from HomeKit Switch');
+                for (let characteristic of removeCharacteristics)
+                    powerService.removeCharacteristic(characteristic);
+            }
         }
 
         // A non-standard Home Appliance was used for extra characteristics;

@@ -12,6 +12,11 @@ module.exports = {
         Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
 
+        // Add a fan (v2) service
+        this.activeService =
+            service = this.accessory.getService(Service.Fanv2)
+            || this.accessory.addService(Service.Fanv2, this.name + ' fan');
+
         // Enable polling of selected/active programs when connected
         this.device.pollPrograms();
 
@@ -96,9 +101,7 @@ module.exports = {
 
     // Add a fan
     addFan() {
-        // Add a fan (v2) service
-        let service = this.accessory.getService(Service.Fanv2)
-            || this.accessory.addService(Service.Fanv2, this.name + ' fan');
+        let service = this.activeService;
 
         // Control the fan, reading missing parameters from the characteristics
         const { INACTIVE: OFF, ACTIVE }       = Characteristic.Active;

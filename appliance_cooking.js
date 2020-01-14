@@ -8,8 +8,7 @@ const HasDoor = require('./has_door.js');
 const HasEvents = require('./has_events.js');
 const HasFan = require('./has_fan.js');
 const HasLight = require('./has_light.js');
-const HasOperation = require('./has_operation.js');
-const HasOperationError = require('./has_operationerror.js');
+const HasActive = require('./has_active.js');
 const HasPrograms = require('./has_programs.js');
 const HasRemainingTime = require('./has_remainingtime.js');
 const HasRemoteControl = require('./has_remotecontrol.js');
@@ -23,6 +22,7 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         super(...args);
 
         // Customise the appliance as a coffee maker
+        this.mixin(HasActive);
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty':
@@ -33,7 +33,6 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
                 'drip tray full'
         });
         this.mixin(HasRemainingTime);
-        this.mixin(HasOperationError);
         this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }
@@ -46,12 +45,12 @@ module.exports.CookProcessor = class ApplianceCookProcessor
         super(...args);
 
         // Customise the appliance as a cook processor
+        this.mixin(HasActive);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',
             'BSH.Common.Event.ProgramAborted':      'program aborted'
         });
         this.mixin(HasRemainingTime);
-        this.mixin(HasOperationError);
     }
 }
 
@@ -63,12 +62,12 @@ module.exports.Hob = class ApplianceHob
 
         // Customise the appliance as a hob (cooktop)
         // (Home Connect requires local power control of hobs)
+        this.mixin(HasActive);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',
             'BSH.Common.Event.AlarmClockElapsed':   'timer finished',
             'Cooking.Oven.Event.PreheatFinished':   'preheat finished'
         });
-        this.mixin(HasOperationError);
         this.mixin(HasRemoteControl);
     }
 }
@@ -90,7 +89,6 @@ module.exports.Hood = class ApplianceHood
         this.mixin(HasRemainingTime);
         this.mixin(HasFan);
         this.mixin(HasLight);
-        this.mixin(HasOperation);
         this.mixin(HasRemoteControl);
     }
 }
@@ -102,6 +100,7 @@ module.exports.Oven = class ApplianceOven
         super(...args);
 
         // Customise the appliance as an oven
+        this.mixin(HasActive);
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',
@@ -110,7 +109,6 @@ module.exports.Oven = class ApplianceOven
             'Cooking.Oven.Event.PreheatFinished':   'preheat finished'
         });
         this.mixin(HasRemainingTime);
-        this.mixin(HasOperationError);
         this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }

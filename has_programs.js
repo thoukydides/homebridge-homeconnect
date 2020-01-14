@@ -210,6 +210,7 @@ module.exports = {
             saved[service.subtype] = program.name;
 
             // Link the program services
+            this.activeService.addLinkedService(service);
             if (prevService) prevService.addLinkedService(service);
             prevService = service;
         }
@@ -316,16 +317,14 @@ module.exports = {
 
     // Add the ability to pause and resume programs
     addPauseResume() {
-        // Make the (Operation State) Active characteristic writable
-        const { INACTIVE, ACTIVE } = Characteristic.Active;
-        this.powerService.getCharacteristic(Characteristic.Active)
+        // Make the (Operation State) active On characteristic writable
+        this.activeService.getCharacteristic(Characteristic.On)
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.WRITE,
                                Characteristic.Perms.NOTIFY]})
             .on('set', this.callbackify(async value => {
-                let pause = value == INACTIVE;
-                this.log((pause ? 'PAUSE' : 'RESUME') + ' Program');
-                await this.device.pauseProgram(pause);
+                this.log((value ? 'RESUME' : 'PAUSE') + ' Program');
+                await this.device.pauseProgram(!value);
             }));
 
         // Status update is performed by the normal Operation State handler

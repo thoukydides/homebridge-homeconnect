@@ -6,7 +6,7 @@
 const ApplianceGeneric = require('./appliance_generic.js');
 const HasDoor = require('./has_door.js');
 const HasEvents = require('./has_events.js');
-const HasOperationError = require('./has_operationerror.js');
+const HasActive = require('./has_active.js');
 const HasPrograms = require('./has_programs.js');
 const HasRemainingTime = require('./has_remainingtime.js');
 const HasRemoteControl = require('./has_remotecontrol.js');
@@ -18,6 +18,7 @@ module.exports.CleaningRobot = class ApplianceCleaningRobot
         super(...args);
 
         // Customise the appliance as a cleaning robot
+        this.mixin(HasActive);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':
                 'program finished',
@@ -30,7 +31,6 @@ module.exports.CleaningRobot = class ApplianceCleaningRobot
             'ConsumerProducts.CleaningRobot.Event.DockingStationNotFound':
                 'lost'
         });
-        this.mixin(HasOperationError);
         this.mixin(HasPrograms);
     }
 }
@@ -42,13 +42,13 @@ module.exports.Dishwasher = class ApplianceDishwasher
         super(...args);
 
         // Customise the appliance as a dishwasher
+        this.mixin(HasActive);
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',
             'BSH.Common.Event.ProgramAborted':      'program aborted'
         });
         this.mixin(HasRemainingTime);
-        this.mixin(HasOperationError);
         this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }
@@ -60,13 +60,13 @@ class ApplianceWasherDryer extends ApplianceGeneric {
         super(...args);
 
         // Customise the appliance as a washer and/or dryer
+        this.mixin(HasActive);
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished',
             'BSH.Common.Event.ProgramAborted':      'program aborted'
         });
         this.mixin(HasRemainingTime);
-        this.mixin(HasOperationError);
         this.mixin(HasRemoteControl);
         this.mixin(HasPrograms);
     }
