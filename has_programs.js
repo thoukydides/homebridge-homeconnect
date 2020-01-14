@@ -246,11 +246,10 @@ module.exports = {
     // Add a single program
     addProgram({name, key, selectonly, options}) {
         // Add a switch service for this program
-        let subtype = 'program ' + name;
+        let subtype = 'program v2 ' + name;
         let service =
             this.accessory.getServiceByUUIDAndSubType(Service.Switch, subtype)
-            || this.accessory.addService(Service.Switch,
-                                         this.name + ' ' + name, subtype);
+            || this.accessory.addService(Service.Switch, name, subtype);
 
         // Either select the program, or start/stop the active program
         service.getCharacteristic(Characteristic.On)
