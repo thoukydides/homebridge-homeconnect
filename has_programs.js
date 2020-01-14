@@ -384,9 +384,12 @@ module.exports = {
 
     // Select a name for a program or an option
     makeName(name, key) {
+        // Use any existing name unchanged
         if (name) return name;
-        let parsed = /[^\.]*$/.exec(key);
-        return parsed ? parsed[0] : key;
+
+        // Remove any enum prefix and insert spaces to convert from PascalCase
+        return key.replace(/^.*\./g, '')
+                  .replace(/(?=\p{Lu}\p{Ll})|(?<=\p{Ll})(?=\p{Lu})/gu, ' ');
     },
 
     // HomeKit restricts the characters allowed in names
