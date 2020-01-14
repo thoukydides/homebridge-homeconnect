@@ -86,9 +86,9 @@ module.exports.Hood = class ApplianceHood
         this.mixin(HasEvents, {
             'BSH.Common.Event.ProgramFinished':     'program finished'
         });
-        this.mixin(HasRemainingTime);
         this.mixin(HasFan);
         this.mixin(HasLight);
+        this.mixin(HasRemainingTime);
         this.mixin(HasRemoteControl);
     }
 }
