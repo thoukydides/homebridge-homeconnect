@@ -56,7 +56,8 @@ module.exports = class ApplianceGeneric {
         let subtype = 'power';
         this.powerService =
             this.accessory.getServiceByUUIDAndSubType(Service.Switch, subtype)
-            || this.accessory.addService(Service.Switch, this.name, subtype);
+            || this.accessory.addService(Service.Switch, this.name + ' Power',
+                                         subtype);
         
         // Update reachability when connection status changes
         device.on('connected', item => {
