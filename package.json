@@ -61,7 +61,7 @@
     },
     "scripts": {
         "make-schema": "node config_schema.js",
-        "prepare": "npm run make-schema"
+        "prepublishOnly": "npm run make-schema"
     },
     "pre-commit": [
         "make-schema"
