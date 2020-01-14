@@ -17,7 +17,7 @@ module.exports = {
             || this.accessory.addService(Service.Switch,
                                        this.name + ' active program', subtype);
 
-        // Make the switch read-only unless programs can be controlled
+        // Make On characteristic read-only unless programs can be controlled
         this.activeService.getCharacteristic(Characteristic.On)
             .setProps({perms: [Characteristic.Perms.READ,
                                Characteristic.Perms.NOTIFY]});
@@ -31,39 +31,41 @@ module.exports = {
             .addOptionalCharacteristic(Characteristic.StatusFault);
         this.activeService.getCharacteristic(Characteristic.StatusFault);
 
-        // Update the status
+        // Update the HomeKit status when the OperationState changes
         this.device.on('BSH.Common.Status.OperationState', item => {
-            const activeStates = [
-                'BSH.Common.EnumType.OperationState.DelayedStart',
-                'BSH.Common.EnumType.OperationState.Run',
-                'BSH.Common.EnumType.OperationState.Aborting'
-            ];
-            let active = activeStates.includes(item.value);
-            this.activeService.updateCharacteristic(Characteristic.On, active);
+            // Remove the enum prefix from the value
+            let value = item.value.replace(
+                    /^BSH\.Common\.EnumType\.OperationState\./, '');
+            
+            // Map the operation state to the three characteristics
+            let mappedState = {
+                Inactive:       { active: false, status: true,  fault: false },
+                Ready:          { active: false, status: true,  fault: false },
+                DelayedStart:   { active: true,  status: true,  fault: false },
+                Run:            { active: true,  status: true,  fault: false },
+                Pause:          { active: false, status: false, fault: false },
+                ActionRequired: { active: false, status: false, fault: false },
+                Finished:       { active: false, status: true,  fault: false },
+                Error:          { active: false, status: false, fault: true  },
+                Aborting:       { active: true,  status: false, fault: false }
+            }[value];
+            if (!mappedState)
+                throw new Error('Unsupported OperationState: ' + item.value);
 
-            const statusActiveStates = [
-                'BSH.Common.EnumType.OperationState.Inactive',
-                'BSH.Common.EnumType.OperationState.Ready',
-                'BSH.Common.EnumType.OperationState.DelayedStart',
-                'BSH.Common.EnumType.OperationState.Run',
-                'BSH.Common.EnumType.OperationState.Finished'
-            ];
-            let statusActive = statusActiveStates.includes(item.value);
-            this.activeService.updateCharacteristic(Characteristic.StatusActive,
-                                                statusActive);
+            // Update the characteristics
+            this.activeService.updateCharacteristic(
+                Characteristic.On, mappedState.active);
+            this.activeService.updateCharacteristic(
+                Characteristic.StatusActive, mappedState.status);
+            this.activeService.updateCharacteristic(
+                Characteristic.StatusFault,
+                mappedState.fault ? GENERAL_FAULT : NO_FAULT);
 
-            let errorStates = [
-                'BSH.Common.EnumType.OperationState.Error'
-            ];
-            let statusFault = errorStates.includes(item.value)
-                              ? GENERAL_FAULT : NO_FAULT;
-            if (statusFault != NO_FAULT) msg += ', in error state';
-            this.activeService.updateCharacteristic(Characteristic.StatusFault,
-                                                statusFault);
-
-            this.log((statusActive ? 'Normal operation' : 'Attention required')
-                     + (active ? ', active' : ', inactive')
-                     + (statusFault == NO_FAULT ? '' : ', in error state'));
+            // Log the status
+            this.log((mappedState.active ? 'Active' : 'Inactive')
+                     + (mappedState.status ? '' : ', attention required')
+                     + (mappedState.fault ? ', in error state' : '')
+                     + ' (' + value + ')');
         });
 
         // Indicate an error if the device is disconnected
