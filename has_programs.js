@@ -140,6 +140,13 @@ module.exports = {
 
     // Add the programs specified in the configuration file
     async addConfiguredPrograms(allPrograms, config) {
+        // Treat a single invalid entry as being an empty array
+        // (workaround for homebridge-config-ui-x / angular6-json-schema-form)
+        if (config.length == 1 && !config[0].name && !config[0].key) {
+            this.warn('Invalid programs array, written by homebridge-config-ui-x; treating as empty');
+            config = [];
+        }
+
         // Perform some validation of the configuration
         let names = [];
         config = config.filter(program => {

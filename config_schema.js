@@ -220,6 +220,7 @@ class ConfigSchema {
             helpvalue:  appliance.brand + ' ' + appliance.type
                         + ' (E-Nr: ' + appliance.enumber + ')'
         }];
+        let code = '';
 
         // Add any programs supported by the appliance
         let programs = appliance.programs;
@@ -233,11 +234,10 @@ class ConfigSchema {
             let programForm = [{
                 key:            keyArrayPrefix + '.name',
                 title:          'HomeKit Name',
-                description:    'This is the name that HomeKit will use to identify the program. Keep it short and simple. Avoid use of punctuation. Each program for this appliance must have a unique name.',
                 placeholder:    'e.g. My ' + appliance.type + ' Program'
             },{
-                key:            keyArrayPrefix + '.keyrow',
-                type:           'section',
+                // (a valid array-element key is required for some reason)
+                key:            keyArrayPrefix + '.key',
                 type:           'flex',
                 'flex-flow':    'row',
                 notitle:        true,
@@ -246,50 +246,93 @@ class ConfigSchema {
                     title:          'Action',
                     type:           'select',
                     titleMap: {
-                        false:      'Start',
-                        true:       'Select'
+                        false:      'Start program',
+                        true:       'Select program'
                     }
                 },{
                     key:            keyArrayPrefix + '.key',
-                    title:          'Program'
+                    title:          'Appliance Program'
                 }]
             }];
 
-            // Add per-program options to the form
+            // Add the superset of all program options to the schema
             let optionsSchema = {};
             for (let program of programs) {
-                // Form condition to only show option for this program
-                let formCondition = {
-                    functionBody:
-                        'try { return ' + keyConditionPrefix + '.key == "' + program.key + '"; } catch (err) { return false; }'
-                };
-
-                // Process each of the program's options
                 for (let option of program.options || []) {
-                    // Update the schema for this option
-                    optionsSchema[option.key] = {
-                        type:   option.type
-                    };
+                    let optionSchema = optionsSchema[option.key];
+                    if (!optionSchema) {
+                        optionSchema = optionsSchema[option.key] = {
+                            type:   option.type
+                        };
+                    }
 
-                    // Add a form item to customise the schema
+                    // Range limit for numeric types
+                    if ('minimum' in option) {
+                        let min = [option.minimum];
+                        if ('minimum' in optionSchema)
+                            min.push(optionSchema.minimum);
+                        optionSchema.minimum = Math.min(...min);
+                    }
+                    if ('maximum' in option) {
+                        let max = [option.maximum];
+                        if ('maximum' in optionSchema)
+                            max.push(optionSchema.maximum);
+                        optionSchema.maximum = Math.max(...max);
+                    }
+
+                    // Allowed values for enum types
+                    if (option.values) {
+                        let keys = optionSchema['enum'] || [];
+                        for (let mapping of option.values) {
+                            if (!keys.includes(mapping.key))
+                                keys.push(mapping.key);
+                        }
+                        optionSchema['enum'] = keys;
+                    }
+                }
+            }
+
+            // Add per-program options to the form
+            for (let program of programs) {
+                let programCondition = keyConditionPrefix
+                                       + '.key == "' + program.key + '"';
+
+                // Add form items to customise the schema for this program
+                for (let option of program.options || []) {
                     let schemaKey =
                         keyArrayPrefix + ".options.['" + option.key + "']";
                     let formOption = {
                         key:        schemaKey,
                         title:      option.name,
-                        condition:  formCondition
+                        condition:  {
+                            functionBody: 'try { return ' + programCondition
+                                          + '; } catch (err) { return false; }'
+                        }
                     }
+
+                    // Range limit and units for numeric types
                     for (let key of ['minimum', 'maximum', 'multipleOf']) {
-                        if (option[key]) formOption[key] = option[key];
+                        if (option[key]) {
+                            formOption[key] = option[key];
+                            formOption.type = 'number';
+                        }
                     }
                     if (option.suffix) {
                         formOption.fieldAddonRight = '&nbsp;' + option.suffix;
                     }
+
+                    // Allowed values for enum types
                     if (option.values) {
                         formOption.titleMap = {};
                         for (let mapping of option.values) {
                             formOption.titleMap[mapping.key] = mapping.name;
                         }
+                    }
+                    if ('minimum' in option && 'maximum' in option) {
+                        formOption.description =
+                            'Supported range: '
+                            + option.minimum + ' to ' + option.maximum
+                            + (option.suffix ? ' ' + option.suffix : '');
                     }
                     if ('default' in option) {
                         let value = option['default'];
@@ -298,25 +341,61 @@ class ConfigSchema {
                     }
                     programForm.push(formOption);
                 }
+
+                // Add form items to remove options unsupported by this program
+                let supported = program.options.map(option => option.key);
+                let unsupported = Object.keys(optionsSchema)
+                                       .filter(key => !supported.includes(key));
+                if (unsupported.length) {
+                    programForm.push({
+                        key:        keyArrayPrefix + ".options.['"
+                                    + unsupported[0] + "']",
+                        condition: {
+                            functionBody: 'try { if (' + programCondition + ') { let options = ' + keyConditionPrefix + '.options;' + unsupported.map(key => ' delete options["' + key + '"];').join('') + ' } } catch (err) {} return false;'
+                        }
+                    });
+                }
             }
+
+            // Add a choice of how to handle programs to the schema
+            schema.addprograms = {
+                type:       'string',
+                oneOf: [{
+                    title:      'No individual program switches',
+                    'const':    'none'
+                },{
+                    title:      'A switch to start each ' + appliance.name
+                                + ' program',
+                    'const':    'auto'
+                },{
+                    title:      'Custom list of programs and options',
+                    'const':    'custom'
+                }],
+                'default':  'auto',
+                required:   true
+            };
 
             // Add an array of programs to the schema
             schema.programs = {
-                type:       'array',
+                type:           'array',
+                uniqueItems:    true,
                 items: {
-                    type:   'object',
+                    type:       'object',
                     properties: {
                         name: {
                             type:       'string',
+                            minLength:  1,
                             required:   true
                         },
                         key: {
                             type:       'string',
+                            minLength:  1,
                             oneOf:      programs.map(program => ({
                                 title:      program.name,
                                 'const':    program.key
                             })),
-                            required:   true
+                            required:   true,
+                            'default':  programs[0].key
                         },
                         selectonly: {
                             type:       'boolean',
@@ -330,11 +409,37 @@ class ConfigSchema {
                     }
                 }
             };
+            let modelPrefix = 'model["' + keyPrefix + '"]';
+            let programListCondition = {
+                functionBody: 'try { return ' + modelPrefix + '.addprograms == "custom"; } catch (err) { return true; }'
+            };
             form.push({
-                key:        keyPrefix + ".programs",
-                notitle:    true,
-                startEmpty: true,
-                items:      programForm
+                key:            keyPrefix + '.addprograms',
+                title:          'Program Switches',
+                description:    'A separate Switch service can be created for individual appliance programs. These indicate which program is running, and (if allowed) can be used to select options and start a specific program.'
+            },{
+                type:           'help',
+                helpvalue:      'Each program for this appliance must be assigned a unique HomeKit Name. Keep it short and avoid punctuation.<p>The same appliance program may be used multiple times with different options.',
+                condition:      programListCondition
+            },{
+                key:            keyPrefix + '.programs',
+                notitle:        true,
+                startEmpty:     true,
+                items:          programForm,
+                condition:      programListCondition
+            });
+
+            // Delete the programs member or set an empty array if appropriate
+            // (workaround homebridge-config-ui-x / angular6-json-schema-form)
+            code += 'switch (' + modelPrefix + '.addprograms) {'
+                + 'case "none": ' + modelPrefix + '.programs = [];   break;'
+                + 'case "auto": delete ' + modelPrefix + '.programs; break;'
+                + '}';
+        } else {
+            // This appliance does not support any programs
+            form.push({
+                type:       'help',
+                helpvalue:  'This appliance does not support any programs.'
             });
         }
 
@@ -344,7 +449,8 @@ class ConfigSchema {
                 type:       'object',
                 properties: schema
             },
-            form:   form
+            form:   form,
+            code:   code
         };
     }
 
@@ -382,7 +488,10 @@ class ConfigSchema {
                 title:        appliance.name,
                 expandable:   true,
                 expanded:     false,
-                items:        appSchema.form
+                items:        appSchema.form,
+                condition: {
+                    functionBody: 'try { ' + appSchema.code + ' } catch (err) {} return true;'
+                }
             });
         }
 
