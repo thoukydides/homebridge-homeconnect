@@ -60,7 +60,7 @@
         "pre-commit": "^1.2.2"
     },
     "scripts": {
-        "make-schema": "node config_schema.js",
+        "make-schema": "node lib/config_schema.js",
         "prepublishOnly": "npm run make-schema"
     },
     "pre-commit": [

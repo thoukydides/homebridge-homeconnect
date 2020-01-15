@@ -3,13 +3,13 @@
 
 'use strict';
 
-const HomeConnectAPI = require('./homeconnect_api.js');
-const HomeConnectDevice = require('./homeconnect_device.js');
-const ApplianceGeneric = require('./appliance_generic.js');
-const ApplianceCleaning = require('./appliance_cleaning.js');
-const ApplianceCooking = require('./appliance_cooking.js');
-const ApplianceCooling = require('./appliance_cooling.js');
-const ConfigSchema = require('./config_schema.js');
+const HomeConnectAPI = require('./lib/homeconnect_api.js');
+const HomeConnectDevice = require('./lib/homeconnect_device.js');
+const ApplianceGeneric = require('./lib/appliance_generic.js');
+const ApplianceCleaning = require('./lib/appliance_cleaning.js');
+const ApplianceCooking = require('./lib/appliance_cooking.js');
+const ApplianceCooling = require('./lib/appliance_cooling.js');
+const ConfigSchema = require('./lib/config_schema.js');
 const NodePersist = require('node-persist');
 const Path = require('path');
 const fsPromises = require('fs').promises;
