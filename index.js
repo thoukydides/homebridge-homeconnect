@@ -187,11 +187,15 @@ class HomeConnectPlatform {
             let device = new HomeConnectDevice(
                 msg => this.log.debug(msg), this.homeconnect, ha);
             let deviceConfig = this.config[ha.haId] || {};
-            accessory.appliance =
-                new applianceConstructor(
-                    this.log, this.homebridge, this.persist,
-                    this.schema.getAppliance(ha.haId),
-                    device, accessory, deviceConfig);
+            try {
+                accessory.appliance =
+                    new applianceConstructor(
+                        this.log, this.homebridge, this.persist,
+                        this.schema.getAppliance(ha.haId),
+                        device, accessory, deviceConfig);
+            } catch (err) {
+                this.log.error('Failed to initialise accessory: ' + err);
+            }
         });
         this.homebridge.registerPlatformAccessories(
             PLUGIN_NAME, PLATFORM_NAME, newAccessories);
