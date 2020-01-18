@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.14.0]
+### Added
+* Added an experimental configuration schema (`config.schema.json`) for [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). The schema is dynamically updated by the plugin to add the authorisation link and settings for appliance programs. This only works if the plugin has write access to the schema file in its installation directory. ([config.json] / [Programs])
+* New configuration option `"language": { "api": "en-GB" }` enables selection of the Home Connect API language. This affects the names of program `Switch` services and options in the configuration schema. ([config.json] / [Programs])
+### Changed
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Created a new `Switch` service to indicate when a program is active. This replaces the `Active` characteristic that was previously on the main power `Switch` service (which caused problems with Siri switching the appliance power on or off). The `Remaining Duration`, `Status Active`, and `Status Fault` characteristics have also been relocated to the new `Switch`. ([HomeKit Mapping] / [#10])
+* **Hood:** The `Remaining Duration` characteristic has been relocated to the `Fan` service. The `Active` characteristic has been removed. ([HomeKit Mapping] / [#10])
+* **CoffeeMaker/Dishwasher/Dryer/Hob/Hood/Oven/Washer/WasherDryer:** Updates to the `Program Mode` characteristic are delayed until all of the state on which it depends has been updated. This prevents it from being temporarily set to an incorrect value.
+* The appliance name is no longer included in HomeKit service names. This only affects newly created accessories.
+* **Oven:** Program options are now hidden in the `Identify` log output for appliances without `Control` scope authorised. ([Programs] / [Scopes])
+* Upgraded `node-persist` from version 0.0.8 to 3.0.5. Any authorisation tokens saved by the previous version are imported and migrated to the new format.
+* Cached appliance capabilities are now expired after 24 hours, or when the API language is changed. This ensures that any new API capabilities, or changes to the language configuration, are detected when Homebridge is restarted.
+* **Hood/Oven:** Expected API errors are now only logged at debug log level. This includes queries for settings or programs that are not supported by a specific appliance. ([#2])
+### Fixed
+* **Hood:** The active program is now checked when an appliance reconnects to the Home Connect servers. This was already done for other appliance types that support programs. ([#2])
+
 ## [v0.13.0] - 2020-01-09
 ### Added
 * **CleaningRobot/CoffeeMaker/Dishwasher/Dryer/Washer/WasherDryer:** New program configuration option `"selectonly": true` causes `Switch` services to select the program and its options rather than to start it. ([config.json] / [#1] / [#3])
@@ -128,6 +144,7 @@ Copyright © 2019-2020 Alexander Thoukydides
 [IFTTT]:            https://github.com/thoukydides/homebridge-homeconnect/wiki/IFTTT            "Wiki: If This Then That (IFTTT)"
 [Scopes]:           https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes           "Wiki: Home Connect Authorisation Scopes"
 [Rate Limits]:      https://github.com/thoukydides/homebridge-homeconnect/wiki/Rate-Limits      "Wiki: Rate Limits"
+[Errors]:           https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors           "Wiki: Error Messages"
 [Testing]:          https://github.com/thoukydides/homebridge-homeconnect/wiki/Testing          "Wiki: Tested Appliances"
 
 [#1]:               https://github.com/thoukydides/homebridge-homeconnect/issues/1              "Issue #1"
@@ -139,8 +156,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#7]:               https://github.com/thoukydides/homebridge-homeconnect/issues/7              "Issue #7"
 [#8]:               https://github.com/thoukydides/homebridge-homeconnect/issues/8              "Issue #8"
 [#9]:               https://github.com/thoukydides/homebridge-homeconnect/issues/9              "Issue #9"
+[#10]:              https://github.com/thoukydides/homebridge-homeconnect/issues/10             "Issue #10"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.13.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.14.0...HEAD
+[v0.14.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.13.0...v0.14.0
 [v0.13.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.12.0...v0.13.0
 [v0.12.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.11.0...v0.12.0
 [v0.11.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.10.1...v0.11.0

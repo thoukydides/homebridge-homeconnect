@@ -36,6 +36,8 @@ The `clientid` should be set to the *Client ID* obtained from the [Home Connect 
 
 For more advanced options refer to [Customising Appliance Programs](https://github.com/thoukydides/homebridge-homeconnect/wiki/Programs) and [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json).
 
+The easiest way to configure this plugin is via the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) graphical settings editor. This plugin dynamically updates its configuration schema with the appropriate options for the connected appliances.
+
 ## Appliance Support
 
 The functionality supported by this plugin with different appliances types is described in:
