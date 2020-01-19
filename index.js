@@ -95,7 +95,9 @@ class HomeConnectPlatform {
         }
 
         // Prepare a configuration schema
-        this.schema = new ConfigSchema(this.log, this.persist);
+        this.schema = new ConfigSchema(this.log, this.persist,
+                                       this.homebridge.user.storagePath(),
+                                       PLUGIN_NAME);
 
         // Connect to the Home Connect cloud
         this.homeconnect = new HomeConnectAPI({
