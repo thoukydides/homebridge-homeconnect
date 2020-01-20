@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Wiki
-    url: https://github.com/thoukydides/homebridge-homeconnect/wiki
-    about: Please check whether your issue is already described in the project Wiki.
+  - name: Error messsages
+    url: https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors
+    about: If you are seeing error messages in the log file then check whether they are expected.
+  - name: Rate limiting
+    url: https://github.com/thoukydides/homebridge-homeconnect/wiki/Rate-Limits
+    about: If access to your appliances is slow, or you are seeing `Too Many Requests` errors in the log, then you may be exceeding Home Connect rate limits.
