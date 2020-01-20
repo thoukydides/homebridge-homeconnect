@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Wiki
+    url: https://github.com/thoukydides/homebridge-homeconnect/wiki
+    about: Please check whether your issue is already described in the project Wiki.
