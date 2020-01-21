@@ -59,6 +59,16 @@ Apple's Home app does not support all of the features of this plugin. Use one of
 
 All notable changes to this project will be documented in [CHANGELOG.md](CHANGELOG.md).
 
+## Reporting Issues
+
+Report any issues on [GitHub](https://github.com/thoukydides/homebridge-homeconnect/issues/new/choose).
+
+Please attach the relevant section of the Homebridge log file, either pasted into the issue or attached as a text file (*but not as a screenshot*). Extra debug should be enabled and captured if appropriate:
+* **Homebridge debug logging:** Start Homebridge with the `-D` option to capture the *debug* level messages. These are used by this plugin to log basic information about each request to the Home Connect servers (but not the actual contents of the requests or responses) and other internal state. Please enable this for any issues that involve problems connecting to the Home Connect servers, API errors, or other problems with appliance state or control.
+* **HomeKit Accessory Protocol (HAP) logging:** Setting the `DEBUG=*` environment variable before starting Homebridge results in verbose logging of all [HAP-NodeJS](https://github.com/KhaosT/HAP-NodeJS) HomeKit exchanges. Please enable this for any issues that involve problems controlling appliances from HomeKit or Siri.
+
+Before raising an issue please check whether it relates to an expected [Error Message](https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors) and whether any similar [issues already exist](https://github.com/thoukydides/homebridge-homeconnect/issues?utf8=%E2%9C%93&q=).
+
 ## License
 
 > ISC License (ISC)<br>Copyright © 2019-2020 Alexander Thoukydides
