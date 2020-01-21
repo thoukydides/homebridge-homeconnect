@@ -20,7 +20,7 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 1. Install this plugin using: `npm install -g homebridge-homeconnect`
 1. Edit `config.json` and add the HomeConnect platform (see example below).
 1. Run [Homebridge](https://github.com/nfarina/homebridge).
-1. The Homebridge log output will include an authorisation URL. Copy the listed URL into a web browser and login to your Home Connect account.
+1. The Homebridge log output will include an authorisation URL. Copy the listed URL into a web browser and login to your Home Connect account. (The authorisation URL can also be found in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) graphical settings editor.)
  
 ### Example `config.json`
 ```JSON
