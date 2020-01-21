@@ -63,17 +63,6 @@ class HomeConnectPlatform {
                      + ' cached accessories');
         }
 
-        // Check that essential configuration has been provided
-        if (!this.config) {
-            if (restored) this.log('Plugin configuration missing;'
-                                   + ' removing all cached accessories');
-            return this.addRemoveAccessories([]);
-        }
-        if (!this.config['clientid']) {
-            return this.log.error('Platform ' + PLATFORM_NAME + ' config.json'
-                                  + " is missing 'clientid' property");
-        }
-
         // Create persistent storage for this plugin
         let persistDir = Path.join(this.homebridge.user.storagePath(),
                                    PLUGIN_NAME, 'persist');
@@ -98,6 +87,17 @@ class HomeConnectPlatform {
         this.schema = new ConfigSchema(this.log, this.persist,
                                        this.homebridge.user.storagePath(),
                                        PLUGIN_NAME);
+
+        // Check that essential configuration has been provided
+        if (!this.config) {
+            if (restored) this.log('Plugin configuration missing;'
+                                   + ' removing all cached accessories');
+            return this.addRemoveAccessories([]);
+        }
+        if (!this.config['clientid']) {
+            return this.log.error('Platform ' + PLATFORM_NAME + ' config.json'
+                                  + " is missing 'clientid' property");
+        }
 
         // Connect to the Home Connect cloud
         this.homeconnect = new HomeConnectAPI({
