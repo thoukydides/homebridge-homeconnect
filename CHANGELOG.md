@@ -4,7 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [v0.14.0]
+## [v0.15.0] - 2020-01-21
+### Changed
+* A single events stream is used to monitor all appliances instead of a separate stream per appliance, reducing the number of requests issued to the Home Connect servers. This only works with physical appliances, so a separate stream is still established for each simulator appliance. ([Rate Limits])
+* Preparation for using the upcoming dynamic configuration schema support in [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x).
+### Fixed
+* **Hood:** Fixed a stupid error that prevented the `Fan` service from being initialised. ([#2])
+* Fixed an error that prevented accessories from being removed when no configuration is provided for this plugin.
+* If a Home Connect event stream is interrupted then appliance updates may be missed, resulting in the plugin's state not matching the appliance. The plugin now polls the appliance status after the event stream is re-established. It also retries if any unexpected errors occur while reading the status.
+* The `Remaining Duration` characteristic is now only updated while there is an active program. Some appliances generate a `RemainingProgramTime` event when a program is selected or its options changed, which previously resulted in the characteristic being set inappropriately.
+
+## [v0.14.0] - 2020-01-18
 ### Added
 * Added an experimental configuration schema (`config.schema.json`) for [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). The schema is dynamically updated by the plugin to add the authorisation link and settings for appliance programs. This only works if the plugin has write access to the schema file in its installation directory. ([config.json] / [Programs])
 * New configuration option `"language": { "api": "en-GB" }` enables selection of the Home Connect API language. This affects the names of program `Switch` services and options in the configuration schema. ([config.json] / [Programs])
@@ -145,6 +155,7 @@ Copyright © 2019-2020 Alexander Thoukydides
 [Scopes]:           https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes           "Wiki: Home Connect Authorisation Scopes"
 [Rate Limits]:      https://github.com/thoukydides/homebridge-homeconnect/wiki/Rate-Limits      "Wiki: Rate Limits"
 [Errors]:           https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors           "Wiki: Error Messages"
+[Files]:            https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors           "Wiki: Files Storing Plugin State"
 [Testing]:          https://github.com/thoukydides/homebridge-homeconnect/wiki/Testing          "Wiki: Tested Appliances"
 
 [#1]:               https://github.com/thoukydides/homebridge-homeconnect/issues/1              "Issue #1"
@@ -158,7 +169,8 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#9]:               https://github.com/thoukydides/homebridge-homeconnect/issues/9              "Issue #9"
 [#10]:              https://github.com/thoukydides/homebridge-homeconnect/issues/10             "Issue #10"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.14.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.15.0...HEAD
+[v0.15.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.14.0...v0.15.0
 [v0.14.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.13.0...v0.14.0
 [v0.13.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.12.0...v0.13.0
 [v0.12.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.11.0...v0.12.0
