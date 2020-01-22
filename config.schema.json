@@ -3,7 +3,7 @@
     "pluginType": "platform",
     "dynamicSchemaVersion": 1,
     "singular": true,
-    "headerDisplay": "*This is a temporary configuration schema for initial setup only. When the plugin runs it will replace this schema with one tailored to the available Home Connect appliances.*\n\n*If this message remains after the Home Connect Client has been configured then ensure that the plugin has write access to the schema file in its installation directory, otherwise it will not be possible to configure all features via this interface.*\n\nFor help please refer to the [README](https://github.com/thoukydides/homebridge-homeconnect/blob/master/README.md) and [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json).",
+    "headerDisplay": "*This is a temporary configuration schema for initial setup only. When the plugin runs it will replace this schema with one tailored to the available Home Connect appliances.*\n\n*Update [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) to version 4.8.1 or later if this message remains after the Home Connect Client has been configured.*\n\nFor help please refer to the [README](https://github.com/thoukydides/homebridge-homeconnect/blob/master/README.md) and [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json).",
     "footerDisplay": "© 2019-2020 [Alexander Thoukydides](https://www.thouky.co.uk/)",
     "schema": {
         "type": "object",

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.0] - 2020-01-22
+### Added
+* **CleaningRobot:** Added a `Battery Service` service to indicate the battery charge level and its charging status.
+### Changed
+* Use the new dynamic configuration schema support in [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) version 4.8.1. This saves the schema as `~/.homebridge/.homebridge-homeconnect-v1.schema.json` instead of overwriting `config.schema.json` in the installation directory, so works even if the plugin does not have write access to its installation directory. ([config.json] / [Programs])
+* The OAuth `access_token` and `refresh_token` are now obfuscated before being written to the log file; only the first 4 and final 8 characters are recorded. This is sufficient for debugging purposes, but prevents account access if a log file is posted publicly. Note that codes used during the initial authorisation are still logged, but these have very short validity periods (the `device_code` and `user_code` for physical appliances are only valid for 5 minutes, and the `authorization_code` for the simulator is valid for 10 minutes).
+
 ## [v0.15.0] - 2020-01-21
 ### Changed
 * A single events stream is used to monitor all appliances instead of a separate stream per appliance, reducing the number of requests issued to the Home Connect servers. This only works with physical appliances, so a separate stream is still established for each simulator appliance. ([Rate Limits])
@@ -169,7 +176,8 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#9]:               https://github.com/thoukydides/homebridge-homeconnect/issues/9              "Issue #9"
 [#10]:              https://github.com/thoukydides/homebridge-homeconnect/issues/10             "Issue #10"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.15.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.0...HEAD
+[v0.16.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.15.0...v0.16.0
 [v0.15.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.14.0...v0.15.0
 [v0.14.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.13.0...v0.14.0
 [v0.13.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.12.0...v0.13.0
