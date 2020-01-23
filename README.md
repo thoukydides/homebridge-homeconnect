@@ -34,40 +34,82 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 ```
 The `clientid` should be set to the *Client ID* obtained from the [Home Connect Developer Program](https://developer.home-connect.com/applications) for the created *Device Flow* application.
 
-For more advanced options refer to [Customising Appliance Programs](https://github.com/thoukydides/homebridge-homeconnect/wiki/Programs) and [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json).
+Additional configuration is recommended to [customise the appliance programs](https://github.com/thoukydides/homebridge-homeconnect/wiki/Programs). The easiest way to do this is via the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) (version 4.8.1 or later) graphical settings editor. This plugin dynamically updates its configuration schema with the appropriate options for the connected appliances.
 
-The easiest way to configure this plugin is via the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) (version 4.8.1 or later) graphical settings editor. This plugin dynamically updates its configuration schema with the appropriate options for the connected appliances.
+See [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json) for a description of all supported configuration options.
 
 ## Appliance Support
 
-The functionality supported by this plugin with different appliances types is described in:
-* [Supported Home Connect Functionality](https://github.com/thoukydides/homebridge-homeconnect/wiki/Functionality)
-* [HomeKit Services and Characteristics](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Mapping)
-* [If This Then That (IFTTT) Comparison](https://github.com/thoukydides/homebridge-homeconnect/wiki/IFTTT)
+This plugin supports most capabilities of the [Home Connect API](https://developer.home-connect.com/) that can be sensibly mapped to Apple-defined [HomeKit services and characteristics](https://github.com/thoukydides/homebridge-homeconnect/wiki/Functionality). More details can be found in the [functionality summary](https://github.com/thoukydides/homebridge-homeconnect/wiki/Functionality).
 
-Support for Hood appliances is currently experimental. Please provide feedback (whether good or bad) to [issue #2](https://github.com/thoukydides/homebridge-homeconnect/issues/2).
+Apple's Home app does not support all of the features of this plugin. Some [third-party HomeKit apps](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Apps) are recommended due to their extra functionality.
 
-Oven appliances cannot be controlled due to the required [Home Connect Authorisation Scopes](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being granted. However, they can be switched on and off, and their operation monitored.
+### Cooking Appliances
 
-This plugin has only been tested by the developer with a Siemens [Dishwasher](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436388) (SN678D06TG/53), [Hob](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004436379) (EX677LYV1E/06), and [Oven](https://www.siemens-home.bsh-group.com/uk/mysiemens/products/0004401572) (HB678GBS6B/58). See [Tested Appliances](https://github.com/thoukydides/homebridge-homeconnect/wiki/Testing).
+  * **CoffeeMaker:**
+    * Switch on/off and start/stop programs with preset options.
+    * Monitor door, program time remaining, remote control, and general operation status.
+    * Automation triggers for bean container empty, water tank empty, and drip tray full.
+  * **CookProcessor:**
+    * Switch on/off.
+    * Monitor program time remaining and general operation status.
+    * Automation triggers for finished and aborted.
+    * *(The [Home Connect API](https://developer.home-connect.com/docs/cook-processor/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2020"*.)*
+  * **Hob:**
+    * Monitor power, remote control, and general operation status.
+    * Automation triggers for finished, timer finished, and preheat finished.
+    * *(The [Home Connect API](https://developer.home-connect.com/docs/cooktop/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2020"*, although this is unlikely to be usable due to the [Hob-Control scope](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being authorised.)*
+  * **Hood:**
+    * Switch on/off.
+    * Switch fan on/off, set fan speed/intensive levels, and select manual/auto mode.
+    * Switch functional light on/off and change brightness.
+    * Switch ambient light on/off, change brighness, and select colour.
+    * Monitor remote control and general operation status.
+    * Automation trigger for finished.
+  * **Oven:**
+    * Switch on/off.
+    * Monitor door, programs, program time remaining, remote control, and general operation status.
+    * Automation triggers for finished, aborted, timer finished, and preheat finished, 
+    * *(It is not possible to control Oven programs due to the [Oven-Control scope](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being authorised; use [IFTTT](https://github.com/thoukydides/homebridge-homeconnect/wiki/IFTTT) instead.)*
+    
+### Cleaning Appliances
 
-## HomeKit Apps
+  * **CleaningRobot:**
+    * Switch on/off and start/stop programs with preset options.
+    * Monitor battery level, battery charging, dock, and general operation status.
+    * Automation triggers for finished, aborted, dust box full, stuck, and lost.
+  * **Dishwasher:**
+    * Switch on/off and start/stop programs with preset options.
+    * Monitor door, program time remaining, remote control, and general operation status.
+    * Automation triggers for finished and aborted.
+  * **Dryer / Washer / WasherDryer:**
+    * Start/stop programs with preset options.
+    * Monitor power, door, program time remaining, remote control, and general operation status.
+    * Automation triggers for finished and aborted.
+    
+### Cooling Appliances
 
-Apple's Home app does not support all of the features of this plugin. Use one of the alternative [Recommended HomeKit Apps](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Apps) instead.
+  * **Freezer / FridgeFreezer / Refrigerator:**
+    * Set freezer/refrigerator super,  eco, sabbath, refrigerator vacation, and refrigerator fresh modes.
+    * Monitor power and door.
+    * Automation triggers for freezer/refrigerator door and freezer temperature alarms.
+  * **WineCooler:**
+    * Set sabbath mode.
+    * Monitor power and door.
 
 ## Changelog
 
-All notable changes to this project will be documented in [CHANGELOG.md](CHANGELOG.md).
+All notable changes to this project are documented in the [CHANGELOG.md](CHANGELOG.md) file.
 
 ## Reporting Issues
 
 Report any issues on [GitHub](https://github.com/thoukydides/homebridge-homeconnect/issues/new/choose).
 
-Please attach the relevant section of the Homebridge log file, either pasted into the issue or attached as a text file (*but not as a screenshot*). Extra debug should be enabled and captured if appropriate:
+Please attach the relevant section of the Homebridge log file, either pasted into the issue or attached as a text file (*not a screenshot*). Extra debug should be enabled and captured if appropriate:
 * **Homebridge debug logging:** Start Homebridge with the `-D` option to capture the *debug* level messages. These are used by this plugin to log basic information about each request to the Home Connect servers (but not the actual contents of the requests or responses) and other internal state. Please enable this for any issues that involve problems connecting to the Home Connect servers, API errors, or other problems with appliance state or control.
 * **HomeKit Accessory Protocol (HAP) logging:** Setting the `DEBUG=*` environment variable before starting Homebridge results in verbose logging of all [HAP-NodeJS](https://github.com/KhaosT/HAP-NodeJS) HomeKit exchanges. Please enable this for any issues that involve problems controlling appliances from HomeKit or Siri.
 
-Before raising an issue please check whether it relates to an expected [Error Message](https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors) and whether any similar [issues already exist](https://github.com/thoukydides/homebridge-homeconnect/issues?utf8=%E2%9C%93&q=).
+Before raising an issue please check whether it relates to an expected [error message](https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors) and whether any similar [issues already exist](https://github.com/thoukydides/homebridge-homeconnect/issues?utf8=%E2%9C%93&q=).
 
 ## License
 
