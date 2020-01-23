@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.1] - 2020-01-23
+### Added
+* **Dryer/Oven/Washer/WasherDryer:** Added a `Lock Current State` characteristic to indicate when the door is locked. ([#3])
+### Changed
+* Removed workaround for a Home Connect API issue (affecting Thermador PRD486WDHU/01 Oven) that has now been fixed. ([#2])
+* Demoted some log messages from info to debug that are not useful in non-debug scenarios.
+### Fixed
+* **Dryer/Oven/Washer/WasherDryer:** Correctly handle the door locked state; previously it was treated as open instead of closed. ([#3])
+
 ## [v0.16.0] - 2020-01-22
 ### Added
 * **CleaningRobot:** Added a `Battery Service` service to indicate the battery charge level and its charging status.
@@ -176,7 +185,8 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#9]:               https://github.com/thoukydides/homebridge-homeconnect/issues/9              "Issue #9"
 [#10]:              https://github.com/thoukydides/homebridge-homeconnect/issues/10             "Issue #10"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.1...HEAD
+[v0.16.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.0...v0.16.1
 [v0.16.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.15.0...v0.16.0
 [v0.15.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.14.0...v0.15.0
 [v0.14.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.13.0...v0.14.0
