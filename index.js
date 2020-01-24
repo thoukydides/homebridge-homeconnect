@@ -13,6 +13,7 @@ const ConfigSchema = require('./lib/config_schema.js');
 const NodePersist = require('node-persist');
 const Path = require('path');
 const fsPromises = require('fs').promises;
+const chalk = require('chalk');
 
 let UUID;
 
@@ -114,7 +115,9 @@ class HomeConnectPlatform {
             this.log('Home Connect authorisation token saved');
         }).on('auth_uri', uri => {
             this.schema.setAuthorisationURI(uri);
-            this.log.error('Home Connect authorisation required: ' + uri);
+            this.log(chalk.greenBright('Home Connect authorisation required.'
+                                       + ' Please visit:'));
+            this.log('    ' + chalk.greenBright.bold(uri));
         });
 
         // Obtain a list of Home Connect home appliances
