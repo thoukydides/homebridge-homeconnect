@@ -102,7 +102,7 @@ class HomeConnectPlatform {
 
         // Connect to the Home Connect cloud
         this.homeconnect = new HomeConnectAPI({
-            log:        msg => this.log.debug(msg),
+            log:        this.log,
             // User options from config.json
             clientID:   this.config.clientid,
             simulator:  this.config.simulator,
