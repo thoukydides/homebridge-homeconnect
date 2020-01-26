@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.3] - 2020-01-26
+### Fixed
+* The initial state of the power `Switch` service is now set correctly when the plugin starts (or an appliance re-establishes a connection to the Home Connect servers). The last release set it to off when appliance connected (instead of just when it disconnected). ([#12])
+
 ## [v0.16.2] - 2020-01-26
 ### Changed
 * Set the `Remaining Duration` characteristic during any delayed start, instead of just while the program is active.
@@ -193,8 +197,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#9]:               https://github.com/thoukydides/homebridge-homeconnect/issues/9              "Issue #9"
 [#10]:              https://github.com/thoukydides/homebridge-homeconnect/issues/10             "Issue #10"
 [#11]:              https://github.com/thoukydides/homebridge-homeconnect/issues/11             "Issue #11"
+[#12]:              https://github.com/thoukydides/homebridge-homeconnect/issues/12             "Issue #12"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.3...HEAD
+[v0.16.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.2...v0.16.3
 [v0.16.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.1...v0.16.2
 [v0.16.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.0...v0.16.1
 [v0.16.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.15.0...v0.16.0
