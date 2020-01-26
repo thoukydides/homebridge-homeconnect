@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.2] - 2020-01-26
+### Changed
+* Set the `Remaining Duration` characteristic during any delayed start, instead of just while the program is active.
+* Include pre-authorisation errors in the log output even when debug logging is not enabled (Homebridge `-D` option not specified). When logging to a destination that supports colour the authorsation URL is also highlighted in green.
+* Added a `User-Agent` header to all Home Connect API requests. This is generated from the npm package name and version, e.g. `homebridge-homeconnect/0.16.2`.
+* Miscellaneous improvements to the handling of incorrect Home Connect server behaviour. Invalid empty responses are now trapped explicitly. Increased maximum delay between retries after server errors from 1 minute to 10 minutes, and share the delay between all appliances. Read the appliance connection status before reading other state to reset API error count. ([Errors] / [Rate Limits])
+* Some appliances update their supported options after a program has been selected. To support these appliances the configuration schema is now updated each time that a program is selected. Previously the details of available programs were only read at plugin start-up or when `Identify` was invoked. ([config.json] / [Programs])
+
 ## [v0.16.1] - 2020-01-23
 ### Added
 * **Dryer/Oven/Washer/WasherDryer:** Added a `Lock Current State` characteristic to indicate when the door is locked. ([#3])
@@ -27,7 +35,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 * **Hood:** Fixed a stupid error that prevented the `Fan` service from being initialised. ([#2])
 * Fixed an error that prevented accessories from being removed when no configuration is provided for this plugin.
-* If a Home Connect event stream is interrupted then appliance updates may be missed, resulting in the plugin's state not matching the appliance. The plugin now polls the appliance status after the event stream is re-established. It also retries if any unexpected errors occur while reading the status.
+* If a Home Connect event stream is interrupted then appliance updates may be missed, resulting in the plugin's state not matching the appliance. The plugin now polls the appliance status after the event stream is re-established. It also retries if any unexpected errors occur while reading the status. ([Errors])
 * The `Remaining Duration` characteristic is now only updated while there is an active program. Some appliances generate a `RemainingProgramTime` event when a program is selected or its options changed, which previously resulted in the characteristic being set inappropriately.
 
 ## [v0.14.0] - 2020-01-18
@@ -184,8 +192,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#8]:               https://github.com/thoukydides/homebridge-homeconnect/issues/8              "Issue #8"
 [#9]:               https://github.com/thoukydides/homebridge-homeconnect/issues/9              "Issue #9"
 [#10]:              https://github.com/thoukydides/homebridge-homeconnect/issues/10             "Issue #10"
+[#11]:              https://github.com/thoukydides/homebridge-homeconnect/issues/11             "Issue #11"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.2...HEAD
+[v0.16.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.1...v0.16.2
 [v0.16.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.0...v0.16.1
 [v0.16.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.15.0...v0.16.0
 [v0.15.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.14.0...v0.15.0
