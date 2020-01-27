@@ -4,13 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.4] - 2020-01-27
+### Fixed
+* **Hood:** Fixed reading of fan program options, broken in v0.14.0. ([#2])
+* Fixed error introduced in v0.16.2 that prevented loss of the event stream from being treated as the appliance being disconnected. ([#13])
+* **CoffeeMaker/CookProcessor/Dryer/Hood/Oven/Washer/WasherDryer:** Increased the range of the `Remaining Duration` characteristic to allow for any delayed start in addition to the actual program duration.
+
 ## [v0.16.3] - 2020-01-26
 ### Fixed
 * The initial state of the power `Switch` service is now set correctly when the plugin starts (or an appliance re-establishes a connection to the Home Connect servers). The last release set it to off when appliance connected (instead of just when it disconnected). ([#12])
 
 ## [v0.16.2] - 2020-01-26
 ### Changed
-* Set the `Remaining Duration` characteristic during any delayed start, instead of just while the program is active.
+* **CoffeeMaker/CookProcessor/Dryer/Hood/Oven/Washer/WasherDryer:** Set the `Remaining Duration` characteristic during any delayed start, instead of just while the program is active.
 * Include pre-authorisation errors in the log output even when debug logging is not enabled (Homebridge `-D` option not specified). When logging to a destination that supports colour the authorsation URL is also highlighted in green.
 * Added a `User-Agent` header to all Home Connect API requests. This is generated from the npm package name and version, e.g. `homebridge-homeconnect/0.16.2`.
 * Miscellaneous improvements to the handling of incorrect Home Connect server behaviour. Invalid empty responses are now trapped explicitly. Increased maximum delay between retries after server errors from 1 minute to 10 minutes, and share the delay between all appliances. Read the appliance connection status before reading other state to reset API error count. ([Errors] / [Rate Limits])
@@ -40,7 +46,7 @@ All notable changes to this project will be documented in this file.
 * **Hood:** Fixed a stupid error that prevented the `Fan` service from being initialised. ([#2])
 * Fixed an error that prevented accessories from being removed when no configuration is provided for this plugin.
 * If a Home Connect event stream is interrupted then appliance updates may be missed, resulting in the plugin's state not matching the appliance. The plugin now polls the appliance status after the event stream is re-established. It also retries if any unexpected errors occur while reading the status. ([Errors])
-* The `Remaining Duration` characteristic is now only updated while there is an active program. Some appliances generate a `RemainingProgramTime` event when a program is selected or its options changed, which previously resulted in the characteristic being set inappropriately.
+* **CoffeeMaker/CookProcessor/Dryer/Hood/Oven/Washer/WasherDryer:** The `Remaining Duration` characteristic is now only updated while there is an active program. Some appliances generate a `RemainingProgramTime` event when a program is selected or its options changed, which previously resulted in the characteristic being set inappropriately.
 
 ## [v0.14.0] - 2020-01-18
 ### Added
@@ -198,8 +204,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#10]:              https://github.com/thoukydides/homebridge-homeconnect/issues/10             "Issue #10"
 [#11]:              https://github.com/thoukydides/homebridge-homeconnect/issues/11             "Issue #11"
 [#12]:              https://github.com/thoukydides/homebridge-homeconnect/issues/12             "Issue #12"
+[#13]:              https://github.com/thoukydides/homebridge-homeconnect/issues/13             "Issue #13"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.3...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.4...HEAD
+[v0.16.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.3...v0.16.4
 [v0.16.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.2...v0.16.3
 [v0.16.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.1...v0.16.2
 [v0.16.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.0...v0.16.1
