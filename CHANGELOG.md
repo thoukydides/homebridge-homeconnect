@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.5] - 2020-01-28
+### Changed
+* There appears to be a Home Connect server problem that sometimes introduces hexadecimal numbers (or spurious HTTP headers) into the event stream. When this is detected the event stream is now terminated and restarted.
+
 ## [v0.16.4] - 2020-01-27
 ### Fixed
 * **Hood:** Fixed reading of fan program options, broken in v0.14.0. ([#2])
@@ -205,8 +209,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#11]:              https://github.com/thoukydides/homebridge-homeconnect/issues/11             "Issue #11"
 [#12]:              https://github.com/thoukydides/homebridge-homeconnect/issues/12             "Issue #12"
 [#13]:              https://github.com/thoukydides/homebridge-homeconnect/issues/13             "Issue #13"
+[#14]:              https://github.com/thoukydides/homebridge-homeconnect/issues/14             "Issue #14"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.5...HEAD
+[v0.16.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.4...v0.16.5
 [v0.16.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.3...v0.16.4
 [v0.16.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.2...v0.16.3
 [v0.16.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.1...v0.16.2
