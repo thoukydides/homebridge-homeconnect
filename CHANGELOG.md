@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.6] - 2020-01-29
+### Fixed
+* Fixed bug that prevented retries from working when an error occurs reading the appliance state following (re)connection.
+
 ## [v0.16.5] - 2020-01-28
 ### Changed
 * There appears to be a Home Connect server problem that sometimes introduces hexadecimal numbers (or spurious HTTP headers) into the event stream. When this is detected the event stream is now terminated and restarted.
@@ -211,7 +215,8 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#13]:              https://github.com/thoukydides/homebridge-homeconnect/issues/13             "Issue #13"
 [#14]:              https://github.com/thoukydides/homebridge-homeconnect/issues/14             "Issue #14"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.5...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.6...HEAD
+[v0.16.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.5...v0.16.6
 [v0.16.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.4...v0.16.5
 [v0.16.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.3...v0.16.4
 [v0.16.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.2...v0.16.3
