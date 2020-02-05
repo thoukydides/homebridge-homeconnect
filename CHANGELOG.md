@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.7] - 2020-02-05
+### Changed
+* Avoid issuing API requests to read or change settings where they would result in errors. In particular, settings (such as power on/off) are now only changed when remote control is enabled and local control is not active. For Hood appliances the details of the functional and ambient light settings are only read after confirming that those settings are supported.
+* Suppress the error that is returned when no programs are available due to an appliance's state.
+* Enable timeouts for all Home Connect API requests. This ensures that event stream failures are detected reliably.
+
 ## [v0.16.6] - 2020-01-29
 ### Fixed
 * Fixed bug that prevented retries from working when an error occurs reading the appliance state following (re)connection.
@@ -214,8 +220,11 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#12]:              https://github.com/thoukydides/homebridge-homeconnect/issues/12             "Issue #12"
 [#13]:              https://github.com/thoukydides/homebridge-homeconnect/issues/13             "Issue #13"
 [#14]:              https://github.com/thoukydides/homebridge-homeconnect/issues/14             "Issue #14"
+[#15]:              https://github.com/thoukydides/homebridge-homeconnect/issues/15             "Issue #15"
+[#16]:              https://github.com/thoukydides/homebridge-homeconnect/issues/16             "Issue #16"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.6...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.7...HEAD
+[v0.16.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.6...v0.16.7
 [v0.16.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.5...v0.16.6
 [v0.16.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.4...v0.16.5
 [v0.16.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.3...v0.16.4
