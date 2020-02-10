@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.8] - 2020-02-10
+### Fixed
+* **Hood:** Fixed control of ambient and functional lights, broken in v0.16.6. ([#2])
+
 ## [v0.16.7] - 2020-02-05
 ### Changed
-* Avoid issuing API requests to read or change settings where they would result in errors. In particular, settings (such as power on/off) are now only changed when remote control is enabled and local control is not active. For Hood appliances the details of the functional and ambient light settings are only read after confirming that those settings are supported.
+* **CoffeeMaker/Dishwasher/Dryer/Hob/Hood/Oven/Washer/WasherDryer:** Avoid issuing API requests to read or change settings where they would result in errors. In particular, settings (such as power on/off) are now only changed when remote control is enabled and local control is not active. For Hood appliances the details of the functional and ambient light settings are only read after confirming that those settings are supported.
 * Suppress the error that is returned when no programs are available due to an appliance's state.
 * Enable timeouts for all Home Connect API requests. This ensures that event stream failures are detected reliably.
 
@@ -223,7 +227,8 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#15]:              https://github.com/thoukydides/homebridge-homeconnect/issues/15             "Issue #15"
 [#16]:              https://github.com/thoukydides/homebridge-homeconnect/issues/16             "Issue #16"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.7...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.8...HEAD
+[v0.16.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.7...v0.16.8
 [v0.16.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.6...v0.16.7
 [v0.16.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.5...v0.16.6
 [v0.16.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.4...v0.16.5
