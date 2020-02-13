@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.16.9] - 2020-02-13
+### Fixed
+* Corrected bug that prevented details of supported programs being written to the log file when the program options have not been read successfully. ([#17])
+
 ## [v0.16.8] - 2020-02-10
 ### Fixed
 * **Hood:** Fixed control of ambient and functional lights, broken in v0.16.6. ([#2])
@@ -226,8 +230,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#14]:              https://github.com/thoukydides/homebridge-homeconnect/issues/14             "Issue #14"
 [#15]:              https://github.com/thoukydides/homebridge-homeconnect/issues/15             "Issue #15"
 [#16]:              https://github.com/thoukydides/homebridge-homeconnect/issues/16             "Issue #16"
+[#17]:              https://github.com/thoukydides/homebridge-homeconnect/issues/17             "Issue #17"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.8...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.9...HEAD
+[v0.16.9]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.8...v0.16.9
 [v0.16.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.7...v0.16.8
 [v0.16.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.6...v0.16.7
 [v0.16.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.5...v0.16.6
