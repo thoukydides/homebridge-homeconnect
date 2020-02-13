@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.16.9] - 2020-02-13
 ### Fixed
-* Corrected bug that prevented details of supported programs being written to the log file when the program options have not been read successfully. ([#17])
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Corrected bug that prevented details of supported programs being written to the log file when the program options have not been read successfully. ([#17])
 
 ## [v0.16.8] - 2020-02-10
 ### Fixed
