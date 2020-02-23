@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.17.0] - 2020-02-23
+### Changed
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Some appliances (such as the Siemens TI9555X1DE CoffeeMaker) do not return correct information about their supported options unless the program is actually selected. To cope with these appliances the plugin now attempts to select each available program when first started and when the `Identify` routine is invoked. ([#17])
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Washer/WasherDryer:** Improved the configuration schema's handling of numeric program options with step size constraints. Options with a small number of allowed values are now enumerated explicitly, otherwise the required step size is added to the description. The schema's `multipleOf` is also set to the GCD (greatest common divisor) of the step sizes for all of the appliance's programs to allow some useful validation messages. ([#18])
+
 ## [v0.16.9] - 2020-02-13
 ### Fixed
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Corrected bug that prevented details of supported programs being written to the log file when the program options have not been read successfully. ([#17])
@@ -231,8 +236,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#15]:              https://github.com/thoukydides/homebridge-homeconnect/issues/15             "Issue #15"
 [#16]:              https://github.com/thoukydides/homebridge-homeconnect/issues/16             "Issue #16"
 [#17]:              https://github.com/thoukydides/homebridge-homeconnect/issues/17             "Issue #17"
+[#18]:              https://github.com/thoukydides/homebridge-homeconnect/issues/18             "Issue #18"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.9...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.0...HEAD
+[v0.17.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.9...v0.17.0
 [v0.16.9]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.8...v0.16.9
 [v0.16.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.7...v0.16.8
 [v0.16.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.6...v0.16.7
