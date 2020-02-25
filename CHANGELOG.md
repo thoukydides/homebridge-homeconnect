@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.17.2] - 2020-02-24
+### Fixed
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Further improvements to reading program options by selecting each program first. Added short delays after switching the appliance on, and after it indicates that it is ready, before attempting to select a program. Also avoid trying to restore the original program if none was selected. ([#17], [#20])
+
 ## [v0.17.1] - 2020-02-24
 ### Fixed
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Allow an appliance to take up to two minutes to be ready after being switched on. This is required for appliances that perform a cleaning cycle on start-up (such as the Bosch CTL636ES6/03 CoffeeMaker). ([#17], [#20])
@@ -242,9 +246,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#17]:              https://github.com/thoukydides/homebridge-homeconnect/issues/17             "Issue #17"
 [#18]:              https://github.com/thoukydides/homebridge-homeconnect/issues/18             "Issue #18"
 [#19]:              https://github.com/thoukydides/homebridge-homeconnect/issues/19             "Issue #19"
-[#29]:              https://github.com/thoukydides/homebridge-homeconnect/issues/20             "Issue #20"
+[#20]:              https://github.com/thoukydides/homebridge-homeconnect/issues/20             "Issue #20"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.2...HEAD
+[v0.17.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.1...v0.17.2
 [v0.17.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.0...v0.17.1
 [v0.17.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.9...v0.17.0
 [v0.16.9]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.8...v0.16.9
