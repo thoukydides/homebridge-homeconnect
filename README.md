@@ -1,3 +1,8 @@
+<p align="center">
+  <a href="https://github.com/homebridge/homebridge/wiki/Verified-Plugins"><img src="https://raw.githubusercontent.com/wiki/thoukydides/homebridge-homeconnect/homebridge-homeconnect.png" height="200"></a>
+</p>
+<span align=center>
+
 # homebridge-homeconnect
 
 [![npm](https://badgen.net/npm/v/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
@@ -6,6 +11,8 @@
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
 Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/homebridge).
+
+</span>
 
 [Home Connect](https://www.home-connect.com), [Bosch](https://www.bosch-home.com/), [Siemens](https://www.siemens-home.bsh-group.com/), [Gaggenau](https://www.gaggenau.com/), [NEFF](https://www.neff-home.com/), and [Thermador](https://www.thermador.com/) are trademarks of [BSH Home Appliances](https://www.bsh-group.com).
 
