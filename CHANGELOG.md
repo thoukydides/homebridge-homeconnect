@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* Added **[Verified By Homebridge](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)** badge to the `README.md`.
 
 ## [v0.17.2] - 2020-02-24
 ### Fixed
