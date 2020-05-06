@@ -90,6 +90,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation triggers for finished, aborted, dust box full, stuck, and lost.
   * **Dishwasher:**
     * Switch on/off and start/stop programs with preset options.
+    * Switch ambient light on/off, change brighness, and select colour.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished and aborted.
   * **Dryer / Washer / WasherDryer:**
