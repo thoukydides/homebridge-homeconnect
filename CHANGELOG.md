@@ -3,9 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.17.3] - 2020-05-07
 ### Added
 * **Dishwasher:** Added ambient light support.
 * Added **[Verified By Homebridge](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)** badge to the `README.md`.
+### Fixed
+* **Hood:** Changes to the ambient light colour update the Hue and Saturation characteristics.
 
 ## [v0.17.2] - 2020-02-24
 ### Fixed
@@ -250,8 +254,14 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#18]:              https://github.com/thoukydides/homebridge-homeconnect/issues/18             "Issue #18"
 [#19]:              https://github.com/thoukydides/homebridge-homeconnect/issues/19             "Issue #19"
 [#20]:              https://github.com/thoukydides/homebridge-homeconnect/issues/20             "Issue #20"
+[#21]:              https://github.com/thoukydides/homebridge-homeconnect/issues/21             "Issue #21"
+[#22]:              https://github.com/thoukydides/homebridge-homeconnect/issues/22             "Issue #22"
+[#23]:              https://github.com/thoukydides/homebridge-homeconnect/issues/23             "Issue #23"
+[#24]:              https://github.com/thoukydides/homebridge-homeconnect/issues/24             "Issue #24"
+[#25]:              https://github.com/thoukydides/homebridge-homeconnect/issues/25             "Issue #25"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.3...HEAD
+[v0.17.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.2...v0.17.3
 [v0.17.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.1...v0.17.2
 [v0.17.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.0...v0.17.1
 [v0.17.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.16.9...v0.17.0
