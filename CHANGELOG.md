@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 * **Dishwasher:** Added ambient light support.
 * Added **[Verified By Homebridge](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)** badge to the `README.md`.
 ### Fixed
-* **Hood:** Changes to the ambient light colour update the Hue and Saturation characteristics.
+* **Hood:** Changes to the ambient light colour update the Hue and Saturation characteristics. ([#24])
 
 ## [v0.17.2] - 2020-02-24
 ### Fixed
