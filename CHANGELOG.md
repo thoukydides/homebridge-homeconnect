@@ -265,7 +265,7 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#25]:              https://github.com/thoukydides/homebridge-homeconnect/issues/25             "Issue #25"
 
 [Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.0...HEAD
-[v0.17.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.3...v0.18.0
+[v0.18.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.3...v0.18.0
 [v0.17.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.2...v0.17.3
 [v0.17.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.1...v0.17.2
 [v0.17.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.0...v0.17.1
