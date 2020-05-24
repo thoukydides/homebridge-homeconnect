@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.18.1] - 2020-05-24
+### Fixed
+* **Dishwasher/Hood:** Corrected discovery of functional or ambient light capabilities when the plugin is first started. ([#24])
+* **Dishwasher/Hood:** Brightness is now supported for ambient lights when set to custom colours. ([#24])
+
 ## [v0.18.0] - 2020-05-09
 ### Fixed
 * **Dishwasher/Hood:** Some appliances (such as the Bosch DWF97RW65/01 Hood) do not return information about all of the settings supported by their functional or ambient lights unless they are switched on. To cope with these appliances the plugin now attempts to switch the lights on when first started. ([#24])
@@ -263,8 +268,10 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#23]:              https://github.com/thoukydides/homebridge-homeconnect/issues/23             "Issue #23"
 [#24]:              https://github.com/thoukydides/homebridge-homeconnect/issues/24             "Issue #24"
 [#25]:              https://github.com/thoukydides/homebridge-homeconnect/issues/25             "Issue #25"
+[#26]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #26"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.1...HEAD
+[v0.18.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.0...v0.18.1
 [v0.18.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.3...v0.18.0
 [v0.17.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.2...v0.17.3
 [v0.17.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.1...v0.17.2
