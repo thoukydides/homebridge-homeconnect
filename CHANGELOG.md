@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.18.2] - 2020-09-15
+### Fixed
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Imply from a change to Operation State `Ready` that the appliance Power State is `On`, even if no event has been been received. ([#32])
+
 ## [v0.18.1] - 2020-05-24
 ### Fixed
 * **Dishwasher/Hood:** Corrected discovery of functional or ambient light capabilities when the plugin is first started. ([#24])
@@ -269,8 +273,15 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#24]:              https://github.com/thoukydides/homebridge-homeconnect/issues/24             "Issue #24"
 [#25]:              https://github.com/thoukydides/homebridge-homeconnect/issues/25             "Issue #25"
 [#26]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #26"
+[#27]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #27"
+[#28]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #28"
+[#29]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #29"
+[#30]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #30"
+[#31]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #31"
+[#32]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #32"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.2...HEAD
+[v0.18.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.1...v0.18.2
 [v0.18.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.0...v0.18.1
 [v0.18.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.3...v0.18.0
 [v0.17.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.2...v0.17.3
