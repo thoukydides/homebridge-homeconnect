@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Fixed
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Do not warn when the appliance does not have a program selected.
 
 ## [v0.18.2] - 2020-09-15
 ### Fixed
@@ -273,12 +275,14 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#24]:              https://github.com/thoukydides/homebridge-homeconnect/issues/24             "Issue #24"
 [#25]:              https://github.com/thoukydides/homebridge-homeconnect/issues/25             "Issue #25"
 [#26]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #26"
-[#27]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #27"
-[#28]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #28"
-[#29]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #29"
-[#30]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #30"
-[#31]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #31"
-[#32]:              https://github.com/thoukydides/homebridge-homeconnect/issues/26             "Issue #32"
+[#27]:              https://github.com/thoukydides/homebridge-homeconnect/issues/27             "Issue #27"
+[#28]:              https://github.com/thoukydides/homebridge-homeconnect/issues/28             "Issue #28"
+[#29]:              https://github.com/thoukydides/homebridge-homeconnect/issues/29             "Issue #29"
+[#30]:              https://github.com/thoukydides/homebridge-homeconnect/issues/30             "Issue #30"
+[#31]:              https://github.com/thoukydides/homebridge-homeconnect/issues/31             "Issue #31"
+[#32]:              https://github.com/thoukydides/homebridge-homeconnect/issues/32             "Issue #32"
+[#33]:              https://github.com/thoukydides/homebridge-homeconnect/issues/33             "Issue #33"
+[#34]:              https://github.com/thoukydides/homebridge-homeconnect/issues/34             "Issue #34"
 
 [Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.2...HEAD
 [v0.18.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.1...v0.18.2
