@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.18.3] - 2020-10-25
 ### Fixed
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Imply from a change to Operation State `Inactive` that the appliance Power State is `Standby`, even if no event has been been received. ([#35])
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Do not warn when the appliance does not have a program selected.
@@ -286,7 +288,8 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#34]:              https://github.com/thoukydides/homebridge-homeconnect/issues/34             "Issue #34"
 [#35]:              https://github.com/thoukydides/homebridge-homeconnect/issues/35             "Issue #35"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.3...HEAD
+[v0.18.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.2...v0.18.3
 [v0.18.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.1...v0.18.2
 [v0.18.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.0...v0.18.1
 [v0.18.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.17.3...v0.18.0
