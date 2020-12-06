@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.19.0] - 2020-12-06
+### Added
+* **CleaningRobot/Dishwasher/Dryer/Oven/Washer/WasherDryer:** Use Pause and/or Resume commands, if supported by the appliance. ([#8])
+
 ## [v0.18.3] - 2020-10-25
 ### Fixed
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Imply from a change to Operation State `Inactive` that the appliance Power State is `Standby`, even if no event has been been received. ([#35])
@@ -287,8 +291,13 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#33]:              https://github.com/thoukydides/homebridge-homeconnect/issues/33             "Issue #33"
 [#34]:              https://github.com/thoukydides/homebridge-homeconnect/issues/34             "Issue #34"
 [#35]:              https://github.com/thoukydides/homebridge-homeconnect/issues/35             "Issue #35"
+[#36]:              https://github.com/thoukydides/homebridge-homeconnect/issues/36             "Issue #36"
+[#37]:              https://github.com/thoukydides/homebridge-homeconnect/issues/37             "Issue #37"
+[#38]:              https://github.com/thoukydides/homebridge-homeconnect/issues/38             "Issue #38"
+[#39]:              https://github.com/thoukydides/homebridge-homeconnect/issues/39             "Issue #39"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.3...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.0...HEAD
+[v0.19.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.3...v0.19.0
 [v0.18.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.2...v0.18.3
 [v0.18.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.1...v0.18.2
 [v0.18.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.0...v0.18.1
