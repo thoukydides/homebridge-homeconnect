@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.19.1] - 2021-02-04
+### Fixed
+* **Oven:** Workaround for appliances reporting unsupported power states (due to be fixed in a firmware update). This restores the ability to switch the appliances to standby via this plugin.
+
 ## [v0.19.0] - 2020-12-06
 ### Added
 * **CleaningRobot/Dishwasher/Dryer/Oven/Washer/WasherDryer:** Use Pause and/or Resume commands, if supported by the appliance. ([#8])
@@ -241,7 +245,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-Copyright © 2019-2020 Alexander Thoukydides
+Copyright © 2019-2021 Alexander Thoukydides
 
 [Wiki]:             https://github.com/thoukydides/homebridge-homeconnect/wiki
 [config.json]:      https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json      "Wiki: config.json"
@@ -295,8 +299,16 @@ Copyright © 2019-2020 Alexander Thoukydides
 [#37]:              https://github.com/thoukydides/homebridge-homeconnect/issues/37             "Issue #37"
 [#38]:              https://github.com/thoukydides/homebridge-homeconnect/issues/38             "Issue #38"
 [#39]:              https://github.com/thoukydides/homebridge-homeconnect/issues/39             "Issue #39"
+[#40]:              https://github.com/thoukydides/homebridge-homeconnect/issues/40             "Issue #40"
+[#41]:              https://github.com/thoukydides/homebridge-homeconnect/issues/41             "Issue #41"
+[#42]:              https://github.com/thoukydides/homebridge-homeconnect/issues/42             "Issue #42"
+[#43]:              https://github.com/thoukydides/homebridge-homeconnect/issues/43             "Issue #43"
+[#44]:              https://github.com/thoukydides/homebridge-homeconnect/issues/44             "Issue #44"
+[#45]:              https://github.com/thoukydides/homebridge-homeconnect/issues/45             "Issue #45"
+[#46]:              https://github.com/thoukydides/homebridge-homeconnect/issues/46             "Issue #46"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.1...HEAD
+[v0.19.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.0...v0.19.1
 [v0.19.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.3...v0.19.0
 [v0.18.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.2...v0.18.3
 [v0.18.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.1...v0.18.2
