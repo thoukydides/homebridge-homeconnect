@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.19.2] - 2021-02-17
+### Fixed
+* If a persistent cache file cannot be read, e.g. due to being corrupt, then it is now treated as though it does not exist. ([Files] / [#47])
+
 ## [v0.19.1] - 2021-02-04
 ### Fixed
 * **Oven:** Workaround for appliances reporting unsupported power states (due to be fixed in a firmware update). This restores the ability to switch the appliances to standby via this plugin.
@@ -306,8 +310,10 @@ Copyright © 2019-2021 Alexander Thoukydides
 [#44]:              https://github.com/thoukydides/homebridge-homeconnect/issues/44             "Issue #44"
 [#45]:              https://github.com/thoukydides/homebridge-homeconnect/issues/45             "Issue #45"
 [#46]:              https://github.com/thoukydides/homebridge-homeconnect/issues/46             "Issue #46"
+[#47]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #47"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.2...HEAD
+[v0.19.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.1...v0.19.2
 [v0.19.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.0...v0.19.1
 [v0.19.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.3...v0.19.0
 [v0.18.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.18.2...v0.18.3

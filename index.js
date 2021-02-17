@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2019-2020 Alexander Thoukydides
+// Copyright © 2019-2021 Alexander Thoukydides
 
 'use strict';
 
@@ -71,18 +71,19 @@ class HomeConnectPlatform {
         await this.persist.init();
 
         // Retrieve any saved authorisation token
-        let savedToken = await this.persist.getItem('token');
-        if (!savedToken) {
-            try {
+        let savedToken;
+        try {
+            savedToken = await this.persist.getItem('token');
+            if (!savedToken) {
                 // Attempt to load any old auth data saved by node-persist 0.0.8
                 let tokenFile = Path.join(this.homebridge.user.storagePath(),
                                           PLUGIN_NAME, 'token');
                 let data = await fsPromises.readFile(tokenFile);
                 savedToken = JSON.parse(data);
                 this.log.warn('Old format authorsation data retrieved');
-            } catch (err) {}
-            if (!savedToken) this.log.warn('No saved authorisation data found');
-        }
+            }
+        } catch (err) {}
+        if (!savedToken) this.log.warn('No saved authorisation data found');
 
         // Prepare a configuration schema
         this.schema = new ConfigSchema(this.log, this.persist,
