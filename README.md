@@ -64,11 +64,11 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Switch on/off.
     * Monitor program time remaining and general operation status.
     * Automation triggers for finished and aborted.
-    * *(The [Home Connect API](https://developer.home-connect.com/docs/cook-processor/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2020"*.)*
+    * *(The [Home Connect API](https://developer.home-connect.com/docs/cook-processor/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2022"*.)*
   * **Hob:**
     * Monitor power, remote control, and general operation status.
     * Automation triggers for finished, timer finished, and preheat finished.
-    * *(The [Home Connect API](https://developer.home-connect.com/docs/cooktop/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2020"*, although this is unlikely to be usable due to the [Hob-Control scope](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being authorised.)*
+    * *(The [Home Connect API](https://developer.home-connect.com/docs/cooktop/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2022"*.)*
   * **Hood:**
     * Switch on/off.
     * Switch fan on/off, set fan speed/intensive levels, and select manual/auto mode.
@@ -77,10 +77,9 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor remote control and general operation status.
     * Automation trigger for finished.
   * **Oven:**
-    * Switch on/off.
+    * Switch on/off and start/stop programs with preset options.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, timer finished, and preheat finished, 
-    * *(It is not possible to control Oven programs due to the [Oven-Control scope](https://github.com/thoukydides/homebridge-homeconnect/wiki/Scopes) not being authorised; use [IFTTT](https://github.com/thoukydides/homebridge-homeconnect/wiki/IFTTT) instead.)*
     
 ### Cleaning Appliances
 
@@ -112,6 +111,8 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 
 All notable changes to this project are documented in the [CHANGELOG.md](CHANGELOG.md) file.
 
+**Version 0.20.0 of this plugin requests authorisation of additional Home Connect API scopes to allow control of Oven appliance programs. When upgrading from version 0.19.2 or earlier force a re-authorisation by deleting the `~/.homebridge/homebridge-homeconnect/persist/94a08da1fecbb6e8b46990538c7b50b2` file while Homebridge is stopped.**
+
 ## Reporting Issues
 
 Report any issues on [GitHub](https://github.com/thoukydides/homebridge-homeconnect/issues/new/choose).
@@ -124,7 +125,7 @@ Before raising an issue please check whether it relates to an expected [error me
 
 ## License
 
-> ISC License (ISC)<br>Copyright © 2019-2020 Alexander Thoukydides
+> ISC License (ISC)<br>Copyright © 2019-2021 Alexander Thoukydides
 >
 > Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 >
