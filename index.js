@@ -157,6 +157,7 @@ class HomeConnectPlatform {
                 Hob:            ApplianceCooking.Hob,
                 Hood:           ApplianceCooking.Hood,
                 Oven:           ApplianceCooking.Oven,
+                WarmingDrawer:  ApplianceCooking.WarmingDrawer,
                 // Cleaning appliances
                 CleaningRobot:  ApplianceCleaning.CleaningRobot,
                 Dishwasher:     ApplianceCleaning.Dishwasher,

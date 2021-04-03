@@ -80,7 +80,10 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Switch on/off and start/stop programs with preset options.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, timer finished, and preheat finished, 
-    
+  * **WarmingDrawer:**
+    * Monitor power, remote control, and general operation status.
+    * *(The [Home Connect API](https://developer.home-connect.com/docs/cooktop/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2021"*.)*
+
 ### Cleaning Appliances
 
   * **CleaningRobot:**

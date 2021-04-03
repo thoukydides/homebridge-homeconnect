@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.21.0] - 2021-04-03
+### Added
+* **WarmingDrawer:** Added support for WarmingDrawer appliances.
+
 ## [v0.20.0] - 2021-04-02
 ### Added
 * **Hob/Oven:** Added `Control` to the requested scopes when the plugin is authorised to access the Home Connect API. This allows Oven programs to be started and stopped, rather than just monitored. If the plugin has been previously authorised then it is necessary to force a re-authorisation for this to take effect. This can be achieved by stopping Homebridge, deleting the `~/.homebridge/homebridge-homeconnect/persist/94a08da1fecbb6e8b46990538c7b50b2` file, and then restarting Homebridge. An authorisation URL will be written to the Homebridge log output. ([Scopes] / [Files])
@@ -321,7 +325,8 @@ Copyright © 2019-2021 Alexander Thoukydides
 [#51]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #51"
 [#52]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #52"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.20.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.21.0...HEAD
+[v0.21.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.20.0...v0.21.0
 [v0.20.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.2...v0.20.0
 [v0.19.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.1...v0.19.2
 [v0.19.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.0...v0.19.1
