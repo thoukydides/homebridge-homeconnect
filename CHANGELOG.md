@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [v0.22.0] - 2021-04-30
 ### Added
 * **CoffeeMaker/Dishwasher/Dryer/Freezer/FridgeFreezer/Hob/Oven/Refrigerator/Washer/WarmingDrawer/WasherDryer/WineCooler:** Added child lock control via a `Lock Physical Controls` characteristic.
+* **WarmingDrawer:** Added program support.
 
 ## [v0.21.0] - 2021-04-03
 ### Added
