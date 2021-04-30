@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.22.0] - 2021-04-30
+### Added
+* **CoffeeMaker/Dishwasher/Dryer/Freezer/FridgeFreezer/Hob/Oven/Refrigerator/Washer/WarmingDrawer/WasherDryer/WineCooler:** Added child lock control via a `Lock Physical Controls` characteristic.
+
 ## [v0.21.0] - 2021-04-03
 ### Added
 * **WarmingDrawer:** Added support for WarmingDrawer appliances.
@@ -319,13 +323,14 @@ Copyright © 2019-2021 Alexander Thoukydides
 [#45]:              https://github.com/thoukydides/homebridge-homeconnect/issues/45             "Issue #45"
 [#46]:              https://github.com/thoukydides/homebridge-homeconnect/issues/46             "Issue #46"
 [#47]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #47"
-[#48]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #48"
-[#49]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #49"
-[#50]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #50"
-[#51]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #51"
-[#52]:              https://github.com/thoukydides/homebridge-homeconnect/issues/47             "Issue #52"
+[#48]:              https://github.com/thoukydides/homebridge-homeconnect/issues/48             "Issue #48"
+[#49]:              https://github.com/thoukydides/homebridge-homeconnect/issues/49             "Issue #49"
+[#50]:              https://github.com/thoukydides/homebridge-homeconnect/issues/50             "Issue #50"
+[#51]:              https://github.com/thoukydides/homebridge-homeconnect/issues/51             "Issue #51"
+[#52]:              https://github.com/thoukydides/homebridge-homeconnect/issues/52             "Issue #52"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.21.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.22.0...HEAD
+[v0.22.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.21.0...v0.22.0
 [v0.21.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.20.0...v0.21.0
 [v0.20.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.2...v0.20.0
 [v0.19.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.19.1...v0.19.2

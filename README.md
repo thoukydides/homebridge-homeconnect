@@ -57,7 +57,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 ### Cooking Appliances
 
   * **CoffeeMaker:**
-    * Switch on/off and start/stop programs with preset options.
+    * Switch on/off, control child lock, and start/stop programs with preset options.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for bean container empty, water tank empty, and drip tray full.
   * **CookProcessor:**
@@ -66,6 +66,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation triggers for finished and aborted.
     * *(The [Home Connect API](https://developer.home-connect.com/docs/cook-processor/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2022"*.)*
   * **Hob:**
+    * Control child lock.
     * Monitor power, remote control, and general operation status.
     * Automation triggers for finished, timer finished, and preheat finished.
     * *(The [Home Connect API](https://developer.home-connect.com/docs/cooktop/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2022"*.)*
@@ -77,10 +78,11 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor remote control and general operation status.
     * Automation trigger for finished.
   * **Oven:**
-    * Switch on/off and start/stop programs with preset options.
+    * Switch on/off, control child lock, and start/stop programs with preset options.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, timer finished, and preheat finished, 
   * **WarmingDrawer:**
+    * Control child lock.
     * Monitor power, remote control, and general operation status.
     * *(The [Home Connect API](https://developer.home-connect.com/docs/cooktop/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2021"*.)*
 
@@ -91,12 +93,12 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor battery level, battery charging, dock, and general operation status.
     * Automation triggers for finished, aborted, dust box full, stuck, and lost.
   * **Dishwasher:**
-    * Switch on/off and start/stop programs with preset options.
+    * Switch on/off, control child lock, and start/stop programs with preset options.
     * Switch ambient light on/off, change brighness, and select colour.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished and aborted.
   * **Dryer / Washer / WasherDryer:**
-    * Start/stop programs with preset options.
+    * Control child lock and start/stop programs with preset options.
     * Monitor power, door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished and aborted.
     
@@ -104,10 +106,12 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 
   * **Freezer / FridgeFreezer / Refrigerator:**
     * Set freezer/refrigerator super,  eco, sabbath, refrigerator vacation, and refrigerator fresh modes.
+    * Control child lock.
     * Monitor power and door.
     * Automation triggers for freezer/refrigerator door and freezer temperature alarms.
   * **WineCooler:**
     * Set sabbath mode.
+    * Control child lock.
     * Monitor power and door.
 
 ## Changelog
