@@ -68,7 +68,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
   * **Hob:**
     * Control alarm clock and child lock.
     * Monitor power, remote control, and general operation status.
-    * Automation triggers for finished, timer finished, and preheat finished.
+    * Automation triggers for finished, alarm clock finished, and preheat finished.
     * *(The [Home Connect API](https://developer.home-connect.com/docs/cooktop/supported_programs_and_options) documentation states that* "Program support is planned to be released in 2022"*.)*
   * **Hood:**
     * Switch on/off.
@@ -80,7 +80,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
   * **Oven:**
     * Switch on/off, control alarm clock and child lock, and start/stop programs with preset options.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
-    * Automation triggers for finished, aborted, timer finished, and preheat finished, 
+    * Automation triggers for finished, aborted, alarm clock finished, and preheat finished, 
   * **WarmingDrawer:**
     * Switch on/off, control child lock, and start/stop programs with preset options.
     * Monitor remote control, and general operation status.
