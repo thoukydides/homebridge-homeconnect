@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ## [v0.22.0] - 2021-05-01
 ### Added
 * **CoffeeMaker/Dishwasher/Dryer/Freezer/FridgeFreezer/Hob/Oven/Refrigerator/Washer/WarmingDrawer/WasherDryer/WineCooler:** Added child lock control as a `Lock Physical Controls` characteristic on the main power `Switch`.
+* **CoffeeMaker:** Added control of the cup warmer.
+* **Oven:** Added control of sabbath mode.
 * **Hob/Oven:** Added alarm clock as a `Set Duration` characteristic on the main power `Switch`.
 * **WarmingDrawer:** Added support for starting, stopping, and monitoring the `WarmingDrawer` program.
 

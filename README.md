@@ -57,7 +57,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 ### Cooking Appliances
 
   * **CoffeeMaker:**
-    * Switch on/off, control child lock, and start/stop programs with preset options.
+    * Switch on/off, control cup warmer and child lock, and start/stop programs with preset options.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for bean container empty, water tank empty, and drip tray full.
   * **CookProcessor:**
@@ -78,6 +78,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor remote control and general operation status.
     * Automation trigger for finished.
   * **Oven:**
+    * Set sabbath mode.
     * Switch on/off, control alarm clock and child lock, and start/stop programs with preset options.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, alarm clock finished, and preheat finished, 
@@ -104,7 +105,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 ### Cooling Appliances
 
   * **Freezer / FridgeFreezer / Refrigerator:**
-    * Set freezer/refrigerator super,  eco, sabbath, refrigerator vacation, and refrigerator fresh modes.
+    * Set freezer/refrigerator super, eco, sabbath, refrigerator vacation, and refrigerator fresh modes.
     * Control child lock.
     * Monitor power and door.
     * Automation triggers for freezer/refrigerator door and freezer temperature alarms.
