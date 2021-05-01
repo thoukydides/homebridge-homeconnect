@@ -57,7 +57,8 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 ### Cooking Appliances
 
   * **CoffeeMaker:**
-    * Switch on/off, control cup warmer and child lock, and start/stop programs with preset options.
+    * Switch on/off, start/stop programs with preset options, and turn cup warmer on/off.
+    * Control child lock.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for bean container empty, water tank empty, and drip tray full.
   * **CookProcessor:**
@@ -78,13 +79,15 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor remote control and general operation status.
     * Automation trigger for finished.
   * **Oven:**
+    * Switch on/off and start/stop programs with preset options.
     * Set sabbath mode.
-    * Switch on/off, control alarm clock and child lock, and start/stop programs with preset options.
+    * Control alarm clock and child lock.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, alarm clock finished, and preheat finished, 
   * **WarmingDrawer:**
-    * Switch on/off, control child lock, and start/stop programs with preset options.
-    * Monitor remote control, and general operation status.
+    * Switch on/off and start/stop programs with preset options.
+    * Control child lock.
+    * Monitor remote control and general operation status.
 
 ### Cleaning Appliances
 
@@ -93,12 +96,14 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor battery level, battery charging, dock, and general operation status.
     * Automation triggers for finished, aborted, dust box full, stuck, and lost.
   * **Dishwasher:**
-    * Switch on/off, control child lock, and start/stop programs with preset options.
+    * Switch on/off and start/stop programs with preset options.
     * Switch ambient light on/off, change brighness, and select colour.
+    * Control child lock.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished and aborted.
   * **Dryer / Washer / WasherDryer:**
-    * Control child lock and start/stop programs with preset options.
+    * Start/stop programs with preset options.
+    * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished and aborted.
     
