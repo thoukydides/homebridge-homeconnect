@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.23.1] - 2021-05-04
+### Fixed
+* **Hood:** Fixed a possible race condition that may have prevented ambient light colour support from being identified correctly. ([#54])
+
 ## [v0.23.0] - 2021-05-03
 ### Added
 * **Dishwasher/Dryer/Oven/Washer/WasherDryer:** The program start time (`BSH.Common.Option.StartInRelative` for Dishwasher and Oven appliances) or end time (`BSH.Common.Option.FinishInRelative` for Dryer, Washer, and WasherDryer appliances) can now be specified as an absolute time instead of a relative time in seconds. The time should be specified in `HH:MM` format using the Homebridge server's timezone.
@@ -337,8 +341,10 @@ Copyright © 2019-2021 Alexander Thoukydides
 [#51]:              https://github.com/thoukydides/homebridge-homeconnect/issues/51             "Issue #51"
 [#52]:              https://github.com/thoukydides/homebridge-homeconnect/issues/52             "Issue #52"
 [#53]:              https://github.com/thoukydides/homebridge-homeconnect/issues/53             "Issue #53"
+[#54]:              https://github.com/thoukydides/homebridge-homeconnect/issues/54             "Issue #54"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.1...HEAD
+[v0.23.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.0...v0.23.1
 [v0.23.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.22.0...v0.23.0
 [v0.22.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.21.0...v0.22.0
 [v0.21.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.20.0...v0.21.0
