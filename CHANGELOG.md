@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.23.3] - 2021-05-16
+### Fixed
+* **Dishwasher/Dryer/Oven/Washer/WasherDryer:** Convert absolute times for program start (`BSH.Common.Option.StartInRelative`) or end (`BSH.Common.Option.FinishInRelative`) to the required delay in seconds every time that the program is started, rather than just the first time.
+
 ## [v0.23.2] - 2021-05-05
 ### Fixed
 * **Dishwasher/Hood:** Fixed bug introduced in the previous version which broke all control of ambient lights. ([#54])
@@ -346,10 +350,12 @@ Copyright © 2019-2021 Alexander Thoukydides
 [#52]:              https://github.com/thoukydides/homebridge-homeconnect/issues/52             "Issue #52"
 [#53]:              https://github.com/thoukydides/homebridge-homeconnect/issues/53             "Issue #53"
 [#54]:              https://github.com/thoukydides/homebridge-homeconnect/issues/54             "Issue #54"
+[#55]:              https://github.com/thoukydides/homebridge-homeconnect/issues/55             "Issue #55"
+[#56]:              https://github.com/thoukydides/homebridge-homeconnect/issues/56             "Issue #56"
 
 [Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.2...HEAD
-[v0.23.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.1...v0.23.2
-[v0.23.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.0...v0.23.1
+[v0.23.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.1...v0.23.2
+[v0.23.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.0...v0.23.1
 [v0.23.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.22.0...v0.23.0
 [v0.22.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.21.0...v0.22.0
 [v0.21.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.20.0...v0.21.0
