@@ -14,7 +14,7 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 
 </span>
 
-[Home Connect](https://www.home-connect.com), [Balay](https://www.balay.es/), [Bosch](https://www.bosch-home.com/), [Constructa](https://www.constructa.com/), [Gaggenau](https://www.gaggenau.com/), [NEFF](https://www.neff-home.com/), [Profilo](https://www.profilo.com/), [Siemens](https://www.siemens-home.bsh-group.com/), and [Thermador](https://www.thermador.com/) are trademarks of [BSH Home Appliances](https://www.bsh-group.com).
+[Home Connect](https://www.home-connect.com), [Balay](https://www.balay.es/), [Bosch](https://www.bosch-home.com/), [Constructa](https://www.constructa.com/), [Gaggenau](https://www.gaggenau.com/), [NEFF](https://www.neff-home.com/), [Pitsos](https://www.pitsos.gr/), [Profilo](https://www.profilo.com/), [Siemens](https://www.siemens-home.bsh-group.com/), and [Thermador](https://www.thermador.com/) are trademarks of [BSH Home Appliances](https://www.bsh-group.com).
 
 ## Installation
 
