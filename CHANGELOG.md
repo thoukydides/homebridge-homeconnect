@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.23.4] - 2021-12-29
+### Changed
+* Removed dependency on the legacy Node.js `url` and `querystring` packages.
+### Fixed
+* Updated the Authorisation Code Grant Flow to work with the current implementation of the appliance simulators (the `redirect_uri` parameter is no longer optional for the Access Token Request).
+
 ## [v0.23.3] - 2021-05-16
 ### Fixed
 * **Dishwasher/Dryer/Oven/Washer/WasherDryer:** Convert absolute times for program start (`BSH.Common.Option.StartInRelative`) or end (`BSH.Common.Option.FinishInRelative`) to the required delay in seconds every time that the program is started, rather than just the first time.
@@ -352,8 +358,21 @@ Copyright © 2019-2021 Alexander Thoukydides
 [#54]:              https://github.com/thoukydides/homebridge-homeconnect/issues/54             "Issue #54"
 [#55]:              https://github.com/thoukydides/homebridge-homeconnect/issues/55             "Issue #55"
 [#56]:              https://github.com/thoukydides/homebridge-homeconnect/issues/56             "Issue #56"
+[#57]:              https://github.com/thoukydides/homebridge-homeconnect/issues/57             "Issue #57"
+[#58]:              https://github.com/thoukydides/homebridge-homeconnect/issues/58             "Issue #58"
+[#59]:              https://github.com/thoukydides/homebridge-homeconnect/issues/59             "Issue #59"
+[#60]:              https://github.com/thoukydides/homebridge-homeconnect/issues/60             "Issue #60"
+[#61]:              https://github.com/thoukydides/homebridge-homeconnect/issues/61             "Issue #61"
+[#62]:              https://github.com/thoukydides/homebridge-homeconnect/issues/62             "Issue #62"
+[#63]:              https://github.com/thoukydides/homebridge-homeconnect/issues/63             "Issue #63"
+[#64]:              https://github.com/thoukydides/homebridge-homeconnect/issues/64             "Issue #64"
+[#65]:              https://github.com/thoukydides/homebridge-homeconnect/issues/65             "Issue #65"
+[#66]:              https://github.com/thoukydides/homebridge-homeconnect/issues/66             "Issue #66"
+[#67]:              https://github.com/thoukydides/homebridge-homeconnect/issues/67             "Issue #67"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.4...HEAD
+[v0.23.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.3...v0.23.4
+[v0.23.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.2...v0.23.3
 [v0.23.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.1...v0.23.2
 [v0.23.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.0...v0.23.1
 [v0.23.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.22.0...v0.23.0
