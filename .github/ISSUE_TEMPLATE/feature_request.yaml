@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest a new feature or other enhancement.
+labels: ["enhancement"]
+body:
+- type: textarea
+  id: description
+  attributes:
+    label: Description of Enhancement
+    description: Please provide a clear and concise description of your proposed improvement.
+  validations:
+    required: true
+- type: textarea
+  id: hcmap
+  attributes:
+    label: Home Connect Mapping
+    description: Please suggest how the requested functionality can be supported using the options, states, settings, events, and other features, of the Home Connect API: https://api-docs.home-connect.com/
+  validations:
+    required: false
+- type: textarea
+  id: hapmap
+  attributes:
+    label: HomeKit Mapping
+    description: Please suggest how the requested functionality can be supported using the Apple-defined services and characteristics listed in the HomeKit Accessory Protocol Specification (Non-Commercial Version): https://developer.apple.com/homekit/specification/
+  validations:
+    required: false
+- type: input
+  id: appliance
+  attributes:
+    label: Home Connect Appliance(s)
+    description: If this enhancement relates to a specific appliance then please provide the manufacturer, type, and model number. These details can be found in the Apple Home app or the Homebridge log file.
+    placeholder: e.g. Siemens Oven HB678GBS6B/50
+  validations:
+    required: false
