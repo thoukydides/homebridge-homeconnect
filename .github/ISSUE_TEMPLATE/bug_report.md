@@ -19,6 +19,9 @@ assignees: ''
 #### HomeKit App(s)
 <!-- If this issue relates to a specific HomeKit app then please provide details, e.g. Apple Home, Elgato Eve, Home+ 4, Hesperus, etc. -->
 
+#### Diagnostic Checks
+<!-- Summarise the steps that have you have taken to rule-out problems with the Home Connect servers or appliance, e.g. controlling the appliance via the Home Connect app, verifying the Network status in the Home Connect app, checking the official server status (https://www.home-connect.com/global/help-support/system-status), and/or checking the unofficial server status (https://www.thouky.co.uk/homeconnect.html). -->
+
 #### Log File
 <!-- Please copy/paste relevant log entries below, between the ``` marks. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its -D command line option). -->
 ```
