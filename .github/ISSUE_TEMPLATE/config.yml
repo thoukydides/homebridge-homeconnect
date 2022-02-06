@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Home Connect System Status (official)
+    url: https://www.home-connect.com/global/help-support/system-status
+    about: Check the official Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
+  - name: Home Connect Server Status (unofficial)
+    url: https://www.thouky.co.uk/homeconnect.html
+    about: Check the unofficial Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
   - name: Error messsages
     url: https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors
     about: If you are seeing error messages in the log file then check whether they are expected before reporting an issue.
