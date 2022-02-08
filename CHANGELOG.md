@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.23.5] - 2022-02-08
+### Fixed
+* **CoffeeMaker/CookProcessor/Hob/Hood/Oven/WarmingDrawer/CleaningRobot/Dishwasher/Dryer/Washer/WasherDryer/Freezer/FridgeFreezer/Refrigerator/WineCooler:** Improved handling of `BSH.Common.Setting.PowerState` or `BSH.Common.Status.OperationState` reads that complete after a `DISCONNECTED` event. This should result in a more consistent state when appliances are switched off or otherwise inaccessible. ([#72])
+
 ## [v0.23.4] - 2021-12-29
 ### Changed
 * Removed dependency on the legacy Node.js `url` and `querystring` packages.
@@ -287,7 +291,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-Copyright © 2019-2021 Alexander Thoukydides
+Copyright © 2019-2022 Alexander Thoukydides
 
 [Wiki]:             https://github.com/thoukydides/homebridge-homeconnect/wiki
 [config.json]:      https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json      "Wiki: config.json"
@@ -369,8 +373,16 @@ Copyright © 2019-2021 Alexander Thoukydides
 [#65]:              https://github.com/thoukydides/homebridge-homeconnect/issues/65             "Issue #65"
 [#66]:              https://github.com/thoukydides/homebridge-homeconnect/issues/66             "Issue #66"
 [#67]:              https://github.com/thoukydides/homebridge-homeconnect/issues/67             "Issue #67"
+[#68]:              https://github.com/thoukydides/homebridge-homeconnect/issues/68             "Issue #68"
+[#69]:              https://github.com/thoukydides/homebridge-homeconnect/issues/69             "Issue #69"
+[#70]:              https://github.com/thoukydides/homebridge-homeconnect/issues/70             "Issue #70"
+[#71]:              https://github.com/thoukydides/homebridge-homeconnect/issues/71             "Issue #71"
+[#72]:              https://github.com/thoukydides/homebridge-homeconnect/issues/72             "Issue #72"
+[#73]:              https://github.com/thoukydides/homebridge-homeconnect/issues/73             "Issue #73"
+[#74]:              https://github.com/thoukydides/homebridge-homeconnect/issues/74             "Issue #74"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.5...HEAD
+[v0.23.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.4...v0.23.5
 [v0.23.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.3...v0.23.4
 [v0.23.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.2...v0.23.3
 [v0.23.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.1...v0.23.2
