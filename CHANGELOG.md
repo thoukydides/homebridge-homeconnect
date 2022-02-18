@@ -3,14 +3,16 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Fixed
+* Improved handling of appliances that are removed from and re-added to the Home Connect account. Previously, if the appliance was re-added without the plugin noticing its prior removal (via its hourly poll) then it would remain unusable until Homebridge is restarted. The `DEPAIRED` and `PAIRED` events are not treated similarly to `DISCONNECTED` and `CONNECTED`, updating the appliance's connection status appropriately.
 
 ## [v0.23.6] - 2022-02-09
 ### Fixed
-* **CoffeeMaker/CookProcessor/Hob/Hood/Oven/WarmingDrawer/CleaningRobot/Dishwasher/Dryer/Washer/WasherDryer/Freezer/FridgeFreezer/Refrigerator/WineCooler:** Improved handling of appliances that are in the `DISCONNECTED` state when Homebridge is (re)started. This should result in a more consistent state when appliances are switched off or otherwise inaccessible. ([#72])
+* Improved handling of appliances that are in the `DISCONNECTED` state when Homebridge is (re)started. This should result in a more consistent state when appliances are switched off or otherwise inaccessible. ([#72])
 
 ## [v0.23.5] - 2022-02-08
 ### Fixed
-* **CoffeeMaker/CookProcessor/Hob/Hood/Oven/WarmingDrawer/CleaningRobot/Dishwasher/Dryer/Washer/WasherDryer/Freezer/FridgeFreezer/Refrigerator/WineCooler:** Improved handling of `BSH.Common.Setting.PowerState` or `BSH.Common.Status.OperationState` reads that complete after a `DISCONNECTED` event. This should result in a more consistent state when appliances are switched off or otherwise inaccessible. ([#72])
+* Improved handling of `BSH.Common.Setting.PowerState` or `BSH.Common.Status.OperationState` reads that complete after a `DISCONNECTED` event. This should result in a more consistent state when appliances are switched off or otherwise inaccessible. ([#72])
 
 ## [v0.23.4] - 2021-12-29
 ### Changed
