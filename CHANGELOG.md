@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.23.7] - 2022-02-18
 ### Fixed
 * Improved handling of appliances that are removed from and re-added to the Home Connect account. Previously, if the appliance was re-added without the plugin noticing its prior removal (via its hourly poll) then it would remain unusable until Homebridge is restarted. The `DEPAIRED` and `PAIRED` events are not treated similarly to `DISCONNECTED` and `CONNECTED`, updating the appliance's connection status appropriately.
 
@@ -387,7 +389,8 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#73]:              https://github.com/thoukydides/homebridge-homeconnect/issues/73             "Issue #73"
 [#74]:              https://github.com/thoukydides/homebridge-homeconnect/issues/74             "Issue #74"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.6...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.7...HEAD
+[v0.23.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.6...v0.23.7
 [v0.23.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.5...v0.23.6
 [v0.23.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.4...v0.23.5
 [v0.23.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.3...v0.23.4
