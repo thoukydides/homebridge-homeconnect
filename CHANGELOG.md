@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.23.8] - 2022-03-14
+### Fixed
+* **CleaningRobot/Cooktop/Dishwasher:** When program options are read due to a new program being selected, the appliance's power and selected program are no longer controlled. This should prevent the appliance from being incorrectly switched off when being operated manually. ([#78])
+
 ## [v0.23.7] - 2022-02-18
 ### Fixed
 * Improved handling of appliances that are removed from and re-added to the Home Connect account. Previously, if the appliance was re-added without the plugin noticing its prior removal (via its hourly poll) then it would remain unusable until Homebridge is restarted. The `DEPAIRED` and `PAIRED` events are not treated similarly to `DISCONNECTED` and `CONNECTED`, updating the appliance's connection status appropriately.
@@ -388,8 +392,14 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#72]:              https://github.com/thoukydides/homebridge-homeconnect/issues/72             "Issue #72"
 [#73]:              https://github.com/thoukydides/homebridge-homeconnect/issues/73             "Issue #73"
 [#74]:              https://github.com/thoukydides/homebridge-homeconnect/issues/74             "Issue #74"
+[#75]:              https://github.com/thoukydides/homebridge-homeconnect/issues/75             "Issue #75"
+[#76]:              https://github.com/thoukydides/homebridge-homeconnect/issues/76             "Issue #76"
+[#77]:              https://github.com/thoukydides/homebridge-homeconnect/issues/77             "Issue #77"
+[#78]:              https://github.com/thoukydides/homebridge-homeconnect/issues/78             "Issue #78"
+[#79]:              https://github.com/thoukydides/homebridge-homeconnect/issues/79             "Issue #79"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.7...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.8...HEAD
+[v0.23.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.7...v0.23.8
 [v0.23.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.6...v0.23.7
 [v0.23.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.5...v0.23.6
 [v0.23.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.4...v0.23.5
