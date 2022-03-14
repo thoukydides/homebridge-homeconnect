@@ -1,6 +1,6 @@
 {
     "name": "homebridge-homeconnect",
-    "version": "0.23.7",
+    "version": "0.23.8",
     "description": "Home Connect home appliances plugin for Homebridge",
     "license": "ISC",
     "keywords": [
