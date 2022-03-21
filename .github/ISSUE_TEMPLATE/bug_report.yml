@@ -41,7 +41,7 @@ body:
       - label: Home Connect app is able to control the appliance with Wi-Fi disabled.
       - label: Home Connect app shows three green lines in the Network section of the appliance Settings.
       - label: Official [Home Connect System Status](https://www.home-connect.com/global/help-support/system-status) is up and running.
-      - label: Unofficial [Home Connect Server Status](https://www.thouky.co.uk/homeconnect.html) shows servers up and no recent errors.
+      - label: Unofficial [Home Connect Server Status](https://homeconnect.thouky.co.uk) shows servers up and no recent errors.
   validations:
     required: false
 - type: textarea

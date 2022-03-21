@@ -4,7 +4,7 @@ contact_links:
     url: https://www.home-connect.com/global/help-support/system-status
     about: Check the official Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
   - name: Home Connect Server Status (unofficial)
-    url: https://www.thouky.co.uk/homeconnect.html
+    url: https://homeconnect.thouky.co.uk
     about: Check the unofficial Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
   - name: Error messsages
     url: https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors
@@ -13,5 +13,5 @@ contact_links:
     url: https://github.com/thoukydides/homebridge-homeconnect/wiki/Rate-Limits
     about: If access to your appliances is slow, or you are seeing "Too Many Requests" errors in the log, then you may be exceeding Home Connect rate limits.
   - name: Contact
-    url: https://www.thouky.co.uk/contact.html
+    url: https://www.thouky.co.uk
     about: Other ways to contact the author.

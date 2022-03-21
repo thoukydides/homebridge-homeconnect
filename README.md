@@ -136,7 +136,7 @@ Before raising an issue please check whether it relates to an expected [error me
     * Open the appliance Settings, scroll to the Network section, and verify that all three lines (for the links between the appliance, cloud, and phone) and green.
   * Check the status of the Home Connect servers using:
     * The official [Home Connect System Status](https://www.home-connect.com/global/help-support/system-status) page.
-    * The unofficial [Home Connect Server Status](https://www.thouky.co.uk/homeconnect.html) page.
+    * The unofficial [Home Connect Server Status](https://homeconnect.thouky.co.uk) page.
 
 Please attach the relevant section of the Homebridge log file, either pasted into the issue or attached as a text file (*not a screenshot*). Extra debug should be enabled and captured if appropriate:
 
