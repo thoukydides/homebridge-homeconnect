@@ -51,14 +51,14 @@
     },
     "main": "index.js",
     "engines": {
-        "homebridge": ">=0.4.50",
-        "node": ">=12.0.0"
+        "homebridge": ">=1.4.0",
+        "node": ">=16.0.0"
     },
     "dependencies": {
-        "chalk": "^3.0.0",
-        "node-persist": "^3.0.5",
-        "request": "^2.88.0",
-        "request-promise-native": "^1.0.8"
+        "chalk": "^4.1.2",
+        "node-persist": "^3.1.0",
+        "request": "^2.88.2",
+        "request-promise-native": "^1.0.9"
     },
     "devDependencies": {
         "pre-commit": "^1.2.2"
