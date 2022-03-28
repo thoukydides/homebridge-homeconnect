@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* Replaced used of `request-promise-native` (deprecated since 11th February 2020) with `undici` for most API calls. However, `request` is still being used for the event steeam.
+* Updated dependencies to the latest compatible versions. Node 16.5 or later is required.
 
 ## [v0.23.8] - 2022-03-14
 ### Fixed
