@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Changed
-* Replaced used of `request-promise-native` (deprecated since 11th February 2020) with `undici` for most API calls. However, `request` is still being used for the event steeam.
+* Replaced used of `request` and `request-promise-native` (both deprecated since 11th February 2020) with `undici`. (This results in Node writing an `ExperimentalWarning: buffer.Blob is an experimental feature` message to the console, but this is safe to ignore.)
 * Updated dependencies to the latest compatible versions. Node 16.5 or later is required.
 
 ## [v0.23.8] - 2022-03-14
