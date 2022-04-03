@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.24.1] - 2022-04-03
+### Fixed
+* Bumped the minimum Node version to 16.14 (required for `AbortSignal.timeout()`. ([#80])
+
 ## [v0.24.0] - 2022-04-02
 ### Fixed
 * Fully support appliance `haID` values that are comprised of 18 decimal digits (rather than just those that include the manufacturer's name and model number). Loss of the event stream was previously ignored for these appliances, but is now treated the same as the appliance being disconnected.
@@ -404,8 +408,10 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#77]:              https://github.com/thoukydides/homebridge-homeconnect/issues/77             "Issue #77"
 [#78]:              https://github.com/thoukydides/homebridge-homeconnect/issues/78             "Issue #78"
 [#79]:              https://github.com/thoukydides/homebridge-homeconnect/issues/79             "Issue #79"
+[#80]:              https://github.com/thoukydides/homebridge-homeconnect/issues/80             "Issue #80"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.1...HEAD
+[v0.24.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.0...v0.24.1
 [v0.24.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.8...v0.24.0
 [v0.23.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.7...v0.23.8
 [v0.23.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.6...v0.23.7

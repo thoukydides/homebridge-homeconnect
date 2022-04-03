@@ -52,7 +52,7 @@
     "main": "index.js",
     "engines": {
         "homebridge": ">=1.4.0",
-        "node": ">=16.5.0"
+        "node": ">=16.14.0"
     },
     "dependencies": {
         "chalk": "^4.1.2",
