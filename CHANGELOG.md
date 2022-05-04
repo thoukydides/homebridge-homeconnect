@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.24.2] - 2022-05-04
+### Fixed
+* Added explicit `content-type` header to all authorization requests (Device Flow, Authorization Code Grant Flow, and Access Token refreshing). ([#86])
+### Changed
+* If the Home Connect API reports that an appliance supports both `Off` and `Standby` then it is treated as an error, and neither are supported. ([#83])
+* **Dishwasher/Hood:** Set the initial value for `Brightness` characteristics at the same time as setting their allowed range. ([#84])
+
 ## [v0.24.1] - 2022-04-03
 ### Fixed
 * Bumped the minimum Node version to 16.14 (required for `AbortSignal.timeout()`. ([#80])
@@ -409,8 +416,16 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#78]:              https://github.com/thoukydides/homebridge-homeconnect/issues/78             "Issue #78"
 [#79]:              https://github.com/thoukydides/homebridge-homeconnect/issues/79             "Issue #79"
 [#80]:              https://github.com/thoukydides/homebridge-homeconnect/issues/80             "Issue #80"
+[#81]:              https://github.com/thoukydides/homebridge-homeconnect/issues/81             "Issue #81"
+[#82]:              https://github.com/thoukydides/homebridge-homeconnect/issues/82             "Issue #82"
+[#83]:              https://github.com/thoukydides/homebridge-homeconnect/issues/83             "Issue #83"
+[#84]:              https://github.com/thoukydides/homebridge-homeconnect/issues/84             "Issue #84"
+[#85]:              https://github.com/thoukydides/homebridge-homeconnect/issues/85             "Issue #85"
+[#86]:              https://github.com/thoukydides/homebridge-homeconnect/issues/86             "Issue #86"
+[#87]:              https://github.com/thoukydides/homebridge-homeconnect/issues/87             "Issue #87"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.2...HEAD
+[v0.24.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.1...v0.24.2
 [v0.24.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.0...v0.24.1
 [v0.24.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.8...v0.24.0
 [v0.23.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.23.7...v0.23.8
