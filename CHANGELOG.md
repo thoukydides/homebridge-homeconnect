@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.24.3] - 2022-05-05
+### Fixed
+* Corrected addition of `content-type` header with undici@5.1.0 and later. ([#86])
+
 ## [v0.24.2] - 2022-05-04
 ### Fixed
 * Added explicit `content-type` header to all authorization requests (Device Flow, Authorization Code Grant Flow, and Access Token refreshing). ([#86])
