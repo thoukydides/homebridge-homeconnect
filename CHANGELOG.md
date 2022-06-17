@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.24.5] - 2022-06-17
+### Changed
+* Bumped undici version due to MITM vulnerability. ([#90])
+
 ## [v0.24.4] - 2022-05-13
 ### Changed
 * Workaround undocumented change to event stream format for `CONNECTED` and `DISCONNECTED` events. ([#88])
@@ -432,8 +436,11 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#86]:              https://github.com/thoukydides/homebridge-homeconnect/issues/86             "Issue #86"
 [#87]:              https://github.com/thoukydides/homebridge-homeconnect/issues/87             "Issue #87"
 [#88]:              https://github.com/thoukydides/homebridge-homeconnect/issues/88             "Issue #88"
+[#89]:              https://github.com/thoukydides/homebridge-homeconnect/issues/89             "Issue #88"
+[#90]:              https://github.com/thoukydides/homebridge-homeconnect/issues/90             "Issue #90"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.5...HEAD
+[v0.24.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.4...v0.24.5
 [v0.24.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.3...v0.24.4
 [v0.24.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.2...v0.24.3
 [v0.24.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.1...v0.24.2
