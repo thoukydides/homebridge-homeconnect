@@ -14,12 +14,18 @@ const NodePersist = require('node-persist');
 const Path = require('path');
 const fsPromises = require('fs').promises;
 const chalk = require('chalk');
+const semver = require('semver');
 
 let UUID;
 
 // Platform identifiers
-const PLUGIN_NAME = 'homebridge-homeconnect';
+const PACKAGE = require('./package.json');
+const PLUGIN_NAME = PACKAGE.name;
 const PLATFORM_NAME = 'HomeConnect';
+
+// Required Homebridge API version
+const HB_REQUIRED = '^2.7';
+const HAP_REQUIRED = '>=0.9.0';
 
 // Interval between updating the list of appliances
 // (only 1000 API calls allowed per day, so only check once an hour)
@@ -45,9 +51,30 @@ class HomeConnectPlatform {
         // Shortcuts to useful HAP objects
         UUID = homebridge.hap.uuid;
 
+        // Check software versions
+        log(PACKAGE.name + ' version ' + PACKAGE.version);
+        this.checkVersion('Node.js', process.versions.node,
+                          PACKAGE.engines.node);
+        this.checkVersion('Homebridge', homebridge.serverVersion,
+                          PACKAGE.engines.homebridge);
+        this.checkVersion('Homebridge API', homebridge.version, HB_REQUIRED);
+        this.checkVersion('Homebridge HAP', homebridge.hap.HAPLibraryVersion(),
+                          HAP_REQUIRED);
+
         // Wait for Homebridge to restore cached accessories
         this.homebridge.on('didFinishLaunching',
                            () => this.finishedLaunching());
+    }
+
+    // Check and log software versions
+    checkVersion(name, current, required) {
+        if (semver.satisfies(semver.coerce(current), required)) {
+            this.log(name + ' version ' + current
+                     + ' (satisfies ' + required + ')');
+        } else {
+            this.log.error(name + ' version ' + current + ' is incompatible'
+                           + ' (require ' + required + ')');
+        }
     }
 
     // Restore a cached accessory
