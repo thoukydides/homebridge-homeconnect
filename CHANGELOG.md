@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 * **Oven:** Added automation trigger for regular preheat finished (in addition to the existing fast preheat trigger).
+* **Freezer/FridgeFreezer/Oven/Refrigerator:** Added ability to open or (Oven appliances only) partly open the appliance door, if supported by the appliance.
+### Changed
+* **CoffeeMaker/Dishwasher/Dryer/Freezer/FridgeFreezer/Oven/Refrigerator/Washer/WasherDryer/WineCooler:** To support opening the appliance door, the door position and lock status have been moved from the main power `Switch` to a new `Door` service. The `CurrentDoorState` characteristic has been replaced by `CurrentPosition`.
 
 ## [v0.24.6] - 2022-07-02
 ### Added

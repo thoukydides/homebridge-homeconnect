@@ -80,6 +80,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation trigger for finished.
   * **Oven:**
     * Switch on/off and start/stop programs with preset options.
+    * Open or partly open the door.
     * Set sabbath mode.
     * Control alarm clock and child lock.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
@@ -111,6 +112,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 
   * **Freezer / FridgeFreezer / Refrigerator:**
     * Set freezer/refrigerator super, eco, sabbath, refrigerator vacation, and refrigerator fresh modes.
+    * Open the door.
     * Control child lock.
     * Monitor power and door.
     * Automation triggers for freezer/refrigerator door and freezer temperature alarms.
