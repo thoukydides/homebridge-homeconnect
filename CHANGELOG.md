@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+* **Oven:** Added automation trigger for regular preheat finished (in addition to the existing fast preheat trigger).
 
 ## [v0.24.6] - 2022-07-02
 ### Added
