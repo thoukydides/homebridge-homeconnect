@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.25.0] - 2022-07-11
 ### Added
 * **Oven:** Added automation trigger for regular preheat finished (in addition to the existing fast preheat trigger).
 * **Freezer/FridgeFreezer/Oven/Refrigerator:** Added ability to open or (Oven appliances only) partly open the appliance door, if supported by the appliance.
@@ -453,8 +455,10 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#91]:              https://github.com/thoukydides/homebridge-homeconnect/issues/91             "Issue #91"
 [#92]:              https://github.com/thoukydides/homebridge-homeconnect/issues/92             "Issue #92"
 [#93]:              https://github.com/thoukydides/homebridge-homeconnect/issues/93             "Issue #93"
+[#94]:              https://github.com/thoukydides/homebridge-homeconnect/issues/94             "Issue #94"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.6...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.25.0...HEAD
+[v0.25.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.6...v0.25.0
 [v0.24.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.5...v0.24.6
 [v0.24.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.4...v0.24.5
 [v0.24.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.3...v0.24.4
