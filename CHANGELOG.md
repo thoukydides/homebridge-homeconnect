@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.26.1] - 2022-09-23
+### Fixed
+* **Dryer/WasherDryer:** Restored support for these appliance types. ([#107])
+
 ## [v0.26.0] - 2022-09-23
 ### Added
 * **Hood:** Added ability to set the colour temperature of functional lights.
@@ -436,7 +440,7 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#66]:              https://github.com/thoukydides/homebridge-homeconnect/issues/66             "Issue #66"
 [#67]:              https://github.com/thoukydides/homebridge-homeconnect/issues/67             "Issue #67"
 [#68]:              https://github.com/thoukydides/homebridge-homeconnect/issues/68             "Issue #68"
-[#69]:              https://github.com/thoukydides/homebridge-homeconnect/issues/69             "Issue #69"
+[#69]:              https://github.com/thoukydides/homebridge-homeconnect/pull/69               "Pull #69"
 [#70]:              https://github.com/thoukydides/homebridge-homeconnect/issues/70             "Issue #70"
 [#71]:              https://github.com/thoukydides/homebridge-homeconnect/issues/71             "Issue #71"
 [#72]:              https://github.com/thoukydides/homebridge-homeconnect/issues/72             "Issue #72"
@@ -454,22 +458,30 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#84]:              https://github.com/thoukydides/homebridge-homeconnect/issues/84             "Issue #84"
 [#85]:              https://github.com/thoukydides/homebridge-homeconnect/issues/85             "Issue #85"
 [#86]:              https://github.com/thoukydides/homebridge-homeconnect/issues/86             "Issue #86"
-[#87]:              https://github.com/thoukydides/homebridge-homeconnect/issues/87             "Issue #87"
-[#88]:              https://github.com/thoukydides/homebridge-homeconnect/issues/88             "Issue #88"
+[#87]:              https://github.com/thoukydides/homebridge-homeconnect/pull/87               "Pull #87"
+[#88]:              https://github.com/thoukydides/homebridge-homeconnect/pull/88               "Pull #88"
 [#89]:              https://github.com/thoukydides/homebridge-homeconnect/issues/89             "Issue #88"
-[#90]:              https://github.com/thoukydides/homebridge-homeconnect/issues/90             "Issue #90"
+[#90]:              https://github.com/thoukydides/homebridge-homeconnect/pull/90               "Pull #90"
 [#91]:              https://github.com/thoukydides/homebridge-homeconnect/issues/91             "Issue #91"
-[#92]:              https://github.com/thoukydides/homebridge-homeconnect/issues/92             "Issue #92"
+[#92]:              https://github.com/thoukydides/homebridge-homeconnect/discussions/92        "Discussion #92"
 [#93]:              https://github.com/thoukydides/homebridge-homeconnect/issues/93             "Issue #93"
 [#94]:              https://github.com/thoukydides/homebridge-homeconnect/issues/94             "Issue #94"
 [#95]:              https://github.com/thoukydides/homebridge-homeconnect/issues/95             "Issue #95"
-[#96]:              https://github.com/thoukydides/homebridge-homeconnect/issues/96             "Issue #96"
+[#96]:              https://github.com/thoukydides/homebridge-homeconnect/discussions/96        "Discussion #96"
 [#97]:              https://github.com/thoukydides/homebridge-homeconnect/issues/97             "Issue #97"
-[#98]:              https://github.com/thoukydides/homebridge-homeconnect/issues/98             "Issue #98"
+[#98]:              https://github.com/thoukydides/homebridge-homeconnect/pull/98               "Pull #98"
 [#99]:              https://github.com/thoukydides/homebridge-homeconnect/issues/99             "Issue #99"
-[#100]:             https://github.com/thoukydides/homebridge-homeconnect/issues/100            "Issue #100"
+[#100]:             https://github.com/thoukydides/homebridge-homeconnect/pull/100              "Pull #100"
+[#101]:             https://github.com/thoukydides/homebridge-homeconnect/issues/101            "Issue #101"
+[#102]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/102       "Discussion #102"
+[#103]:             https://github.com/thoukydides/homebridge-homeconnect/issues/103            "Issue #103"
+[#104]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/104       "Discussion #104"
+[#105]:             https://github.com/thoukydides/homebridge-homeconnect/issues/105            "Issue #105"
+[#106]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/106       "Discussion #106"
+[#107]:             https://github.com/thoukydides/homebridge-homeconnect/issues/107            "Issue #107"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.1...HEAD
+[v0.26.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.0...v0.26.1
 [v0.26.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.25.0...v0.26.0
 [v0.25.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.6...v0.25.0
 [v0.24.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.5...v0.24.6
