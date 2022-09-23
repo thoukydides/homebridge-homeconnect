@@ -102,7 +102,12 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Control child lock.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished and aborted.
-  * **Dryer / Washer / WasherDryer:**
+  * **Dryer:**
+    * Start/stop programs with preset options.
+    * Control child lock.
+    * Monitor power, door, program time remaining, remote control, and general operation status.
+    * Automation triggers for finished and aborted.
+  * **Washer / WasherDryer:**
     * Start/stop programs with preset options.
     * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
