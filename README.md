@@ -74,7 +74,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
   * **Hood:**
     * Switch on/off.
     * Switch fan on/off, set fan speed/intensive levels, and select manual/auto mode.
-    * Switch functional light on/off and change brightness.
+    * Switch functional light on/off, change brightness, and select colour temperature.
     * Switch ambient light on/off, change brighness, and select colour.
     * Monitor remote control and general operation status.
     * Automation triggers for finished, grease filter nearly saturated, and grease filter saturated.

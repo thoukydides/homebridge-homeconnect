@@ -6,8 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.26.0] - 2022-09-23
 ### Added
-* **Washer/WasherDryer:** Added automation triggers for when i-Dos (1 or 2) fill levels are low.
+* **Hood:** Added ability to set the colour temperature of functional lights.
 * **Hood:** Added automation triggers for grease filter saturation.
+* **Washer/WasherDryer:** Added automation triggers for when i-Dos (1 or 2) fill levels are low.
 
 ## [v0.25.0] - 2022-07-11
 ### Added
