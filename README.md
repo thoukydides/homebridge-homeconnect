@@ -77,7 +77,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Switch functional light on/off and change brightness.
     * Switch ambient light on/off, change brighness, and select colour.
     * Monitor remote control and general operation status.
-    * Automation trigger for finished.
+    * Automation triggers for finished, grease filter nearly saturated, and grease filter saturated.
   * **Oven:**
     * Switch on/off and start/stop programs with preset options.
     * Open or partly open the door.
@@ -106,7 +106,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Start/stop programs with preset options.
     * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
-    * Automation triggers for finished and aborted.
+    * Automation triggers for finished, aborted, i-Dos 1 fill level low, and i-Dos 2 fill level low.
     
 ### Cooling Appliances
 

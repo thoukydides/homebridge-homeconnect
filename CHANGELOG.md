@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.26.0] - 2022-09-23
+### Added
+* **Washer/WasherDryer:** Added automation triggers for when i-Dos (1 or 2) fill levels are low.
+* **Hood:** Added automation triggers for grease filter saturation.
+
 ## [v0.25.0] - 2022-07-11
 ### Added
 * **Oven:** Added automation trigger for regular preheat finished (in addition to the existing fast preheat trigger).
@@ -456,8 +461,15 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#92]:              https://github.com/thoukydides/homebridge-homeconnect/issues/92             "Issue #92"
 [#93]:              https://github.com/thoukydides/homebridge-homeconnect/issues/93             "Issue #93"
 [#94]:              https://github.com/thoukydides/homebridge-homeconnect/issues/94             "Issue #94"
+[#95]:              https://github.com/thoukydides/homebridge-homeconnect/issues/95             "Issue #95"
+[#96]:              https://github.com/thoukydides/homebridge-homeconnect/issues/96             "Issue #96"
+[#97]:              https://github.com/thoukydides/homebridge-homeconnect/issues/97             "Issue #97"
+[#98]:              https://github.com/thoukydides/homebridge-homeconnect/issues/98             "Issue #98"
+[#99]:              https://github.com/thoukydides/homebridge-homeconnect/issues/99             "Issue #99"
+[#100]:             https://github.com/thoukydides/homebridge-homeconnect/issues/100            "Issue #100"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.25.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.0...HEAD
+[v0.26.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.25.0...v0.26.0
 [v0.25.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.6...v0.25.0
 [v0.24.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.5...v0.24.6
 [v0.24.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.4...v0.24.5
