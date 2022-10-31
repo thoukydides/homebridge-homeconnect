@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.26.2] - 2022-10-31
+### Fixed
+* Always create new `Error` objects when prefixing new text to their `message`, instead of overwriting the existing property (which would fail if read-only). ([#109])
+### Changed
+* Bumped undici version to latest release.
+
 ## [v0.26.1] - 2022-09-23
 ### Fixed
 * **Dryer/WasherDryer:** Restored support for these appliance types. ([#107])
@@ -479,8 +485,11 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#105]:             https://github.com/thoukydides/homebridge-homeconnect/issues/105            "Issue #105"
 [#106]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/106       "Discussion #106"
 [#107]:             https://github.com/thoukydides/homebridge-homeconnect/issues/107            "Issue #107"
+[#108]:             https://github.com/thoukydides/homebridge-homeconnect/issues/108            "Issue #108"
+[#109]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/109       "Discussion #109"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.2...HEAD
+[v0.26.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.1...v0.26.2
 [v0.26.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.0...v0.26.1
 [v0.26.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.25.0...v0.26.0
 [v0.25.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.24.6...v0.25.0
