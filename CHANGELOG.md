@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.26.3] - 2022-11-06
+### Fixed
+* Respect the returned `retry-after` value when refreshing access tokens. Also increased the minimum retry interval from 5 to 6 seconds to remain under the 10 requests per minute limit.
+
 ## [v0.26.2] - 2022-10-31
 ### Fixed
 * Always create new `Error` objects when prefixing new text to their `message`, instead of overwriting the existing property (which would fail if read-only). ([#109])
@@ -487,8 +491,12 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#107]:             https://github.com/thoukydides/homebridge-homeconnect/issues/107            "Issue #107"
 [#108]:             https://github.com/thoukydides/homebridge-homeconnect/issues/108            "Issue #108"
 [#109]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/109       "Discussion #109"
+[#110]:             https://github.com/thoukydides/homebridge-homeconnect/issues/110            "Issue #110"
+[#111]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/111       "Discussion #111"
+[#112]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #112"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.3...HEAD
+[v0.26.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.2...v0.26.3
 [v0.26.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.1...v0.26.2
 [v0.26.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.0...v0.26.1
 [v0.26.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.25.0...v0.26.0
