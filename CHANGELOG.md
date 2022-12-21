@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.27.0] - 2022-12-21
+### Changed
+* Added `Configured Name` characteristic to the `Switch`, `Stateless Programmable Switch`, and `Lightbulb` services. This appears to be necessary for HomeKit on iOS 16 to show anything other than the accessory name without manually changing all of the names within the Home app. ([#102], [#108], [#116])
+
 ## [v0.26.3] - 2022-11-06
 ### Fixed
 * Respect the returned `retry-after` value when refreshing access tokens. Also increased the minimum retry interval from 5 to 6 seconds to remain under the 10 requests per minute limit.
@@ -494,8 +498,13 @@ Copyright © 2019-2022 Alexander Thoukydides
 [#110]:             https://github.com/thoukydides/homebridge-homeconnect/issues/110            "Issue #110"
 [#111]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/111       "Discussion #111"
 [#112]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #112"
+[#113]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #113"
+[#114]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #114"
+[#115]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #115"
+[#116]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #116"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.3...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.27.0...HEAD
+[v0.27.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.3...v0.27.0
 [v0.26.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.2...v0.26.3
 [v0.26.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.1...v0.26.2
 [v0.26.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.0...v0.26.1
