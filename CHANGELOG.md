@@ -371,7 +371,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-Copyright © 2019-2022 Alexander Thoukydides
+Copyright © 2019-2023 Alexander Thoukydides
 
 [Wiki]:             https://github.com/thoukydides/homebridge-homeconnect/wiki
 [config.json]:      https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json      "Wiki: config.json"

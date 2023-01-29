@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2021 Alexander Thoukydides
+// Copyright © 2023 Alexander Thoukydides
 
 'use strict';
 
