@@ -11,13 +11,13 @@ module.exports = {
     init() {
         // Shortcuts to useful HAP objects
         const Characteristic = this.homebridge.hap.Characteristic;
-        
+
         // Add a progress position
         this.activeService
             .addOptionalCharacteristic(Characteristic.RemainingDuration);
         this.activeService.getCharacteristic(Characteristic.RemainingDuration)
             .setProps({ maxValue: 2 * (24 * 60 - 1) * 60 });
-        
+
         // Update the status
         let state, timeDelay = 0, timeRemaining = 0, scheduled;
         let update = () => {
@@ -78,4 +78,4 @@ module.exports = {
             update();
         });
     }
-}
+};

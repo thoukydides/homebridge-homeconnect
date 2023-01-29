@@ -47,14 +47,14 @@ const REQUEST_TIMEOUT = 20; // (seconds)
 const EVENT_TIMEOUT   = 2 * 60; // (seconds, must be > 55 second keep-alive)
 
 const MS = 1000;
-                  
+
 // Low-level access to the Home Connect API
 module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Create a new API object
     constructor(options) {
         super();
-        
+
         // Store the options, applying defaults for missing options
         this.clientID  = options.clientID;
         this.simulator = options.simulator || false;
@@ -92,7 +92,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Get details of a specific paired home appliances
     getAppliance(haid) {
-       return this.requestAppliances('GET', haid);
+        return this.requestAppliances('GET', haid);
     }
 
     // Get all programs
@@ -160,11 +160,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
     setActiveProgramOption(haid, optionKey, value) {
         return this.requestAppliances('PUT', haid,
                                       '/programs/active/options/' + optionKey, {
-            data: {
-                key:    optionKey,
-                value:  value
-            }
-        });
+                                          data: {
+                                              key:    optionKey,
+                                              value:  value
+                                          }
+                                      });
     }
 
     // Get the program which is currently selected
@@ -193,10 +193,10 @@ module.exports = class HomeConnectAPI extends EventEmitter {
     setSelectedProgramOptions(haid, options) {
         return this.requestAppliances('PUT', haid,
                                       '/programs/selected/options', {
-            data: {
-                options: options
-            }
-        });
+                                          data: {
+                                              options: options
+                                          }
+                                      });
     }
 
     // Get a specific option of the selecgted program
@@ -211,11 +211,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         return this.requestAppliances('PUT', haid,
                                       '/programs/selected/options/'
                                       + optionKey, {
-            data: {
-                key:    optionKey,
-                value:  value
-            }
-        });
+                                          data: {
+                                              key:    optionKey,
+                                              value:  value
+                                          }
+                                      });
     }
 
     // Get the current status
@@ -265,12 +265,12 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             }
         });
     }
-    
+
     // Obtain and maintain an access token
     async authoriseClient() {
         while (true) {
             try {
-                
+
                 // Authorise this client if there is no saved authorisation
                 if (!this.savedAuth[this.clientID]) {
                     let token = await (this.simulator
@@ -289,11 +289,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                     let refreshIn = auth.accessExpires - Date.now()
                                     - TOKEN_REFRESH_WINDOW * MS;
                     if (auth.accessToken && 0 < refreshIn) {
-                        
+
                         // Resolve any promises awaiting authorisation
                         for (let resolve of this.authResolve) resolve();
                         this.authResolve = [];
-                    
+
                         // Delay before refreshing the access token
                         this.debug('Refreshing access token in '
                                    + Math.floor(refreshIn / MS) + ' seconds');
@@ -304,9 +304,9 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                     let token = await this.tokenRefresh(auth.refreshToken);
                     this.tokenSave(token);
                 }
-                
+
             } catch (err) {
-                
+
                 // Discard any access token and report the error
                 this.tokenInvalidate();
                 this.error(err.message);
@@ -398,8 +398,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
         // Wait for the user to authorise access (or expiry of device code)
         let token;
-        while (!token)
-        {
+        while (!token) {
             // Wait for the specified poll interval
             await this.sleep(resp.interval * MS);
 
@@ -419,7 +418,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         // Return the access token
         return token;
     }
-    
+
     // Authorisation code grant flow (used for the simulator)
     async authCodeGrantFlow() {
         // Request authorisation, skipping the user interaction steps
@@ -434,7 +433,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                 response_type:  'code',
                 scope:          this.scopes.join(' '),
                 user:           'me' // (can be anything non-zero length)
-            },
+            }
         });
 
         // Extract the authorisation code from the redirection URL
@@ -531,10 +530,10 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                           + ' seconds before issuing Home Connect API request');
                 await this.sleep(retryIn);
             }
-        
+
             // Try issuing the request
             try {
-                
+
                 options.headers['authorization'] = this.getAuthorisation();
                 let body = await this.requestRaw(options);
                 return body && body.data;
@@ -550,7 +549,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Issue a raw Home Connect request
     async requestRaw(options) {
-        
+
         // Log the request
         let logPrefix = 'Home Connect request #' + ++this.requestCount + ': ';
         this.debug(logPrefix + options.method + ' ' + options.url);
@@ -559,7 +558,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         // Issue the request
         let status = 'OK';
         try {
-            
+
             // Construct the fetch request
             let init = {
                 method:     options.method,
@@ -627,7 +626,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                     status = 'Authorisation pending';
                     return null;
                     break;
-                        
+
                 case 'access_denied':
                     if (json.error_description == 'Too many requests') {
                         // Token refresh rate limit exceeded
@@ -642,7 +641,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                     // Refresh token not valid; restart whole authorisation
                     this.authInvalidate();
                     break;
-                        
+
                 case 'unauthorized_client':
                     // There is a problem with the client
                     this.authInvalidate();
@@ -658,7 +657,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                     retry = true;
                     break;
                 }
-                    
+
             } else if (json && json.error && json.error.key) {
 
                 // Normal Home Connect API error format
@@ -707,7 +706,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             // Log completion of the request
             this.debug(logPrefix + status
                        + ' +' + (Date.now() - startTime) + 'ms ');
-            
+
         }
     }
 
@@ -753,7 +752,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
             // Notify all of the listeners
             for (let haid of eventListeners) this.emit(haid, event);
-        }
+        };
 
         // Automatically restart the event stream
         let description = 'events stream for ' + (haid || 'all appliances');
@@ -769,7 +768,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                               + ' seconds before requesting ' + description);
                     await this.sleep(retryIn);
                 }
-                
+
                 // Start the event stream
                 this.log('Starting ' + description);
                 options.headers['authorization'] = this.getAuthorisation();
@@ -807,11 +806,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             state.debugHistory.push(line);
             if (20 < state.debugHistory.length) state.debugHistory.shift();
             let garbage = desc => {
-                this.debug("Unable to parse " + desc + " '" + line + "':\n"
+                this.debug('Unable to parse ' + desc + " '" + line + "':\n"
                            + state.debugHistory.join('\n'));
                 state.debugHistory = [];
                 state.controller.abort();
-            }
+            };
 
             // Parse an event
             if (!line.length) {
@@ -874,7 +873,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                 let body = response.body;
                 body.setEncoding('utf-8');
                 body.on('end',   () => {
-                    client.close()
+                    client.close();
                     this.debug(logPrefix + 'END'
                                + ' +' + (Date.now() - startTime) + 'ms ');
                 });
@@ -974,4 +973,4 @@ module.exports = class HomeConnectAPI extends EventEmitter {
     warn(msg)   { this.logRaw ? this.logRaw.warn(msg)  : console.warn(msg);  }
     log(msg)    { this.logRaw ? this.logRaw.info(msg)  : console.log(msg);   }
     debug(msg)  { this.logRaw ? this.logRaw.debug(msg) : console.debug(msg); }
-}
+};

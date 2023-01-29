@@ -31,7 +31,7 @@ const UPDATE_APPLIANCES_DELAY = 60 * 60 * 1000; // (milliseconds)
 module.exports = homebridge => {
     homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME,
                                 HomeConnectPlatform, true);
-}
+};
 
 // A Homebridge HomeConnect platform
 class HomeConnectPlatform {
@@ -147,7 +147,7 @@ class HomeConnectPlatform {
 
         // Obtain a list of Home Connect home appliances
         this.updateAppliances();
-    };
+    }
 
     // Periodically update a list of Home Connect home appliances
     async updateAppliances() {
@@ -197,7 +197,7 @@ class HomeConnectPlatform {
             if (!applianceConstructor)
                 return this.log.warn("Appliance type '" + ha.type
                                      + "' not currently supported");
-            
+
             // Convert the Home Connect haId into a Homebridge UUID
             ha.uuid = UUID.generate(ha.haId);
             let accessory = this.accessories[ha.uuid];
@@ -213,7 +213,7 @@ class HomeConnectPlatform {
                 this.accessories[ha.uuid] = accessory;
                 newAccessories.push(accessory);
             }
-            
+
             // Construct an instance of the appliance
             let device = new HomeConnectDevice(
                 msg => this.log.debug(msg), this.homeconnect, ha);
@@ -230,12 +230,12 @@ class HomeConnectPlatform {
         });
         this.homebridge.registerPlatformAccessories(
             PLUGIN_NAME, PLATFORM_NAME, newAccessories);
-        
+
         // Delete accessories for which there is no matching appliance
         let oldAccessories = [];
         Object.keys(this.accessories).forEach(uuid => {
             let accessory = this.accessories[uuid];
-            if (!appliances.some(ha => { return ha.uuid == uuid })) {
+            if (!appliances.some(ha => { return ha.uuid == uuid; })) {
                 this.log("Removing accessory '"
                          + accessory.displayName + "'");
                 if (accessory.appliance) accessory.appliance.unregister();

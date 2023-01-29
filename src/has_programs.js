@@ -176,7 +176,7 @@ module.exports = {
     async updateProgramsWithoutSelecting(programKeys) {
         for (let programKey of programKeys) {
             let details = await this.getCached('program ' + programKey,
-                             () => this.device.getAvailableProgram(programKey));
+                                               () => this.device.getAvailableProgram(programKey));
             this.updateCachedProgram(details, false);
         }
     },
@@ -197,7 +197,7 @@ module.exports = {
             for (let programKey of programKeys) {
                 let details =
                     await this.getCached('program select ' + programKey,
-                           () => this.selectAndGetAvailableProgram(programKey));
+                                         () => this.selectAndGetAvailableProgram(programKey));
                 this.updateCachedProgram(details, true);
             }
         } finally {
@@ -317,7 +317,7 @@ module.exports = {
             // Read and save the options for this program
             await this.device.api.sleep(READY_DELAY);
             let details = await this.getCached('program select ' + programKey,
-                                    () => this.getAvailableProgram(programKey));
+                                               () => this.getAvailableProgram(programKey));
             this.updateCachedProgram(details, true);
             await this.savePrograms();
         } catch (err) {
@@ -693,15 +693,15 @@ module.exports = {
 
         // Remove any enum prefix and insert spaces to convert from PascalCase
         return key.replace(/^.*\./g, '')
-                  .replace(/(?=\p{Lu}\p{Ll})|(?<=\p{Ll})(?=\p{Lu})/gu, ' ');
+            .replace(/(?=\p{Lu}\p{Ll})|(?<=\p{Ll})(?=\p{Lu})/gu, ' ');
     },
 
     // HomeKit restricts the characters allowed in names
     simpleName(name, key) {
         return this.makeName(name, key)
-                   .replace(/[^\p{L}\p{N}.' -]/ug, '')
-                   .replace(/^[^\p{L}\p{N}]*/u, '')
-                   .replace(/[^\p{L}\p{N}]*$/u, '');
+            .replace(/[^\p{L}\p{N}.' -]/ug, '')
+            .replace(/^[^\p{L}\p{N}]*/u, '')
+            .replace(/[^\p{L}\p{N}]*$/u, '');
     },
 
     // Check if an option key is a relative time
@@ -732,4 +732,4 @@ module.exports = {
         this.debug('Converted time ' + value + ' to ' + seconds + ' seconds');
         return seconds;
     }
-}
+};

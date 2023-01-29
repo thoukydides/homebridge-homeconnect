@@ -31,7 +31,7 @@ const COOLING_MODES = {
 
 // A Homebridge accessory for a Home Connect freezer
 module.exports.Freezer = class ApplianceFreezer
-                       extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -46,11 +46,11 @@ module.exports.Freezer = class ApplianceFreezer
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect fridge freezer
 module.exports.FridgeFreezer = class ApplianceFridgeFreezer
-                             extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -67,11 +67,11 @@ module.exports.FridgeFreezer = class ApplianceFridgeFreezer
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect refrigerator
 module.exports.Refrigerator = class ApplianceRefrigerator
-                            extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -84,11 +84,11 @@ module.exports.Refrigerator = class ApplianceRefrigerator
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect wine cooler
 module.exports.WineCooler = class ApplianceWineCooler
-                          extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -97,4 +97,4 @@ module.exports.WineCooler = class ApplianceWineCooler
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-}
+};

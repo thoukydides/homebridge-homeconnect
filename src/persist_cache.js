@@ -55,7 +55,7 @@ module.exports = class PeristCache {
             value:      value,
             preferred:  this.preferred,
             updated:    Date.now()
-        }
+        };
         this.log("'" + key + "' written to cache");
         await this.save();
     }
@@ -97,7 +97,7 @@ module.exports = class PeristCache {
             // Schedule another save if required
             if (this.savePending) this.saveScheduled = setTimeout(doSave);
             else delete this.saveScheduled;
-        }
+        };
         if (!this.savePending) {
             this.savePending = [];
             if (!this.saveScheduled) this.saveScheduled = setTimeout(doSave);
@@ -120,4 +120,4 @@ module.exports = class PeristCache {
             this.log('Failed to write cache: ' + err.message);
         }
     }
-}
+};

@@ -22,7 +22,7 @@ module.exports = {
 
         // The door starts stationary
         this.doorService.setCharacteristic(Characteristic.PositionState,
-                                         Characteristic.PositionState.STOPPED);
+                                           Characteristic.PositionState.STOPPED);
 
         // Add the lock current state characteristic
         const { UNSECURED, SECURED } = Characteristic.LockCurrentState;
@@ -41,7 +41,7 @@ module.exports = {
             this.log('Door ' + (isOpen ? 'open' : 'closed')
                      + (isLocked ? ' and locked' : ''));
             let targetPosition = this.doorService
-                       .getCharacteristic(Characteristic.TargetPosition).value;
+                .getCharacteristic(Characteristic.TargetPosition).value;
             if (isOpen && 0 < targetPosition) {
                 // Assume door has reached its target position
                 this.doorService
@@ -56,7 +56,7 @@ module.exports = {
                                           isOpen ? 100 : 0);
             }
             this.doorService.setCharacteristic(Characteristic.PositionState,
-                                         Characteristic.PositionState.STOPPED);
+                                               Characteristic.PositionState.STOPPED);
 
             // If the door can be locked then update its status
             if (hasLock) {
@@ -108,7 +108,7 @@ module.exports = {
                         this.log((fullyOpen ? '' : 'PARTLY ') + 'OPEN Door');
                         this.doorService
                             .setCharacteristic(Characteristic.PositionState,
-                                       Characteristic.PositionState.INCREASING);
+                                               Characteristic.PositionState.INCREASING);
                         await this.device.openDoor(fullyOpen);
                     }
                 }));
@@ -119,4 +119,4 @@ module.exports = {
                                     Characteristic.Perms.NOTIFY] });
         }
     }
-}
+};

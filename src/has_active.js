@@ -86,7 +86,7 @@ module.exports = {
         this.device.on('BSH.Common.Status.OperationState', item => {
             // Remove the enum prefix from the value
             operationState = item.value.replace(
-                    /^BSH\.Common\.EnumType\.OperationState\./, '');
+                /^BSH\.Common\.EnumType\.OperationState\./, '');
             update();
         });
         this.device.on('connected', item => {
@@ -94,4 +94,4 @@ module.exports = {
             update();
         });
     }
-}
+};

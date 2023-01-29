@@ -12,7 +12,7 @@ module.exports = {
         // Shortcuts to useful HAP objects
         const Service = this.homebridge.hap.Service;
         const Characteristic = this.homebridge.hap.Characteristic;
-        
+
         // Create a label service if there are multiple events
         if (1 < Object.keys(events).length) {
             this.labelService =
@@ -25,7 +25,7 @@ module.exports = {
 
         // Create a programmable switch for each event
         let index = 0;
-        Object.keys(events).forEach(event => {            
+        Object.keys(events).forEach(event => {
             let name = events[event];
             ++index;
             let service =
@@ -40,7 +40,7 @@ module.exports = {
             const SINGLE = Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS;
             service.getCharacteristic(Characteristic.ProgrammableSwitchEvent)
                 .setProps({ minValue: SINGLE, maxValue: SINGLE,
-                            validValues: [SINGLE] });
+                    validValues: [SINGLE] });
 
             // If there are multiple events then add a service label index
             if (this.labelService) {
@@ -71,4 +71,4 @@ module.exports = {
             });
         });
     }
-}
+};

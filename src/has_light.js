@@ -80,13 +80,13 @@ module.exports = {
             // Special handling for lights that support colour temperature
             if (keys.colourtemp) {
                 settings.colourtemp = await this.getCached(type + ' colourtemp',
-                                 () => this.device.getSetting(keys.colourtemp));
+                                                           () => this.device.getSetting(keys.colourtemp));
             }
 
             // Special handling for lights that support colour
             if (keys.colour) {
                 settings.colour = await this.getCached(type + ' colour',
-                                     () => this.device.getSetting(keys.colour));
+                                                       () => this.device.getSetting(keys.colour));
             }
             if (settings.colour) {
                 // Check whether the light supports custom colours
@@ -106,14 +106,14 @@ module.exports = {
                         await this.device.setSetting(keys.colour,
                                                      nonCustomColour);
                         initialSettings.unshift({ key: keys.colour,
-                                                  value: colour });
+                            value: colour });
                     }
                 }
             }
 
             // Read the supported brightness range
             settings.brightness = await this.getCached(type + ' brightness',
-                                 () => this.device.getSetting(keys.brightness));
+                                                       () => this.device.getSetting(keys.brightness));
 
             // Update the cache
             await this.cache.set(type, settings);
@@ -153,8 +153,7 @@ module.exports = {
                 await this.setLightColour(type, settings, service,
                                           options.hue, options.saturation,
                                           options.brightness);
-            }
-            else if ('brightness' in options) {
+            } else if ('brightness' in options) {
                 await this.setLightBrightness(type, settings,
                                               options.brightness);
             }
@@ -245,7 +244,7 @@ module.exports = {
     // Set the colour temperature of a light
     async setLightColourTemp(type, settings, mirek) {
         // Convert from reciprocal megakelvin to percent cold
-        let percent = 100.0 * (mirek - MIREK_WARM) / (MIREK_COLD - MIREK_WARM)
+        let percent = 100.0 * (mirek - MIREK_WARM) / (MIREK_COLD - MIREK_WARM);
         this.log('SET Light ' + type + ' ' + percent + '% cold ('
                  + mirek + 'MK^-1');
         await this.device.setSetting(settings.colourtemp.key, percent);
@@ -326,7 +325,7 @@ module.exports = {
         let rgb = [
             parseInt(rgbHex.substring(1, 3), 16),
             parseInt(rgbHex.substring(3, 5), 16),
-            parseInt(rgbHex.substring(5, 7), 16),
+            parseInt(rgbHex.substring(5, 7), 16)
         ];
 
         // Perform the conversion
@@ -352,4 +351,4 @@ module.exports = {
             value:      Math.round(maxRgb * 100 / 255)
         };
     }
-}
+};

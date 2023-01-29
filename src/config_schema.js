@@ -79,7 +79,7 @@ class ConfigSchema {
             let appliance = this.appliances[haId];
             if (!appliance) return;
             return appliance.programs.find(p => p.key == programKey);
-        }
+        };
 
         // Return the methods that the accessory can use to update the schema
         return {
@@ -109,7 +109,7 @@ class ConfigSchema {
                 program.options = options;
                 this.writeSchema();
             }
-        }
+        };
     }
 
     // Convert the supported Home Connect API languages into a schema
@@ -169,28 +169,28 @@ class ConfigSchema {
                 false:      'Physical Appliances (production server)',
                 true:       'Simulated Appliances (test server)'
             }
-        },{
+        }, {
             key:            'clientid',
             title:          'Client ID',
             description:    'Create an application via the <a href="https://developer.home-connect.com/applications">Home Connect Developer Program</a>, with <strong>OAuth Flow</strong> set to <strong>Device Flow</strong>.',
             placeholder:    'e.g. 0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
             condition: {
-                functionBody: 'return !model.simulator',
+                functionBody: 'return !model.simulator'
             }
-        },{
+        }, {
             key:            'clientid',
             title:          'Client ID',
             description:    'Enter the Client ID for the automatically generated <a href="https://developer.home-connect.com/applications">API Web Client</a> to use the <a href="https://developer.home-connect.com/simulator">Appliance Simulators</a>.<br>Use this to test the functionality of this plugin without requiring access to physical appliances.',
             placeholder:    'e.g. 0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
             condition: {
-                functionBody: 'return model.simulator',
+                functionBody: 'return model.simulator'
             }
-        },{
+        }, {
             key:            'language.api',
             title:          'API Language',
             description:    'This changes the language used for program names and their options.',
             condition: {
-                functionBody: 'return !model.simulator && model.clientid',
+                functionBody: 'return !model.simulator && model.clientid'
             }
         }];
         return {
@@ -221,7 +221,7 @@ class ConfigSchema {
                 type:       'help',
                 helpvalue:  '<p>This plugin requires authorisation to access Home Connect appliances.</p><p>The authorisation link will appear here (and in the Homebridge log file) after the Client ID has been configured and the plugin started.</p>',
                 condition: {
-                    functionBody: 'return !model.simulator && model.clientid',
+                    functionBody: 'return !model.simulator && model.clientid'
                 }
             };
         }
@@ -250,7 +250,7 @@ class ConfigSchema {
                 key:            keyArrayPrefix + '.name',
                 title:          'HomeKit Name',
                 placeholder:    'e.g. My ' + appliance.type + ' Program'
-            },{
+            }, {
                 // (a valid array-element key is required for some reason)
                 key:            keyArrayPrefix + '.key',
                 type:           'flex',
@@ -264,7 +264,7 @@ class ConfigSchema {
                         false:      'Start program',
                         true:       'Select program'
                     }
-                },{
+                }, {
                     key:            keyArrayPrefix + '.key',
                     title:          'Appliance Program'
                 }]
@@ -332,7 +332,7 @@ class ConfigSchema {
                             functionBody: 'try { return ' + programCondition
                                           + '; } catch (err) { return false; }'
                         }
-                    }
+                    };
 
                     // Treat restricted numeric types as enum types
                     if ('minimum' in option && 'maximum' in option
@@ -342,7 +342,7 @@ class ConfigSchema {
                         let suffix = option.suffix ? ' ' + option.suffix : '';
                         let mappings = [];
                         for (let i = option.minimum; i <= option.maximum;
-                             i += option.multipleOf) {
+                            i += option.multipleOf) {
                             mappings.push({ name: i + suffix, key: i });
                         }
                         option = { values: mappings };
@@ -391,9 +391,9 @@ class ConfigSchema {
 
                 // Add form items to remove options unsupported by this program
                 let supported = (program.options || [])
-                                .map(option => option.key);
+                    .map(option => option.key);
                 let unsupported = Object.keys(optionsSchema)
-                                       .filter(key => !supported.includes(key));
+                    .filter(key => !supported.includes(key));
                 if (unsupported.length) {
                     programForm.push({
                         key:        keyArrayPrefix + ".options.['"
@@ -416,11 +416,11 @@ class ConfigSchema {
                 oneOf: [{
                     title:  'No individual program switches',
                     const:  'none'
-                },{
+                }, {
                     title:  'A switch to start each ' + appliance.name
                             + ' program',
                     const:  'auto'
-                },{
+                }, {
                     title:  'Custom list of programs and options',
                     const:  'custom'
                 }],
@@ -470,11 +470,11 @@ class ConfigSchema {
                 key:            keyPrefix + '.addprograms',
                 title:          'Program Switches',
                 description:    'A separate Switch service can be created for individual appliance programs. These indicate which program is running, and (if authorised) can be used to select options and start a specific program.'
-            },{
+            }, {
                 type:           'help',
                 helpvalue:      '<p>Specify a unique HomeKit Name for each program (preferably short and without punctuation).</p><p>The same Appliance Program may be used multiple times with different options.</p>',
                 condition:      programListCondition
-            },{
+            }, {
                 key:            keyPrefix + '.programs',
                 notitle:        true,
                 startEmpty:     true,
@@ -604,7 +604,7 @@ class ConfigSchema {
                 this.debug('Scheduled configuration schema write complete');
                 delete this.writeScheduled;
             }
-        }
+        };
         if (!this.writePending) {
             this.writePending = [];
             if (!this.writeScheduled) {

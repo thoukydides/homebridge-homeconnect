@@ -20,7 +20,7 @@ let Service, Characteristic;
 
 // A Homebridge accessory for a Home Connect coffee maker
 module.exports.CoffeeMaker = class ApplianceCoffeeMaker
-                           extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -43,11 +43,11 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect cook processor
 module.exports.CookProcessor = class ApplianceCookProcessor
-                             extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -59,11 +59,11 @@ module.exports.CookProcessor = class ApplianceCookProcessor
         });
         this.mixin(HasRemainingTime);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect hob (cooktop)
 module.exports.Hob = class ApplianceHob
-                   extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -79,11 +79,11 @@ module.exports.Hob = class ApplianceHob
         this.mixin(HasRemoteControl);
         this.mixin(HasChildLock);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect hood
 module.exports.Hood = class ApplianceHood
-                    extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -104,11 +104,11 @@ module.exports.Hood = class ApplianceHood
         this.mixin(HasRemainingTime);
         this.mixin(HasRemoteControl);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect oven
 module.exports.Oven = class ApplianceOven
-                    extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -132,11 +132,11 @@ module.exports.Oven = class ApplianceOven
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect warming drawer
 module.exports.WarmingDrawer = class ApplianceWarmingDrawer
-                             extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -146,4 +146,4 @@ module.exports.WarmingDrawer = class ApplianceWarmingDrawer
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-}
+};

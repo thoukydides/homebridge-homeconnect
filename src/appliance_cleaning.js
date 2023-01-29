@@ -16,7 +16,7 @@ const HasRemoteControl = require('./has_remotecontrol.js');
 
 // A Homebridge accessory for a Home Connect cleaning robot (Roxxter)
 module.exports.CleaningRobot = class ApplianceCleaningRobot
-                             extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -37,11 +37,11 @@ module.exports.CleaningRobot = class ApplianceCleaningRobot
         this.mixin(HasPrograms);
         this.mixin(HasBattery);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect dishwasher
 module.exports.Dishwasher = class ApplianceDishwasher
-                          extends ApplianceGeneric {
+    extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
 
@@ -58,7 +58,7 @@ module.exports.Dishwasher = class ApplianceDishwasher
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect washer and/or dryer
 class ApplianceLaundry extends ApplianceGeneric {
@@ -77,7 +77,7 @@ class ApplianceLaundry extends ApplianceGeneric {
 
 // A Homebridge accessory for a Home Connect dryer
 module.exports.Dryer = class ApplianceDryer
-                     extends ApplianceLaundry {
+    extends ApplianceLaundry {
     constructor(...args) {
         super(...args);
 
@@ -87,7 +87,7 @@ module.exports.Dryer = class ApplianceDryer
             'BSH.Common.Event.ProgramAborted':      'Program Aborted'
         });
     }
-}
+};
 
 // A Homebridge accessory for a Home Connect washer or washer/dryer
 class ApplianceWasherDryer extends ApplianceLaundry {
@@ -101,7 +101,7 @@ class ApplianceWasherDryer extends ApplianceLaundry {
             'LaundryCare.Washer.Event.IDos1FillLevelPoor':  'i-Dos 1 Low',
             'LaundryCare.Washer.Event.IDos2FillLevelPoor':  'i-Dos 2 Low'
         });
-     }
+    }
 }
 
 module.exports.Washer      = ApplianceWasherDryer;

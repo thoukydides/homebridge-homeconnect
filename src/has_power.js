@@ -50,7 +50,7 @@ module.exports = {
 
         // Check whether the appliance supports off or standby
         let setting = await this.getCached('power',
-                 () => this.device.getSetting('BSH.Common.Setting.PowerState'));
+                                           () => this.device.getSetting('BSH.Common.Setting.PowerState'));
         let values = setting.constraints.allowedvalues;
 
         // Add the ability to switch off or to standby if supported
@@ -85,4 +85,4 @@ module.exports = {
                                              powerState);
             }));
     }
-}
+};

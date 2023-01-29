@@ -44,7 +44,7 @@ module.exports = {
                 state[key] = this.device.getItem(mapping.key);
                 let detail = mapping.values[state[key]];
                 if (detail) {
-                    if (mapping.prefix) detail = mapping.prefix + ' ' + detail
+                    if (mapping.prefix) detail = mapping.prefix + ' ' + detail;
                     detailBits.push(detail);
                 }
             }
@@ -66,7 +66,7 @@ module.exports = {
             }
             this.powerService.updateCharacteristic(Characteristic.ProgramMode,
                                                    programMode);
-        }
+        };
         let scheduled;
         for (let mapping of Object.values(stateMapping)) {
             this.device.on(mapping.key, item => {
@@ -76,4 +76,4 @@ module.exports = {
             });
         }
     }
-}
+};

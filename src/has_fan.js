@@ -25,7 +25,7 @@ module.exports = {
 
         // Read the fan program details
         let programs = await this.getCached('fan',
-                                 () => this.device.getAvailablePrograms());
+                                            () => this.device.getAvailablePrograms());
         if (!programs) throw new Error('No fan programs are supported');
 
         // Identify the Venting and/or Automatic programs
@@ -39,21 +39,21 @@ module.exports = {
 
         // Read the options supported by the manual fan program
         this.fanPrograms.manual = await this.getCached('fan manual program',
-            () => this.device.getAvailableProgram(this.fanPrograms.manual.key));
+                                                       () => this.device.getAvailableProgram(this.fanPrograms.manual.key));
 
         // Determine the supported fan speeds
         let findOption = key => {
             let option = this.fanPrograms.manual.options
-                             .find(o => o.key == key);
+                .find(o => o.key == key);
             if (!option) return [];
             return option.constraints.allowedvalues
-                         .filter(v => !v.endsWith('Off'))
-                         .map(v => ({ key: key, value: v }));
+                .filter(v => !v.endsWith('Off'))
+                .map(v => ({ key: key, value: v }));
         };
         let levels = {
             venting:   findOption('Cooking.Common.Option.Hood.VentingLevel'),
             intensive: findOption('Cooking.Common.Option.Hood.IntensiveLevel')
-        }
+        };
         this.fanLevels = [...levels.venting, ...levels.intensive];
         if (!this.fanLevels.length) throw new Error('No fan speed levels');
         this.log('Fan suppports ' + levels.venting.length + ' venting levels + '
@@ -114,7 +114,7 @@ module.exports = {
                 return option === undefined
                     ? service.getCharacteristic(characteristic).value
                     : option;
-            }
+            };
             let active  = read(options.active,  Characteristic.Active);
             let auto    = read(options.auto,    Characteristic.TargetFanState);
             let percent = read(options.percent, Characteristic.RotationSpeed);
@@ -122,7 +122,7 @@ module.exports = {
             // Configure the fan
             if (auto != AUTO && percent == 0) active = INACTIVE;
             return this.setFan(active == ACTIVE, auto == AUTO, percent);
-        }
+        };
 
         // Add the fan state characteristics
         service.getCharacteristic(Characteristic.Active)
@@ -141,7 +141,7 @@ module.exports = {
         // Add a rotation speed characteristic
         service.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({ minValue: 0, maxValue: 100,
-                        minStep: this.fanLevelsPercentStep })
+                minStep: this.fanLevelsPercentStep })
             .on('set', this.callbackify(
                 value => this.serialise(setFanProxy, { percent: value })));
 
@@ -151,7 +151,7 @@ module.exports = {
             if (!percent) return;
             this.log('Fan ' + percent + '%');
             service.updateCharacteristic(Characteristic.RotationSpeed, percent);
-        }
+        };
         this.device.on('Cooking.Common.Option.Hood.VentingLevel', newLevel);
         this.device.on('Cooking.Common.Option.Hood.IntensiveLevel', newLevel);
         this.device.on('BSH.Common.Root.ActiveProgram', item => {
@@ -195,8 +195,7 @@ module.exports = {
                 // Try changing the options for the current program
                 await this.device.setActiveProgramOption(option.key,
                                                          option.value);
-            }
-            else {
+            } else {
                 // Start the manual program at the requested speed
                 await this.device.startProgram(this.fanPrograms.manual.key,
                                                { [option.key]: option.value });
@@ -219,4 +218,4 @@ module.exports = {
         if (!level) return 0; // (presumably FanOff or IntensiveStageOff)
         return level.percent;
     }
-}
+};

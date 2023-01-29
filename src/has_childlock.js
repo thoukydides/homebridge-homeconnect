@@ -22,7 +22,7 @@ module.exports = {
         const { CONTROL_LOCK_DISABLED, CONTROL_LOCK_ENABLED } = Characteristic.LockPhysicalControls;
         this.powerService
             .addOptionalCharacteristic(Characteristic.LockPhysicalControls);
-        
+
         // Change the child lock status
         this.powerService.getCharacteristic(Characteristic.LockPhysicalControls)
             .on('set', this.callbackify(async value => {
@@ -36,8 +36,8 @@ module.exports = {
         this.device.on('BSH.Common.Setting.ChildLock', item => {
             this.log('Child lock ' + (item.value ? 'enabled' : 'disabled'));
             this.powerService.updateCharacteristic(
-                Characteristic.LockPhysicalControls, 
+                Characteristic.LockPhysicalControls,
                 item.value ? CONTROL_LOCK_ENABLED : CONTROL_LOCK_DISABLED);
         });
     }
-}
+};

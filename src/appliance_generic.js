@@ -47,7 +47,7 @@ module.exports = class ApplianceGeneric {
 
         // Handle the identify request
         accessory.on('identify', this.callbackify(this.identify));
-        
+
         // Set the Accessory Information service characteristics
         this.informationService =
             accessory.getService(Service.AccessoryInformation);
@@ -66,7 +66,7 @@ module.exports = class ApplianceGeneric {
             .addOptionalCharacteristic(Characteristic.ConfiguredName);
         this.powerService
             .setCharacteristic(Characteristic.ConfiguredName, 'Power');
-        
+
         // Update reachability when connection status changes
         device.on('connected', item => {
             this.log(item.value ? 'Connected' : 'Disconnected');
@@ -116,7 +116,7 @@ module.exports = class ApplianceGeneric {
 
         // A non-standard Home Appliance was used for extra characteristics;
         // these are now added to the power Switch service instead
-        class HomeAppliance {};
+        class HomeAppliance {}
         HomeAppliance.UUID =
             UUID.generate('homebridge-homeconnect:Service:HomeAppliance');
         let homeApplianceService = this.accessory.getService(HomeAppliance);
@@ -285,7 +285,7 @@ module.exports = class ApplianceGeneric {
                     let name = obj.name || 'anonymous';
                     this.reportError(err, "Initialising mixin '" + name + "'");
                 }
-            }
+            };
             doInit();
         }
     }
@@ -323,4 +323,4 @@ module.exports = class ApplianceGeneric {
     warn(msg)   { this.logRaw.warn (this.logPrefix() + msg); }
     log(msg)    { this.logRaw.info (this.logPrefix() + msg); }
     debug(msg)  { this.logRaw.debug(this.logPrefix() + msg); }
-}
+};

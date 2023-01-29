@@ -17,17 +17,17 @@ module.exports = {
                                                () => this.device.getSettings());
         if (!allSettings.some(s => s.key == 'BSH.Common.Setting.AlarmClock'))
             return this.log('Does not support an alarm clock');
-        
+
         // Check the maximum supported alarm clock duration
         let setting = await this.getCached('alarmclock',
-                 () => this.device.getSetting('BSH.Common.Setting.AlarmClock'));
+                                           () => this.device.getSetting('BSH.Common.Setting.AlarmClock'));
 
         // Add a set duration characteristic for the alarm clock
         this.powerService
             .addOptionalCharacteristic(Characteristic.SetDuration);
         this.powerService.getCharacteristic(Characteristic.SetDuration)
             .setProps({ maxValue: setting.constraints.max });
-        
+
         // Change the alarm clock value
         this.powerService.getCharacteristic(Characteristic.SetDuration)
             .on('set', this.callbackify(async value => {
@@ -46,4 +46,4 @@ module.exports = {
                 Characteristic.SetDuration, item.value);
         });
     }
-}
+};

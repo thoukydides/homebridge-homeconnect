@@ -55,10 +55,10 @@ module.exports = {
                     chargingState = NOT_CHARGEABLE;
                 }
                 service.updateCharacteristic(Characteristic.ChargingState,
-                                             chargingState)
+                                             chargingState);
             });
         };
         this.device.on('BSH.Common.Status.BatteryChargingState', updateCharger);
         this.device.on('BSH.Common.Status.ChargingConnection',   updateCharger);
     }
-}
+};

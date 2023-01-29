@@ -35,7 +35,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         // Workaround some appliances not reliably indicating their power state
         this.on('BSH.Common.Status.OperationState',
                 item => this.readyImpliesPower(item));
-        
+
         // Start streaming events
         this.listener = event => this.eventListener(event);
         this.api.on(this.haId, this.listener);
@@ -59,7 +59,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         }
         return description;
     }
-    
+
     // Update cached values and notify listeners
     update(items) {
         // Update cached state for all items before notifying any listeners
@@ -98,7 +98,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             throw this.reportError(err, 'GET appliance');
         }
     }
-    
+
     // Read current status
     async getStatus() {
         try {
@@ -205,7 +205,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             let program = await this.api.getSelectedProgram(this.haId);
             if (program === undefined) throw new Error('Empty response');
             this.update([{ key:   'BSH.Common.Root.SelectedProgram',
-                           value: program.key }]);
+                value: program.key }]);
             if (this.getItem('BSH.Common.Status.OperationState')
                 == 'BSH.Common.EnumType.OperationState.Ready') {
                 // Only update options when no program is active
@@ -237,7 +237,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             await this.api.setSelectedProgram(this.haId, programKey,
                                               programOptions);
             this.update([{ key:   'BSH.Common.Root.SelectedProgram',
-                           value: programKey }]);
+                value: programKey }]);
             this.update(programOptions);
         } catch (err) {
             throw this.reportError(err, 'SET selected program ' + programKey);
@@ -259,7 +259,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
                 let program = await this.api.getActiveProgram(this.haId);
                 if (program === undefined) throw new Error('Empty response');
                 this.update([{ key:   'BSH.Common.Root.ActiveProgram',
-                               value: program.key }]);
+                    value: program.key }]);
                 this.update(program.options);
                 return program;
             } else {
@@ -294,7 +294,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             await this.api.setActiveProgram(this.haId, programKey,
                                             programOptions);
             this.update([{ key:   'BSH.Common.Root.ActiveProgram',
-                           value: programKey }]);
+                value: programKey }]);
             this.update(programOptions);
         } catch (err) {
             throw this.reportError(err, 'START active program ' + programKey);
@@ -443,11 +443,11 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         if (operationImpliesOn && !stateIsOn) {
             this.log('Operation state implies power is on');
             this.update([{ key:   'BSH.Common.Setting.PowerState',
-                           value: 'BSH.Common.EnumType.PowerState.On' }]);
+                value: 'BSH.Common.EnumType.PowerState.On' }]);
         } else if (!operationImpliesOn && stateIsOn) {
             this.log('Operation state implies power is standby or off');
             this.update([{ key:   'BSH.Common.Setting.PowerState',
-                           value: 'BSH.Common.EnumType.PowerState.Standby' }]);
+                value: 'BSH.Common.EnumType.PowerState.Standby' }]);
         }
     }
 
@@ -672,4 +672,4 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         this.emit('error', err, op);
         return err;
     }
-}
+};
