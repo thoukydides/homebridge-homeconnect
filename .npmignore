@@ -1,3 +1,7 @@
-.github
-test.js
+src
+.*
+nodemon.json
+tsconfig.json
+/*.js
 *~
+[#]*[#]
