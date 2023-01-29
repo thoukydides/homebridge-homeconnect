@@ -18,7 +18,10 @@
     "rules": {
         "quotes": [
             "warn",
-            "single"
+            "single",
+            {
+                "avoidEscape": true
+            }
         ],
         "indent": [
             "warn",
