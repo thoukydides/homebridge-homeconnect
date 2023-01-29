@@ -8,6 +8,7 @@
 [![npm](https://badgen.net/npm/v/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
 [![npm](https://badgen.net/npm/dt/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
 [![npm](https://badgen.net/npm/dw/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
+[![Build and Lint](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml/badge.svg)](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml)
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
 Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/homebridge).
