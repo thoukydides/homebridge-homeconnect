@@ -1,0 +1,32 @@
+// Homebridge plugin for Home Connect home appliances
+// Copyright © 2019-2023 Alexander Thoukydides
+
+// Configuration for GitHub Codespaces
+{
+	"name": "Homebridge Home Connect (Node 14)",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:0-14",
+
+	// VS Code extensions to install automatically
+	"extensions": [
+		"dbaeumer.vscode-eslint",
+		"streetsidesoftware.code-spell-checker"
+	],
+
+	// Finish setup after creating the container
+	"postCreateCommand": {
+		"install": "npm install",
+		"homebridge": "cp -R ./.devcontainer/.homebridge ~/"
+	},
+
+	// Port forwarding configuration
+	"portsAttributes": {
+		"8581": {
+			"label": "Homebridge Config UI X",
+			"onAutoForward": "openPreview"
+		},
+		"53543": {
+			"label": "Homebridge HAP",
+			"onAutoForward": "ignore"
+		}
+	}
+}

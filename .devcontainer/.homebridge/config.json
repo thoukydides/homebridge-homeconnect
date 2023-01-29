@@ -1,0 +1,24 @@
+{
+    "bridge": {
+        "name": "Homebridge",
+        "username": "12:34:56:78:9A:BC",
+        "port": 53543,
+        "pin": "123-45-678"
+    },
+    "platforms": [
+        {
+            "name": "Config",
+            "platform": "config",
+            "port": 8581,
+            "auth": "none",
+            "sudo": false,
+            "theme": "auto",
+            "lang": "auto",
+            "tempUnits": "c"
+        },
+        {
+            "platform": "HomeConnect",
+            "simulator": false
+        }
+    ]
+}

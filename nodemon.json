@@ -1,0 +1,12 @@
+{
+    "watch": [
+        "src"
+    ],
+    "ext": "ts",
+    "ignore": [],
+    "exec": "npm run checkers && tsc && homebridge -D -I -P ..",
+    "signal": "SIGTERM",
+    "env": {
+        "NODE_OPTIONS": "--trace-warnings"
+    }
+}
