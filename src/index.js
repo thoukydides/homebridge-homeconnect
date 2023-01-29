@@ -3,28 +3,24 @@
 
 'use strict';
 
-const HomeConnectAPI = require('./lib/homeconnect_api.js');
-const HomeConnectDevice = require('./lib/homeconnect_device.js');
-const ApplianceGeneric = require('./lib/appliance_generic.js');
-const ApplianceCleaning = require('./lib/appliance_cleaning.js');
-const ApplianceCooking = require('./lib/appliance_cooking.js');
-const ApplianceCooling = require('./lib/appliance_cooling.js');
-const ConfigSchema = require('./lib/config_schema.js');
+const HomeConnectAPI = require('./homeconnect_api.js');
+const HomeConnectDevice = require('./homeconnect_device.js');
+const ApplianceGeneric = require('./appliance_generic.js');
+const ApplianceCleaning = require('./appliance_cleaning.js');
+const ApplianceCooking = require('./appliance_cooking.js');
+const ApplianceCooling = require('./appliance_cooling.js');
+const ConfigSchema = require('./config_schema.js');
 const NodePersist = require('node-persist');
 const Path = require('path');
 const fsPromises = require('fs').promises;
 const chalk = require('chalk');
 const semver = require('semver');
+import { PACKAGE, PLUGIN_NAME, PLUGIN_VERSION, PLATFORM_NAME,
+         REQUIRED_HOMEBRIDGE_API } from './settings';
 
 let UUID;
 
-// Platform identifiers
-const PACKAGE = require('./package.json');
-const PLUGIN_NAME = PACKAGE.name;
-const PLATFORM_NAME = 'HomeConnect';
-
 // Required Homebridge API version
-const HB_REQUIRED = '^2.7';
 const HAP_REQUIRED = '>=0.9.0';
 
 // Interval between updating the list of appliances
@@ -52,12 +48,13 @@ class HomeConnectPlatform {
         UUID = homebridge.hap.uuid;
 
         // Check software versions
-        log(PACKAGE.name + ' version ' + PACKAGE.version);
+        log(PLUGIN_NAME + ' version ' + PLUGIN_VERSION);
         this.checkVersion('Node.js', process.versions.node,
                           PACKAGE.engines.node);
         this.checkVersion('Homebridge', homebridge.serverVersion,
                           PACKAGE.engines.homebridge);
-        this.checkVersion('Homebridge API', homebridge.version, HB_REQUIRED);
+        this.checkVersion('Homebridge API', homebridge.version,
+                          REQUIRED_HOMEBRIDGE_API);
         this.checkVersion('Homebridge HAP', homebridge.hap.HAPLibraryVersion(),
                           HAP_REQUIRED);
 

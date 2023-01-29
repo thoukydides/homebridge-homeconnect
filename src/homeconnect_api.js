@@ -8,11 +8,10 @@ const finished = require('stream/promises').finished;
 const undici = require('undici');
 const fetch = undici.fetch;
 const FormData = require('undici').FormData;
+import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
 
 // User-Agent header
-const NAME       = require('../package.json').name;
-const VERSION    = require('../package.json').version;
-const USER_AGENT = NAME + '/' + VERSION;
+const USER_AGENT = PLUGIN_NAME + '/' + PLUGIN_VERSION;
 
 // URLs for the Home Connect API
 const URL_LIVE = 'https://api.home-connect.com';
