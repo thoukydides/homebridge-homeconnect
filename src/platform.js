@@ -27,14 +27,8 @@ const HAP_REQUIRED = '>=0.9.0';
 // (only 1000 API calls allowed per day, so only check once an hour)
 const UPDATE_APPLIANCES_DELAY = 60 * 60 * 1000; // (milliseconds)
 
-// Register as a dynamic platform
-export default homebridge => {
-    homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME,
-                                HomeConnectPlatform, true);
-};
-
 // A Homebridge HomeConnect platform
-class HomeConnectPlatform {
+export class HomeConnectPlatform {
 
     // Create a new HomeConnect platform object
     constructor(log, config, homebridge) {
