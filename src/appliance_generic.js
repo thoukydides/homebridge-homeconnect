@@ -225,7 +225,7 @@ export class ApplianceGeneric {
     }
 
     // Convert an async function into one that takes a callback
-    // (cannot use util.callbackify because homebridge adds exra parameters)
+    // (cannot use util.callbackify because homebridge adds extra parameters)
     callbackify(fn) {
         return async (value, callback) => {
             try {

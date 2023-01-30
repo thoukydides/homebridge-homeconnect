@@ -93,7 +93,7 @@ module.exports = {
         this.doorService.getCharacteristic(Characteristic.TargetPosition)
             .setProps({ minStep: minStep });
 
-        // Allow the target positon to be controlled, if supported
+        // Allow the target position to be controlled, if supported
         if (supportsOpen || supportsPartly) {
             // Door can be opened and/or partly opened
             this.doorService.getCharacteristic(Characteristic.TargetPosition)

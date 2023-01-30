@@ -710,7 +710,7 @@ module.exports = {
         return /InRelative$/.test(key);
     },
 
-    // Convert an absolute time (HH:MM) to the nubmer of seconds in the future
+    // Convert an absolute time (HH:MM) to the number of seconds in the future
     timeToSeconds(value) {
         // Assume that simple integers are already relative times in seconds
         if (/^\d+$/.test(value)) return parseInt(value, 10);
