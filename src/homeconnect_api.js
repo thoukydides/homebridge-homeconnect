@@ -591,9 +591,11 @@ export class HomeConnectAPI extends EventEmitter {
                 headers,
                 body
             });
-            if (!options.followRedirect && response.redirected) {
-                status = 'Redirect ' + response.url;
-                return response.url;
+            const redirectStatus = [301, 302, 303, 307, 308];
+            if (!options.followRedirect
+                && redirectStatus.includes(response.statusCode)) {
+                status = 'Redirect ' + response.headers.location;
+                return response.headers.location;
             }
             let text = await response.body.text();
             let json;
