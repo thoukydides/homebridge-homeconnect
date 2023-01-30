@@ -88,7 +88,7 @@ export class ApplianceDryer
 }
 
 // A Homebridge accessory for a Home Connect washer or washer/dryer
-class ApplianceWasherDryer extends ApplianceLaundry {
+export class ApplianceWasherDryer extends ApplianceLaundry {
     constructor(...args) {
         super(...args);
 
@@ -102,5 +102,4 @@ class ApplianceWasherDryer extends ApplianceLaundry {
     }
 }
 
-export const Washer      = ApplianceWasherDryer;
-export const WasherDryer = ApplianceWasherDryer;
+export const ApplianceWasher = ApplianceWasherDryer;
