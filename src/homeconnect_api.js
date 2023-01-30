@@ -5,7 +5,7 @@
 
 const { STATUS_CODES } = require('http');
 const EventEmitter = require('events');
-const finished = require('stream/promises').finished;
+const finished = require('stream').finished;
 const undici = require('undici');
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
 
@@ -784,7 +784,12 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                     debugHistory:   []
                 };
                 stream.on('data', chunk => this.eventChunk(state, chunk));
-                await finished(stream);
+                await new Promise((resolve, reject) => {
+                    finished(stream, err => {
+                        if (err) reject(err);
+                        else resolve();
+                    });
+                });
 
                 // Event stream closed
                 this.debug('Terminated ' + description + ' without error');
