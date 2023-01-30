@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2021-2023 Alexander Thoukydides
 
-'use strict';
-
 let Service, Characteristic;
 
 // Add mode switches to an accessory

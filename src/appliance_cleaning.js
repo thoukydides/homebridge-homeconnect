@@ -1,21 +1,19 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const ApplianceGeneric = require('./appliance_generic.js');
-const HasChildLock = require('./has_childlock.js');
-const HasDoor = require('./has_door.js');
-const HasEvents = require('./has_events.js');
-const HasActive = require('./has_active.js');
-const HasBattery = require('./has_battery.js');
-const HasLight = require('./has_light.js');
-const HasPrograms = require('./has_programs.js');
-const HasRemainingTime = require('./has_remainingtime.js');
-const HasRemoteControl = require('./has_remotecontrol.js');
+import ApplianceGeneric from './appliance_generic.js';
+import HasChildLock from './has_childlock.js';
+import HasDoor from './has_door.js';
+import HasEvents from './has_events.js';
+import HasActive from './has_active.js';
+import HasBattery from './has_battery.js';
+import HasLight from './has_light.js';
+import HasPrograms from './has_programs.js';
+import HasRemainingTime from './has_remainingtime.js';
+import HasRemoteControl from './has_remotecontrol.js';
 
 // A Homebridge accessory for a Home Connect cleaning robot (Roxxter)
-module.exports.CleaningRobot = class ApplianceCleaningRobot
+export class ApplianceCleaningRobot
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -37,10 +35,10 @@ module.exports.CleaningRobot = class ApplianceCleaningRobot
         this.mixin(HasPrograms);
         this.mixin(HasBattery);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect dishwasher
-module.exports.Dishwasher = class ApplianceDishwasher
+export class ApplianceDishwasher
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -58,7 +56,7 @@ module.exports.Dishwasher = class ApplianceDishwasher
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect washer and/or dryer
 class ApplianceLaundry extends ApplianceGeneric {
@@ -76,7 +74,7 @@ class ApplianceLaundry extends ApplianceGeneric {
 }
 
 // A Homebridge accessory for a Home Connect dryer
-module.exports.Dryer = class ApplianceDryer
+export class ApplianceDryer
     extends ApplianceLaundry {
     constructor(...args) {
         super(...args);
@@ -87,7 +85,7 @@ module.exports.Dryer = class ApplianceDryer
             'BSH.Common.Event.ProgramAborted':      'Program Aborted'
         });
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect washer or washer/dryer
 class ApplianceWasherDryer extends ApplianceLaundry {
@@ -104,5 +102,5 @@ class ApplianceWasherDryer extends ApplianceLaundry {
     }
 }
 
-module.exports.Washer      = ApplianceWasherDryer;
-module.exports.WasherDryer = ApplianceWasherDryer;
+export const Washer      = ApplianceWasherDryer;
+export const WasherDryer = ApplianceWasherDryer;

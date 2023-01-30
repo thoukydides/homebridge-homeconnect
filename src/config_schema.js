@@ -1,11 +1,11 @@
+/* eslint-disable max-len */
+/* eslint-disable no-console */
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const HomeConnectLanguages = require('./homeconnect_languages.json');
-const Path = require('path');
-const fsPromises = require('fs').promises;
+import HomeConnectLanguages from './homeconnect_languages.json';
+import { join } from 'path';
+import { promises } from 'fs';
 
 // Platform identifier (must match index.js)
 const PLATFORM_NAME = 'HomeConnect';
@@ -24,7 +24,7 @@ const MAX_ENUM_STEPS = 18;
 // Delay before writing the schema to allow multiple updates to be applied
 const WRITE_DELAY = 3 * 1000; // (milliseconds)
 
-// Schema generator for the Homebrifge config.json configuration file
+// Schema generator for the Homebridge config.json configuration file
 class ConfigSchema {
 
     // Create a new schema generator
@@ -33,9 +33,9 @@ class ConfigSchema {
         this.persist = persist;
 
         // The full path to the schema file
-        this.schemaFile = path ? Path.join(path, '.' + pluginName + '-v'
-                                           + SCHEMA_VERSION + '.schema.json')
-                               : Path.join(__dirname, '../config.schema.json');
+        this.schemaFile = path ? join(path, '.' + pluginName + '-v'
+                                            + SCHEMA_VERSION + '.schema.json')
+                               : join(__dirname, '../config.schema.json');
         // Initial state
         this.appliances = {};
 
@@ -78,7 +78,7 @@ class ConfigSchema {
         let findProgram = programKey => {
             let appliance = this.appliances[haId];
             if (!appliance) return;
-            return appliance.programs.find(p => p.key == programKey);
+            return appliance.programs.find(p => p.key === programKey);
         };
 
         // Return the methods that the accessory can use to update the schema
@@ -118,7 +118,7 @@ class ConfigSchema {
         let languages = [];
         for (let language of Object.keys(HomeConnectLanguages)) {
             let countries = HomeConnectLanguages[language];
-            let single = Object.keys(countries).length == 1;
+            let single = Object.keys(countries).length === 1;
             for (let country of Object.keys(countries)) {
                 let tag = countries[country];
                 let title = language;
@@ -352,7 +352,7 @@ class ConfigSchema {
                     for (let key of ['minimum', 'maximum', 'multipleOf']) {
                         if (option[key]) {
                             formOption[key] = option[key];
-                            if (option.type != 'string') {
+                            if (option.type !== 'string') {
                                 // Don't set this for relative time options
                                 formOption.type = 'number';
                             }
@@ -577,7 +577,7 @@ class ConfigSchema {
 
         // Then try reading a schema file (does not exist initially)
         try {
-            let data = await fsPromises.readFile(this.schemaFile, 'utf8');
+            let data = await promises.readFile(this.schemaFile, 'utf8');
             this.oldSchema = data;
         } catch (err) {
             this.debug('Failed to read the current configuration schema: '
@@ -589,12 +589,12 @@ class ConfigSchema {
     writeSchema() {
         // Perform the write
         let doWrite = async () => {
-            let promises = this.writePending;
+            let writePromises = this.writePending;
             delete this.writePending;
 
             // Write the schema and resolve all pending promises
             await this.writeSchemaDeferred();
-            for (let promise of promises) promise.resolve();
+            for (let promise of writePromises) promise.resolve();
 
             // Schedule another write if required
             if (this.writePending) {
@@ -641,11 +641,11 @@ class ConfigSchema {
         let data = JSON.stringify(schema, null, 4);
 
         // No action required unless the schema has changed
-        if (data == this.oldSchema) return;
+        if (data === this.oldSchema) return;
 
         // Attempt to write the new schema
         try {
-            await fsPromises.writeFile(this.schemaFile, data, 'utf8');
+            await promises.writeFile(this.schemaFile, data, 'utf8');
             this.oldSchema = data;
             this.log('Configuration schema file updated: ' + this.schemaFile);
         } catch (err) {
@@ -660,10 +660,10 @@ class ConfigSchema {
     log(msg)    { this.logRaw ? this.logRaw.info(msg)  : console.log(msg);   }
     debug(msg)  { this.logRaw ? this.logRaw.debug(msg) : console.debug(msg); }
 }
-module.exports = ConfigSchema;
+export default ConfigSchema;
 
 // If this script is being run interactively then generate the default schema
-if (!module.parent) {
+if (require.main === module) {
     let schema = new ConfigSchema;
     schema.writeSchema();
 }

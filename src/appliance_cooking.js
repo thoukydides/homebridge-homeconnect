@@ -1,25 +1,21 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const ApplianceGeneric = require('./appliance_generic.js');
-const HasAlarmClock = require('./has_alarmclock.js');
-const HasChildLock = require('./has_childlock.js');
-const HasDoor = require('./has_door.js');
-const HasEvents = require('./has_events.js');
-const HasModes = require('./has_modes.js');
-const HasFan = require('./has_fan.js');
-const HasLight = require('./has_light.js');
-const HasActive = require('./has_active.js');
-const HasPrograms = require('./has_programs.js');
-const HasRemainingTime = require('./has_remainingtime.js');
-const HasRemoteControl = require('./has_remotecontrol.js');
-
-let Service, Characteristic;
+import ApplianceGeneric from './appliance_generic.js';
+import HasAlarmClock from './has_alarmclock.js';
+import HasChildLock from './has_childlock.js';
+import HasDoor from './has_door.js';
+import HasEvents from './has_events.js';
+import HasModes from './has_modes.js';
+import HasFan from './has_fan.js';
+import HasLight from './has_light.js';
+import HasActive from './has_active.js';
+import HasPrograms from './has_programs.js';
+import HasRemainingTime from './has_remainingtime.js';
+import HasRemoteControl from './has_remotecontrol.js';
 
 // A Homebridge accessory for a Home Connect coffee maker
-module.exports.CoffeeMaker = class ApplianceCoffeeMaker
+export class ApplianceCoffeeMaker
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -43,10 +39,10 @@ module.exports.CoffeeMaker = class ApplianceCoffeeMaker
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect cook processor
-module.exports.CookProcessor = class ApplianceCookProcessor
+export class ApplianceCookProcessor
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -59,10 +55,10 @@ module.exports.CookProcessor = class ApplianceCookProcessor
         });
         this.mixin(HasRemainingTime);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect hob (cooktop)
-module.exports.Hob = class ApplianceHob
+export class ApplianceHob
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -79,17 +75,13 @@ module.exports.Hob = class ApplianceHob
         this.mixin(HasRemoteControl);
         this.mixin(HasChildLock);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect hood
-module.exports.Hood = class ApplianceHood
+export class ApplianceHood
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
-
-        // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
-        Characteristic = this.homebridge.hap.Characteristic;
 
         // Customise the appliance as a hood
         this.mixin(HasEvents, {
@@ -104,10 +96,10 @@ module.exports.Hood = class ApplianceHood
         this.mixin(HasRemainingTime);
         this.mixin(HasRemoteControl);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect oven
-module.exports.Oven = class ApplianceOven
+export class ApplianceOven
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -132,10 +124,10 @@ module.exports.Oven = class ApplianceOven
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect warming drawer
-module.exports.WarmingDrawer = class ApplianceWarmingDrawer
+export class ApplianceWarmingDrawer
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -146,4 +138,4 @@ module.exports.WarmingDrawer = class ApplianceWarmingDrawer
         this.mixin(HasPrograms);
         this.mixin(HasChildLock);
     }
-};
+}

@@ -1,18 +1,13 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const HasPower = require('./has_power.js');
-const PersistCache = require('./persist_cache.js');
+import HasPower from './has_power.js';
+import PersistCache from './persist_cache.js';
 
 let Service, Characteristic, UUID;
 
-// Length of time to cache API responses
-const CACHE_TTL = 24 * 60 * 60 * 1000; // (24 hours in milliseconds)
-
 // A Homebridge accessory for a generic Home Connect home appliance
-module.exports = class ApplianceGeneric {
+export default class ApplianceGeneric {
 
     // Initialise an appliance
     constructor(log, homebridge, persist, schema, device, accessory, config) {
@@ -133,6 +128,7 @@ module.exports = class ApplianceGeneric {
     }
 
     // Identify this appliance
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     identify(paired) {
         // Log the current status of this appliance
         this.log('Identify: ' + this.device.haId);
@@ -251,9 +247,9 @@ module.exports = class ApplianceGeneric {
         minutes -= hours * 60;
 
         // Format the individual components
-        let prettyHours   = hours   + (hours   == 1 ? ' hour'   : ' hours');
-        let prettyMinutes = minutes + (minutes == 1 ? ' minute' : ' minutes');
-        let prettySeconds = seconds + (seconds == 1 ? ' second' : ' seconds');
+        let prettyHours   = hours   + (hours   === 1 ? ' hour'   : ' hours');
+        let prettyMinutes = minutes + (minutes === 1 ? ' minute' : ' minutes');
+        let prettySeconds = seconds + (seconds === 1 ? ' second' : ' seconds');
 
         // Combine the components appropriately
         if (hours) {
@@ -308,7 +304,7 @@ module.exports = class ApplianceGeneric {
             // Log this error with some context
             this.error(err.message);
             if (op) this.error(op);
-            if (err.name == 'StatusCodeError')
+            if (err.name === 'StatusCodeError')
                 this.error(err.options.method + ' ' + err.options.url);
 
             // Log any stack backtrace at lower priority
@@ -323,4 +319,4 @@ module.exports = class ApplianceGeneric {
     warn(msg)   { this.logRaw.warn (this.logPrefix() + msg); }
     log(msg)    { this.logRaw.info (this.logPrefix() + msg); }
     debug(msg)  { this.logRaw.debug(this.logPrefix() + msg); }
-};
+}

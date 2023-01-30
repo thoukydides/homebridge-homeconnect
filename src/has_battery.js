@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 let Service, Characteristic;
 
 // Battery level to treat as low battery
@@ -38,11 +36,13 @@ module.exports = {
         const { NOT_CHARGING, CHARGING, NOT_CHARGEABLE } =
               Characteristic.ChargingState;
         let scheduled;
-        let updateCharger = item => {
+        let updateCharger = () => {
             clearTimeout(scheduled);
             scheduled = setTimeout(() => {
-                let charging = this.device.getItem('BSH.Common.Status.BatteryChargingState') == 'BSH.Common.EnumType.BatteryChargingState.Charging';
-                let connected = this.device.getItem('BSH.Common.Status.ChargingConnection') == 'BSH.Common.EnumType.ChargingConnection.Connected';
+                let charging = this.device.getItem('BSH.Common.Status.BatteryChargingState')
+                               === 'BSH.Common.EnumType.BatteryChargingState.Charging';
+                let connected = this.device.getItem('BSH.Common.Status.ChargingConnection')
+                                === 'BSH.Common.EnumType.ChargingConnection.Connected';
                 let chargingState;
                 if (charging) {
                     this.log('Battery is charging');

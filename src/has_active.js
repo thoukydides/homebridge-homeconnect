@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 // Mapping from OperationState to the individual characteristics
 const OPERATION_STATE_MAPPING ={
     Inactive:       { active: false, status: true,  fault: false },

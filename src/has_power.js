@@ -1,9 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-let Service, Characteristic;
+let Characteristic;
 
 // Add a power switch to an accessory
 module.exports = {
@@ -12,7 +10,6 @@ module.exports = {
     // Initialise the mixin
     async init() {
         // Shortcuts to useful HAP objects
-        Service = this.homebridge.hap.Service;
         Characteristic = this.homebridge.hap.Characteristic;
 
         // Add a characteristic for the power state, initially read-only
@@ -40,7 +37,7 @@ module.exports = {
             });
         };
         this.device.on('BSH.Common.Setting.PowerState', item => {
-            isOn = item.value == 'BSH.Common.EnumType.PowerState.On';
+            isOn = item.value === 'BSH.Common.EnumType.PowerState.On';
             update();
         });
         this.device.on('connected', item => {

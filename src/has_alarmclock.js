@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-'use strict';
-
 // Add an alarm clock to an accessory
 module.exports = {
     name: 'HasAlarmClock',
@@ -15,7 +13,7 @@ module.exports = {
         // Check whether the appliance supports an alarm clock
         let allSettings = await this.getCached('settings',
                                                () => this.device.getSettings());
-        if (!allSettings.some(s => s.key == 'BSH.Common.Setting.AlarmClock'))
+        if (!allSettings.some(s => s.key === 'BSH.Common.Setting.AlarmClock'))
             return this.log('Does not support an alarm clock');
 
         // Check the maximum supported alarm clock duration

@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 let Service, Characteristic;
 
 // Add an extractor fan to an accessory
@@ -29,8 +27,8 @@ module.exports = {
         if (!programs) throw new Error('No fan programs are supported');
 
         // Identify the Venting and/or Automatic programs
-        // (DelatedShutOff (fan run-on) not currently supported by this plugin)
-        let findProgram = key => programs.find(p => p.key == key);
+        // (DelayedShutOff (fan run-on) not currently supported by this plugin)
+        let findProgram = key => programs.find(p => p.key === key);
         this.fanPrograms = {
             manual: findProgram('Cooking.Common.Program.Hood.Venting'),
             auto:   findProgram('Cooking.Common.Program.Hood.Automatic')
@@ -44,7 +42,7 @@ module.exports = {
         // Determine the supported fan speeds
         let findOption = key => {
             let option = this.fanPrograms.manual.options
-                .find(o => o.key == key);
+                .find(o => o.key === key);
             if (!option) return [];
             return option.constraints.allowedvalues
                 .filter(v => !v.endsWith('Off'))
@@ -56,7 +54,7 @@ module.exports = {
         };
         this.fanLevels = [...levels.venting, ...levels.intensive];
         if (!this.fanLevels.length) throw new Error('No fan speed levels');
-        this.log('Fan suppports ' + levels.venting.length + ' venting levels + '
+        this.log('Fan supports ' + levels.venting.length + ' venting levels + '
                  + levels.intensive.length + ' intensive levels'
                  + (this.fanPrograms.auto ? ' + auto mode' : ''));
 
@@ -79,8 +77,8 @@ module.exports = {
         for (let siri of Object.keys(siriPercent)) {
             let percent = siriPercent[siri];
             let option = this.fromFanSpeedPercent(percent);
-            let level = this.fanLevels.find(o => o.key == option.key
-                                                 && o.value == option.value);
+            let level = this.fanLevels.find(o => o.key === option.key
+                                                 && o.value === option.value);
             level.siri = siri;
             level.percent = percent;
         }
@@ -88,7 +86,7 @@ module.exports = {
         // Verify that the fan speed mapping is stable
         for (let level of this.fanLevels) {
             let option = this.fromFanSpeedPercent(level.percent);
-            if (level.value != option.value) {
+            if (level.value !== option.value) {
                 this.error('Unstable fan speed mapping: ' + level.value
                            + ' -> ' + level.percent + '% -> ' + option.value);
             }
@@ -105,9 +103,9 @@ module.exports = {
         let service = this.activeService;
 
         // Control the fan, reading missing parameters from the characteristics
-        const { INACTIVE: OFF, ACTIVE }       = Characteristic.Active;
-        const { INACTIVE, IDLE, BLOWING_AIR } = Characteristic.CurrentFanState;
-        const { MANUAL, AUTO }                = Characteristic.TargetFanState;
+        const { INACTIVE: OFF, ACTIVE } = Characteristic.Active;
+        const { INACTIVE, BLOWING_AIR } = Characteristic.CurrentFanState;
+        const { MANUAL, AUTO }          = Characteristic.TargetFanState;
         let setFanProxy = (options) => {
             // Read missing values
             let read = (option, characteristic) => {
@@ -120,8 +118,8 @@ module.exports = {
             let percent = read(options.percent, Characteristic.RotationSpeed);
 
             // Configure the fan
-            if (auto != AUTO && percent == 0) active = INACTIVE;
-            return this.setFan(active == ACTIVE, auto == AUTO, percent);
+            if (auto !== AUTO && percent === 0) active = INACTIVE;
+            return this.setFan(active === ACTIVE, auto === AUTO, percent);
         };
 
         // Add the fan state characteristics
@@ -156,7 +154,7 @@ module.exports = {
         this.device.on('Cooking.Common.Option.Hood.IntensiveLevel', newLevel);
         this.device.on('BSH.Common.Root.ActiveProgram', item => {
             if (!item.value) return;
-            let manual = item.value == this.fanPrograms.manual.key;
+            let manual = item.value === this.fanPrograms.manual.key;
             this.log('Fan ' + (manual ? 'manual' : 'automatic') + ' control');
             service.updateCharacteristic(Characteristic.TargetFanState,
                                          manual ? MANUAL : AUTO);
@@ -189,9 +187,9 @@ module.exports = {
             let snapPercent = this.toFanSpeedPercent(option);
             this.log('SET fan manual ' + snapPercent + '%');
             if (this.device.getItem('BSH.Common.Status.OperationState')
-                == 'BSH.Common.EnumType.OperationState.Run'
+                === 'BSH.Common.EnumType.OperationState.Run'
                 && this.device.getItem('BSH.Common.Root.ActiveProgram')
-                   == this.fanPrograms.manual.key) {
+                   === this.fanPrograms.manual.key) {
                 // Try changing the options for the current program
                 await this.device.setActiveProgramOption(option.key,
                                                          option.value);
@@ -213,8 +211,8 @@ module.exports = {
     // Convert from a program option to a rotation speed percentage
     toFanSpeedPercent(option) {
         // Attempt to convert option to an index into the supported fan levels
-        let level = this.fanLevels.find(o => o.key == option.key
-                                             && o.value == option.value);
+        let level = this.fanLevels.find(o => o.key === option.key
+                                             && o.value === option.value);
         if (!level) return 0; // (presumably FanOff or IntensiveStageOff)
         return level.percent;
     }

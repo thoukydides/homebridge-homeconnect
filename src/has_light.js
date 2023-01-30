@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 let Service, Characteristic;
 
 const CUSTOM_COLOR = 'BSH.Common.EnumType.AmbientLightColor.CustomColor';
@@ -47,7 +45,7 @@ module.exports = {
                                                () => this.device.getSettings());
 
         // A light must at least support being switched on and off
-        if (!allSettings.some(setting => setting.key == keys.on))
+        if (!allSettings.some(setting => setting.key === keys.on))
             return this.log('Does not support ' + type);
 
         // Retrieve any previously cached light details
@@ -96,10 +94,10 @@ module.exports = {
                     settings.custom = { key: keys.custom };
 
                 // Check whether the light supports non-custom colours
-                let nonCustomColour = colours.find(c => c != CUSTOM_COLOR);
+                let nonCustomColour = colours.find(c => c !== CUSTOM_COLOR);
                 if (nonCustomColour) {
                     // Select a non-custom colour, if necessary, to read range
-                    if (colour == CUSTOM_COLOR) {
+                    if (colour === CUSTOM_COLOR) {
                         if (!active) return;
                         this.warn('Temporarily setting ' + type + ' to a'
                                   + ' non-custom colour to read its settings');
@@ -122,7 +120,7 @@ module.exports = {
             for (let setting of initialSettings) {
                 try {
                     await this.device.setSetting(setting.key, setting.value);
-                } catch (err) {}
+                } catch (err) { /* empty */ }
             }
         }
     },
@@ -333,18 +331,18 @@ module.exports = {
         let maxRgb = Math.max(...rgb);
         let chroma = maxRgb - minRgb;
         let sector;
-        if (chroma == 0) {
+        if (chroma === 0) {
             sector = 0; // (dummy value for white, i.e. R=G=B=V)
-        } else if (maxRgb == rgb[0]) { // 0-60° or 300-360°
+        } else if (maxRgb === rgb[0]) { // 0-60° or 300-360°
             sector = (rgb[1] - rgb[2]) / chroma;
             if (sector < 0) sector += 6;
-        } else if (maxRgb == rgb[1]) { // 60-180°
+        } else if (maxRgb === rgb[1]) { // 60-180°
             sector = (rgb[2] - rgb[0]) / chroma + 2;
-        } else { // (maxRgb == rgb[2])    180-300°
+        } else { // (maxRgb === rgb[2])    180-300°
             sector = (rgb[0] - rgb[1]) / chroma + 4;
         }
 
-        // Scale and return the hue, saturation, and vaue
+        // Scale and return the hue, saturation, and value
         return {
             hue:        Math.round(sector * 60),
             saturation: maxRgb ? Math.round((chroma / maxRgb) * 100) : 0,

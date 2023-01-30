@@ -1,20 +1,20 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const HomeConnectAPI = require('./homeconnect_api.js');
-const HomeConnectDevice = require('./homeconnect_device.js');
-const ApplianceGeneric = require('./appliance_generic.js');
-const ApplianceCleaning = require('./appliance_cleaning.js');
-const ApplianceCooking = require('./appliance_cooking.js');
-const ApplianceCooling = require('./appliance_cooling.js');
-const ConfigSchema = require('./config_schema.js');
-const NodePersist = require('node-persist');
-const Path = require('path');
-const fsPromises = require('fs').promises;
-const chalk = require('chalk');
-const semver = require('semver');
+import HomeConnectAPI from './homeconnect_api.js';
+import HomeConnectDevice from './homeconnect_device.js';
+import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
+         ApplianceWasher, ApplianceWasherDryer } from './appliance_cleaning.js';
+import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
+         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance_cooking.js';
+import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
+         ApplianceWineCooler } from './appliance_cooling.js';
+import ConfigSchema from './config_schema.js';
+import { create } from 'node-persist';
+import { join } from 'path';
+import { promises as fsPromises } from 'fs';
+import { greenBright } from 'chalk';
+import { satisfies, coerce } from 'semver';
 import { PACKAGE, PLUGIN_NAME, PLUGIN_VERSION, PLATFORM_NAME,
          REQUIRED_HOMEBRIDGE_API } from './settings';
 
@@ -28,7 +28,7 @@ const HAP_REQUIRED = '>=0.9.0';
 const UPDATE_APPLIANCES_DELAY = 60 * 60 * 1000; // (milliseconds)
 
 // Register as a dynamic platform
-module.exports = homebridge => {
+export default homebridge => {
     homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME,
                                 HomeConnectPlatform, true);
 };
@@ -65,7 +65,7 @@ class HomeConnectPlatform {
 
     // Check and log software versions
     checkVersion(name, current, required) {
-        if (semver.satisfies(semver.coerce(current), required)) {
+        if (satisfies(coerce(current), required)) {
             this.log(name + ' version ' + current
                      + ' (satisfies ' + required + ')');
         } else {
@@ -89,9 +89,9 @@ class HomeConnectPlatform {
         }
 
         // Create persistent storage for this plugin
-        let persistDir = Path.join(this.homebridge.user.storagePath(),
-                                   PLUGIN_NAME, 'persist');
-        this.persist = NodePersist.create({ dir: persistDir });
+        let persistDir = join(this.homebridge.user.storagePath(),
+                              PLUGIN_NAME, 'persist');
+        this.persist = create({ dir: persistDir });
         await this.persist.init();
 
         // Retrieve any saved authorisation token
@@ -100,13 +100,13 @@ class HomeConnectPlatform {
             savedToken = await this.persist.getItem('token');
             if (!savedToken) {
                 // Attempt to load any old auth data saved by node-persist 0.0.8
-                let tokenFile = Path.join(this.homebridge.user.storagePath(),
-                                          PLUGIN_NAME, 'token');
+                let tokenFile = join(this.homebridge.user.storagePath(),
+                                     PLUGIN_NAME, 'token');
                 let data = await fsPromises.readFile(tokenFile);
                 savedToken = JSON.parse(data);
-                this.log.warn('Old format authorsation data retrieved');
+                this.log.warn('Old format authorisation data retrieved');
             }
-        } catch (err) {}
+        } catch (err) { /* empty */ }
         if (!savedToken) this.log.warn('No saved authorisation data found');
 
         // Prepare a configuration schema
@@ -140,9 +140,9 @@ class HomeConnectPlatform {
             this.log('Home Connect authorisation token saved');
         }).on('auth_uri', uri => {
             this.schema.setAuthorisationURI(uri);
-            this.log(chalk.greenBright('Home Connect authorisation required.'
+            this.log(greenBright('Home Connect authorisation required.'
                                        + ' Please visit:'));
-            this.log('    ' + chalk.greenBright.bold(uri));
+            this.log('    ' + greenBright.bold(uri));
         });
 
         // Obtain a list of Home Connect home appliances
@@ -151,7 +151,7 @@ class HomeConnectPlatform {
 
     // Periodically update a list of Home Connect home appliances
     async updateAppliances() {
-        while (true) {
+        for (;;) {
             try {
                 await this.homeconnect.waitUntilAuthorised();
                 let appliances = await this.homeconnect.getAppliances();
@@ -176,23 +176,23 @@ class HomeConnectPlatform {
             // Select a constructor for this appliance
             let applianceConstructor = {
                 // Cooking appliances
-                CoffeeMaker:    ApplianceCooking.CoffeeMaker,
-                CookProcessor:  ApplianceCooking.CookProcessor,
-                Hob:            ApplianceCooking.Hob,
-                Hood:           ApplianceCooking.Hood,
-                Oven:           ApplianceCooking.Oven,
-                WarmingDrawer:  ApplianceCooking.WarmingDrawer,
+                CoffeeMaker:    ApplianceCoffeeMaker,
+                CookProcessor:  ApplianceCookProcessor,
+                Hob:            ApplianceHob,
+                Hood:           ApplianceHood,
+                Oven:           ApplianceOven,
+                WarmingDrawer:  ApplianceWarmingDrawer,
                 // Cleaning appliances
-                CleaningRobot:  ApplianceCleaning.CleaningRobot,
-                Dishwasher:     ApplianceCleaning.Dishwasher,
-                Dryer:          ApplianceCleaning.Dryer,
-                Washer:         ApplianceCleaning.Washer,
-                WasherDryer:    ApplianceCleaning.WasherDryer,
+                CleaningRobot:  ApplianceCleaningRobot,
+                Dishwasher:     ApplianceDishwasher,
+                Dryer:          ApplianceDryer,
+                Washer:         ApplianceWasher,
+                WasherDryer:    ApplianceWasherDryer,
                 // Cooling appliances
-                Freezer:        ApplianceCooling.Freezer,
-                FridgeFreezer:  ApplianceCooling.FridgeFreezer,
-                Refrigerator:   ApplianceCooling.Refrigerator,
-                WineCooler:     ApplianceCooling.WineCooler
+                Freezer:        ApplianceFreezer,
+                FridgeFreezer:  ApplianceFridgeFreezer,
+                Refrigerator:   ApplianceRefrigerator,
+                WineCooler:     ApplianceWineCooler
             }[ha.type];
             if (!applianceConstructor)
                 return this.log.warn("Appliance type '" + ha.type
@@ -235,7 +235,7 @@ class HomeConnectPlatform {
         let oldAccessories = [];
         Object.keys(this.accessories).forEach(uuid => {
             let accessory = this.accessories[uuid];
-            if (!appliances.some(ha => { return ha.uuid == uuid; })) {
+            if (!appliances.some(ha => { return ha.uuid === uuid; })) {
                 this.log("Removing accessory '"
                          + accessory.displayName + "'");
                 if (accessory.appliance) accessory.appliance.unregister();

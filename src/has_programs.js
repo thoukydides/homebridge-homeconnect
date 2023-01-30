@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 let Service, Characteristic;
 
 const MS = 1000;
@@ -48,7 +46,7 @@ module.exports = {
             // Read the list of supported commands
             let commands = await this.getCached(
                 'commands', () => this.device.getCommands());
-            let supports = key => commands.some(command => command.key == key);
+            let supports = key => commands.some(command => command.key === key);
             let supportsPause  = supports('BSH.Common.Command.PauseProgram');
             let supportsResume = supports('BSH.Common.Command.ResumeProgram');
             if (supportsPause && supportsResume) {
@@ -85,7 +83,7 @@ module.exports = {
             if (!all.length) this.warn('Does not support any programs');
 
             // Merge any previous program details with the current list
-            this.programs = all.map(newProgram => Object.assign({}, this.programs.find(p => p.key == newProgram.key), newProgram));
+            this.programs = all.map(newProgram => Object.assign({}, this.programs.find(p => p.key === newProgram.key), newProgram));
 
             // Read the list of currently available programs (not cached)
             let available = await this.device.getAvailablePrograms();
@@ -97,7 +95,7 @@ module.exports = {
 
             // First read programs passively (less likely to generate errors)
             let passiveKeys = availableKeys.filter(key => {
-                let program = this.programs.find(p => p.key == key);
+                let program = this.programs.find(p => p.key === key);
                 return program && !program.selected;
             });
             if (passiveKeys.length) {
@@ -110,7 +108,7 @@ module.exports = {
             // Check whether any programs should be actively read
             let activeKeys = availableKeys.filter(key => {
                 // Only read missing programs unless an active refresh
-                let program = this.programs.find(p => p.key == key);
+                let program = this.programs.find(p => p.key === key);
                 return program && this.device.hasScope('Control')
                        && (active || !program.selected);
             });
@@ -204,14 +202,14 @@ module.exports = {
             // Best-effort attempt to restore the originally selected program
             if (initialSelectedProgram
                 && this.device.getItem('BSH.Common.Root.SelectedProgram')
-                   != initialSelectedProgram) {
-                try { await this.device.setSelectedProgram(initialSelectedProgram); } catch (err) {}
+                   !== initialSelectedProgram) {
+                try { await this.device.setSelectedProgram(initialSelectedProgram); } catch (err) { /* empty */ }
             }
 
             // Best-effort attempt to restore the original power state
             if (this.device.getItem('BSH.Common.Setting.PowerState')
-                != initialPowerState) {
-                try { await this.device.setSetting('BSH.Common.Setting.PowerState', initialPowerState); } catch (err) {}
+                !== initialPowerState) {
+                try { await this.device.setSetting('BSH.Common.Setting.PowerState', initialPowerState); } catch (err) { /* empty */ }
             }
 
             // Re-enable monitoring of the selected program
@@ -222,7 +220,7 @@ module.exports = {
     // Update the cached details of a single program
     updateCachedProgram(details, selected) {
         // Find the cached details for this program
-        let program = this.programs.find(p => p.key == details.key);
+        let program = this.programs.find(p => p.key === details.key);
         if (!program) throw new Error('Attempted to update unknown program');
         if (program.selected && !selected)
             throw new Error('Attempted to overwrite selected program details');
@@ -238,7 +236,7 @@ module.exports = {
     async selectAndGetAvailableProgram(programKey) {
         // Switch the appliance on, if necessary
         let powerState = this.device.getItem('BSH.Common.Setting.PowerState');
-        if (powerState && powerState != 'BSH.Common.EnumType.PowerState.On') {
+        if (powerState && powerState !== 'BSH.Common.EnumType.PowerState.On') {
             this.warn('Switching appliance on to read program options');
             await this.device.setSetting('BSH.Common.Setting.PowerState',
                                          'BSH.Common.EnumType.PowerState.On');
@@ -250,7 +248,7 @@ module.exports = {
 
         // Select the program, if necessary
         if (this.device.getItem('BSH.Common.Root.SelectedProgram')
-            != programKey) {
+            !== programKey) {
             this.warn('Temporarily selecting program ' + programKey
                       + ' to read its options');
             await this.device.setSelectedProgram(programKey);
@@ -275,13 +273,13 @@ module.exports = {
     requireProgramReady(programKey) {
         // The appliance needs to be ready to read the program details reliably
         if (this.device.getItem('BSH.Common.Status.OperationState')
-            != 'BSH.Common.EnumType.OperationState.Ready')
+            !== 'BSH.Common.EnumType.OperationState.Ready')
             throw new Error('Appliance is not ready'
                             + ' (switched on without an active program)');
 
         // The program must be currently selected
         if (this.device.getItem('BSH.Common.Root.SelectedProgram')
-            != programKey)
+            !== programKey)
             throw new Error('Program ' + programKey + ' is not selected');
     },
 
@@ -308,7 +306,7 @@ module.exports = {
             if (!programKey) return this.log('No program selected');
 
             // Check that the program is actually supported
-            let program = this.programs.find(p => p.key == programKey);
+            let program = this.programs.find(p => p.key === programKey);
             if (!program) {
                 return this.warn('Selected program ' + programKey
                                  + ' is not supported by the Home Connect API');
@@ -341,7 +339,7 @@ module.exports = {
     addConfiguredPrograms(config) {
         // Treat a single invalid entry as being an empty array
         // (workaround for homebridge-config-ui-x / angular6-json-schema-form)
-        if (config.length == 1 && !config[0].name && !config[0].key) {
+        if (config.length === 1 && !config[0].name && !config[0].key) {
             this.warn('Treating Invalid programs array as empty'
                       + ' (presumably written by homebridge-config-ui-x');
             config = [];
@@ -364,7 +362,7 @@ module.exports = {
                 names.push(program.name);
 
                 // Check that the program key is supported by the appliance
-                if (!this.programs.some(all => all.key == program.key))
+                if (!this.programs.some(all => all.key === program.key))
                     throw new Error("Program key '" + program.key
                                     + "' is not supported by the appliance");
 
@@ -443,7 +441,8 @@ module.exports = {
         };
         if (programs.length && !this.device.hasScope('Control')) {
             // Control of this appliance has not been authorised
-            this.warn('Programs cannot be controlled without Control scope; re-authorise with the Home Connect API to add the missing scope');
+            this.warn('Programs cannot be controlled without Control scope;'
+                      + ' re-authorise with the Home Connect API to add the missing scope');
             allowWrite(false);
         } else {
             allowWrite(true);
@@ -500,7 +499,7 @@ module.exports = {
             scheduled = setTimeout(() => {
                 let prevActive =
                     service.getCharacteristic(Characteristic.On).value;
-                if (active != prevActive) {
+                if (active !== prevActive) {
                     this.log("Program '" + name + "' (" + key + ') '
                              + (active ? 'active' : 'inactive'));
                     service.updateCharacteristic(Characteristic.On, active);
@@ -508,7 +507,7 @@ module.exports = {
             });
         };
         this.device.on('BSH.Common.Root.ActiveProgram',
-                       item => update(item.value == key));
+                       item => update(item.value === key));
         this.device.on('BSH.Common.Status.OperationState', item => {
             const inactiveStates = [
                 'BSH.Common.EnumType.OperationState.Inactive',
@@ -595,11 +594,11 @@ module.exports = {
         let {type, unit} = option;
         let constraints = option.constraints || {};
         let {allowedvalues} = constraints;
-        let value = 'value' in option             ? option.value
-                    : ('default' in constraints   ? constraints.default
-                       : ('min' in constraints    ? constraints.min
-                          : (allowedvalues        ? allowedvalues[0]
-                             : (type == 'Boolean' ? false : null))));
+        let value = 'value' in option              ? option.value
+                    : ('default' in constraints    ? constraints.default
+                       : ('min' in constraints     ? constraints.min
+                          : (allowedvalues         ? allowedvalues[0]
+                             : (type === 'Boolean' ? false : null))));
 
         // Construct a comment describing the allowed values
         let comment = null;
@@ -613,7 +612,7 @@ module.exports = {
             if (stepsize) commentParts.push('step ' + stepsize);
             if (unit) commentParts.push(unit);
             comment = commentParts.join(' ');
-        } else if (type == 'Boolean') {
+        } else if (type === 'Boolean') {
             comment = [true, false];
         }
 
@@ -655,7 +654,7 @@ module.exports = {
         if ('min' in constraints) schema.minimum = constraints.min;
         if ('max' in constraints) schema.maximum = constraints.max;
         if (constraints.stepsize) schema.multipleOf = constraints.stepsize;
-        if (option.unit && option.unit != 'enum') schema.suffix = option.unit;
+        if (option.unit && option.unit !== 'enum') schema.suffix = option.unit;
         if ('default' in constraints) schema.default = constraints.default;
 
         // Map the type itself

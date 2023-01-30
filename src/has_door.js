@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 let Service, Characteristic;
 
 // Add an appliance door to an accessory
@@ -36,8 +34,8 @@ module.exports = {
 
         // Update the door status
         this.device.on('BSH.Common.Status.DoorState', item => {
-            let isOpen = item.value == 'BSH.Common.EnumType.DoorState.Open';
-            let isLocked = item.value == 'BSH.Common.EnumType.DoorState.Locked';
+            let isOpen = item.value === 'BSH.Common.EnumType.DoorState.Open';
+            let isLocked = item.value === 'BSH.Common.EnumType.DoorState.Locked';
             this.log('Door ' + (isOpen ? 'open' : 'closed')
                      + (isLocked ? ' and locked' : ''));
             let targetPosition = this.doorService
@@ -71,7 +69,7 @@ module.exports = {
             // Read the list of supported commands
             let commands = await this.getCached(
                 'commands', () => this.device.getCommands());
-            let supports = key => commands.some(command => command.key == key);
+            let supports = key => commands.some(command => command.key === key);
             let supportsOpen   = supports('BSH.Common.Command.OpenDoor');
             let supportsPartly = supports('BSH.Common.Command.PartlyOpenDoor');
             if (supportsOpen || supportsPartly) {

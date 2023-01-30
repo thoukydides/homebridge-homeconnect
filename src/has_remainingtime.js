@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 // Add remaining program time to an accessory
 module.exports = {
     name: 'HasRemainingTime',
@@ -25,12 +23,12 @@ module.exports = {
             scheduled = setTimeout(() => {
                 // Determine the remaining duration
                 let remainingDuration = 0, description;
-                if (state == 'delayed start') {
+                if (state === 'delayed start') {
                     remainingDuration = timeDelay + timeRemaining;
                     description = 'Program will start in '
                         + this.prettySeconds(timeDelay) + ' (total '
                         + this.prettySeconds(remainingDuration) + ' remaining)';
-                } else if (state == 'active') {
+                } else if (state === 'active') {
                     remainingDuration = timeRemaining;
                     description = 'Program has '
                         + this.prettySeconds(remainingDuration) + ' remaining';
@@ -41,7 +39,7 @@ module.exports = {
                 // If it has changed then update the characteristic
                 let prevRemainingDuration = this.activeService
                     .getCharacteristic(Characteristic.RemainingDuration).value;
-                if (remainingDuration != prevRemainingDuration) {
+                if (remainingDuration !== prevRemainingDuration) {
                     this.log(description);
                     this.activeService.updateCharacteristic(
                         Characteristic.RemainingDuration, remainingDuration);
@@ -56,11 +54,11 @@ module.exports = {
             timeRemaining = item.value;
             update();
         });
-        this.device.on('BSH.Common.Event.ProgramFinished', item => {
+        this.device.on('BSH.Common.Event.ProgramFinished', () => {
             state = '';
             update();
         });
-        this.device.on('BSH.Common.Event.ProgramAborted',  item => {
+        this.device.on('BSH.Common.Event.ProgramAborted', () => {
             state = '';
             update();
         });

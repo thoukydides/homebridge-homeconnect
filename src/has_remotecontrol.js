@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
 // Add local and remote control state to an accessory
 module.exports = {
     name: 'HasRemoteControl',
@@ -69,7 +67,7 @@ module.exports = {
         };
         let scheduled;
         for (let mapping of Object.values(stateMapping)) {
-            this.device.on(mapping.key, item => {
+            this.device.on(mapping.key, () => {
                 // Update once after all changes have been applied
                 clearTimeout(scheduled);
                 scheduled = setTimeout(updateDeferred);

@@ -1,12 +1,11 @@
+/* eslint-disable no-console */
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const { STATUS_CODES } = require('http');
-const EventEmitter = require('events');
-const finished = require('stream').finished;
-const undici = require('undici');
+import { STATUS_CODES } from 'http';
+import EventEmitter from 'events';
+import { finished } from 'stream';
+import { Client } from 'undici';
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
 
 // User-Agent header
@@ -27,7 +26,8 @@ const CLIENT_HELP_EXTRA = {
     'request rejected by client authorization authority (developer portal)':
         'register an application and then copy its Client ID.',
     'client not authorized for this oauth flow (grant_type)':
-        "register a new application, ensuring that the 'OAuth Flow' is set to 'Device Flow' (this setting cannot be changed after the application has been created).",
+        "register a new application, ensuring that the 'OAuth Flow' is set to 'Device Flow'"
+        + ' (this setting cannot be changed after the application has been created).',
     'client has no redirect URI defined':
         "edit the application (or register a new one) to set a 'Success Redirect' web page address.",
     'client has limited user list - user not assigned to client':
@@ -48,7 +48,7 @@ const EVENT_TIMEOUT   = 2 * 60; // (seconds, must be > 55 second keep-alive)
 const MS = 1000;
 
 // Low-level access to the Home Connect API
-module.exports = class HomeConnectAPI extends EventEmitter {
+export default class HomeConnectAPI extends EventEmitter {
 
     // Create a new API object
     constructor(options) {
@@ -198,7 +198,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                                       });
     }
 
-    // Get a specific option of the selecgted program
+    // Get a specific option of the selected program
     getSelectedProgramOption(haid, optionKey) {
         return this.requestAppliances('GET', haid,
                                       '/programs/selected/options/'
@@ -267,7 +267,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
     // Obtain and maintain an access token
     async authoriseClient() {
-        while (true) {
+        for (;;) {
             try {
 
                 // Authorise this client if there is no saved authorisation
@@ -281,7 +281,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                 }
 
                 // Refresh the access token before it expires
-                while (true) {
+                for (;;) {
 
                     // Check the validity of the current access token
                     let auth = this.savedAuth[this.clientID];
@@ -520,7 +520,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         if (body) options.body = body;
 
         // Implement retries
-        while (true) {
+        for (;;) {
 
             // Apply rate limiting
             let retryIn = this.earliestRetry - Date.now();
@@ -560,7 +560,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
             // Create a new HTTP client for this request
             let url = new URL(options.url);
-            let client = new undici.Client(url.origin, {
+            let client = new Client(url.origin, {
                 timeout:          options.timeout,
                 headersTimeout:   options.timeout,
                 bodyTimeout:      options.timeout,
@@ -624,10 +624,9 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                     // User has not yet completed the user interaction steps
                     status = 'Authorisation pending';
                     return null;
-                    break;
 
                 case 'access_denied':
-                    if (json.error_description == 'Too many requests') {
+                    if (json.error_description === 'Too many requests') {
                         // Token refresh rate limit exceeded
                         status = 'Token refresh rate limit exceeded'
                                + ' (only 100 refreshes are allowed per day)';
@@ -714,7 +713,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         // Listen for event listeners that resemble haId values
         const haidRegex = /^(\w+-\w+-[0-9A-F]{12}|\d{18})$/;
         this.eventListeners = new Set();
-        this.on('newListener', (event, listener) => {
+        this.on('newListener', event => {
             if (!haidRegex.test(event)) return;
 
             // Start an event stream when the first listener registers
@@ -743,7 +742,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         // Dispatch a received event
         let dispatch = event => {
             // Ignore keep-alive events
-            if (event.event == 'KEEP-ALIVE') return;
+            if (event.event === 'KEEP-ALIVE') return;
 
             // Choose the destination for this event
             let eventListeners = event.id ? [event.id]
@@ -755,7 +754,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
         // Automatically restart the event stream
         let description = 'events stream for ' + (haid || 'all appliances');
-        while (true) {
+        for (;;) {
             try {
                 // Wait until authorised
                 await this.waitUntilAuthorised();
@@ -836,7 +835,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
                 let data = /^(\w+):\s*(.*)$/.exec(line);
                 if (!data) return garbage('event');
                 let key = data[1], value = data[2];
-                if (key == 'data' && value.length) {
+                if (key === 'data' && value.length) {
                     value = this.parseJSON(value);
                     if (value === null) return garbage('event data');
                 }
@@ -859,7 +858,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
             // Create a new HTTP client for this event stream
             let url = new URL(options.url);
-            let client = new undici.Client(url.origin, {
+            let client = new Client(url.origin, {
                 timeout:          options.timeout,
                 headersTimeout:   options.timeout,
                 bodyTimeout:      options.timeout,
@@ -977,4 +976,4 @@ module.exports = class HomeConnectAPI extends EventEmitter {
     warn(msg)   { this.logRaw ? this.logRaw.warn(msg)  : console.warn(msg);  }
     log(msg)    { this.logRaw ? this.logRaw.info(msg)  : console.log(msg);   }
     debug(msg)  { this.logRaw ? this.logRaw.debug(msg) : console.debug(msg); }
-};
+}

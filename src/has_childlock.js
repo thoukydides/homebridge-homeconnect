@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2021-2023 Alexander Thoukydides
 
-'use strict';
-
 // Add a child lock to an accessory
 module.exports = {
     name: 'HasChildLock',
@@ -15,7 +13,7 @@ module.exports = {
         // Check whether the appliance supports a child lock
         let allSettings = await this.getCached('settings',
                                                () => this.device.getSettings());
-        if (!allSettings.some(s => s.key == 'BSH.Common.Setting.ChildLock'))
+        if (!allSettings.some(s => s.key === 'BSH.Common.Setting.ChildLock'))
             return this.log('Does not support a child lock');
 
         // Add the lock physical controls characteristic
@@ -26,7 +24,7 @@ module.exports = {
         // Change the child lock status
         this.powerService.getCharacteristic(Characteristic.LockPhysicalControls)
             .on('set', this.callbackify(async value => {
-                let isEnabled = value == CONTROL_LOCK_ENABLED;
+                let isEnabled = value === CONTROL_LOCK_ENABLED;
                 this.log('SET Child lock ' + (isEnabled ? 'enabled' : 'disabled'));
                 await this.device.setSetting('BSH.Common.Setting.ChildLock',
                                              isEnabled);

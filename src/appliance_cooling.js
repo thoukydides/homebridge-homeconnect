@@ -1,13 +1,11 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const ApplianceGeneric = require('./appliance_generic.js');
-const HasChildLock = require('./has_childlock.js');
-const HasDoor = require('./has_door.js');
-const HasEvents = require('./has_events.js');
-const HasModes = require('./has_modes.js');
+import ApplianceGeneric from './appliance_generic.js';
+import HasChildLock from './has_childlock.js';
+import HasDoor from './has_door.js';
+import HasEvents from './has_events.js';
+import HasModes from './has_modes.js';
 
 // Modes supported by some or all cooling appliances
 const COOLING_MODES = {
@@ -30,7 +28,7 @@ const COOLING_MODES = {
 };
 
 // A Homebridge accessory for a Home Connect freezer
-module.exports.Freezer = class ApplianceFreezer
+export class ApplianceFreezer
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -46,10 +44,10 @@ module.exports.Freezer = class ApplianceFreezer
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect fridge freezer
-module.exports.FridgeFreezer = class ApplianceFridgeFreezer
+export class ApplianceFridgeFreezer
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -67,10 +65,10 @@ module.exports.FridgeFreezer = class ApplianceFridgeFreezer
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect refrigerator
-module.exports.Refrigerator = class ApplianceRefrigerator
+export class ApplianceRefrigerator
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -84,10 +82,10 @@ module.exports.Refrigerator = class ApplianceRefrigerator
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-};
+}
 
 // A Homebridge accessory for a Home Connect wine cooler
-module.exports.WineCooler = class ApplianceWineCooler
+export class ApplianceWineCooler
     extends ApplianceGeneric {
     constructor(...args) {
         super(...args);
@@ -97,4 +95,4 @@ module.exports.WineCooler = class ApplianceWineCooler
         this.mixin(HasModes, COOLING_MODES, 'cooling');
         this.mixin(HasChildLock);
     }
-};
+}

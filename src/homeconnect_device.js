@@ -1,9 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-'use strict';
-
-const EventEmitter = require('events');
+import EventEmitter from 'events';
 
 // Minimum event stream interruption before treated as appliance disconnected
 const EVENT_DISCONNECT_DELAY = 3;           // (seconds)
@@ -16,7 +14,7 @@ const CONNECTED_RETRY_FACTOR = 2;           // (double delay on each retry)
 const MS = 1000;
 
 // Low-level access to the Home Connect API
-module.exports = class HomeConnectDevice extends EventEmitter {
+export default class HomeConnectDevice extends EventEmitter {
 
     // Create a new API object
     constructor(log, api, ha) {
@@ -54,7 +52,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         } else if ('default' in (item.constraints || {})) {
             description += '=' + item.constraints.default;
         }
-        if (item.unit && item.unit != 'enum') {
+        if (item.unit && item.unit !== 'enum') {
             description += ' ' + item.unit;
         }
         return description;
@@ -135,8 +133,8 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             return item;
         } catch (err) {
             let key = ((err.response || {}).error || {}).key;
-            if (key == 'SDK.Error.UnsupportedSetting'
-                || key == 'SDK.Simulator.InternalError') {
+            if (key === 'SDK.Error.UnsupportedSetting'
+                || key === 'SDK.Simulator.InternalError') {
                 // Suppress error when the setting is unsupported
                 return null;
             }
@@ -177,7 +175,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             return programs;
         } catch (err) {
             let key = ((err.response || {}).error || {}).key;
-            if (key == 'SDK.Error.WrongOperationState') {
+            if (key === 'SDK.Error.WrongOperationState') {
                 // Suppress error when there are no available programs
                 return [];
             }
@@ -207,14 +205,14 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.update([{ key:   'BSH.Common.Root.SelectedProgram',
                 value: program.key }]);
             if (this.getItem('BSH.Common.Status.OperationState')
-                == 'BSH.Common.EnumType.OperationState.Ready') {
+                === 'BSH.Common.EnumType.OperationState.Ready') {
                 // Only update options when no program is active
                 this.update(program.options);
             }
             return program;
         } catch (err) {
             if (((err.response || {}).error || {}).key
-                == 'SDK.Error.NoProgramSelected') {
+                === 'SDK.Error.NoProgramSelected') {
                 // Suppress error when there is no selected program
                 return null;
             }
@@ -269,7 +267,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             }
         } catch (err) {
             if (((err.response || {}).error || {}).key
-                == 'SDK.Error.NoProgramActive') {
+                === 'SDK.Error.NoProgramActive') {
                 // Suppress error when there is no active program
                 return null;
             }
@@ -334,7 +332,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             if (commands === undefined) throw new Error('Empty response');
             return commands;
         } catch (err) {
-            if (((err.response || {}).error || {}).key == '404') {
+            if (((err.response || {}).error || {}).key === '404') {
                 // Suppress error when the API is not supported
                 return [];
             }
@@ -386,7 +384,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             return Promise.resolve();
 
         // Otherwise wait
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             // Listen for updates to the operation state
             let listener = item => {
                 if (item.value) {
@@ -616,7 +614,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
     async eventListener(event) {
         let itemCount = event.data ? event.data.items.length : 0;
         this.log('Event ' + event.event + ' (' + itemCount
-                 + (itemCount == 1 ? ' item)' : ' items)'));
+                 + (itemCount === 1 ? ' item)' : ' items)'));
         switch (event.event) {
         case 'START':
             // If appliance disconnected then check its current status
@@ -624,7 +622,7 @@ module.exports = class HomeConnectDevice extends EventEmitter {
             this.setConnectedState();
             break;
         case 'STOP':
-            // Disconnect appliance if too slow reestablishing event stream
+            // Disconnect appliance if too slow re-establishing event stream
             this.stopScheduled = setTimeout(() => {
                 this.log('Events may have been missed;'
                           + ' treating appliance as disconnected');
@@ -672,4 +670,4 @@ module.exports = class HomeConnectDevice extends EventEmitter {
         this.emit('error', err, op);
         return err;
     }
-};
+}
