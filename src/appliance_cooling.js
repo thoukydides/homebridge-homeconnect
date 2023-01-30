@@ -1,11 +1,11 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import { ApplianceGeneric } from './appliance_generic.js';
-import HasChildLock from './has_childlock.js';
-import HasDoor from './has_door.js';
-import HasEvents from './has_events.js';
-import HasModes from './has_modes.js';
+import { ApplianceGeneric } from './appliance_generic';
+import HasChildLock from './has_childlock';
+import HasDoor from './has_door';
+import HasEvents from './has_events';
+import HasModes from './has_modes';
 
 // Modes supported by some or all cooling appliances
 const COOLING_MODES = {

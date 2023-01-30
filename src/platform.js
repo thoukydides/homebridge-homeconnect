@@ -1,15 +1,15 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import { HomeConnectAPI } from './homeconnect_api.js';
-import { HomeConnectDevice } from './homeconnect_device.js';
+import { HomeConnectAPI } from './homeconnect_api';
+import { HomeConnectDevice } from './homeconnect_device';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
-         ApplianceWasher, ApplianceWasherDryer } from './appliance_cleaning.js';
+         ApplianceWasher, ApplianceWasherDryer } from './appliance_cleaning';
 import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
-         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance_cooking.js';
+         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance_cooking';
 import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
-         ApplianceWineCooler } from './appliance_cooling.js';
-import { ConfigSchema } from './config_schema.js';
+         ApplianceWineCooler } from './appliance_cooling';
+import { ConfigSchema } from './config_schema';
 import { create } from 'node-persist';
 import { join } from 'path';
 import { promises } from 'fs';

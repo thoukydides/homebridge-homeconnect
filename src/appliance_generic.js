@@ -1,8 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import HasPower from './has_power.js';
-import { PersistCache } from './persist_cache.js';
+import HasPower from './has_power';
+import { PersistCache } from './persist_cache';
 
 let Service, Characteristic, UUID;
 

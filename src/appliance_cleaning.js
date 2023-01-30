@@ -1,16 +1,16 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import { ApplianceGeneric } from './appliance_generic.js';
-import HasChildLock from './has_childlock.js';
-import HasDoor from './has_door.js';
-import HasEvents from './has_events.js';
-import HasActive from './has_active.js';
-import HasBattery from './has_battery.js';
-import HasLight from './has_light.js';
-import HasPrograms from './has_programs.js';
-import HasRemainingTime from './has_remainingtime.js';
-import HasRemoteControl from './has_remotecontrol.js';
+import { ApplianceGeneric } from './appliance_generic';
+import HasChildLock from './has_childlock';
+import HasDoor from './has_door';
+import HasEvents from './has_events';
+import HasActive from './has_active';
+import HasBattery from './has_battery';
+import HasLight from './has_light';
+import HasPrograms from './has_programs';
+import HasRemainingTime from './has_remainingtime';
+import HasRemoteControl from './has_remotecontrol';
 
 // A Homebridge accessory for a Home Connect cleaning robot (Roxxter)
 export class ApplianceCleaningRobot
