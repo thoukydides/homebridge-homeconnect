@@ -121,6 +121,11 @@ class HomeConnectPlatform {
             return this.addRemoveAccessories([]);
         }
         if (!this.config['clientid']) {
+            this.config['clientid'] = this.config['simulator']
+                ? process.env.HOMECONNECT_CLIENT_SIMULATOR
+                : process.env.HOMECONNECT_CLIENT_PHYSICAL;
+        }
+        if (!this.config['clientid']) {
             return this.log.error('Platform ' + PLATFORM_NAME + ' config.json'
                                   + " is missing 'clientid' property");
         }
