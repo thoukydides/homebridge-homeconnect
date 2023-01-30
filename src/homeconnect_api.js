@@ -3,11 +3,10 @@
 
 'use strict';
 
+const { STATUS_CODES } = require('http');
 const EventEmitter = require('events');
 const finished = require('stream/promises').finished;
 const undici = require('undici');
-const fetch = undici.fetch;
-const FormData = require('undici').FormData;
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
 
 // User-Agent header
@@ -559,45 +558,46 @@ module.exports = class HomeConnectAPI extends EventEmitter {
         let status = 'OK';
         try {
 
+            // Create a new HTTP client for this request
+            let url = new URL(options.url);
+            let client = new undici.Client(url.origin, {
+                timeout:          options.timeout,
+                headersTimeout:   options.timeout,
+                bodyTimeout:      options.timeout,
+                keepAliveTimeout: options.timeout
+            });
+
             // Construct the fetch request
-            let init = {
-                method:     options.method,
-                headers:    options.headers || {}
-            };
-            let url = options.url;
-            if (options.qs) {
-                // Add query string to the URL
-                let params = new URLSearchParams();
-                Object.entries(options.qs).forEach(([key, value]) => {
-                    params.append(key, value);
-                });
-                url += '?' + params;
-            }
+            let headers = { ...options.headers };
+            let body;
             if (options.body) {
-                init.body = options.json ? JSON.stringify(options.body)
-                                                 : options.body;
+                body = options.json ? JSON.stringify(options.body)
+                                    : options.body;
             } else if (options.form) {
                 // POST form as application/x-www-form-urlencoded
-                init.headers['content-type'] = 'application/x-www-form-urlencoded';
-                init.body = new URLSearchParams();
+                headers['content-type'] = 'application/x-www-form-urlencoded';
+                body = new URLSearchParams();
                 Object.entries(options.form).forEach(([key, value]) => {
-                    init.body.append(key, value);
+                    body.append(key, value);
                 });
-            }
-            if (options.timeout) {
-                init.signal = AbortSignal.timeout(options.timeout);
             }
 
             // Attempt the request
-            let response = await fetch(url, init);
+            let response = await client.request({
+                method:     options.method,
+                path:       url.pathname,
+                query:      options.qs,
+                headers,
+                body
+            });
             if (!options.followRedirect && response.redirected) {
                 status = 'Redirect ' + response.url;
                 return response.url;
             }
-            let text = await response.text();
+            let text = await response.body.text();
             let json;
             if (options.json && text.length) json = this.parseJSON(text);
-            if (response.ok) {
+            if (200 <= response.statusCode && response.statusCode <= 299) {
                 if (options.json) {
                     if (json === null) {
                         throw new Error('Response not JSON: ' + text);
@@ -607,10 +607,8 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             }
 
             // Status codes returned by the server have special handling
-            status = response.status;
-            if (response.statusText.length) {
-                status += ' - ' + response.statusText;
-            }
+            status = response.statusCode + ' - '
+                   + STATUS_CODES[response.statusCode];
             let retry = false;
 
             // Inspect any response returned by the server
@@ -685,7 +683,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             // Throw a status code error unless handled above
             throw Object.assign(new Error(status), {
                 name:       'StatusCodeError',
-                statusCode: response.status,
+                statusCode: response.statusCode,
                 response:   json,
                 options:    options,
                 retry:      retry
