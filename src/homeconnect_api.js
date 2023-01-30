@@ -773,8 +773,7 @@ export class HomeConnectAPI extends EventEmitter {
                 // Start the event stream
                 this.log('Starting ' + description);
                 options.headers['authorization'] = this.getAuthorisation();
-                let controller = new AbortController();
-                options.signal = controller.signal;
+                options.signal = new EventEmitter();
                 let stream = await this.requestStream(options);
                 this.debug('Started ' + description);
                 dispatch({ event: 'START' });
@@ -782,7 +781,7 @@ export class HomeConnectAPI extends EventEmitter {
                 // Process received events until the stream terminates
                 let state = {
                     dispatch:       dispatch,
-                    controller:     controller,
+                    signal:         options.signal,
                     event:          {},
                     debugHistory:   []
                 };
@@ -815,7 +814,7 @@ export class HomeConnectAPI extends EventEmitter {
                 this.debug('Unable to parse ' + desc + " '" + line + "':\n"
                            + state.debugHistory.join('\n'));
                 state.debugHistory = [];
-                state.controller.abort();
+                state.signal.emit('abort');
             };
 
             // Parse an event
