@@ -640,20 +640,21 @@ export class HomeConnectAPI extends EventEmitter {
                     this.authInvalidate();
                     break;
 
-                case 'unauthorized_client':
+                case 'unauthorized_client': {
                     // There is a problem with the client
                     this.authInvalidate();
                     status = CLIENT_HELP_PREFIX1 + json.error_description;
                     let extra = CLIENT_HELP_EXTRA[json.error_description];
                     if (extra) status += CLIENT_HELP_PREFIX2 + extra;
                     break;
-
-                case '429':
+                }
+                case '429': {
                     // Rate limit exceeded (wait Retry-After header seconds)
                     let delay = response.headers['retry-after'];
                     this.retryAfter(delay);
                     retry = true;
                     break;
+                }
                 }
 
             } else if (json && json.error && json.error.key) {
@@ -671,12 +672,13 @@ export class HomeConnectAPI extends EventEmitter {
                     this.tokenInvalidate();
                     break;
 
-                case '429':
+                case '429': {
                     // Rate limit exceeded (wait Retry-After header seconds)
                     let delay = response.headers['retry-after'];
                     this.retryAfter(delay);
                     retry = true;
                     break;
+                }
                 }
             }
 
@@ -695,6 +697,7 @@ export class HomeConnectAPI extends EventEmitter {
             if (err.cause && err.cause.message) {
                 status += ' (' + err.cause.message + ')';
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             let { message, ...errFields } = err;
             throw Object.assign(new Error('Home Connect API error: ' + status),
                                 errFields);
@@ -911,12 +914,13 @@ export class HomeConnectAPI extends EventEmitter {
                     this.tokenInvalidate();
                     break;
 
-                case '429':
+                case '429': {
                     // Rate limit exceeded (wait Retry-After header seconds)
                     let delay = response.headers['retry-after'];
                     this.retryAfter(delay);
                     retry = true;
                     break;
+                }
                 }
             }
 
@@ -935,6 +939,7 @@ export class HomeConnectAPI extends EventEmitter {
             if (err.cause && err.cause.message) {
                 status += ' (' + err.cause.message + ')';
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             let { message, ...errFields } = err;
             throw Object.assign(new Error('Home Connect API error: ' + status),
                                 errFields);
