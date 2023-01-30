@@ -576,10 +576,11 @@ module.exports = class HomeConnectAPI extends EventEmitter {
             } else if (options.form) {
                 // POST form as application/x-www-form-urlencoded
                 headers['content-type'] = 'application/x-www-form-urlencoded';
-                body = new URLSearchParams();
+                let form = new URLSearchParams();
                 Object.entries(options.form).forEach(([key, value]) => {
-                    body.append(key, value);
+                    form.append(key, value);
                 });
+                body = form.toString();
             }
 
             // Attempt the request
@@ -650,7 +651,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
                 case '429':
                     // Rate limit exceeded (wait Retry-After header seconds)
-                    let delay = response.headers.get('retry-after');
+                    let delay = response.headers['retry-after'];
                     this.retryAfter(delay);
                     retry = true;
                     break;
@@ -673,7 +674,7 @@ module.exports = class HomeConnectAPI extends EventEmitter {
 
                 case '429':
                     // Rate limit exceeded (wait Retry-After header seconds)
-                    let delay = response.headers.get('retry-after');
+                    let delay = response.headers['retry-after'];
                     this.retryAfter(delay);
                     retry = true;
                     break;
