@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 
 // Minimum event stream interruption before treated as appliance disconnected
 const EVENT_DISCONNECT_DELAY = 3;           // (seconds)
@@ -14,7 +14,7 @@ const CONNECTED_RETRY_FACTOR = 2;           // (double delay on each retry)
 const MS = 1000;
 
 // Low-level access to the Home Connect API
-export default class HomeConnectDevice extends EventEmitter {
+export class HomeConnectDevice extends EventEmitter {
 
     // Create a new API object
     constructor(log, api, ha) {

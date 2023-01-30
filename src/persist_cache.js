@@ -6,7 +6,7 @@ const MS = 1000;
 const CACHE_TTL = 24 * 60 * 60 * MS; // (24 hours in milliseconds)
 
 // A simple persistent cache, with soft expiry
-module.exports = class PeristCache {
+export class PersistCache {
 
     // Initialise a cache
     constructor(log, persist, name, preferred) {
@@ -118,4 +118,4 @@ module.exports = class PeristCache {
             this.log('Failed to write cache: ' + err.message);
         }
     }
-};
+}

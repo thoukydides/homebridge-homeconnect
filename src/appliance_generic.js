@@ -2,12 +2,12 @@
 // Copyright © 2019-2023 Alexander Thoukydides
 
 import HasPower from './has_power.js';
-import PersistCache from './persist_cache.js';
+import { PersistCache } from './persist_cache.js';
 
 let Service, Characteristic, UUID;
 
 // A Homebridge accessory for a generic Home Connect home appliance
-export default class ApplianceGeneric {
+export class ApplianceGeneric {
 
     // Initialise an appliance
     constructor(log, homebridge, persist, schema, device, accessory, config) {

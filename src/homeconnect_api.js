@@ -3,7 +3,7 @@
 // Copyright © 2019-2023 Alexander Thoukydides
 
 import { STATUS_CODES } from 'http';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { finished } from 'stream';
 import { Client } from 'undici';
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
@@ -48,7 +48,7 @@ const EVENT_TIMEOUT   = 2 * 60; // (seconds, must be > 55 second keep-alive)
 const MS = 1000;
 
 // Low-level access to the Home Connect API
-export default class HomeConnectAPI extends EventEmitter {
+export class HomeConnectAPI extends EventEmitter {
 
     // Create a new API object
     constructor(options) {

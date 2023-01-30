@@ -1,18 +1,18 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import HomeConnectAPI from './homeconnect_api.js';
-import HomeConnectDevice from './homeconnect_device.js';
+import { HomeConnectAPI } from './homeconnect_api.js';
+import { HomeConnectDevice } from './homeconnect_device.js';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
          ApplianceWasher, ApplianceWasherDryer } from './appliance_cleaning.js';
 import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
          ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance_cooking.js';
 import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
          ApplianceWineCooler } from './appliance_cooling.js';
-import ConfigSchema from './config_schema.js';
+import { ConfigSchema } from './config_schema.js';
 import { create } from 'node-persist';
 import { join } from 'path';
-import { promises as fsPromises } from 'fs';
+import { promises } from 'fs';
 import { greenBright } from 'chalk';
 import { satisfies, coerce } from 'semver';
 import { PACKAGE, PLUGIN_NAME, PLUGIN_VERSION, PLATFORM_NAME,
@@ -102,7 +102,7 @@ class HomeConnectPlatform {
                 // Attempt to load any old auth data saved by node-persist 0.0.8
                 let tokenFile = join(this.homebridge.user.storagePath(),
                                      PLUGIN_NAME, 'token');
-                let data = await fsPromises.readFile(tokenFile);
+                let data = await promises.readFile(tokenFile);
                 savedToken = JSON.parse(data);
                 this.log.warn('Old format authorisation data retrieved');
             }

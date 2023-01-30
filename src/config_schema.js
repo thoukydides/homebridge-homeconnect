@@ -25,7 +25,7 @@ const MAX_ENUM_STEPS = 18;
 const WRITE_DELAY = 3 * 1000; // (milliseconds)
 
 // Schema generator for the Homebridge config.json configuration file
-class ConfigSchema {
+export class ConfigSchema {
 
     // Create a new schema generator
     constructor(log, persist, path, pluginName) {
@@ -660,7 +660,6 @@ class ConfigSchema {
     log(msg)    { this.logRaw ? this.logRaw.info(msg)  : console.log(msg);   }
     debug(msg)  { this.logRaw ? this.logRaw.debug(msg) : console.debug(msg); }
 }
-export default ConfigSchema;
 
 // If this script is being run interactively then generate the default schema
 if (require.main === module) {

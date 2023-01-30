@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import ApplianceGeneric from './appliance_generic.js';
+import { ApplianceGeneric } from './appliance_generic.js';
 import HasAlarmClock from './has_alarmclock.js';
 import HasChildLock from './has_childlock.js';
 import HasDoor from './has_door.js';
