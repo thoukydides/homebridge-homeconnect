@@ -27,7 +27,7 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 1. If you are using a legacy Home Connect account then also create a [SingleKey ID](https://singlekey-id.com/en/sign-up/) using the same email address, ensuring that it is all in lowercase.
 1. Obtain a Home Connect application *Client ID*:
    1. Sign-up for a free [Home Connect Developer Program](https://developer.home-connect.com/user/register) account and login.
-   1. [Register a new application](https://developer.home-connect.com/applications/add), ensuring that the *OAuth Flow* is set to *Device Flow*, and the *Home Connect User Account* is the same as the SingleKey ID email address.
+   1. [Register a new application](https://developer.home-connect.com/applications/add), ensuring that *OAuth Flow* is set to *Device Flow*, the *Home Connect User Account* is the same as the SingleKey ID email address, the *Success Redirect* is a valid web URL, *One Time Token* is not ticked, *Status* is `Enabled`, and *Client Secret Always Required* is `No`.
    1. Save the displayed *Client ID* to include in the Homebridge `config.json` file.
 1. Install this plugin using: `npm install -g homebridge-homeconnect`
 1. Edit `config.json` and add the HomeConnect platform (see example below).
@@ -77,7 +77,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Switch on/off.
     * Switch fan on/off, set fan speed/intensive levels, and select manual/auto mode.
     * Switch functional light on/off, change brightness, and select colour temperature.
-    * Switch ambient light on/off, change brighness, and select colour.
+    * Switch ambient light on/off, change brightness, and select colour.
     * Monitor remote control and general operation status.
     * Automation triggers for finished, grease filter nearly saturated, and grease filter saturated.
   * **Oven:**
@@ -100,10 +100,10 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation triggers for finished, aborted, dust box full, stuck, and lost.
   * **Dishwasher:**
     * Switch on/off and start/stop programs with preset options.
-    * Switch ambient light on/off, change brighness, and select colour.
+    * Switch ambient light on/off, change brightness, and select colour.
     * Control child lock.
     * Monitor door, program time remaining, remote control, and general operation status.
-    * Automation triggers for finished and aborted.
+    * Automation triggers for finished, aborted, salt supply low, and rinse aid supply low.
   * **Dryer:**
     * Start/stop programs with preset options.
     * Control child lock.

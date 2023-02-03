@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.28.0] - 2023-02-03
+### Added
+* **Dishwasher:** Added automation triggers for when salt or rinse aid supplies are low.
+### Changed
+* Restored support for Node 14 LTS.
+
 ## [v0.27.0] - 2022-12-21
 ### Changed
 * Added `Configured Name` characteristic to the `Switch`, `Stateless Programmable Switch`, and `Lightbulb` services. This appears to be necessary for HomeKit on iOS 16 to show anything other than the accessory name without manually changing all of the names within the Home app. ([#102], [#108], [#116])
@@ -498,12 +504,20 @@ Copyright © 2019-2023 Alexander Thoukydides
 [#110]:             https://github.com/thoukydides/homebridge-homeconnect/issues/110            "Issue #110"
 [#111]:             https://github.com/thoukydides/homebridge-homeconnect/discussions/111       "Discussion #111"
 [#112]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #112"
-[#113]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #113"
-[#114]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #114"
-[#115]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #115"
-[#116]:             https://github.com/thoukydides/homebridge-homeconnect/issues/112            "Issue #116"
+[#113]:             https://github.com/thoukydides/homebridge-homeconnect/issues/113            "Issue #113"
+[#114]:             https://github.com/thoukydides/homebridge-homeconnect/issues/114            "Issue #114"
+[#115]:             https://github.com/thoukydides/homebridge-homeconnect/issues/115            "Issue #115"
+[#116]:             https://github.com/thoukydides/homebridge-homeconnect/issues/116            "Issue #116"
+[#117]:             https://github.com/thoukydides/homebridge-homeconnect/issues/117            "Issue #117"
+[#118]:             https://github.com/thoukydides/homebridge-homeconnect/issues/118            "Issue #118"
+[#119]:             https://github.com/thoukydides/homebridge-homeconnect/issues/119            "Issue #119"
+[#120]:             https://github.com/thoukydides/homebridge-homeconnect/issues/120            "Issue #120"
+[#121]:             https://github.com/thoukydides/homebridge-homeconnect/issues/121            "Issue #121"
+[#122]:             https://github.com/thoukydides/homebridge-homeconnect/issues/122            "Issue #122"
+[#123]:             https://github.com/thoukydides/homebridge-homeconnect/pull/123              "Pull #123"
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.27.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.28.0...HEAD
+[v0.28.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.27.0...v0.28.0
 [v0.27.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.3...v0.27.0
 [v0.26.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.2...v0.26.3
 [v0.26.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.1...v0.26.2

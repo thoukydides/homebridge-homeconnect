@@ -47,8 +47,10 @@ export class ApplianceDishwasher
         this.mixin(HasActive);
         this.mixin(HasDoor);
         this.mixin(HasEvents, {
-            'BSH.Common.Event.ProgramFinished':     'Program Finished',
-            'BSH.Common.Event.ProgramAborted':      'Program Aborted'
+            'BSH.Common.Event.ProgramFinished':                 'Program Finished',
+            'BSH.Common.Event.ProgramAborted':                  'Program Aborted',
+            'Dishcare.Dishwasher.Event.SaltNearlyEmpty':        'Salt Low',
+            'Dishcare.Dishwasher.Event.RinseAidNearlyEmpty':    'Rinse Aid Low'
         });
         this.mixin(HasLight);
         this.mixin(HasRemainingTime);
