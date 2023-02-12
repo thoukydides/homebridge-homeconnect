@@ -27,7 +27,7 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 1. If you are using a legacy Home Connect account then also create a [SingleKey ID](https://singlekey-id.com/en/sign-up/) using the same email address, ensuring that it is all in lowercase.
 1. Obtain a Home Connect application *Client ID*:
    1. Sign-up for a free [Home Connect Developer Program](https://developer.home-connect.com/user/register) account and login.
-   1. [Register a new application](https://developer.home-connect.com/applications/add), ensuring that *OAuth Flow* is set to *Device Flow*, the *Home Connect User Account* is the same as the SingleKey ID email address, the *Success Redirect* is a valid web URL, *One Time Token* is not ticked, *Status* is `Enabled`, and *Client Secret Always Required* is `No`.
+   1. [Register a new application](https://developer.home-connect.com/applications/add), ensuring that *OAuth Flow* is set to *Device Flow*, the *Home Connect User Account* is the same as the SingleKey ID email address, the *Success Redirect* is left blank, *One Time Token* is not ticked, *Status* is `Enabled`, and *Client Secret Always Required* is `No`.
    1. Save the displayed *Client ID* to include in the Homebridge `config.json` file.
 1. Install this plugin using: `npm install -g homebridge-homeconnect`
 1. Edit `config.json` and add the HomeConnect platform (see example below).
