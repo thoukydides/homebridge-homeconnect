@@ -1,6 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { logError, sleep } from './utils';
+
 let Service, Characteristic;
 
 const MS = 1000;
@@ -139,7 +141,7 @@ module.exports = {
                 }
             }
         } catch (err) {
-            this.reportError(err, 'Reading available programs and options');
+            logError(this.logRaw, 'Reading available programs and options', err);
         } finally {
             // Regardless of what happened save the results and updated schema
             await this.savePrograms();
@@ -240,10 +242,10 @@ module.exports = {
             this.warn('Switching appliance on to read program options');
             await this.device.setSetting('BSH.Common.Setting.PowerState',
                                          'BSH.Common.EnumType.PowerState.On');
-            await this.device.api.sleep(READY_DELAY);
+            await sleep(READY_DELAY);
             await this.device.waitOperationState(
                 ['BSH.Common.EnumType.OperationState.Ready'], READY_TIMEOUT);
-            await this.device.api.sleep(READY_DELAY);
+            await sleep(READY_DELAY);
         }
 
         // Select the program, if necessary
@@ -313,13 +315,13 @@ module.exports = {
             }
 
             // Read and save the options for this program
-            await this.device.api.sleep(READY_DELAY);
+            await sleep(READY_DELAY);
             let details = await this.getCached('program select ' + programKey,
                                                () => this.getAvailableProgram(programKey));
             this.updateCachedProgram(details, true);
             await this.savePrograms();
         } catch (err) {
-            this.reportError(err, 'Reading selected program options');
+            logError(this.logRaw, 'Reading selected program options', err);
         }
     },
 
@@ -584,7 +586,7 @@ module.exports = {
             this.log(this.programs.length + ' programs supported\n'
                      + JSON.stringify(json, null, 4));
         } catch (err) {
-            this.reportError(err, 'Identify programs');
+            logError(this.logRaw, 'Identify programs', err);
         }
     },
 

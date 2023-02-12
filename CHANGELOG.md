@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* Complete rewrite of the Home Connect API client. More rigorous checking is performed on requests submitted to and responses returned from the API, which should detect problems and new features quicker.
+* Authorisation of the Home Connect client is only attempted once at start-up. If the user does not complete the Device Flow interaction steps before the code expires (currently 10 minutes) then it is necessary to restart Homebridge to try again.
+* Various log messages have been changed due to the rewrite.
 
 ## [v0.28.0] - 2023-02-03
 ### Added
@@ -515,6 +519,7 @@ Copyright © 2019-2023 Alexander Thoukydides
 [#121]:             https://github.com/thoukydides/homebridge-homeconnect/issues/121            "Issue #121"
 [#122]:             https://github.com/thoukydides/homebridge-homeconnect/issues/122            "Issue #122"
 [#123]:             https://github.com/thoukydides/homebridge-homeconnect/pull/123              "Pull #123"
+[#124]:             https://github.com/thoukydides/homebridge-homeconnect/issues/124            "Issue #124"
 
 [Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.28.0...HEAD
 [v0.28.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.27.0...v0.28.0

@@ -6,6 +6,7 @@
 import HomeConnectLanguages from './homeconnect_languages.json';
 import { join } from 'path';
 import { promises } from 'fs';
+import { sleep } from './utils';
 
 // Platform identifier (must match index.js)
 const PLATFORM_NAME = 'HomeConnect';
@@ -43,18 +44,19 @@ export class ConfigSchema {
         this.ready = this.readSchema();
     }
 
-    // Client authorisation complete
-    async setAuthorised() {
+    // Update the schema if the user needs to authorise the client
+    async setAuthorised(uri) {
+        // Set the verification URI or authorisation status
         await this.ready;
-        this.authorisation = true;
+        this.authorisation = uri ?? true;
         this.writeSchema();
-    }
 
-    // The user needs to visit a web page to authorise the client
-    async setAuthorisationURI(uri) {
-        await this.ready;
-        this.authorisation = uri;
-        this.writeSchema();
+        // Expire the authorisation URI
+        if (uri !== null && uri.expires) {
+            await sleep(uri.expires - Date.now());
+            this.authorisation = false;
+            this.writeSchema();
+        }
     }
 
     // Update the list of accessories

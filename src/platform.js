@@ -1,7 +1,11 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import { HomeConnectAPI } from './homeconnect_api';
+import { create } from 'node-persist';
+import { join } from 'path';
+import { satisfies, coerce } from 'semver';
+
+import { HomeConnectAPI } from './api';
 import { HomeConnectDevice } from './homeconnect_device';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
          ApplianceWasher, ApplianceWasherDryer } from './appliance_cleaning';
@@ -10,13 +14,10 @@ import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
 import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
          ApplianceWineCooler } from './appliance_cooling';
 import { ConfigSchema } from './config_schema';
-import { create } from 'node-persist';
-import { join } from 'path';
-import { promises } from 'fs';
-import { greenBright } from 'chalk';
-import { satisfies, coerce } from 'semver';
 import { PACKAGE, PLUGIN_NAME, PLUGIN_VERSION, PLATFORM_NAME,
          REQUIRED_HOMEBRIDGE_API } from './settings';
+import { PrefixLogger } from './logger';
+import { sleep } from './utils';
 
 let UUID;
 
@@ -33,7 +34,7 @@ export class HomeConnectPlatform {
     // Create a new HomeConnect platform object
     constructor(log, config, homebridge) {
         log('new HomeConnectPlatform');
-        this.log = log;
+        this.log = new PrefixLogger(log);
         this.config = config;
         this.homebridge = homebridge;
         this.accessories = {};
@@ -60,8 +61,8 @@ export class HomeConnectPlatform {
     // Check and log software versions
     checkVersion(name, current, required) {
         if (satisfies(coerce(current), required)) {
-            this.log(name + ' version ' + current
-                     + ' (satisfies ' + required + ')');
+            this.log.info(name + ' version ' + current
+                          + ' (satisfies ' + required + ')');
         } else {
             this.log.error(name + ' version ' + current + ' is incompatible'
                            + ' (require ' + required + ')');
@@ -78,8 +79,8 @@ export class HomeConnectPlatform {
     async finishedLaunching() {
         let restored = Object.keys(this.accessories).length;
         if (restored) {
-            this.log('Restored ' + Object.keys(this.accessories).length
-                     + ' cached accessories');
+            this.log.info('Restored ' + Object.keys(this.accessories).length
+                          + ' cached accessories');
         }
 
         // Create persistent storage for this plugin
@@ -88,21 +89,6 @@ export class HomeConnectPlatform {
         this.persist = create({ dir: persistDir });
         await this.persist.init();
 
-        // Retrieve any saved authorisation token
-        let savedToken;
-        try {
-            savedToken = await this.persist.getItem('token');
-            if (!savedToken) {
-                // Attempt to load any old auth data saved by node-persist 0.0.8
-                let tokenFile = join(this.homebridge.user.storagePath(),
-                                     PLUGIN_NAME, 'token');
-                let data = await promises.readFile(tokenFile);
-                savedToken = JSON.parse(data);
-                this.log.warn('Old format authorisation data retrieved');
-            }
-        } catch (err) { /* empty */ }
-        if (!savedToken) this.log.warn('No saved authorisation data found');
-
         // Prepare a configuration schema
         this.schema = new ConfigSchema(this.log, this.persist,
                                        this.homebridge.user.storagePath(),
@@ -110,8 +96,8 @@ export class HomeConnectPlatform {
 
         // Check that essential configuration has been provided
         if (!this.config) {
-            if (restored) this.log('Plugin configuration missing;'
-                                   + ' removing all cached accessories');
+            if (restored) this.log.info('Plugin configuration missing;'
+                                      + ' removing all cached accessories');
             return this.addRemoveAccessories([]);
         }
         if (!this.config['clientid']) {
@@ -125,24 +111,8 @@ export class HomeConnectPlatform {
         }
 
         // Connect to the Home Connect cloud
-        this.homeconnect = new HomeConnectAPI({
-            log:        this.log,
-            // User options from config.json
-            clientID:   this.config.clientid,
-            simulator:  this.config.simulator,
-            language:   (this.config.language || {}).api,
-            // Saved access and refresh tokens
-            savedAuth:  savedToken
-        }).on('auth_save', async token => {
-            this.schema.setAuthorised();
-            await this.persist.setItem('token', token);
-            this.log('Home Connect authorisation token saved');
-        }).on('auth_uri', uri => {
-            this.schema.setAuthorisationURI(uri);
-            this.log(greenBright('Home Connect authorisation required.'
-                                       + ' Please visit:'));
-            this.log('    ' + greenBright.bold(uri));
-        });
+        this.homeconnect = new HomeConnectAPI(this.log, this.config, this.persist);
+        this.schema.setAuthorised(this.homeconnect.getAuthorisationURI());
 
         // Obtain a list of Home Connect home appliances
         this.updateAppliances();
@@ -152,7 +122,6 @@ export class HomeConnectPlatform {
     async updateAppliances() {
         for (;;) {
             try {
-                await this.homeconnect.waitUntilAuthorised();
                 let appliances = await this.homeconnect.getAppliances();
                 this.log.debug('Found ' + appliances.length + ' appliances');
                 await this.addRemoveAccessories(appliances);
@@ -160,7 +129,7 @@ export class HomeConnectPlatform {
                 this.log.error('Failed to read list of'
                                + ' home appliances: ' + err);
             }
-            await this.homeconnect.sleep(UPDATE_APPLIANCES_DELAY);
+            await sleep(UPDATE_APPLIANCES_DELAY);
         }
     }
 
@@ -206,7 +175,7 @@ export class HomeConnectPlatform {
                 this.log.debug("Connecting accessory '" + ha.name + "'");
             } else {
                 // New appliance, so create a matching accessory
-                this.log("Adding new accessory '" + ha.name + "'");
+                this.log.info("Adding new accessory '" + ha.name + "'");
                 accessory = new this.homebridge.platformAccessory(ha.name,
                                                                   ha.uuid);
                 this.accessories[ha.uuid] = accessory;
@@ -214,13 +183,13 @@ export class HomeConnectPlatform {
             }
 
             // Construct an instance of the appliance
-            let device = new HomeConnectDevice(
-                msg => this.log.debug(msg), this.homeconnect, ha);
+            const log = new PrefixLogger(this.log, ha.name);
+            let device = new HomeConnectDevice(log, this.homeconnect, ha);
             let deviceConfig = this.config[ha.haId] || {};
             try {
                 accessory.appliance =
                     new applianceConstructor(
-                        this.log, this.homebridge, this.persist,
+                        log, this.homebridge, this.persist,
                         this.schema.getAppliance(ha.haId),
                         device, accessory, deviceConfig);
             } catch (err) {
@@ -235,8 +204,8 @@ export class HomeConnectPlatform {
         Object.keys(this.accessories).forEach(uuid => {
             let accessory = this.accessories[uuid];
             if (!appliances.some(ha => { return ha.uuid === uuid; })) {
-                this.log("Removing accessory '"
-                         + accessory.displayName + "'");
+                this.log.info("Removing accessory '"
+                            + accessory.displayName + "'");
                 if (accessory.appliance) accessory.appliance.unregister();
                 oldAccessories.push(accessory);
                 delete this.accessories[uuid];

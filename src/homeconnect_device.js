@@ -2,6 +2,8 @@
 // Copyright © 2019-2023 Alexander Thoukydides
 
 import { EventEmitter } from 'events';
+import { APIStatusCodeError } from './api-errors';
+import { logError } from './utils';
 
 // Minimum event stream interruption before treated as appliance disconnected
 const EVENT_DISCONNECT_DELAY = 3;           // (seconds)
@@ -19,7 +21,7 @@ export class HomeConnectDevice extends EventEmitter {
     // Create a new API object
     constructor(log, api, ha) {
         super();
-        this.log = msg => log('[' + ha.name + '] ' + msg);
+        this.log = log;
         this.api = api;
         Object.assign(this, ha);
 
@@ -35,13 +37,12 @@ export class HomeConnectDevice extends EventEmitter {
                 item => this.readyImpliesPower(item));
 
         // Start streaming events
-        this.listener = event => this.eventListener(event);
-        this.api.on(this.haId, this.listener);
+        this.processEvents();
     }
 
     // Stop event stream (and any other autonomous activity)
     stop() {
-        this.api.off(this.haId, this.listener);
+        this.stopEvents = true;
     }
 
     // Describe an item
@@ -68,12 +69,11 @@ export class HomeConnectDevice extends EventEmitter {
         // Notify listeners for each item
         items.forEach(item => {
             let description = this.describe(item);
-            this.log(description
-                     + ' (' + this.listenerCount(item.key) + ' listeners)');
+            this.log.debug(`${description} (${this.listenerCount(item.key)} listeners)`);
             try {
                 this.emit(item.key, item);
             } catch (err) {
-                this.reportError(err, 'Update emit ' + description);
+                logError(this.log, `Update emit ${description}`, err);
             }
         });
     }
@@ -93,7 +93,7 @@ export class HomeConnectDevice extends EventEmitter {
             this.setConnectedState(appliance.connected);
             return appliance;
         } catch (err) {
-            throw this.reportError(err, 'GET appliance');
+            throw logError(this.log, 'GET appliance', err);
         }
     }
 
@@ -106,7 +106,7 @@ export class HomeConnectDevice extends EventEmitter {
             this.update(status);
             return status;
         } catch (err) {
-            throw this.reportError(err, 'GET status');
+            throw logError(this.log, 'GET status', err);
         }
     }
 
@@ -119,7 +119,7 @@ export class HomeConnectDevice extends EventEmitter {
             this.update(settings);
             return settings;
         } catch (err) {
-            throw this.reportError(err, 'GET settings');
+            throw logError(this.log, 'GET settings', err);
         }
     }
 
@@ -132,13 +132,13 @@ export class HomeConnectDevice extends EventEmitter {
             this.update([item]);
             return item;
         } catch (err) {
-            let key = ((err.response || {}).error || {}).key;
-            if (key === 'SDK.Error.UnsupportedSetting'
-                || key === 'SDK.Simulator.InternalError') {
+            if (err instanceof APIStatusCodeError
+                && (err.key === 'SDK.Error.UnsupportedSetting'
+                 || err.key === 'SDK.Simulator.InternalError')) {
                 // Suppress error when the setting is unsupported
                 return null;
             }
-            throw this.reportError(err, 'GET ' + settingKey);
+            throw logError(this.log, `GET ${settingKey}`, err);
         }
     }
 
@@ -150,7 +150,7 @@ export class HomeConnectDevice extends EventEmitter {
             await this.api.setSetting(this.haId, settingKey, value);
             this.update([{ key: settingKey, value: value }]);
         } catch (err) {
-            throw this.reportError(err, 'SET ' + settingKey + '=' + value);
+            throw logError(this.log, `SET ${settingKey}=${value}`, err);
         }
     }
 
@@ -162,7 +162,7 @@ export class HomeConnectDevice extends EventEmitter {
             if (programs === undefined) throw new Error('Empty response');
             return programs;
         } catch (err) {
-            throw this.reportError(err, 'GET programs');
+            throw logError(this.log, 'GET programs', err);
         }
     }
 
@@ -174,12 +174,12 @@ export class HomeConnectDevice extends EventEmitter {
             if (programs === undefined) throw new Error('Empty response');
             return programs;
         } catch (err) {
-            let key = ((err.response || {}).error || {}).key;
-            if (key === 'SDK.Error.WrongOperationState') {
+            if (err instanceof APIStatusCodeError
+                && err.key === 'SDK.Error.WrongOperationState') {
                 // Suppress error when there are no available programs
                 return [];
             }
-            throw this.reportError(err, 'GET available programs');
+            throw logError(this.log, 'GET available programs', err);
         }
     }
 
@@ -192,7 +192,7 @@ export class HomeConnectDevice extends EventEmitter {
             if (program === undefined) throw new Error('Empty response');
             return program;
         } catch (err) {
-            throw this.reportError(err, 'GET available program ' + programKey);
+            throw logError(this.log, `GET available program ${programKey}`, err);
         }
     }
 
@@ -211,12 +211,12 @@ export class HomeConnectDevice extends EventEmitter {
             }
             return program;
         } catch (err) {
-            if (((err.response || {}).error || {}).key
-                === 'SDK.Error.NoProgramSelected') {
+            if (err instanceof APIStatusCodeError
+                && err.key === 'SDK.Error.NoProgramSelected') {
                 // Suppress error when there is no selected program
                 return null;
             }
-            throw this.reportError(err, 'GET selected program');
+            throw logError(this.log, 'GET selected program', err);
         }
     }
 
@@ -238,7 +238,7 @@ export class HomeConnectDevice extends EventEmitter {
                 value: programKey }]);
             this.update(programOptions);
         } catch (err) {
-            throw this.reportError(err, 'SET selected program ' + programKey);
+            throw logError(this.log, `SET selected program ${programKey}`, err);
         }
     }
 
@@ -261,17 +261,16 @@ export class HomeConnectDevice extends EventEmitter {
                 this.update(program.options);
                 return program;
             } else {
-                this.log('Ignoring GET active program in '
-                         + operationState);
+                this.log.debug(`Ignoring GET active program in ${operationState}`);
                 return null;
             }
         } catch (err) {
-            if (((err.response || {}).error || {}).key
-                === 'SDK.Error.NoProgramActive') {
+            if (err instanceof APIStatusCodeError
+                && err.key === 'SDK.Error.NoProgramActive') {
                 // Suppress error when there is no active program
                 return null;
             }
-            throw this.reportError(err, 'GET active program');
+            throw logError(this.log, 'GET active program', err);
         }
     }
 
@@ -295,7 +294,7 @@ export class HomeConnectDevice extends EventEmitter {
                 value: programKey }]);
             this.update(programOptions);
         } catch (err) {
-            throw this.reportError(err, 'START active program ' + programKey);
+            throw logError(this.log, `START active program ${programKey}`, err);
         }
     }
 
@@ -316,11 +315,10 @@ export class HomeConnectDevice extends EventEmitter {
                 this.requireRemoteControl();
                 await this.api.stopActiveProgram(this.haId);
             } else {
-                this.log('Ignoring STOP active program in '
-                         + operationState);
+                this.log.debug(`Ignoring STOP active program in ${operationState}`);
             }
         } catch (err) {
-            throw this.reportError(err, 'STOP active program');
+            throw logError(this.log, 'STOP active program', err);
         }
     }
 
@@ -332,11 +330,11 @@ export class HomeConnectDevice extends EventEmitter {
             if (commands === undefined) throw new Error('Empty response');
             return commands;
         } catch (err) {
-            if (((err.response || {}).error || {}).key === '404') {
+            if (err instanceof APIStatusCodeError && err.key === '404') {
                 // Suppress error when the API is not supported
                 return [];
             }
-            throw this.reportError(err, 'GET commands');
+            throw logError(this.log, 'GET commands', err);
         }
     }
 
@@ -349,7 +347,7 @@ export class HomeConnectDevice extends EventEmitter {
             this.requireRemoteControl();
             return await this.api.setCommand(this.haId, command);
         } catch (err) {
-            throw this.reportError(err, 'COMMAND ' + command);
+            throw logError(this.log, `COMMAND ${command}`, err);
         }
     }
 
@@ -361,7 +359,7 @@ export class HomeConnectDevice extends EventEmitter {
             this.requireControl();
             return await this.api.setCommand(this.haId, command);
         } catch (err) {
-            throw this.reportError(err, 'COMMAND ' + command);
+            throw logError(this.log, `COMMAND ${command}`, err);
         }
     }
 
@@ -373,7 +371,7 @@ export class HomeConnectDevice extends EventEmitter {
             await this.api.setActiveProgramOption(this.haId, optionKey, value);
             this.update([{ key: optionKey, value: value }]);
         } catch (err) {
-            throw this.reportError(err, 'SET ' + optionKey + '=' + value);
+            throw logError(this.log, `SET ${optionKey}=${value}`, err);
         }
     }
 
@@ -439,11 +437,11 @@ export class HomeConnectDevice extends EventEmitter {
 
         // Fake the power state if there is a mismatch
         if (operationImpliesOn && !stateIsOn) {
-            this.log('Operation state implies power is on');
+            this.log.debug('Operation state implies power is on');
             this.update([{ key:   'BSH.Common.Setting.PowerState',
                 value: 'BSH.Common.EnumType.PowerState.On' }]);
         } else if (!operationImpliesOn && stateIsOn) {
-            this.log('Operation state implies power is standby or off');
+            this.log.debug('Operation state implies power is standby or off');
             this.update([{ key:   'BSH.Common.Setting.PowerState',
                 value: 'BSH.Common.EnumType.PowerState.Standby' }]);
         }
@@ -486,19 +484,18 @@ export class HomeConnectDevice extends EventEmitter {
 
         // Schedule the pending reads
         if (!this.readAllScheduled) {
-            this.log((this.connected ? 'Connected' : 'Might be connected')
-                     + ', so reading appliance state...');
+            this.log.debug((this.connected ? 'Connected' : 'Might be connected')
+                           + ', so reading appliance state...');
             this.readAllScheduled = setTimeout(() => this.readAll());
         } else {
-            this.log('Connected, but appliance state read already pending...');
+            this.log.debug('Connected, but appliance state read already pending...');
         }
     }
 
     // Abort refreshing appliance information when it disconnects
     onDisconnected() {
         if (this.readAllActions && this.readAllActions.length) {
-            this.log('Appliance disconnected; abandoning '
-                     + this.readAllActions.length + ' pending reads');
+            this.log.debug(`Appliance disconnected; abandoning ${this.readAllActions.length} pending reads`);
         }
         delete this.readAllActions;
     }
@@ -518,33 +515,32 @@ export class HomeConnectDevice extends EventEmitter {
             delete this.readAllScheduled;
             if (this.readAllActions) {
                 // Successfully read all appliance state
-                this.log('Successfully read all appliance state');
+                this.log.debug('Successfully read all appliance state');
                 delete this.api.readAllRetryDelay;
                 if (this.connected && !this.getItem('connected')) {
                     this.update([{ key: 'connected', value: true }]);
                 }
             } else {
                 // Abandoned reading appliance state due to disconnection
-                this.log('Ignoring appliance state read due to disconnection');
+                this.log.debug('Ignoring appliance state read due to disconnection');
             }
         } catch (err) {
             // Attempt to recover after an error
             if (this.connected) {
-                this.reportError(err, 'Reading appliance state (will retry)');
+                logError(this.log, 'Reading appliance state (will retry)', err);
                 this.api.readAllRetryDelay =
                     this.api.readAllRetryDelay
                     ? Math.min(this.api.readAllRetryDelay
                                * CONNECTED_RETRY_FACTOR,
                                CONNECTED_RETRY_MAX_DELAY)
                     : CONNECTED_RETRY_MIN_DELAY;
-                this.log('Still connected, so retrying appliance state read in '
-                         + this.api.readAllRetryDelay + ' seconds...');
+                this.log.debug('Still connected, so retrying appliance state'
+                             + ` read in ${this.api.readAllRetryDelay} seconds...`);
                 this.readAllScheduled =
                     setTimeout(() => this.readAll(),
                                this.api.readAllRetryDelay * MS);
             } else {
-                this.log('Ignoring appliance state read due to disconnection: '
-                         + err.message);
+                this.log.debug(`Ignoring appliance state read due to disconnection: ${err.message}`);
                 delete this.readAllScheduled;
             }
         }
@@ -611,10 +607,20 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Process received events
-    async eventListener(event) {
+    async processEvents() {
+        try {
+            for await (const event of this.api.getEvents(this.haId)) {
+                this.eventListener(event);
+                if (this.stopEvents) break;
+            }
+        } catch (err) {
+            logError(this.log, 'Device events', err);
+        }
+    }
+
+    eventListener(event) {
         let itemCount = event.data ? event.data.items.length : 0;
-        this.log('Event ' + event.event + ' (' + itemCount
-                 + (itemCount === 1 ? ' item)' : ' items)'));
+        this.log.debug(`Event ${event.event} (${itemCount} items)`);
         switch (event.event) {
         case 'START':
             // If appliance disconnected then check its current status
@@ -624,28 +630,28 @@ export class HomeConnectDevice extends EventEmitter {
         case 'STOP':
             // Disconnect appliance if too slow re-establishing event stream
             this.stopScheduled = setTimeout(() => {
-                this.log('Events may have been missed;'
-                          + ' treating appliance as disconnected');
+                this.log.debug('Events may have been missed;'
+                             + ' treating appliance as disconnected');
                 this.setConnectedState(false);
             }, event.err ? 0 : EVENT_DISCONNECT_DELAY * MS);
             break;
         case 'PAIRED':
             // Check status if an appliance is added back to the account
-            this.log('Appliance restored to Home Connect account');
+            this.log.debug('Appliance restored to Home Connect account');
             this.setConnectedState();
             break;
         case 'DEPAIRED':
             // Immediately treat a removed appliance as disconnected
-            this.log('Appliance removed from Home Connect account;'
-                     + ' treating appliance as disconnected');
+            this.log.debug('Appliance removed from Home Connect account;'
+                         + ' treating appliance as disconnected');
             this.setConnectedState(false);
             break;
         case 'CONNECTED':
-            this.log('Appliance is now connected to Home Connect servers');
+            this.log.debug('Appliance is now connected to Home Connect servers');
             this.setConnectedState(true);
             break;
         case 'DISCONNECTED':
-            this.log('Appliance lost connection to Home Connect servers');
+            this.log.debug('Appliance lost connection to Home Connect servers');
             this.setConnectedState(false);
             break;
         case 'STATUS':
@@ -654,8 +660,7 @@ export class HomeConnectDevice extends EventEmitter {
             this.update(event.data.items);
             break;
         default:
-            this.reportError(new Error('Unsupported type: ' + event.event),
-                             'Event stream');
+            logError(this.log, 'Event stream', new Error(`Unsupported type: ${event.event}`));
             break;
         }
     }
@@ -663,11 +668,5 @@ export class HomeConnectDevice extends EventEmitter {
     // Query the currently selected API language
     getLanguage() {
         return this.api.language;
-    }
-
-    // Report an error
-    reportError(err, op) {
-        this.emit('error', err, op);
-        return err;
     }
 }

@@ -11,3 +11,6 @@ export const PLUGIN_VERSION :string = PACKAGE.version;
 
 // Required Homebridge API version
 export const REQUIRED_HOMEBRIDGE_API = '^2.7';
+
+// API scopes to request (additional Partner Agreement is required for 'FridgeFreezer-Images')
+export const API_SCOPES = ['IdentifyAppliance', 'Monitor', 'Settings', 'Control'];

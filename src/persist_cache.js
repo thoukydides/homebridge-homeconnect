@@ -1,6 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { formatDuration } from './utils';
+
 // Length of time before values in the cache expire
 const MS = 1000;
 const CACHE_TTL = 24 * 60 * 60 * MS; // (24 hours in milliseconds)
@@ -34,8 +36,7 @@ export class PersistCache {
             expired = 'does not exist in cache';
         } else {
             let age = Date.now() - item.updated;
-            description += ' [' + item.preferred + ', updated '
-                           + Math.floor(age / MS) + ' seconds ago]';
+            description += ` [${item.preferred}, updated ${formatDuration(age)} ago]`;
             if (item.preferred !== this.preferred) {
                 expired = 'does not match preference ' + this.preferred;
             } else if (CACHE_TTL < age) {

@@ -3,6 +3,7 @@
 
 import HasPower from './has_power';
 import { PersistCache } from './persist_cache';
+import { logError } from './utils';
 
 let Service, Characteristic, UUID;
 
@@ -36,9 +37,6 @@ export class ApplianceGeneric {
 
         // Remove any services or characteristics that are no longer required
         this.cleanup();
-
-        // Log errors from the Home Connect API as warnings
-        device.on('error', (...args) => this.reportError(...args));
 
         // Handle the identify request
         accessory.on('identify', this.callbackify(this.identify));
@@ -160,7 +158,7 @@ export class ApplianceGeneric {
                 this.warn('Using expired cache result: ' + err.message);
                 return value;
             } else {
-                this.reportError(err, "Cached operation '" + key + "'");
+                logError(this.log, `Cached operation '${key}'`, err);
                 throw(err);
             }
         }
@@ -232,7 +230,7 @@ export class ApplianceGeneric {
                 let data = await fn.bind(this)(value);
                 callback(null, data);
             } catch (err) {
-                this.reportError(err);
+                logError(this.logRaw, 'Callback', err);
                 callback(err);
             }
         };
@@ -279,44 +277,16 @@ export class ApplianceGeneric {
                     await obj.init.bind(this)(...args);
                 } catch (err) {
                     let name = obj.name || 'anonymous';
-                    this.reportError(err, "Initialising mixin '" + name + "'");
+                    logError(this.logRaw, `Initialising mixin '${name}'`, err);
                 }
             };
             doInit();
         }
     }
 
-    // Log information for an issue
-    logIssue(issue, data) {
-        const url = 'https://github.com/thoukydides/homebridge-homeconnect/issues/' + issue;
-        this.warn('Please copy the following to ' + url + '\n'
-                  + this.device.brand + ' ' + this.device.type
-                  + ' (E-Nr: ' + this.device.enumber + ')\n'
-                  + JSON.stringify(data, null, 4));
-    }
-
-    // Report an error
-    reportError(err, op) {
-        // Suppress duplicate reports
-        if (this.lastError !== err) {
-            this.lastError = err;
-
-            // Log this error with some context
-            this.error(err.message);
-            if (op) this.error(op);
-            if (err.name === 'StatusCodeError')
-                this.error(err.options.method + ' ' + err.options.url);
-
-            // Log any stack backtrace at lower priority
-            if (err.stack) this.debug(err.stack);
-        }
-        return err;
-    }
-
     // Logging
-    logPrefix() { return '[' + this.name + '] '; }
-    error(msg)  { this.logRaw.error(this.logPrefix() + msg); }
-    warn(msg)   { this.logRaw.warn (this.logPrefix() + msg); }
-    log(msg)    { this.logRaw.info (this.logPrefix() + msg); }
-    debug(msg)  { this.logRaw.debug(this.logPrefix() + msg); }
+    error(msg)  { this.logRaw.error(msg); }
+    warn(msg)   { this.logRaw.warn (msg); }
+    log(msg)    { this.logRaw.info (msg); }
+    debug(msg)  { this.logRaw.debug(msg); }
 }
