@@ -2,7 +2,7 @@
 // Copyright © 2019-2023 Alexander Thoukydides
 
 import HasPower from './has_power';
-import { PersistCache } from './persist_cache';
+import { PersistCache } from './persist-cache';
 import { logError } from './utils';
 
 let Service, Characteristic, UUID;
@@ -32,8 +32,7 @@ export class ApplianceGeneric {
 
         // Initialise the cache for this appliance
         let lang = this.device.getLanguage();
-        this.cache = new PersistCache(msg => this.debug(msg),
-                                      persist, device.haId, lang);
+        this.cache = new PersistCache(log, persist, device.haId, lang);
 
         // Remove any services or characteristics that are no longer required
         this.cleanup();
