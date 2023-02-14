@@ -254,27 +254,27 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         const response = await this.deviceAuthorisationRequest();
         if (response.interval) this.deviceFlowPollInterval = response.interval * 1000;
 
-        // Display the verification URI in the log file
-        const prompt = [
-            'Please authorise access to your appliances using the associated Home Connect'
-            + ' or SingleKey ID email address by visiting:',
-            response.verification_uri_complete
-            ? `    ${bold(response.verification_uri_complete)}`
-            : `    ${bold(response.verification_uri)} and enter code ${bold(response.user_code)}`
-        ];
-        const logPrompt = async () => {
-            while (prompt.length) {
-                prompt.forEach(line => this.log.info(greenBright(line)));
-                await sleep(this.deviceFlowLogInterval);
-            }
-        };
-
         // Provide the verification URI to any other interested party
         const uri: AuthorisationURI = response.verification_uri_complete
             ? { uri: response.verification_uri_complete }
             : { uri: response.verification_uri, code: response.user_code };
         if (response.expires_in) uri.expires = Date.now() + response.expires_in * 1000;
         this.setAuthorisationURI(uri);
+
+        // Display the verification URI in the log file
+        let displayPrompts = true;
+        const logPrompt = async () => {
+            while (displayPrompts) {
+                const expiry = uri.expires ? ` within ${formatDuration(uri.expires - Date.now())}` : '';
+                this.log.info(greenBright(`Please authorise access to your appliances${expiry}`
+                                          + ' using the associated Home Connect or SingleKey ID'
+                                          + ' email address by visiting:'));
+                this.log.info(response.verification_uri_complete
+                    ? greenBright(`    ${bold(response.verification_uri_complete)}`)
+                    : greenBright(`    ${bold(response.verification_uri)} and enter code ${bold(response.user_code)}`));
+                await sleep(this.deviceFlowLogInterval);
+            }
+        };
 
         // Wait for the user to authorise access (or expiry of device code)
         this.log.debug('Waiting for completion of Home Connect authorisation'
@@ -285,7 +285,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
             logPrompt();
             return await this.deviceAccessTokenRequest(response.device_code);
         } finally {
-            prompt.length = 0;
+            displayPrompts = false;
         }
     }
 

@@ -230,7 +230,8 @@ export class APIUserAgent {
                 // Apply rate limiting
                 const retryDelay = this.retryDelay;
                 if (0 < retryDelay) {
-                    this.log.warn(`Waiting ${formatDuration(retryDelay)} before issuing Home Connect API request`);
+                    this.log.log(retryDelay < 10 * 1000 ? LogLevel.DEBUG : LogLevel.WARN,
+                                 `Waiting ${formatDuration(retryDelay)} before issuing Home Connect API request`);
                     await sleep(retryDelay);
                 }
 
