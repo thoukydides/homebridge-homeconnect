@@ -94,6 +94,12 @@ export function deviceFlowHelp(log: Logger, err: unknown, clientid: string) {
                + ' field of the "config.json" configuration file.');
     }
 
+    // Seek additional support from the Home Connect Developer Portal
+    log.warn('Descriptions of authorisation error messages can be found in the Home Connect API documentation at:');
+    log.warn('    https://api-docs.home-connect.com/authorization?#authorization-errors');
+    log.warn('For additional support contact the Home Connect Developer team at:');
+    log.warn('    https://developer.home-connect.com/support/contact');
+
     // Note that changes can take time to propagate
     log.warn('Note that applications created or edited on the Home Connect Developer Program site'
            + ' often take several minutes to propagate to the authorisation servers.'
