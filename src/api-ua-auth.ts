@@ -438,6 +438,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
             try {
                 // Wait for authorisation and then set the Authorisation header
                 await this.isAuthorised;
+                assertIsDefined(this.authorizationHeader);
                 request.headers.authorization = this.authorizationHeader;
             } catch (err) {
                 if (!(err instanceof APIError)) throw err;

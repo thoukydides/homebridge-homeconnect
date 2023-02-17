@@ -3,8 +3,9 @@
 
 import { Logger, LogLevel } from 'homebridge';
 
-import { IncomingHttpHeaders, STATUS_CODES } from 'http';
+import { STATUS_CODES } from 'http';
 import { Client, Dispatcher } from 'undici';
+import { IncomingHttpHeaders } from 'undici/types/header';
 import { Checker, IErrorDetail } from 'ts-interface-checker';
 import querystring, { ParsedUrlQueryInput } from 'node:querystring';
 
@@ -128,8 +129,9 @@ export class APIUserAgent {
         // Check that a JSON response was returned
         if (response.statusCode === 204)
             throw new APIError(request, response, 'Unexpected empty response (status code 204 No Content)');
-        const contentType = response.headers['content-type'] ?? '';
-        if (!['application/json', 'application/vnd.bsh.sdk.v1+json'].includes(contentType.replace(/;.*$/, '')))
+        const contentType = response.headers['content-type'];
+        if (typeof contentType !== 'string'
+            || !['application/json', 'application/vnd.bsh.sdk.v1+json'].includes(contentType.replace(/;.*$/, '')))
             throw new APIError(request, response, `Unexpected response content-type (${contentType})`);
 
         // Retrieve and parse the response as JSON
@@ -171,7 +173,9 @@ export class APIUserAgent {
 
         // Parse the redirection URL
         try {
-            return new URL(response.headers.location);
+            const location = response.headers.location;
+            if (typeof location !== 'string') throw new Error('Missing "location" header in redirect');
+            return new URL(location);
         } catch (cause) {
             throw new APIError(request, response, `Failed to parse redirect location "${response.headers.location}"`, { cause });
         }

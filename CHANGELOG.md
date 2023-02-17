@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 * Complete rewrite of the Home Connect API client. More rigorous checking is performed on requests submitted to and responses returned from the API, which should detect problems and new features quicker.
 * Authorisation of the Home Connect client is only attempted once at start-up. If the user does not complete the Device Flow interaction steps before the code expires (currently 10 minutes) then it is necessary to restart Homebridge to try again.
 * Various log messages have been changed due to the rewrite.
+* Updated dependencies.
 
 ## [v0.28.0] - 2023-02-03
 ### Added
@@ -221,7 +222,7 @@ All notable changes to this project will be documented in this file.
 ## [v0.16.2] - 2020-01-26
 ### Changed
 * **CoffeeMaker/CookProcessor/Dryer/Hood/Oven/Washer/WasherDryer:** Set the `Remaining Duration` characteristic during any delayed start, instead of just while the program is active.
-* Include pre-authorisation errors in the log output even when debug logging is not enabled (Homebridge `-D` option not specified). When logging to a destination that supports colour the authorsation URL is also highlighted in green.
+* Include pre-authorisation errors in the log output even when debug logging is not enabled (Homebridge `-D` option not specified). When logging to a destination that supports colour the authorisation URL is also highlighted in green.
 * Added a `User-Agent` header to all Home Connect API requests. This is generated from the npm package name and version, e.g. `homebridge-homeconnect/0.16.2`.
 * Miscellaneous improvements to the handling of incorrect Home Connect server behaviour. Invalid empty responses are now trapped explicitly. Increased maximum delay between retries after server errors from 1 minute to 10 minutes, and share the delay between all appliances. Read the appliance connection status before reading other state to reset API error count. ([Errors] / [Rate Limits])
 * Some appliances update their supported options after a program has been selected. To support these appliances the configuration schema is now updated each time that a program is selected. Previously the details of available programs were only read at plugin start-up or when `Identify` was invoked. ([config.json] / [Programs])
