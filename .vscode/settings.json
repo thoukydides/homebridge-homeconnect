@@ -26,6 +26,7 @@
     "devportal",
     "Dishcare",
     "displayvalues",
+    "Elgato",
     "enumber",
     "Fanv",
     "fgrp",
@@ -45,6 +46,8 @@
     "Pitsos",
     "previewimagekey",
     "Profilo",
+    "querystring",
+    "reestablished",
     "remainingtime",
     "remotecontrol",
     "roxxter",
@@ -55,10 +58,12 @@
     "stepsize",
     "Thermador",
     "Thoukydides",
+    "timezone",
     "undici",
     "vars",
     "warmingdrawer",
     "washerdryer",
+    "WDHU",
     "winecooler"
   ]
 }
