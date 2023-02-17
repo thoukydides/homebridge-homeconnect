@@ -28,5 +28,6 @@ jobs:
         days-before-issue-close: 7
         close-pr-message: 'This project does not accept PRs.'
         stale-pr-label: 'wontfix'
+        exempt-pr-labels: 'dependencies'
         days-before-pr-stale: 0
         days-before-pr-close: 0
