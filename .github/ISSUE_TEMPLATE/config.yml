@@ -1,17 +1,14 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Home Connect System Status (official)
-    url: https://www.home-connect.com/global/help-support/system-status
-    about: Check the official Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
-  - name: Home Connect Server Status (unofficial)
+  - name: 🚦 Home Connect Server Status (unofficial)
     url: https://homeconnect.thouky.co.uk
     about: Check the unofficial Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
-  - name: Error messsages
-    url: https://github.com/thoukydides/homebridge-homeconnect/wiki/Errors
-    about: If you are seeing error messages in the log file then check whether they are expected before reporting an issue.
-  - name: Rate limiting
-    url: https://github.com/thoukydides/homebridge-homeconnect/wiki/Rate-Limits
-    about: If access to your appliances is slow, or you are seeing "Too Many Requests" errors in the log, then you may be exceeding Home Connect rate limits.
-  - name: Contact
-    url: https://www.thouky.co.uk
-    about: Other ways to contact the author.
+  - name: ⛔ Authorisation error messages
+    url: https://api-docs.home-connect.com/authorization?#authorization-errors
+    about: Refer to the Home Connect Developer documentation for descriptions of errors that may occur during authorisation.
+  - name: ⛔ Other error messages
+    url: https://api-docs.home-connect.com/general?#api-errors
+    about: Refer to the Home Connect Developer documentation for descriptions of errors that may occur during normal operation.
+  - name: 📧 Contact the Home Connect Developer team
+    url: https://developer.home-connect.com/support/contact
+    about: Contact the Home Connect Developer team if you are having problems with authorisation, or if you want support for additional appliance programs or options.
