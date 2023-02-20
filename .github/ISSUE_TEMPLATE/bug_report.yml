@@ -1,14 +1,35 @@
 name: 🐞 Bug report
 description: "Report a bug or something that is otherwise not working as expected."
 labels: ["bug"]
+
 body:
 - type: textarea
   id: description
   attributes:
     label: Description of Issue
     description: "Please provide a clear and concise description of the bug below."
+    placeholder: "A clear and concise description of the bug..."
   validations:
     required: true
+
+- type: textarea
+  id: expected
+  attributes:
+    label: Expected Behaviour
+    description: "Please provide a clear and consise description of what you expected to happen."
+    placeholder: "A clear and concise description of what you expected to happen..."
+  validations:
+    required: true
+  
+- type: textarea
+  id: reproduce
+  attributes:
+    label: Steps to Reproduce
+    description: "Please provide a description of how to reproduce the issue."
+    placeholder: "A description of how to reproduce the bug..."
+  validations:
+    required: true
+
 - type: input
   id: version
   attributes:
@@ -16,6 +37,19 @@ body:
     description: "Please state the version number of this plugin that exhibits the bug. If this is not the most recent release then please try updating to the latest version before reporting the issue."
   validations:
     required: true
+    
+- type: textarea
+  id: environment
+  attributes:
+    label: Environment
+    description: "Describe the software environment in which this plugin is being run. It should include Operating System type and version (output of `lsb_release -d` on Linux), Node.js version (output by `node -v`), and Homebridge version (output by `npm -g ls homebridge`)."
+    value: |
+      - OS:
+      - Node:
+      - Homebridge:
+  validations:
+    required: true
+
 - type: input
   id: appliance
   attributes:
@@ -24,6 +58,7 @@ body:
     placeholder: "e.g. Siemens Oven HB678GBS6B/50"
   validations:
     required: false
+    
 - type: input
   id: homekitapp
   attributes:
@@ -32,6 +67,7 @@ body:
     placeholder: "e.g. Apple Home, Elgato Eve, Home+ 4, Hesperus, etc."
   validations:
     required: false
+    
 - type: checkboxes
   id: diagnostics
   attributes:
@@ -43,11 +79,32 @@ body:
       - label: "Unofficial [Home Connect Server Status](https://homeconnect.thouky.co.uk) shows servers up and no recent errors."
   validations:
     required: false
+    
 - type: textarea
   id: log
   attributes:
     label: Log File
-    description: "Please copy/paste relevant log entries. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its -D command line option)."
+    description: "Please copy/paste relevant log entries. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its `-D` command line option)."
+    placeholder: "Paste logging output..."
     render: shell
   validations:
-    required: false
+    required: true
+ 
+- type: textarea
+  id: config
+  attributes:
+    label: Configuration
+    description: "Please provide, if applicable, the content of your `config.json` file. Be sure to remove any sensitive information (Client ID, passwords, tokens, etc)."
+    placeholder: "Paste configuration..."
+    render: json
+  validations:
+    required: true
+ 
+ - type: textarea
+   id: additional
+   attributes:
+     label: Additional Information
+     description: "Please provide any additional information that might assist with resolving your bug report. This could include screenshots, configuration files, or anything else you think might be relevant."
+    placeholder: "Any additional information that might be relevant..."
+   validations:
+     required: false
