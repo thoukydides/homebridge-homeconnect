@@ -19,14 +19,14 @@ body:
   id: hcmap
   attributes:
     label: Home Connect Mapping
-    description: "Please suggest how the requested functionality can be supported using the options, states, settings, events, and other features, of the Home Connect API: https://api-docs.home-connect.com/"
+    description: "Please suggest how the requested functionality can be supported using the options, states, settings, events, and other features, of the [Home Connect API](https://api-docs.home-connect.com/)."
   validations:
     required: false
 - type: textarea
   id: hapmap
   attributes:
     label: HomeKit Mapping
-    description: "Please suggest how the requested functionality can be supported using the Apple-defined services and characteristics listed in the HomeKit Accessory Protocol Specification (Non-Commercial Version): https://developer.apple.com/homekit/specification/"
+    description: "Please suggest how the requested functionality can be supported using the Apple-defined services and characteristics listed in the [HomeKit Accessory Protocol Specification (Non-Commercial Version)](https://developer.apple.com/apple-home/)."
   validations:
     required: false
 - type: input
