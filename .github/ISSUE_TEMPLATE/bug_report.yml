@@ -1,4 +1,4 @@
-name: Bug report
+name: 🐞 Bug report
 description: "Report a bug or something that is otherwise not working as expected."
 labels: ["bug"]
 body:
