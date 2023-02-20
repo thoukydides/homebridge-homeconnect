@@ -100,11 +100,11 @@ body:
     validations:
       required: true
    
-   - type: textarea
-     id: additional
-     attributes:
-       label: Additional Information
-       description: "Please provide any additional information that might assist with resolving your bug report. This could include screenshots, configuration files, or anything else you think might be relevant."
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: "Please provide any additional information that might assist with resolving your bug report. This could include screenshots, configuration files, or anything else you think might be relevant."
       placeholder: "Any additional information that might be relevant..."
-     validations:
-       required: false
+    validations:
+      required: false
