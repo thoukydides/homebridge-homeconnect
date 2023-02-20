@@ -7,8 +7,8 @@ body:
     id: description
     attributes:
       label: Description of Issue
-      description: "Please provide a clear and concise description of the bug below."
-      placeholder: "A clear and concise description of the bug..."
+      description: "Please provide a clear and concise description of the bug."
+      placeholder: "Describe the bug..."
     validations:
       required: true
   
@@ -17,7 +17,7 @@ body:
     attributes:
       label: Expected Behaviour
       description: "Please provide a clear and consise description of what you expected to happen."
-      placeholder: "A clear and concise description of what you expected to happen..."
+      placeholder: "What did you expect to happen..."
     validations:
       required: true
     
@@ -26,7 +26,7 @@ body:
     attributes:
       label: Steps to Reproduce
       description: "Please provide a description of how to reproduce the issue."
-      placeholder: "A description of how to reproduce the bug..."
+      placeholder: "What steps are required to reproduce the bug..."
     validations:
       required: true
   
@@ -42,7 +42,7 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: "Describe the software environment in which this plugin is being run. It should include Operating System type and version (output of `lsb_release -d` on Linux), Node.js version (output by `node -v`), and Homebridge version (output by `npm -g ls homebridge`)."
+      description: "Describe the software environment being used to run this plugin. Please include the Operating System type and version (output of `lsb_release -d` on Linux), Node.js version (output of `node -v`), and Homebridge version (output of `npm -g ls homebridge`)."
       value: |
         - OS:
         - Node:
@@ -77,6 +77,8 @@ body:
         - label: "Home Connect app is able to control the appliance with Wi-Fi disabled."
         - label: "Home Connect app shows three green lines in the Network section of the appliance Settings."
         - label: "Unofficial [Home Connect Server Status](https://homeconnect.thouky.co.uk) shows servers up and no recent errors."
+        - label: "Searched for [previously reported issues](https://github.com/thoukydides/homebridge-homeconnect/issues?q=is%3Aissue) and no similar ones found."
+        - label: "Checked the [Home Connect API errors](https://api-docs.home-connect.com/general?#api-errors) and [authorisation errors](https://api-docs.home-connect.com/authorization?#authorization-errors) documentation."
     validations:
       required: false
       
@@ -84,7 +86,7 @@ body:
     id: log
     attributes:
       label: Log File
-      description: "Please copy/paste relevant log entries. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its `-D` command line option)."
+      description: "Please copy/paste relevant log entries. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its `-D` command line option). Be sure to remove any sensitive information (passwords, tokens, etc)."
       placeholder: "Paste logging output..."
       render: shell
     validations:
