@@ -1,7 +1,11 @@
-name: Feature request
+name: 🚧 Feature request
 description: Suggest a new feature or other enhancement.
 labels: ["enhancement"]
 body:
+- type: markdown
+  attributes:
+    value: |
+      Requests for additional configuration options to disable functionality will be rejected.
 - type: textarea
   id: description
   attributes:
