@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/thoukydides/homebridge-homeconnect/discussions
+    about: If you are seeking support or have a question then please start a discussion instead of raising an issue.
   - name: 🚦 Home Connect Server Status (unofficial)
     url: https://homeconnect.thouky.co.uk
     about: Check the unofficial Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
