@@ -9,3 +9,6 @@ updates:
       timezone: "Europe/London"
     allow:
       - dependency-type: "production"
+    ignore:
+      - dependency-name: "chalk"
+        update-types: ["version-update:semver-major"]
