@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+* Added Node 20 the supported engines.
 ### Changed
 * Complete rewrite of the Home Connect API client. More rigorous checking is performed on requests submitted to and responses returned from the API, which should detect problems and new features quicker.
 * Authorisation of the Home Connect client is only attempted once at start-up. If the user does not complete the Device Flow interaction steps before the code expires (currently 10 minutes) then it is necessary to restart Homebridge to try again.
