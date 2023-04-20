@@ -119,7 +119,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 ### Cooling Appliances
 
   * **Freezer / FridgeFreezer / Refrigerator:**
-    * Set freezer/refrigerator super, eco, sabbath, refrigerator vacation, and refrigerator fresh modes.
+    * Set freezer/refrigerator super, eco, sabbath, refrigerator vacation, refrigerator fresh, and ice dispenser modes.
     * Open the door.
     * Control child lock.
     * Monitor power and door.

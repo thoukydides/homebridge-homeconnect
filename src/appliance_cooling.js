@@ -12,6 +12,8 @@ const COOLING_MODES = {
     // Freezer / FridgeFreezer
     'Refrigeration.FridgeFreezer.Setting.SuperModeFreezer':
         'Freezer Super Mode',
+    'Refrigeration.Common.Setting.Dispenser.Enabled':
+        'Ice Dispenser',
     // FridgeFreezer / Refrigerator
     'Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator':
         'Refrigerator Super Mode',

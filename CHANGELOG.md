@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+* **Freezer/FridgeFreezer:** Added on/off control of ice water dispenser. (#94 / #141)
 * Added Node 20 the supported engines.
 ### Changed
 * Complete rewrite of the Home Connect API client. More rigorous checking is performed on requests submitted to and responses returned from the API, which should detect problems and new features quicker.
