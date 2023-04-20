@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.29.0] - 2023-04-20
 ### Added
 * **Freezer/FridgeFreezer:** Added on/off control of ice water dispenser. (#94 / #141)
 * Added Node 20 the supported engines.
@@ -387,7 +389,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.28.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.0...HEAD
+[v0.29.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.28.0...v0.29.0
 [v0.28.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.27.0...v0.28.0
 [v0.27.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.3...v0.27.0
 [v0.26.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.26.2...v0.26.3
