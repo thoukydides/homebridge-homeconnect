@@ -2,7 +2,7 @@
 // Copyright © 2023 Alexander Thoukydides
 
 // Most options, settings, events, etc, can be any of any type
-export type Value = string | number | boolean;
+export type Value = string | number | boolean | null;
 export interface Constraints {
     min?:                       number;
     max?:                       number;
