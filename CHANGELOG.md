@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.29.2] - 2023-04-24
+### Fixed
+* Accept a `data` object with `CONNECTED`, `DISCONNECTED`, `PAIRED`, and `DEPAIRED` events. (#144)
+
 ## [v0.29.1] - 2023-04-24
 ### Fixed
 * Accept `null` as the `value` in events. (#144)
@@ -395,7 +399,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.2...HEAD
+[v0.29.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.1...v0.29.2
 [v0.29.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.0...v0.29.1
 [v0.29.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.28.0...v0.29.0
 [v0.28.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.27.0...v0.28.0

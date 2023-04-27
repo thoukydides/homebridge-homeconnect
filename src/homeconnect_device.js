@@ -619,7 +619,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     eventListener(event) {
-        let itemCount = event.data ? event.data.items.length : 0;
+        let itemCount = event.data?.items?.length || 0;
         this.log.debug(`Event ${event.event} (${itemCount} items)`);
         switch (event.event) {
         case 'START':

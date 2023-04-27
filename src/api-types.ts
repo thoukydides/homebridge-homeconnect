@@ -44,7 +44,7 @@ export interface EventKeepAlive {
 export interface EventApplianceConnection {
     event:                      'CONNECTED' | 'DISCONNECTED' | 'PAIRED' | 'DEPAIRED';
     id:                         string;
-    data?:                      '';
+    data?:                      '' | EventData;
 }
 export interface EventApplianceData {
     event:                      'STATUS' | 'EVENT' | 'NOTIFY';
@@ -64,6 +64,7 @@ export interface EventData {
     value:                      Value;
     displayvalue?:              string;
     unit?:                      string;
+    haId?:                      string;
 }
 type EventLevel = 'critical' | 'alert' | 'warning' | 'hint' | 'info';
 type EventHandling = 'none' | 'acknowledge' | 'decision';
