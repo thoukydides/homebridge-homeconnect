@@ -165,6 +165,7 @@ export interface Option {
     key:                        string;
     name?:                      string;
     value:                      Value;
+    displayvalue?:              string;
     unit?:                      string;
 }
 

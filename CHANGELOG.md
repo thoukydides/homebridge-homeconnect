@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.29.3] - 2023-05-07
+### Fixed
+* Accept a `displayvalue` in an option associated with an active or selected program. (#145)
 ### Changed
 * Dropped Node 14 compatibility.
 
@@ -401,7 +405,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.3...HEAD
+[v0.29.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.2...v0.29.3
 [v0.29.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.1...v0.29.2
 [v0.29.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.0...v0.29.1
 [v0.29.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.28.0...v0.29.0
