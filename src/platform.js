@@ -112,7 +112,7 @@ export class HomeConnectPlatform {
 
         // Connect to the Home Connect cloud
         this.homeconnect = new HomeConnectAPI(this.log, this.config, this.persist);
-        this.schema.setAuthorised((await this.homeconnect.getAuthorisationURI())?.uri);
+        this.schema.setAuthorised(await this.homeconnect.getAuthorisationURI());
 
         // Obtain a list of Home Connect home appliances
         this.updateAppliances();

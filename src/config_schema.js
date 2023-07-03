@@ -213,7 +213,7 @@ export class ConfigSchema {
             // Authorisation is required via the provided URI
             return {
                 type:       'help',
-                helpvalue:  '<em class="primary-text">AUTHORISATION REQUIRED</em><br>To authorise this plugin to access your Home Connect appliances please visit:<div align=center><a href="' + this.authorisation + '">' + this.authorisation + '</a></div>'
+                helpvalue:  '<em class="primary-text">AUTHORISATION REQUIRED</em><br>To authorise this plugin to access your Home Connect appliances please visit:<div align=center><a href="' + this.authorisation.uri + '">' + this.authorisation.uri + '</a></div>'
             };
 
         } else {

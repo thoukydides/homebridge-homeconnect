@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.29.5] - 2023-07-03
+### Fixed
+* Properly corrected display of authorisation URI in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). (#151)
+### Changed
+* Updated dependencies.
+
 ## [v0.29.4] - 2023-07-03
 ### Fixed
 * Corrected display of authorisation URI in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). (#151)
@@ -409,7 +415,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.5...HEAD
+[v0.29.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.4...v0.29.5
 [v0.29.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.3...v0.29.4
 [v0.29.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.2...v0.29.3
 [v0.29.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.1...v0.29.2
