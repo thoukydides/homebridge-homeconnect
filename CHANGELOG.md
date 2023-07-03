@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [v0.29.4] = 2023-07-03
+## [v0.29.4] - 2023-07-03
 ### Fixed
 * Corrected display of authorisation URI in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). (#151)
 
