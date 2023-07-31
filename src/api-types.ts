@@ -118,6 +118,7 @@ export interface ProgramList {
 export interface ProgramConstraints {
     available?:                 boolean;
     execution?:                 ProgramExecution;
+    access?:                    Access;
 }
 type ProgramExecution = 'none' | 'selectonly' | 'startonly' | 'selectandstart';
 
@@ -129,6 +130,7 @@ export interface Program {
     key:                        string;
     name?:                      string;
     options?:                   Option[];
+    constraints?:               ProgramConstraints;
 }
 
 // Program definition
