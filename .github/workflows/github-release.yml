@@ -9,6 +9,9 @@ on:
         description: 'Version tag'
         required: true
 
+env:
+  VERSION: ${{ github.event.inputs.version || github.ref_name }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -18,9 +21,9 @@ jobs:
       
       - uses: CSchoel/release-notes-from-changelog@v1
         with:
-          begin-pattern: '/^## \\[v${RELEASE_VERSION}\\]/'
-          link-pattern: '^\\[v${RELEASE_VERSION}\\]:'
-          version: "${{ github.event.inputs.version }}"
+          begin-pattern: '/^## \\[${RELEASE_VERSION}\\]/'
+          link-pattern: '^\\[${RELEASE_VERSION}\\]:'
+          version: "${VERSION}"
 
       - name: Create Release using GitHub CLI
         env:
@@ -30,4 +33,4 @@ jobs:
           -d
           -F RELEASE.md
           -t "Version $RELEASE_VERSION"
-          ${GITHUB_REF#refs/*/}
+          $VERSION
