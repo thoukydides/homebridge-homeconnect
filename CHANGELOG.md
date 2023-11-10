@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.30.0] - 2023-11-10
+### Fixed
+* Accept `selected` and/or `active` program details when requesting the list of supported or available programs. (#175)
+### Changed
+* Dropped Node 14 compatibility.
+* Updated dependencies.
+
 ## [v0.29.8] - 2023-10-23
 ### Changed
 * Updated dependencies.
@@ -427,7 +434,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.8...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.0...HEAD
+[v0.30.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.8...v0.30.0
 [v0.29.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.7...v0.29.8
 [v0.29.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.6...v0.29.7
 [v0.29.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.5...v0.29.6
