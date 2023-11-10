@@ -98,7 +98,7 @@ export interface Image {
     key:                        string;
     name?:                      string;
     imagekey:                   string;
-    previewimagekey:             string;
+    previewimagekey:            string;
     timestamp:                  number;
     quality:                    ImageQuality;
 }
@@ -106,9 +106,12 @@ export type ImageQuality = 'good' | 'bad';
 
 // Programs (list)
 export interface ProgramsWrapper {
-    data: {
-        programs:               ProgramList[];
-    };
+    data:                       Programs;
+}
+export interface Programs {
+    programs:                   ProgramList[];
+    selected?:                  Program;
+    active?:                    Program;
 }
 export interface ProgramList {
     key:                        string;
@@ -127,7 +130,7 @@ export interface ProgramWrapper {
     data:                       Program;
 }
 export interface Program {
-    key:                        string;
+    key?:                       string;
     name?:                      string;
     options?:                   Option[];
     constraints?:               ProgramConstraints;

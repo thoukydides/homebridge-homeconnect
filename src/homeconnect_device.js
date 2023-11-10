@@ -159,8 +159,16 @@ export class HomeConnectDevice extends EventEmitter {
         try {
             this.requireMonitor();
             let programs = await this.api.getPrograms(this.haId);
-            if (programs === undefined) throw new Error('Empty response');
-            return programs;
+            if (programs.active?.key) {
+                this.update([{ key: 'BSH.Common.Root.ActiveProgram',
+                    value: programs.active.key }]);
+                this.update(programs.active.options);
+            } else if (programs.selected?.key) {
+                this.update([{ key: 'BSH.Common.Root.SelectedProgram',
+                    value: programs.selected.key }]);
+                this.update(programs.selected.options);
+            }
+            return programs.programs;
         } catch (err) {
             throw logError(this.log, 'GET programs', err);
         }
@@ -171,8 +179,16 @@ export class HomeConnectDevice extends EventEmitter {
         try {
             this.requireMonitor();
             let programs = await this.api.getAvailablePrograms(this.haId);
-            if (programs === undefined) throw new Error('Empty response');
-            return programs;
+            if (programs.active?.key) {
+                this.update([{ key: 'BSH.Common.Root.ActiveProgram',
+                    value: programs.active.key }]);
+                this.update(programs.active.options);
+            } else if (programs.selected?.key) {
+                this.update([{ key: 'BSH.Common.Root.SelectedProgram',
+                    value: programs.selected.key }]);
+                this.update(programs.selected.options);
+            }
+            return programs.programs;
         } catch (err) {
             if (err instanceof APIStatusCodeError
                 && err.key === 'SDK.Error.WrongOperationState') {

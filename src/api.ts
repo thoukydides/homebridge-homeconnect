@@ -11,7 +11,7 @@ import { Config } from './config-types';
 import { Command, CommandsWrapper, ExecuteCommandWrapper, ProgramDefinition,
          ProgramDefinitionWrapper, HomeAppliance, HomeApplianceWrapper,
          HomeAppliancesWrapper, Option, OptionWrapper, OptionsWrapper,
-         ProgramList, ProgramsWrapper, ProgramWrapper, Setting,
+         Programs, ProgramsWrapper, ProgramWrapper, Setting,
          SettingWrapper, SettingsWrapper, Status, StatusWrapper,
          StatusesWrapper, Value, Program } from './api-types';
 import { APIAuthoriseUserAgent, AuthorisationURI } from './api-ua-auth';
@@ -75,17 +75,17 @@ export class HomeConnectAPI {
     }
 
     // Get all programs
-    async getPrograms(haid: string): Promise<ProgramList[]> {
+    async getPrograms(haid: string): Promise<Programs> {
         const response = await this.ua.get<ProgramsWrapper>(
             checkers.ProgramsWrapper, `/api/homeappliances/${haid}/programs`);
-        return response.data.programs;
+        return response.data;
     }
 
     // Get a list of the available programs
-    async getAvailablePrograms(haid: string): Promise<ProgramList[]> {
+    async getAvailablePrograms(haid: string): Promise<Programs> {
         const response = await this.ua.get<ProgramsWrapper>(
             checkers.ProgramsWrapper, `/api/homeappliances/${haid}/programs/available`);
-        return response.data.programs;
+        return response.data;
     }
 
     // Get the details of a specific available programs
