@@ -25,7 +25,7 @@ const checkers = createCheckers(apiTI);
 export class HomeConnectAPI {
 
     // Language used for human-readable names and values
-    readonly language = this.config.language?.api ?? 'en-GB';
+    readonly language: string;
 
     // User agent used for all requests
     private readonly ua: APIAuthoriseUserAgent;
@@ -39,6 +39,7 @@ export class HomeConnectAPI {
         readonly config:    Config,
         readonly persist:   LocalStorage
     ) {
+        this.language = config.language?.api ?? 'en-GB';
         this.ua = new APIAuthoriseUserAgent(log, config, persist, this.language);
         this.events = new APIEventStream(log, this.ua);
     }

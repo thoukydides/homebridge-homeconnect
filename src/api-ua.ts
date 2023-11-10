@@ -34,8 +34,7 @@ export type SSE = Record<string, string>;
 // User agent for accessing the Home Connect API
 export class APIUserAgent {
     // Home Connect API host
-    readonly url = this.config.simulator ? 'https://simulator.home-connect.com'
-                                         : 'https://api.home-connect.com';
+    readonly url: string;
 
     // Default timeout applied to most requests
     private readonly requestTimeout =     20 * 1000; // milliseconds
@@ -44,10 +43,7 @@ export class APIUserAgent {
     private readonly streamTimeout =  2 * 60 * 1000; // milliseconds
 
     // Default headers to include in all requests
-    private readonly defaultHeaders: Headers = {
-        'user-agent':       `${PLUGIN_NAME}/${PLUGIN_VERSION}`,
-        'accept-language':  this.language
-    };
+    private readonly defaultHeaders: Headers;
 
     // Number of requests that have been issued
     private requestCount = 0;
@@ -60,7 +56,14 @@ export class APIUserAgent {
         readonly log:       Logger,
         readonly config:    Config,
         readonly language:  string
-    ) {}
+    ) {
+        this.url = this.config.simulator ? 'https://simulator.home-connect.com'
+                                         : 'https://api.home-connect.com';
+        this.defaultHeaders = {
+            'user-agent':       `${PLUGIN_NAME}/${PLUGIN_VERSION}`,
+            'accept-language':  this.language
+        };
+    }
 
     // GET request, expecting a JSON response
     async get<Type>(checker: Checker, path: string): Promise<Type> {
