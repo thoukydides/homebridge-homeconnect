@@ -87,7 +87,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Set sabbath mode.
     * Control alarm clock and child lock.
     * Monitor door, programs, program time remaining, remote control, and general operation status.
-    * Automation triggers for finished, aborted, alarm clock finished, fast preheat finished, and regular preheat finished,
+    * Automation triggers for finished, aborted, alarm clock finished, fast preheat finished, and regular preheat finished.
   * **WarmingDrawer:**
     * Switch on/off and start/stop programs with preset options.
     * Control child lock.
