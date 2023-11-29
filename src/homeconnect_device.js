@@ -32,9 +32,8 @@ export class HomeConnectDevice extends EventEmitter {
         // Disable warning for more than 10 listeners on an event
         this.setMaxListeners(0);
 
-        // Workaround some appliances not reliably indicating their power state
-        this.on('BSH.Common.Status.OperationState',
-                item => this.readyImpliesPower(item));
+        // Workaround appliances not reliably indicating power or operation state
+        this.inferPowerAndOperation();
 
         // Start streaming events
         this.processEvents();
@@ -436,31 +435,51 @@ export class HomeConnectDevice extends EventEmitter {
         });
     }
 
-    // Workaround some appliances not reliably indicating their power state
-    readyImpliesPower(item) {
-        // Only interested in unambiguous operation states
-        let operationPowerMap = {
-            'BSH.Common.EnumType.OperationState.Inactive': false,
-            'BSH.Common.EnumType.OperationState.Ready':    true,
-            'BSH.Common.EnumType.OperationState.Run':      true
+    // Workaround appliances not reliably indicating power or operation state
+    inferPowerAndOperation() {
+        let scheduled, events = {};
+        let inferState = key => {
+            events[key] = true;
+            clearTimeout(scheduled);
+            scheduled = setTimeout(() => {
+                // Map operation state to power
+                let operation = this.getItem('BSH.Common.Status.OperationState');
+                let operationPowerMap = {
+                    'BSH.Common.EnumType.OperationState.Inactive': false,
+                    'BSH.Common.EnumType.OperationState.Ready':    true,
+                    'BSH.Common.EnumType.OperationState.Run':      true
+                };
+                let operationImpliesOn = operationPowerMap[operation];
+
+                // Map power to operation state
+                let powerState = this.getItem('BSH.Common.Setting.PowerState');
+                let stateIsOn = powerState === 'BSH.Common.EnumType.PowerState.On';
+
+                // Infer state if only one event generated
+                if (!('operation' in events)) {
+                    // Fake the operation state if there is a mismatch
+                    if (!stateIsOn && operationImpliesOn) {
+                        this.log.debug('Power state implies operation is inactive');
+                        this.update([{ key: 'BSH.Common.Status.OperationState',
+                            value: 'BSH.Common.EnumType.OperationState.Inactive' }]);
+                    }
+                } else if (!('power' in events)) {
+                    // Fake the power state if there is a mismatch
+                    if (operationImpliesOn && !stateIsOn) {
+                        this.log.debug('Operation state implies power is on');
+                        this.update([{ key: 'BSH.Common.Setting.PowerState',
+                            value: 'BSH.Common.EnumType.PowerState.On' }]);
+                    } else if (operationImpliesOn === false && stateIsOn) {
+                        this.log.debug('Operation state implies power is standby or off');
+                        this.update([{ key: 'BSH.Common.Setting.PowerState',
+                            value: 'BSH.Common.EnumType.PowerState.Standby' }]);
+                    }
+                }
+                events = {};
+            });
         };
-        if (!(item.value in operationPowerMap)) return;
-        let operationImpliesOn = operationPowerMap[item.value];
-
-        // Check whether the power is currently considered to be on
-        let powerState = this.getItem('BSH.Common.Setting.PowerState');
-        let stateIsOn = powerState === 'BSH.Common.EnumType.PowerState.On';
-
-        // Fake the power state if there is a mismatch
-        if (operationImpliesOn && !stateIsOn) {
-            this.log.debug('Operation state implies power is on');
-            this.update([{ key:   'BSH.Common.Setting.PowerState',
-                value: 'BSH.Common.EnumType.PowerState.On' }]);
-        } else if (!operationImpliesOn && stateIsOn) {
-            this.log.debug('Operation state implies power is standby or off');
-            this.update([{ key:   'BSH.Common.Setting.PowerState',
-                value: 'BSH.Common.EnumType.PowerState.Standby' }]);
-        }
+        this.on('BSH.Common.Status.OperationState', () => inferState('operation'));
+        this.on('BSH.Common.Setting.PowerState',    () => inferState('power'));
     }
 
     // Update whether the appliance is currently reachable
