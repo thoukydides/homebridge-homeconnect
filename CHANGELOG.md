@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.30.2] - 2023-11-30
+### Fixed
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Replaced delay when implicitly updating the Power State with a blackout period. Removed inference of Operation State from the Power State. (#181)
+
 ## [v0.30.1] - 2023-11-29
 ### Fixed
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Avoid implicitly updating the Power State if an explicit event was received. Also infer from a change to Power State `Off` or `Standby` that the appliance Operation State is `Inactive` if no event has been been received. (#181)
@@ -440,7 +444,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.2...HEAD
+[v0.30.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.1...v0.30.2
 [v0.30.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.0...v0.30.1
 [v0.30.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.8...v0.30.0
 [v0.29.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.7...v0.29.8
