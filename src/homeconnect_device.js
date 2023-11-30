@@ -13,6 +13,9 @@ const CONNECTED_RETRY_MIN_DELAY = 5;        // (seconds)
 const CONNECTED_RETRY_MAX_DELAY = 10 * 60;  // (seconds)
 const CONNECTED_RETRY_FACTOR = 2;           // (double delay on each retry)
 
+// Blackout period for workaround implicitly setting power state
+const POWERSTATE_BLACKOUT = 2;              // (seconds)
+
 const MS = 1000;
 
 // Low-level access to the Home Connect API
@@ -32,8 +35,8 @@ export class HomeConnectDevice extends EventEmitter {
         // Disable warning for more than 10 listeners on an event
         this.setMaxListeners(0);
 
-        // Workaround appliances not reliably indicating power or operation state
-        this.inferPowerAndOperation();
+        // Workaround appliances not reliably indicating power state
+        this.inferPowerState();
 
         // Start streaming events
         this.processEvents();
@@ -435,51 +438,47 @@ export class HomeConnectDevice extends EventEmitter {
         });
     }
 
-    // Workaround appliances not reliably indicating power or operation state
-    inferPowerAndOperation() {
-        let scheduled, events = {};
-        let inferState = key => {
-            events[key] = true;
-            clearTimeout(scheduled);
-            scheduled = setTimeout(() => {
-                // Map operation state to power
-                let operation = this.getItem('BSH.Common.Status.OperationState');
-                let operationPowerMap = {
-                    'BSH.Common.EnumType.OperationState.Inactive': false,
-                    'BSH.Common.EnumType.OperationState.Ready':    true,
-                    'BSH.Common.EnumType.OperationState.Run':      true
-                };
-                let operationImpliesOn = operationPowerMap[operation];
+    // Workaround appliances not reliably indicating power state
+    inferPowerState() {
+        // Disable workaround for blackout period after power status updated
+        let powerState, blackoutScheduled;
+        this.on('BSH.Common.Setting.PowerState', item => {
+            powerState = item.value;
+            clearTimeout(blackoutScheduled);
+            blackoutScheduled = setTimeout(() => {
+                blackoutScheduled = undefined;
+            }, POWERSTATE_BLACKOUT * MS);
+        });
 
-                // Map power to operation state
-                let powerState = this.getItem('BSH.Common.Setting.PowerState');
-                let stateIsOn = powerState === 'BSH.Common.EnumType.PowerState.On';
+        //
+        this.on('BSH.Common.Status.OperationState', item => {
+            // Map operation state to power
+            let operationPowerMap = {
+                'BSH.Common.EnumType.OperationState.Inactive': false,
+                'BSH.Common.EnumType.OperationState.Ready':    true,
+                'BSH.Common.EnumType.OperationState.Run':      true
+            };
+            if (!(item.value in operationPowerMap)) return;
+            let operationImpliesOn = operationPowerMap[item.value];
 
-                // Infer state if only one event generated
-                if (!('operation' in events)) {
-                    // Fake the operation state if there is a mismatch
-                    if (!stateIsOn && operationImpliesOn) {
-                        this.log.debug('Power state implies operation is inactive');
-                        this.update([{ key: 'BSH.Common.Status.OperationState',
-                            value: 'BSH.Common.EnumType.OperationState.Inactive' }]);
-                    }
-                } else if (!('power' in events)) {
-                    // Fake the power state if there is a mismatch
-                    if (operationImpliesOn && !stateIsOn) {
-                        this.log.debug('Operation state implies power is on');
-                        this.update([{ key: 'BSH.Common.Setting.PowerState',
-                            value: 'BSH.Common.EnumType.PowerState.On' }]);
-                    } else if (operationImpliesOn === false && stateIsOn) {
-                        this.log.debug('Operation state implies power is standby or off');
-                        this.update([{ key: 'BSH.Common.Setting.PowerState',
-                            value: 'BSH.Common.EnumType.PowerState.Standby' }]);
-                    }
+            // Map power to operation state
+            let stateIsOn = powerState === 'BSH.Common.EnumType.PowerState.On';
+
+            // Fake the power state if there is a mismatch
+            if (operationImpliesOn && !stateIsOn) {
+                if (blackoutScheduled) {
+                    this.log.debug('Operation state implies power is on (ignored)');
+                } else {
+                    this.log.debug('Operation state implies power is on');
+                    this.update([{ key: 'BSH.Common.Setting.PowerState',
+                        value: 'BSH.Common.EnumType.PowerState.On' }]);
                 }
-                events = {};
-            });
-        };
-        this.on('BSH.Common.Status.OperationState', () => inferState('operation'));
-        this.on('BSH.Common.Setting.PowerState',    () => inferState('power'));
+            } else if (!operationImpliesOn && stateIsOn) {
+                this.log.debug('Operation state implies power is standby or off');
+                this.update([{ key: 'BSH.Common.Setting.PowerState',
+                    value: 'BSH.Common.EnumType.PowerState.Standby' }]);
+            }
+        });
     }
 
     // Update whether the appliance is currently reachable
