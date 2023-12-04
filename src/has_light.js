@@ -175,9 +175,9 @@ module.exports = {
     addLightOn(type, settings, service, setLightProxy) {
 
         // Update whether the light is on or off
-        this.device.on(settings.on.key, item => {
-            this.log('Light ' + type + ' ' + (item.value ? 'on' : 'off'));
-            service.updateCharacteristic(Characteristic.On, item.value);
+        this.device.on(settings.on.key, on => {
+            this.log('Light ' + type + ' ' + (on ? 'on' : 'off'));
+            service.updateCharacteristic(Characteristic.On, on);
         });
         service.getCharacteristic(Characteristic.On)
             .on('set', this.callbackify(
@@ -204,8 +204,8 @@ module.exports = {
             .updateValue(Math.round(settings.brightness.value));
 
         // Update the brightness
-        this.device.on(settings.brightness.key, item => {
-            let percent = Math.round(item.value);
+        this.device.on(settings.brightness.key, percent => {
+            percent = Math.round(percent);
             this.log('Light ' + type + ' ' + percent + '% brightness');
             service.updateCharacteristic(Characteristic.Brightness, percent);
         });
@@ -223,10 +223,10 @@ module.exports = {
     // Add colour temperature control of a light
     addLightColourTemp(type, settings, service, setLightProxy) {
         // Convert from Home Connect's percentage to reciprocal megakelvin
-        this.device.on(settings.colourtemp.key, item => {
-            let percent = Math.round(item.value);
+        this.device.on(settings.colourtemp.key, percent => {
+            percent = Math.round(percent);
             let mirek = Math.round(MIREK_WARM + (percent / 100.0)
-                                                * (MIREK_COLD - MIREK_WARM));
+                                   * (MIREK_COLD - MIREK_WARM));
             this.log('Light ' + type + ' ' + mirek + 'MK^-1 ('
                      + percent + '% cold');
             service.updateCharacteristic(Characteristic.ColorTemperature,
@@ -252,9 +252,9 @@ module.exports = {
     addLightColour(type, settings, service, setLightProxy) {
         // Convert from Home Connect's RGB to HomeKit's hue and saturation
         // (ignore changes to 'BSH.Common.Setting.AmbientLightColor')
-        this.device.on(settings.custom.key, item => {
-            let { hue, saturation, value } = this.fromRGB(item.value);
-            this.log('Light ' + type + ' ' + item.value
+        this.device.on(settings.custom.key, rgb => {
+            let { hue, saturation, value } = this.fromRGB(rgb);
+            this.log('Light ' + type + ' ' + rgb
                      + ' (hue=' + hue + ', saturation=' + saturation
                      + '%, value=' + value + '%)');
             service.updateCharacteristic(Characteristic.Hue, hue);

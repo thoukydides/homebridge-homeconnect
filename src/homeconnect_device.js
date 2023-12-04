@@ -65,7 +65,7 @@ export class HomeConnectDevice extends EventEmitter {
     update(items) {
         // Update cached state for all items before notifying any listeners
         items.forEach(item => {
-            this.items[item.key] = item;
+            this.items[item.key] = item.value;
         });
 
         // Notify listeners for each item
@@ -73,7 +73,7 @@ export class HomeConnectDevice extends EventEmitter {
             let description = this.describe(item);
             this.log.debug(`${description} (${this.listenerCount(item.key)} listeners)`);
             try {
-                this.emit(item.key, item);
+                this.emit(item.key, item.value);
             } catch (err) {
                 logError(this.log, `Update emit ${description}`, err);
             }
@@ -82,8 +82,7 @@ export class HomeConnectDevice extends EventEmitter {
 
     // Get a cached item's value
     getItem(key) {
-        let item = this.items[key] || {};
-        return item.value;
+        return this.items[key];
     }
 
     // Read details about this appliance (especially its connection status)
@@ -402,8 +401,8 @@ export class HomeConnectDevice extends EventEmitter {
         // Otherwise wait
         return new Promise(resolve => {
             // Listen for updates to the operation state
-            let listener = item => {
-                if (item.value) {
+            let listener = connected => {
+                if (connected) {
                     this.off('connected', listener);
                     resolve();
                 }
@@ -422,10 +421,9 @@ export class HomeConnectDevice extends EventEmitter {
         let listener;
         return new Promise((resolve, reject) => {
             // Listen for updates to the operation state
-            listener = item => {
-                if (states.includes(item.value)) resolve();
-            };
-            this.on('BSH.Common.Status.OperationState', listener);
+            this.on('BSH.Common.Status.OperationState', operationState => {
+                if (states.includes(operationState)) resolve();
+            });
 
             // Wait for the specified timeout, if any
             if (milliseconds !== undefined)
@@ -441,9 +439,8 @@ export class HomeConnectDevice extends EventEmitter {
     // Workaround appliances not reliably indicating power state
     inferPowerState() {
         // Disable workaround for blackout period after power status updated
-        let powerState, blackoutScheduled;
-        this.on('BSH.Common.Setting.PowerState', item => {
-            powerState = item.value;
+        let blackoutScheduled;
+        this.on('BSH.Common.Setting.PowerState', () => {
             clearTimeout(blackoutScheduled);
             blackoutScheduled = setTimeout(() => {
                 blackoutScheduled = undefined;
@@ -451,17 +448,18 @@ export class HomeConnectDevice extends EventEmitter {
         });
 
         //
-        this.on('BSH.Common.Status.OperationState', item => {
+        this.on('BSH.Common.Status.OperationState', operationState => {
             // Map operation state to power
             let operationPowerMap = {
                 'BSH.Common.EnumType.OperationState.Inactive': false,
                 'BSH.Common.EnumType.OperationState.Ready':    true,
                 'BSH.Common.EnumType.OperationState.Run':      true
             };
-            if (!(item.value in operationPowerMap)) return;
-            let operationImpliesOn = operationPowerMap[item.value];
+            if (!(operationState in operationPowerMap)) return;
+            let operationImpliesOn = operationPowerMap[operationState];
 
             // Map power to operation state
+            let powerState = this.getItem('BSH.Common.Setting.PowerState');
             let stateIsOn = powerState === 'BSH.Common.EnumType.PowerState.On';
 
             // Fake the power state if there is a mismatch

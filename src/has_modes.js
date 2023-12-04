@@ -46,9 +46,9 @@ module.exports = {
             }));
 
         // Update the status
-        this.device.on(key, item => {
-            this.log(name + ' ' + (item.value ? 'on' : 'off'));
-            service.updateCharacteristic(Characteristic.On, item.value);
+        this.device.on(key, enabled => {
+            this.log(name + ' ' + (enabled ? 'on' : 'off'));
+            service.updateCharacteristic(Characteristic.On, enabled);
         });
     }
 };

@@ -33,9 +33,9 @@ module.exports = {
         }
 
         // Update the door status
-        this.device.on('BSH.Common.Status.DoorState', item => {
-            let isOpen = item.value === 'BSH.Common.EnumType.DoorState.Open';
-            let isLocked = item.value === 'BSH.Common.EnumType.DoorState.Locked';
+        this.device.on('BSH.Common.Status.DoorState', doorState => {
+            let isOpen = doorState === 'BSH.Common.EnumType.DoorState.Open';
+            let isLocked = doorState === 'BSH.Common.EnumType.DoorState.Locked';
             this.log('Door ' + (isOpen ? 'open' : 'closed')
                      + (isLocked ? ' and locked' : ''));
             let targetPosition = this.doorService

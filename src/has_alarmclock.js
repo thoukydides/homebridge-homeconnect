@@ -35,13 +35,12 @@ module.exports = {
             }));
 
         // Update the alarm clock status
-        this.device.on('BSH.Common.Setting.AlarmClock', item => {
+        this.device.on('BSH.Common.Setting.AlarmClock', seconds => {
             this.log('Alarm clock '
-                     + (item.value
-                        ? this.prettySeconds(item.value) + ' remaining'
-                        : 'inactive'));
+                     + (seconds ? this.prettySeconds(seconds) + ' remaining'
+                                : 'inactive'));
             this.powerService.updateCharacteristic(
-                Characteristic.SetDuration, item.value);
+                Characteristic.SetDuration, seconds);
         });
     }
 };

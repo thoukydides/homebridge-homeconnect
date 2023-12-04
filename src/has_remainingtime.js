@@ -46,12 +46,12 @@ module.exports = {
                 }
             });
         };
-        this.device.on('BSH.Common.Option.StartInRelative', item => {
-            timeDelay = item.value;
+        this.device.on('BSH.Common.Option.StartInRelative', seconds => {
+            timeDelay = seconds;
             update();
         });
-        this.device.on('BSH.Common.Option.RemainingProgramTime', item => {
-            timeRemaining = item.value;
+        this.device.on('BSH.Common.Option.RemainingProgramTime', seconds => {
+            timeRemaining = seconds;
             update();
         });
         this.device.on('BSH.Common.Event.ProgramFinished', () => {
@@ -62,7 +62,7 @@ module.exports = {
             state = '';
             update();
         });
-        this.device.on('BSH.Common.Status.OperationState', item => {
+        this.device.on('BSH.Common.Status.OperationState', operationState => {
             const inactiveStates = [
                 'BSH.Common.EnumType.OperationState.Inactive',
                 'BSH.Common.EnumType.OperationState.Ready',
@@ -71,8 +71,8 @@ module.exports = {
             const delayStates = [
                 'BSH.Common.EnumType.OperationState.DelayedStart'
             ];
-            state = delayStates.includes(item.value) ? 'delayed start'
-                    : (!inactiveStates.includes(item.value) ? 'active' : '');
+            state = delayStates.includes(operationState) ? 'delayed start'
+                    : (!inactiveStates.includes(operationState) ? 'active' : '');
             update();
         });
     }

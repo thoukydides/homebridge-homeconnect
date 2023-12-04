@@ -33,7 +33,7 @@ module.exports = {
         // Update the cache of programs supported by this appliance
         await this.initPrograms();
         this.device.on('BSH.Common.Root.SelectedProgram',
-                       item => this.updateSelectedProgram(item.value));
+                       programKey => this.updateSelectedProgram(programKey));
 
         // Add the appropriate services depending on the configuration
         let config = this.config.programs;
@@ -509,14 +509,14 @@ module.exports = {
             });
         };
         this.device.on('BSH.Common.Root.ActiveProgram',
-                       item => update(item.value === key));
-        this.device.on('BSH.Common.Status.OperationState', item => {
+                       programKey => update(programKey === key));
+        this.device.on('BSH.Common.Status.OperationState', operationState => {
             const inactiveStates = [
                 'BSH.Common.EnumType.OperationState.Inactive',
                 'BSH.Common.EnumType.OperationState.Ready',
                 'BSH.Common.EnumType.OperationState.Finished'
             ];
-            if (inactiveStates.includes(item.value)) update(false);
+            if (inactiveStates.includes(operationState)) update(false);
         });
 
         // Return the service

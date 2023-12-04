@@ -23,8 +23,8 @@ module.exports = {
         // Update the battery level (and low battery status)
         const { BATTERY_LEVEL_NORMAL, BATTERY_LEVEL_LOW } =
               Characteristic.StatusLowBattery;
-        this.device.on('BSH.Common.Status.BatteryLevel', item => {
-            let level = Math.round(item.value);
+        this.device.on('BSH.Common.Status.BatteryLevel', level => {
+            level = Math.round(level);
             this.log('Battery level ' + level + '%');
             service.updateCharacteristic(Characteristic.BatteryLevel, level);
             service.updateCharacteristic(

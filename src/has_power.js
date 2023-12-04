@@ -36,12 +36,12 @@ module.exports = {
                                                        powerOn);
             });
         };
-        this.device.on('BSH.Common.Setting.PowerState', item => {
-            isOn = item.value === 'BSH.Common.EnumType.PowerState.On';
+        this.device.on('BSH.Common.Setting.PowerState', powerState => {
+            isOn = powerState === 'BSH.Common.EnumType.PowerState.On';
             update();
         });
-        this.device.on('connected', item => {
-            isDisconnected = !item.value;
+        this.device.on('connected', connected => {
+            isDisconnected = !connected;
             update();
         });
 

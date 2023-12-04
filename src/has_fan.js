@@ -150,20 +150,22 @@ module.exports = {
             this.log('Fan ' + percent + '%');
             service.updateCharacteristic(Characteristic.RotationSpeed, percent);
         };
-        this.device.on('Cooking.Common.Option.Hood.VentingLevel', newLevel);
-        this.device.on('Cooking.Common.Option.Hood.IntensiveLevel', newLevel);
-        this.device.on('BSH.Common.Root.ActiveProgram', item => {
-            if (!item.value) return;
-            let manual = item.value === this.fanPrograms.manual.key;
+        this.device.on('Cooking.Common.Option.Hood.VentingLevel', level =>
+            newLevel('Cooking.Common.Option.Hood.VentingLevel', level));
+        this.device.on('Cooking.Common.Option.Hood.IntensiveLevel', level =>
+            newLevel('Cooking.Common.Option.Hood.IntensiveLevel', level));
+        this.device.on('BSH.Common.Root.ActiveProgram', programKey => {
+            if (!programKey) return;
+            let manual = programKey === this.fanPrograms.manual.key;
             this.log('Fan ' + (manual ? 'manual' : 'automatic') + ' control');
             service.updateCharacteristic(Characteristic.TargetFanState,
                                          manual ? MANUAL : AUTO);
         });
-        this.device.on('BSH.Common.Status.OperationState', item => {
+        this.device.on('BSH.Common.Status.OperationState', operationState => {
             const activeStates = [
                 'BSH.Common.EnumType.OperationState.Run'
             ];
-            let active = activeStates.includes(item.value);
+            let active = activeStates.includes(operationState);
             this.log('Fan ' + (active ? 'running' : 'off'));
             service.updateCharacteristic(Characteristic.Active,
                                          active ? ACTIVE : OFF);

@@ -31,11 +31,11 @@ module.exports = {
             }));
 
         // Update the child lock status
-        this.device.on('BSH.Common.Setting.ChildLock', item => {
-            this.log('Child lock ' + (item.value ? 'enabled' : 'disabled'));
+        this.device.on('BSH.Common.Setting.ChildLock', childLock => {
+            this.log('Child lock ' + (childLock ? 'enabled' : 'disabled'));
             this.powerService.updateCharacteristic(
                 Characteristic.LockPhysicalControls,
-                item.value ? CONTROL_LOCK_ENABLED : CONTROL_LOCK_DISABLED);
+                childLock ? CONTROL_LOCK_ENABLED : CONTROL_LOCK_DISABLED);
         });
     }
 };

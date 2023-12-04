@@ -48,8 +48,8 @@ module.exports = {
             }
 
             // Update the status
-            this.device.on(event, item => {
-                switch (item.value) {
+            this.device.on(event, eventStatus => {
+                switch (eventStatus) {
                 case 'BSH.Common.EnumType.EventPresentState.Present':
                 case 'BSH.Common.EnumType.DoorState.Open':
                     this.log('Event ' + name);
@@ -63,7 +63,7 @@ module.exports = {
                     this.log('Event ' + name + ' off (ignored)');
                     break;
                 default:
-                    this.warn("Unsupported event status '" + item.value + "'");
+                    this.warn("Unsupported event status '" + eventStatus + "'");
                     break;
                 }
             });
