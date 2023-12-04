@@ -1,16 +1,25 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-// Most options, settings, events, etc, can be any of any type
-export type Value = string | number | boolean | null;
-export interface Constraints {
+// Most options, settings, events, etc, can be of any type
+export type Value = string | number | boolean;
+export type Constraints = ConstraintsString | ConstraintsNumber | ConstraintsBoolean;
+export interface ConstraintsString extends ConstraintsCommon {
+    default?:                   string;
+    allowedvalues?:             Array<string>;
+    displayvalues?:             Array<string>;
+}
+export interface ConstraintsNumber extends ConstraintsCommon {
+    default?:                   number;
     min?:                       number;
     max?:                       number;
     stepsize?:                  number;
-    allowedvalues?:             Array<string>;
-    displayvalues?:             Array<string>;
+}
+export interface ConstraintsBoolean extends ConstraintsCommon {
+    default?:                   boolean;
+}
+export interface ConstraintsCommon {
     access?:                    Access;
-    default?:                   Value;
 }
 
 // Access rights for settings and status
@@ -22,7 +31,7 @@ export interface ExecuteCommandWrapper {
 }
 export interface ExecuteCommand {
     key:                        string;
-    value:                      Value;
+    value:                      true;
 }
 export interface CommandsWrapper {
     data: {
@@ -61,7 +70,7 @@ export interface EventData {
     timestamp:                  number | null;
     level:                      EventLevel;
     handling:                   EventHandling;
-    value:                      Value;
+    value:                      Value | null;
     displayvalue?:              string;
     unit?:                      string;
     haId?:                      string;
@@ -145,15 +154,25 @@ export interface ProgramDefinition {
     name?:                      string;
     options?:                   OptionDefinition[];
 }
-export interface OptionDefinition {
+export type OptionDefinition = OptionDefinitionString | OptionDefinitionNumber | OptionDefinitionBoolean;
+export interface OptionDefinitionString extends OptionDefinitionCommon {
+    type:                       'String' | string;
+    constraints?:               OptionConstraintsCommon & ConstraintsString;
+}
+export interface OptionDefinitionNumber extends OptionDefinitionCommon {
+    type:                       'Double' | 'Int';
+    constraints?:               OptionConstraintsCommon & ConstraintsNumber;
+}
+export interface OptionDefinitionBoolean extends OptionDefinitionCommon {
+    type:                       'Boolean';
+    constraints?:               OptionConstraintsCommon & ConstraintsBoolean;
+}
+export interface OptionDefinitionCommon {
     key:                        string;
     name?:                      string;
-    type:                       string;
     unit?:                      string;
-    constraints?:               OptionConstraints;
 }
-export interface OptionConstraints extends Constraints {
-    default?:                   Value;
+export interface OptionConstraintsCommon {
     liveupdate?:                boolean;
 }
 
@@ -183,14 +202,25 @@ export interface SettingsWrapper {
 export interface SettingWrapper {
     data:                       Setting;
 }
-export interface Setting {
+export type Setting = SettingString | SettingNumber | SettingBoolean;
+export interface SettingString extends SettingCommon {
+    value:                      string;
+    constraints?:               ConstraintsString;
+}
+export interface SettingNumber extends SettingCommon {
+    value:                      number;
+    constraints?:               ConstraintsNumber;
+}
+export interface SettingBoolean extends SettingCommon {
+    value:                      boolean;
+    constraints?:               ConstraintsBoolean;
+}
+export interface SettingCommon {
     key:                        string;
     name?:                      string;
     type?:                      string;
-    value:                      Value;
     displayvalue?:              string;
     unit?:                      string;
-    constraints?:               Constraints;
 }
 
 // Status
@@ -202,13 +232,24 @@ export interface StatusesWrapper {
 export interface StatusWrapper {
     data:                       Status;
 }
-export interface Status {
+export type Status = StatusString | StatusNumber | StatusBoolean;
+export interface StatusString extends StatusCommon {
+    value:                      string;
+    constraints?:               ConstraintsString;
+}
+export interface StatusNumber extends StatusCommon {
+    value:                      number;
+    constraints?:               ConstraintsNumber;
+}
+export interface StatusBoolean extends StatusCommon {
+    value:                      boolean;
+    constraints?:               ConstraintsBoolean;
+}
+export interface StatusCommon {
     key:                        string;
     name?:                      string;
-    value:                      Value;
     displayvalue?:              string;
     unit?:                      string;
-    constraints?:               Constraints;
 }
 
 // API errors (excluding authorisation)
