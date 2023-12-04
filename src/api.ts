@@ -222,8 +222,8 @@ export class HomeConnectAPI {
     }
 
     // Issue a command
-    setCommand(haid: string, key: string, value = true): Promise<void> {
-        const putBody: ExecuteCommandWrapper = { data: { key, value } };
+    setCommand(haid: string, key: string): Promise<void> {
+        const putBody: ExecuteCommandWrapper = { data: { key, value: true } };
         return this.ua.put(`/api/homeappliances/${haid}/commands/${key}`, putBody);
     }
 
