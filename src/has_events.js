@@ -1,6 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { DoorState, EventPresentState } from './api-value-types';
+
 // Add events to an accessory
 module.exports = {
     name: 'HasEvents',
@@ -50,16 +52,16 @@ module.exports = {
             // Update the status
             this.device.on(event, eventStatus => {
                 switch (eventStatus) {
-                case 'BSH.Common.EnumType.EventPresentState.Present':
-                case 'BSH.Common.EnumType.DoorState.Open':
+                case EventPresentState.Present:
+                case DoorState.Open: // (FridgeFreezer simulator workaround)
                     this.log('Event ' + name);
                     service.updateCharacteristic(
                         Characteristic.ProgrammableSwitchEvent, SINGLE);
                     break;
-                case 'BSH.Common.EnumType.EventPresentState.Confirmed':
+                case EventPresentState.Confirmed:
                     this.log('Event ' + name + ' confirmed (ignored)');
                     break;
-                case 'BSH.Common.EnumType.EventPresentState.Off':
+                case EventPresentState.Off:
                     this.log('Event ' + name + ' off (ignored)');
                     break;
                 default:

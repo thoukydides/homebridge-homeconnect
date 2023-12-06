@@ -1,6 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { DoorState } from './api-value-types';
+
 let Service, Characteristic;
 
 // Add an appliance door to an accessory
@@ -34,8 +36,8 @@ module.exports = {
 
         // Update the door status
         this.device.on('BSH.Common.Status.DoorState', doorState => {
-            let isOpen = doorState === 'BSH.Common.EnumType.DoorState.Open';
-            let isLocked = doorState === 'BSH.Common.EnumType.DoorState.Locked';
+            let isOpen = doorState === DoorState.Open;
+            let isLocked = doorState === DoorState.Locked;
             this.log('Door ' + (isOpen ? 'open' : 'closed')
                      + (isLocked ? ' and locked' : ''));
             let targetPosition = this.doorService

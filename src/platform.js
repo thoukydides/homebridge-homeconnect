@@ -6,7 +6,7 @@ import { join } from 'path';
 import { satisfies, coerce } from 'semver';
 
 import { HomeConnectAPI } from './api';
-import { HomeConnectDevice } from './homeconnect_device';
+import { HomeConnectDevice } from './homeconnect-device';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
          ApplianceWasher, ApplianceWasherDryer } from './appliance_cleaning';
 import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,

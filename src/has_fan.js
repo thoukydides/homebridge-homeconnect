@@ -161,11 +161,8 @@ module.exports = {
             service.updateCharacteristic(Characteristic.TargetFanState,
                                          manual ? MANUAL : AUTO);
         });
-        this.device.on('BSH.Common.Status.OperationState', operationState => {
-            const activeStates = [
-                'BSH.Common.EnumType.OperationState.Run'
-            ];
-            let active = activeStates.includes(operationState);
+        this.device.on('BSH.Common.Status.OperationState', () => {
+            let active = this.device.isOperationState('Run');
             this.log('Fan ' + (active ? 'running' : 'off'));
             service.updateCharacteristic(Characteristic.Active,
                                          active ? ACTIVE : OFF);
@@ -188,8 +185,7 @@ module.exports = {
             let option = this.fromFanSpeedPercent(percent);
             let snapPercent = this.toFanSpeedPercent(option);
             this.log('SET fan manual ' + snapPercent + '%');
-            if (this.device.getItem('BSH.Common.Status.OperationState')
-                === 'BSH.Common.EnumType.OperationState.Run'
+            if (this.device.isOperationState('Run')
                 && this.device.getItem('BSH.Common.Root.ActiveProgram')
                    === this.fanPrograms.manual.key) {
                 // Try changing the options for the current program

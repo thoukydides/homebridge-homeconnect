@@ -62,17 +62,10 @@ module.exports = {
             state = '';
             update();
         });
-        this.device.on('BSH.Common.Status.OperationState', operationState => {
-            const inactiveStates = [
-                'BSH.Common.EnumType.OperationState.Inactive',
-                'BSH.Common.EnumType.OperationState.Ready',
-                'BSH.Common.EnumType.OperationState.Finished'
-            ];
-            const delayStates = [
-                'BSH.Common.EnumType.OperationState.DelayedStart'
-            ];
-            state = delayStates.includes(operationState) ? 'delayed start'
-                    : (!inactiveStates.includes(operationState) ? 'active' : '');
+        this.device.on('BSH.Common.Status.OperationState', () => {
+            state = this.device.isOperationState('DelayedStart') ? 'delayed start'
+                    : (!this.device.isOperationState('Inactive', 'Ready', 'Finished')
+                       ? 'active' : '');
             update();
         });
     }

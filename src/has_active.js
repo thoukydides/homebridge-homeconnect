@@ -1,21 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-// Mapping from OperationState to the individual characteristics
-const OPERATION_STATE_MAPPING ={
-    Inactive:       { active: false, status: true,  fault: false },
-    Ready:          { active: false, status: true,  fault: false },
-    DelayedStart:   { active: true,  status: true,  fault: false },
-    Run:            { active: true,  status: true,  fault: false },
-    Pause:          { active: false, status: false, fault: false },
-    ActionRequired: { active: false, status: false, fault: false },
-    Finished:       { active: false, status: true,  fault: false },
-    Error:          { active: false, status: false, fault: true  },
-    Aborting:       { active: true,  status: false, fault: false },
-    // Fake OperationState for when the appliance is disconnected
-    Disconnected:   { active: false, status: false, fault: true  }
-};
-
 // Add operation state to an accessory
 module.exports = {
     name: 'HasActive',
@@ -57,34 +42,29 @@ module.exports = {
             clearTimeout(scheduled);
             scheduled = setTimeout(() => {
                 // Map the OperationState to the individual characteristics
-                let state = isDisconnected ? 'Disconnected' : operationState;
-                if (state === undefined) return;
-                let mappedState = OPERATION_STATE_MAPPING[state];
-                if (!mappedState)
-                    return this.warn('Unsupported OperationState: '
-                                     + operationState);
+                let isActive = !isDisconnected && this.device.isOperationState('DelayedStart', 'Run', 'Aborting');
+                let isStatus = !isDisconnected && this.device.isOperationState('Inactive', 'Ready', 'DelayedStart', 'Run', 'Finished');
+                let isFault  =  isDisconnected || this.device.isOperationState('Error');
 
                 // Update the characteristics
                 this.activeService.updateCharacteristic(
-                    Characteristic.On, mappedState.active);
+                    Characteristic.On, isActive);
                 this.activeService.updateCharacteristic(
-                    Characteristic.StatusActive, mappedState.status);
+                    Characteristic.StatusActive, isStatus);
                 this.activeService.updateCharacteristic(
-                    Characteristic.StatusFault,
-                    mappedState.fault ? GENERAL_FAULT : NO_FAULT);
+                    Characteristic.StatusFault, isFault ? GENERAL_FAULT : NO_FAULT);
 
                 // Log the status
-                this.log((mappedState.active ? 'Active' : 'Inactive')
-                         + (mappedState.status ? '' : ', attention required')
-                         + (mappedState.fault ? ', in error state' : '')
+                this.log((isActive ? 'Active' : 'Inactive')
+                         + (isStatus ? '' : ', attention required')
+                         + (isFault ? ', in error state' : '')
                          + (isDisconnected ? ' (disconnected)'
                                            : ' (' + operationState + ')'));
             });
         };
         this.device.on('BSH.Common.Status.OperationState', state => {
             // Remove the enum prefix from the value
-            operationState = state.replace(
-                /^BSH\.Common\.EnumType\.OperationState\./, '');
+            operationState = state.replace(/^.*\./, '');
             update();
         });
         this.device.on('connected', connected => {

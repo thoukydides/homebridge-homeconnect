@@ -1,9 +1,11 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { AmbientLightColor } from './api-value-types';
+
 let Service, Characteristic;
 
-const CUSTOM_COLOR = 'BSH.Common.EnumType.AmbientLightColor.CustomColor';
+const CUSTOM_COLOR = AmbientLightColor.CustomColor;
 
 // HomeKit colour temperature range
 const MIREK_WARM = 400; //  2,500K ->   0% (incandescent lamp)

@@ -1,6 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { PowerState } from './api-value-types';
+
 let Characteristic;
 
 // Add a power switch to an accessory
@@ -37,7 +39,7 @@ module.exports = {
             });
         };
         this.device.on('BSH.Common.Setting.PowerState', powerState => {
-            isOn = powerState === 'BSH.Common.EnumType.PowerState.On';
+            isOn = powerState === PowerState.On;
             update();
         });
         this.device.on('connected', connected => {
@@ -52,16 +54,16 @@ module.exports = {
 
         // Add the ability to switch off or to standby if supported
         // (with workaround for appliances reporting unsupported combinations)
-        if (values.includes('BSH.Common.EnumType.PowerState.Off')
-            && values.includes('BSH.Common.EnumType.PowerState.Standby')) {
+        if (values.includes(PowerState.Off)
+            && values.includes(PowerState.Standby)) {
             this.warn('Claims can be both switched off and placed in standby;'
                       + ' treating as cannot be switched off');
-        } else if (values.includes('BSH.Common.EnumType.PowerState.Off')) {
+        } else if (values.includes(PowerState.Off)) {
             this.log('Can be switched off');
-            this.addPowerOff('BSH.Common.EnumType.PowerState.Off');
-        } else if (values.includes('BSH.Common.EnumType.PowerState.Standby')) {
+            this.addPowerOff(PowerState.Off);
+        } else if (values.includes(PowerState.Standby)) {
             this.log('Can be placed in standby');
-            this.addPowerOff('BSH.Common.EnumType.PowerState.Standby');
+            this.addPowerOff(PowerState.Standby);
         } else {
             this.log('Cannot be switched off');
         }
@@ -75,8 +77,7 @@ module.exports = {
                                Characteristic.Perms.WRITE,
                                Characteristic.Perms.NOTIFY]})
             .on('set', this.callbackify(async value => {
-                let powerState = value ? 'BSH.Common.EnumType.PowerState.On'
-                                       : offValue;
+                let powerState = value ? PowerState.On : offValue;
                 this.log('SET ' + (value ? 'On' : 'Off'));
                 await this.device.setSetting('BSH.Common.Setting.PowerState',
                                              powerState);

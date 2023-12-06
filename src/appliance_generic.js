@@ -22,8 +22,8 @@ export class ApplianceGeneric {
         this.config       = config;
 
         // Log some basic information about this appliance
-        this.log(device.brand + ' ' + device.type
-                 + ' (E-Nr: ' + device.enumber + ')');
+        this.log(device.ha.brand + ' ' + device.ha.type
+                 + ' (E-Nr: ' + device.ha.enumber + ')');
 
         // Shortcuts to useful HAP objects
         Service = homebridge.hap.Service;
@@ -32,7 +32,7 @@ export class ApplianceGeneric {
 
         // Initialise the cache for this appliance
         let lang = this.device.getLanguage();
-        this.cache = new PersistCache(log, persist, device.haId, lang);
+        this.cache = new PersistCache(log, persist, device.ha.haId, lang);
 
         // Remove any services or characteristics that are no longer required
         this.cleanup();
@@ -44,9 +44,9 @@ export class ApplianceGeneric {
         this.informationService =
             accessory.getService(Service.AccessoryInformation);
         this.informationService
-            .setCharacteristic(Characteristic.Manufacturer, device.brand)
-            .setCharacteristic(Characteristic.Model,        device.enumber)
-            .setCharacteristic(Characteristic.SerialNumber, device.haId)
+            .setCharacteristic(Characteristic.Manufacturer, device.ha.brand)
+            .setCharacteristic(Characteristic.Model,        device.ha.enumber)
+            .setCharacteristic(Characteristic.SerialNumber, device.ha.haId)
             .setCharacteristic(Characteristic.FirmwareRevision, '0');
 
         // Add power Switch service to host the appliance's main characteristics
@@ -60,9 +60,9 @@ export class ApplianceGeneric {
             .setCharacteristic(Characteristic.ConfiguredName, 'Power');
 
         // Update reachability when connection status changes
-        device.on('connected', item => {
-            this.log(item.value ? 'Connected' : 'Disconnected');
-            this.accessory.updateReachability(item.value);
+        device.on('connected', connected => {
+            this.log(connected ? 'Connected' : 'Disconnected');
+            this.accessory.updateReachability(connected);
         });
 
         // All appliances have power state
@@ -128,7 +128,7 @@ export class ApplianceGeneric {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     identify(paired) {
         // Log the current status of this appliance
-        this.log('Identify: ' + this.device.haId);
+        this.log('Identify: ' + this.device.ha.haId);
         for (let key of Object.keys(this.device.items).sort()) {
             this.log(this.device.describe(this.device.items[key]));
         }

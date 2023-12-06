@@ -1,14 +1,26 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { Logger } from 'homebridge';
+
 import { EventEmitter } from 'events';
+import { once } from 'node:events';
+
 import { APIStatusCodeError } from './api-errors';
 import { logError } from './utils';
+import { HomeConnectAPI } from './api';
+import { HomeAppliance } from './api-types';
+import { OperationState, OptionValues, PowerState, ProgramKey } from './api-value-types';
+import { CommandKV, EventKey, EventKV, EventValue, KVKey, KVValue, OptionKey,
+         OptionKV, OptionValue, ProgramDefinitionKV, ProgramKV, ProgramListKV,
+         SettingKey, SettingKV, SettingValue, StatusKey, StatusKV, StatusValue } from './api-value';
+import { Scope } from './api-auth-types';
 
 // Minimum event stream interruption before treated as appliance disconnected
 const EVENT_DISCONNECT_DELAY = 3;           // (seconds)
 
 // Delay before retrying a failed read of appliance state when connected
+let readAllRetryDelay: number = 0;          // (seconds)
 const CONNECTED_RETRY_MIN_DELAY = 5;        // (seconds)
 const CONNECTED_RETRY_MAX_DELAY = 10 * 60;  // (seconds)
 const CONNECTED_RETRY_FACTOR = 2;           // (double delay on each retry)
@@ -18,19 +30,61 @@ const POWERSTATE_BLACKOUT = 2;              // (seconds)
 
 const MS = 1000;
 
+// All key-value pairs that can be get/set or included in events
+interface DeviceExtraValues {
+    connected?:     boolean;
+}
+type DeviceExtraKey = KVKey<DeviceExtraValues>;
+type DeviceKey = DeviceExtraKey | OptionKey | StatusKey | SettingKey | EventKey;
+type DeviceExtraValue<Key> = KVValue<DeviceExtraValues, Key>;
+type DeviceValue<Key> = DeviceExtraValue<Key> | OptionValue<Key> | StatusValue<Key> | SettingValue<Key> | EventValue<Key>;
+
+// Any type of key-value item
+type Item<KeyU extends DeviceKey = DeviceKey> = { [Key in KeyU]: {
+    key:            Key;
+    value:          DeviceValue<Key>;
+    unit?:          string;
+} }[KeyU];
+
+// Shorthand for OperationState values
+export type OperationStateKey = keyof typeof OperationState;
+
+// Convert Options from dictionary to array format
+function OptionsRecordToKV(options: OptionValues): OptionKV[] {
+    const toKV = <Key extends OptionKey>(key: Key, value: OptionValue<Key>): OptionKV<Key> => ({ key, value });
+    return Object.entries(options).map(([key, value]) => toKV(key as OptionKey, value));
+}
+
 // Low-level access to the Home Connect API
 export class HomeConnectDevice extends EventEmitter {
 
+    // Database of most recently reported key-value pairs
+    readonly items: { [Key in DeviceKey]?: Item<Key>; } = {};
+
+    // Stop event stream when appliance is depaired
+    private stopEvents: boolean = false;
+
+    // Avoid multiple connection status updates in same poll cycle
+    private setConnectedScheduled?: NodeJS.Timeout;
+
+    // Treat extened event stream outage as an appliance disconnect
+    private stopScheduled?: NodeJS.Timeout;
+
+    // Pending actions to read appliance state when (re)connected
+    private readAllActions?: (() => void)[];
+    private readAllScheduled?: NodeJS.Timeout;
+    private readPrograms?: boolean;
+
     // Create a new API object
-    constructor(log, api, ha) {
+    constructor(
+        readonly log:   Logger,
+        readonly api:   HomeConnectAPI,
+        readonly ha:    HomeAppliance
+    ) {
         super();
-        this.log = log;
-        this.api = api;
-        Object.assign(this, ha);
 
         // Initial device state
-        this.items = {};
-        this.setConnectedState(this.connected);
+        this.setConnectedState(this.ha.connected);
 
         // Disable warning for more than 10 listeners on an event
         this.setMaxListeners(0);
@@ -43,34 +97,30 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Stop event stream (and any other autonomous activity)
-    stop() {
+    stop(): void {
         this.stopEvents = true;
     }
 
     // Describe an item
-    describe(item) {
-        let description = item.key;
+    describe<Key extends DeviceKey>(item: Item<Key>): string {
+        let description: string = item.key;
         if ('value' in item) {
-            description += '=' + item.value;
-        } else if ('default' in (item.constraints || {})) {
-            description += '=' + item.constraints.default;
+            description += `=${item.value}`;
         }
         if (item.unit && item.unit !== 'enum') {
-            description += ' ' + item.unit;
+            description += ` ${item.unit}`;
         }
         return description;
     }
 
     // Update cached values and notify listeners
-    update(items) {
+    update<Key extends DeviceKey>(items: Item<Key>[]): void {
         // Update cached state for all items before notifying any listeners
-        items.forEach(item => {
-            this.items[item.key] = item.value;
-        });
+        items.forEach(item => Object.assign(this.items, { [item.key]: item }));
 
         // Notify listeners for each item
         items.forEach(item => {
-            let description = this.describe(item);
+            const description = this.describe(item);
             this.log.debug(`${description} (${this.listenerCount(item.key)} listeners)`);
             try {
                 this.emit(item.key, item.value);
@@ -81,16 +131,15 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Get a cached item's value
-    getItem(key) {
-        return this.items[key];
+    getItem<Key extends DeviceKey>(key: Key): DeviceValue<Key> | undefined {
+        return this.items[key]?.value;
     }
 
     // Read details about this appliance (especially its connection status)
-    async getAppliance() {
+    async getAppliance(): Promise<HomeAppliance> {
         try {
             this.requireIdentify();
-            let appliance = await this.api.getAppliance(this.haId);
-            if (appliance === undefined) throw new Error('Empty response');
+            const appliance = await this.api.getAppliance(this.ha.haId);
             this.setConnectedState(appliance.connected);
             return appliance;
         } catch (err) {
@@ -99,11 +148,10 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read current status
-    async getStatus() {
+    async getStatus(): Promise<StatusKV[]> {
         try {
             this.requireMonitor();
-            let status = await this.api.getStatus(this.haId);
-            if (status === undefined) throw new Error('Empty response');
+            const status = await this.api.getStatus(this.ha.haId);
             this.update(status);
             return status;
         } catch (err) {
@@ -112,11 +160,10 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read current settings
-    async getSettings() {
+    async getSettings(): Promise<SettingKV[]> {
         try {
             this.requireSettings();
-            let settings = await this.api.getSettings(this.haId);
-            if (settings === undefined) throw new Error('Empty response');
+            const settings = await this.api.getSettings(this.ha.haId);
             this.update(settings);
             return settings;
         } catch (err) {
@@ -125,13 +172,12 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read a single setting
-    async getSetting(settingKey) {
+    async getSetting<Key extends SettingKey>(settingKey: Key): Promise<SettingKV<Key> | null> {
         try {
             this.requireSettings();
-            let item = await this.api.getSetting(this.haId, settingKey);
-            if (item === undefined) throw new Error('Empty response');
-            this.update([item]);
-            return item;
+            const setting = await this.api.getSetting(this.ha.haId, settingKey);
+            this.update([setting]);
+            return setting;
         } catch (err) {
             if (err instanceof APIStatusCodeError
                 && (err.key === 'SDK.Error.UnsupportedSetting'
@@ -144,11 +190,11 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Write a single setting
-    async setSetting(settingKey, value) {
+    async setSetting<Key extends SettingKey>(settingKey: Key, value: SettingValue<Key>): Promise<void> {
         try {
             this.requireSettings();
             this.requireRemoteControl();
-            await this.api.setSetting(this.haId, settingKey, value);
+            await this.api.setSetting<Key>(this.ha.haId, settingKey, value);
             this.update([{ key: settingKey, value: value }]);
         } catch (err) {
             throw logError(this.log, `SET ${settingKey}=${value}`, err);
@@ -156,18 +202,22 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read the list of all programs
-    async getAllPrograms() {
+    async getAllPrograms(): Promise<ProgramListKV[]> {
         try {
             this.requireMonitor();
-            let programs = await this.api.getPrograms(this.haId);
+            const programs = await this.api.getPrograms(this.ha.haId);
             if (programs.active?.key) {
                 this.update([{ key: 'BSH.Common.Root.ActiveProgram',
                     value: programs.active.key }]);
-                this.update(programs.active.options);
+                if (programs.active.options) {
+                    this.update(programs.active.options);
+                }
             } else if (programs.selected?.key) {
                 this.update([{ key: 'BSH.Common.Root.SelectedProgram',
                     value: programs.selected.key }]);
-                this.update(programs.selected.options);
+                if (programs.selected.options) {
+                    this.update(programs.selected.options);
+                }
             }
             return programs.programs;
         } catch (err) {
@@ -176,18 +226,22 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read the list of currently available programs
-    async getAvailablePrograms() {
+    async getAvailablePrograms(): Promise<ProgramListKV[]>  {
         try {
             this.requireMonitor();
-            let programs = await this.api.getAvailablePrograms(this.haId);
+            const programs = await this.api.getAvailablePrograms(this.ha.haId);
             if (programs.active?.key) {
                 this.update([{ key: 'BSH.Common.Root.ActiveProgram',
                     value: programs.active.key }]);
-                this.update(programs.active.options);
+                if (programs.active.options) {
+                    this.update(programs.active.options);
+                }
             } else if (programs.selected?.key) {
                 this.update([{ key: 'BSH.Common.Root.SelectedProgram',
                     value: programs.selected.key }]);
-                this.update(programs.selected.options);
+                if (programs.selected.options) {
+                    this.update(programs.selected.options);
+                }
             }
             return programs.programs;
         } catch (err) {
@@ -201,12 +255,11 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read the options for a currently available program
-    async getAvailableProgram(programKey) {
+    async getAvailableProgram<Key extends ProgramKey>(programKey: Key): Promise<ProgramDefinitionKV<Key>> {
         try {
             this.requireMonitor();
-            let program = await this.api.getAvailableProgram(this.haId,
-                                                             programKey);
-            if (program === undefined) throw new Error('Empty response');
+            const program = await this.api.getAvailableProgram(this.ha.haId,
+                                                               programKey);
             return program;
         } catch (err) {
             throw logError(this.log, `GET available program ${programKey}`, err);
@@ -214,15 +267,12 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read the currently selected program
-    async getSelectedProgram() {
+    async getSelectedProgram(): Promise<ProgramKV | null> {
         try {
             this.requireMonitor();
-            let program = await this.api.getSelectedProgram(this.haId);
-            if (program === undefined) throw new Error('Empty response');
-            this.update([{ key:   'BSH.Common.Root.SelectedProgram',
-                value: program.key }]);
-            if (this.getItem('BSH.Common.Status.OperationState')
-                === 'BSH.Common.EnumType.OperationState.Ready') {
+            const program = await this.api.getSelectedProgram(this.ha.haId);
+            this.update([{ key: 'BSH.Common.Root.SelectedProgram', value: program.key }]);
+            if (this.isOperationState('Ready') && program.options) {
                 // Only update options when no program is active
                 this.update(program.options);
             }
@@ -238,21 +288,14 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Select a program
-    async setSelectedProgram(programKey, options = {}) {
+    async setSelectedProgram(programKey: ProgramKey, options: OptionValues = {}): Promise<void> {
         try {
             this.requireControl();
             this.requireRemoteControl();
-            let programOptions = [];
-            for (let key of Object.keys(options)) {
-                programOptions.push({
-                    key:   key,
-                    value: options[key]
-                });
-            }
-            await this.api.setSelectedProgram(this.haId, programKey,
+            const programOptions = OptionsRecordToKV(options);
+            await this.api.setSelectedProgram(this.ha.haId, programKey,
                                               programOptions);
-            this.update([{ key:   'BSH.Common.Root.SelectedProgram',
-                value: programKey }]);
+            this.update([{ key: 'BSH.Common.Root.SelectedProgram', value: programKey }]);
             this.update(programOptions);
         } catch (err) {
             throw logError(this.log, `SET selected program ${programKey}`, err);
@@ -260,24 +303,21 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Read the currently active program (if any)
-    async getActiveProgram() {
+    async getActiveProgram(): Promise<ProgramKV | null> {
         try {
             // Only request the active program if one might be active
-            let inactiveStates = [
-                'BSH.Common.EnumType.OperationState.Inactive',
-                'BSH.Common.EnumType.OperationState.Ready'
-            ];
-            let operationState =
-                this.getItem('BSH.Common.Status.OperationState');
-            if (!inactiveStates.includes(operationState)) {
+            if (!this.isOperationState('Inactive', 'Ready')) {
                 this.requireMonitor();
-                let program = await this.api.getActiveProgram(this.haId);
+                const program = await this.api.getActiveProgram(this.ha.haId);
                 if (program === undefined) throw new Error('Empty response');
                 this.update([{ key:   'BSH.Common.Root.ActiveProgram',
                     value: program.key }]);
-                this.update(program.options);
+                if (program.options) {
+                    this.update(program.options);
+                }
                 return program;
             } else {
+                const operationState = this.getItem('BSH.Common.Status.OperationState');
                 this.log.debug(`Ignoring GET active program in ${operationState}`);
                 return null;
             }
@@ -292,23 +332,20 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Start a program
-    async startProgram(programKey, options = {}) {
+    async startProgram(programKey?: ProgramKey, options: OptionValues = {}) {
         try {
             this.requireControl();
             this.requireRemoteStart();
-            if (!programKey)
-                programKey = this.getItem('BSH.Common.Root.SelectedProgram');
-            let programOptions = [];
-            for (let key of Object.keys(options)) {
-                programOptions.push({
-                    key:   key,
-                    value: options[key]
-                });
+            if (programKey === undefined) {
+                // Start the selected program if none specified explicitly
+                const selected = this.getItem('BSH.Common.Root.SelectedProgram');
+                if (!selected) throw new Error('No program selected');
+                programKey = selected;
             }
-            await this.api.setActiveProgram(this.haId, programKey,
+            const programOptions = OptionsRecordToKV(options);
+            await this.api.setActiveProgram(this.ha.haId, programKey,
                                             programOptions);
-            this.update([{ key:   'BSH.Common.Root.ActiveProgram',
-                value: programKey }]);
+            this.update([{ key: 'BSH.Common.Root.ActiveProgram', value: programKey }]);
             this.update(programOptions);
         } catch (err) {
             throw logError(this.log, `START active program ${programKey}`, err);
@@ -316,22 +353,15 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Stop a program
-    async stopProgram() {
+    async stopProgram(): Promise<void> {
         try {
             // No action required unless a program is active
-            let activeStates = [
-                'BSH.Common.EnumType.OperationState.DelayedStart',
-                'BSH.Common.EnumType.OperationState.Run',
-                'BSH.Common.EnumType.OperationState.Pause',
-                'BSH.Common.EnumType.OperationState.ActionRequired'
-            ];
-            let operationState =
-                this.getItem('BSH.Common.Status.OperationState');
-            if (activeStates.includes(operationState)) {
+            if (this.isOperationState('DelayedStart', 'Run', 'Pause', 'ActionRequired')) {
                 this.requireControl();
                 this.requireRemoteControl();
-                await this.api.stopActiveProgram(this.haId);
+                await this.api.stopActiveProgram(this.ha.haId);
             } else {
+                const operationState = this.getItem('BSH.Common.Status.OperationState');
                 this.log.debug(`Ignoring STOP active program in ${operationState}`);
             }
         } catch (err) {
@@ -340,11 +370,10 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Get a list of supported commands
-    async getCommands() {
+    async getCommands(): Promise<CommandKV[]> {
         try {
             this.requireControl();
-            let commands = await this.api.getCommands(this.haId);
-            if (commands === undefined) throw new Error('Empty response');
+            const commands = await this.api.getCommands(this.ha.haId);
             return commands;
         } catch (err) {
             if (err instanceof APIStatusCodeError && err.key === '404') {
@@ -356,36 +385,36 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Pause or resume program
-    async pauseProgram(pause = true) {
-        let command = pause ? 'BSH.Common.Command.PauseProgram'
-                            : 'BSH.Common.Command.ResumeProgram';
+    async pauseProgram(pause: boolean = true): Promise<void> {
+        const command = pause ? 'BSH.Common.Command.PauseProgram'
+                              : 'BSH.Common.Command.ResumeProgram';
         try {
             this.requireControl();
             this.requireRemoteControl();
-            return await this.api.setCommand(this.haId, command);
+            return await this.api.setCommand(this.ha.haId, command);
         } catch (err) {
             throw logError(this.log, `COMMAND ${command}`, err);
         }
     }
 
     // Open or partly open door
-    async openDoor(fully = true) {
-        let command = fully ? 'BSH.Common.Command.OpenDoor'
-                            : 'BSH.Common.Command.PartlyOpenDoor';
+    async openDoor(fully: boolean = true): Promise<void> {
+        const command = fully ? 'BSH.Common.Command.OpenDoor'
+                              : 'BSH.Common.Command.PartlyOpenDoor';
         try {
             this.requireControl();
-            return await this.api.setCommand(this.haId, command);
+            return await this.api.setCommand(this.ha.haId, command);
         } catch (err) {
             throw logError(this.log, `COMMAND ${command}`, err);
         }
     }
 
     // Set a specific option of the active program
-    async setActiveProgramOption(optionKey, value) {
+    async setActiveProgramOption<Key extends OptionKey>(optionKey: Key, value: OptionValue<Key>): Promise<void> {
         try {
             this.requireControl();
             this.requireRemoteControl();
-            await this.api.setActiveProgramOption(this.haId, optionKey, value);
+            await this.api.setActiveProgramOption(this.ha.haId, optionKey, value);
             this.update([{ key: optionKey, value: value }]);
         } catch (err) {
             throw logError(this.log, `SET ${optionKey}=${value}`, err);
@@ -393,37 +422,26 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Wait for the appliance to be connected
-    waitConnected(immediate = false) {
-        // Check whether the appliance is already connected
-        if (immediate && this.getItem('connected'))
-            return Promise.resolve();
-
-        // Otherwise wait
-        return new Promise(resolve => {
-            // Listen for updates to the operation state
-            let listener = connected => {
-                if (connected) {
-                    this.off('connected', listener);
-                    resolve();
-                }
-            };
-            this.on('connected', listener);
-        });
+    async waitConnected(immediate: boolean = false): Promise<void> {
+        let connected = immediate && this.getItem('connected');
+        while (!connected) {
+            connected = await this.onceWait('connected');
+        }
     }
 
     // Wait for the appliance to enter specific states
-    waitOperationState(states, milliseconds) {
+    waitOperationState(states: OperationStateKey[], milliseconds?: number): Promise<void> {
         // Check whether the appliance is already in the target state
-        if (states.includes(this.getItem('BSH.Common.Status.OperationState')))
-            return Promise.resolve();
+        if (this.isOperationState(...states)) return Promise.resolve();
 
         // Otherwise wait
-        let listener;
-        return new Promise((resolve, reject) => {
+        let listener: (value: OperationState) => void;
+        return new Promise<void>((resolve, reject) => {
             // Listen for updates to the operation state
-            this.on('BSH.Common.Status.OperationState', operationState => {
-                if (states.includes(operationState)) resolve();
-            });
+            listener = () => {
+                if (this.isOperationState(...states)) resolve();
+            };
+            this.on('BSH.Common.Status.OperationState', listener);
 
             // Wait for the specified timeout, if any
             if (milliseconds !== undefined)
@@ -437,9 +455,9 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Workaround appliances not reliably indicating power state
-    inferPowerState() {
+    inferPowerState(): void {
         // Disable workaround for blackout period after power status updated
-        let blackoutScheduled;
+        let blackoutScheduled: NodeJS.Timeout | undefined;
         this.on('BSH.Common.Setting.PowerState', () => {
             clearTimeout(blackoutScheduled);
             blackoutScheduled = setTimeout(() => {
@@ -447,49 +465,34 @@ export class HomeConnectDevice extends EventEmitter {
             }, POWERSTATE_BLACKOUT * MS);
         });
 
-        //
-        this.on('BSH.Common.Status.OperationState', operationState => {
-            // Map operation state to power
-            let operationPowerMap = {
-                'BSH.Common.EnumType.OperationState.Inactive': false,
-                'BSH.Common.EnumType.OperationState.Ready':    true,
-                'BSH.Common.EnumType.OperationState.Run':      true
-            };
-            if (!(operationState in operationPowerMap)) return;
-            let operationImpliesOn = operationPowerMap[operationState];
-
-            // Map power to operation state
-            let powerState = this.getItem('BSH.Common.Setting.PowerState');
-            let stateIsOn = powerState === 'BSH.Common.EnumType.PowerState.On';
-
-            // Fake the power state if there is a mismatch
-            if (operationImpliesOn && !stateIsOn) {
+        // Fake the power state when the operation state changes
+        this.on('BSH.Common.Status.OperationState', () => {
+            const powerIsOn = this.getItem('BSH.Common.Setting.PowerState') === PowerState.On;
+            if (this.isOperationState('Ready', 'Run') && !powerIsOn) {
                 if (blackoutScheduled) {
                     this.log.debug('Operation state implies power is on (ignored)');
                 } else {
                     this.log.debug('Operation state implies power is on');
-                    this.update([{ key: 'BSH.Common.Setting.PowerState',
-                        value: 'BSH.Common.EnumType.PowerState.On' }]);
+                    this.update([{ key: 'BSH.Common.Setting.PowerState', value: PowerState.On }]);
                 }
-            } else if (!operationImpliesOn && stateIsOn) {
+            } else if (this.isOperationState('Inactive') && powerIsOn) {
                 this.log.debug('Operation state implies power is standby or off');
-                this.update([{ key: 'BSH.Common.Setting.PowerState',
-                    value: 'BSH.Common.EnumType.PowerState.Standby' }]);
+                this.update([{ key: 'BSH.Common.Setting.PowerState', value: PowerState.Standby }]);
             }
         });
     }
 
     // Update whether the appliance is currently reachable
-    setConnectedState(isConnected) {
+    setConnectedState(isConnected?: boolean): void {
         // Update the internal state immediately (if known)
-        if (isConnected !== undefined) this.connected = isConnected;
+        if (isConnected !== undefined) this.ha.connected = isConnected;
         if (isConnected === false) this.onDisconnected();
 
         // Only apply the most recent of multiple updates
         clearTimeout(this.setConnectedScheduled);
         this.setConnectedScheduled = setTimeout(() => {
             // Inform clients immediately when disconnected
-            if (!this.connected && this.getItem('connected') !== false) {
+            if (!this.ha.connected && this.getItem('connected') !== false) {
                 this.update([{ key: 'connected', value: false }]);
             }
 
@@ -499,7 +502,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Refresh appliance information when it reconnects (or connection unknown)
-    onConnected() {
+    onConnected(): void {
         // No action required if already reading (or read) appliance state
         if (this.readAllActions) return;
 
@@ -509,14 +512,14 @@ export class HomeConnectDevice extends EventEmitter {
             () => this.getStatus(),
             () => this.getSettings()
         ];
-        if (this.hasPrograms) this.readAllActions.push(
+        if (this.readPrograms) this.readAllActions.push(
             () => this.getSelectedProgram(),
             () => this.getActiveProgram()
         );
 
         // Schedule the pending reads
         if (!this.readAllScheduled) {
-            this.log.debug((this.connected ? 'Connected' : 'Might be connected')
+            this.log.debug((this.ha.connected ? 'Connected' : 'Might be connected')
                            + ', so reading appliance state...');
             this.readAllScheduled = setTimeout(() => this.readAll());
         } else {
@@ -525,7 +528,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Abort refreshing appliance information when it disconnects
-    onDisconnected() {
+    onDisconnected(): void {
         if (this.readAllActions && this.readAllActions.length) {
             this.log.debug(`Appliance disconnected; abandoning ${this.readAllActions.length} pending reads`);
         }
@@ -533,12 +536,12 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Attempt to read all appliance state when connected
-    async readAll() {
+    async readAll(): Promise<void> {
         try {
             // Attempt all pending reads
             while (this.readAllActions && this.readAllActions.length) {
                 // Careful to avoid losing action if error or array replaced
-                let actions = this.readAllActions;
+                const actions = this.readAllActions;
                 await actions[0]();
                 actions.shift();
             }
@@ -548,8 +551,8 @@ export class HomeConnectDevice extends EventEmitter {
             if (this.readAllActions) {
                 // Successfully read all appliance state
                 this.log.debug('Successfully read all appliance state');
-                delete this.api.readAllRetryDelay;
-                if (this.connected && !this.getItem('connected')) {
+                readAllRetryDelay = 0;
+                if (this.ha.connected && !this.getItem('connected')) {
                     this.update([{ key: 'connected', value: true }]);
                 }
             } else {
@@ -558,61 +561,65 @@ export class HomeConnectDevice extends EventEmitter {
             }
         } catch (err) {
             // Attempt to recover after an error
-            if (this.connected) {
+            if (this.ha.connected) {
                 logError(this.log, 'Reading appliance state (will retry)', err);
-                this.api.readAllRetryDelay =
-                    this.api.readAllRetryDelay
-                    ? Math.min(this.api.readAllRetryDelay
-                               * CONNECTED_RETRY_FACTOR,
-                               CONNECTED_RETRY_MAX_DELAY)
+                readAllRetryDelay =
+                    readAllRetryDelay
+                    ? Math.min(readAllRetryDelay * CONNECTED_RETRY_FACTOR, CONNECTED_RETRY_MAX_DELAY)
                     : CONNECTED_RETRY_MIN_DELAY;
                 this.log.debug('Still connected, so retrying appliance state'
-                             + ` read in ${this.api.readAllRetryDelay} seconds...`);
+                             + ` read in ${readAllRetryDelay} seconds...`);
                 this.readAllScheduled =
-                    setTimeout(() => this.readAll(),
-                               this.api.readAllRetryDelay * MS);
+                    setTimeout(() => this.readAll(), readAllRetryDelay * MS);
             } else {
-                this.log.debug(`Ignoring appliance state read due to disconnection: ${err.message}`);
+                this.log.debug(`Ignoring appliance state read due to disconnection: ${err}`);
                 delete this.readAllScheduled;
             }
         }
     }
 
+    // Test whether the current OperationState is one of the specified values
+    isOperationState(...states: OperationStateKey[]): boolean {
+        const operationState = this.getItem('BSH.Common.Status.OperationState');
+        return operationState !== undefined
+            && states.map(state => OperationState[state]).includes(operationState);
+    }
+
     // Ensure that the appliance is connected
-    requireConnected() {
-        if (!this.connected)
+    requireConnected(): void {
+        if (!this.ha.connected)
             throw new Error('The appliance is offline');
     }
 
     // Ensure that IdentifyAppliance scope has been authorised
-    requireIdentify() {
+    requireIdentify(): void {
         if (!this.api.hasScope('IdentifyAppliance'))
             throw new Error('IdentifyAppliance scope has not been authorised');
     }
 
     // Ensure that Monitor scope has been authorised
-    requireMonitor() {
+    requireMonitor(): void {
         if (!this.hasScope('Monitor'))
             throw new Error('Monitor scope has not been authorised');
         this.requireConnected();
     }
 
     // Ensure that Settings scope has been authorised
-    requireSettings() {
+    requireSettings(): void {
         if (!this.hasScope('Settings'))
             throw new Error('Settings scope has not been authorised');
         this.requireConnected();
     }
 
     // Ensure that Control scope has been authorised
-    requireControl() {
+    requireControl(): void {
         if (!this.hasScope('Control'))
             throw new Error('Control scope has not been authorised');
         this.requireConnected();
     }
 
     // Ensure that remote control is currently allowed
-    requireRemoteControl() {
+    requireRemoteControl(): void {
         if (this.getItem('BSH.Common.Status.LocalControlActive'))
             throw new Error('Appliance is being manually controlled locally');
         if (this.getItem('BSH.Common.Status.RemoteControlActive') === false)
@@ -620,7 +627,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Ensure that remote start is currently allowed
-    requireRemoteStart() {
+    requireRemoteStart(): void {
         this.requireRemoteControl();
         if (this.getItem('BSH.Common.Status.RemoteControlStartAllowed')
             === false)
@@ -628,20 +635,20 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Check whether a particular scope has been authorised
-    hasScope(scope) {
+    hasScope(scope: Scope): boolean {
         return this.api.hasScope(scope)
-            || this.api.hasScope(this.type + '-' + scope);
+            || this.api.hasScope(this.ha.type + '-' + scope);
     }
 
     // Enable polling of selected/active programs when connected
-    pollPrograms(enable = true) {
-        this.hasPrograms = enable;
+    pollPrograms(enable: boolean = true): void {
+        this.readPrograms = enable;
     }
 
     // Process received events
-    async processEvents() {
+    async processEvents(): Promise<void> {
         try {
-            for await (const event of this.api.getEvents(this.haId)) {
+            for await (const event of this.api.getEvents(this.ha.haId)) {
                 this.eventListener(event);
                 if (this.stopEvents) break;
             }
@@ -650,8 +657,10 @@ export class HomeConnectDevice extends EventEmitter {
         }
     }
 
-    eventListener(event) {
-        let itemCount = event.data?.items?.length || 0;
+    // Process a single received event
+    eventListener(event: EventKV): void {
+        const itemCount = 'data' in event && event.data !== ''
+                          ? (Array.isArray(event.data) ? event.data.length : 1) : 0;
         this.log.debug(`Event ${event.event} (${itemCount} items)`);
         switch (event.event) {
         case 'START':
@@ -691,14 +700,32 @@ export class HomeConnectDevice extends EventEmitter {
         case 'NOTIFY':
             this.update(event.data.items);
             break;
-        default:
-            logError(this.log, 'Event stream', new Error(`Unsupported type: ${event.event}`));
-            break;
         }
     }
 
     // Query the currently selected API language
-    getLanguage() {
+    getLanguage(): string {
         return this.api.language;
+    }
+
+    // Install a handler for a device key-value event
+    on<Key extends DeviceKey>(key: Key, listener: (value: DeviceValue<Key>) => void): this {
+        return super.on(key, listener);
+    }
+
+    // Uninstall a handler for a device key-value event
+    off<Key extends DeviceKey>(key: Key, listener: (value: DeviceValue<Key>) => void): this {
+        return super.off(key, listener);
+    }
+
+    // Wait (once) for a device key-value event
+    async onceWait<Key extends DeviceKey>(key: Key): Promise<DeviceValue<Key>> {
+        const [value] = await once(this, key);
+        return value;
+    }
+
+    // Emit an event
+    emit<Key extends DeviceKey>(key: Key, value: DeviceValue<Key>): boolean {
+        return super.emit(key, value);
     }
 }

@@ -2,6 +2,7 @@
 // Copyright © 2019-2023 Alexander Thoukydides
 
 import { logError, sleep } from './utils';
+import { PowerState } from './api-value-types';
 
 let Service, Characteristic;
 
@@ -117,11 +118,7 @@ module.exports = {
             if (activeKeys.length) {
                 // Check whether the appliance is in a suitable state
                 let problems = [];
-                const inactiveStates = [
-                    'BSH.Common.EnumType.OperationState.Inactive',
-                    'BSH.Common.EnumType.OperationState.Ready'
-                ];
-                if (!inactiveStates.includes(this.device.getItem('BSH.Common.Status.OperationState')))
+                if (!this.device.isOperationState('Inactive', 'Ready'))
                     problems.push('there is an active program');
 
                 if (this.device.getItem('BSH.Common.Status.LocalControlActive'))
@@ -238,13 +235,12 @@ module.exports = {
     async selectAndGetAvailableProgram(programKey) {
         // Switch the appliance on, if necessary
         let powerState = this.device.getItem('BSH.Common.Setting.PowerState');
-        if (powerState && powerState !== 'BSH.Common.EnumType.PowerState.On') {
+        if (powerState && powerState !== PowerState.On) {
             this.warn('Switching appliance on to read program options');
             await this.device.setSetting('BSH.Common.Setting.PowerState',
-                                         'BSH.Common.EnumType.PowerState.On');
+                                         PowerState.On);
             await sleep(READY_DELAY);
-            await this.device.waitOperationState(
-                ['BSH.Common.EnumType.OperationState.Ready'], READY_TIMEOUT);
+            await this.device.waitOperationState(['Ready'], READY_TIMEOUT);
             await sleep(READY_DELAY);
         }
 
@@ -274,8 +270,7 @@ module.exports = {
     // Ensure that the required program is selected and ready
     requireProgramReady(programKey) {
         // The appliance needs to be ready to read the program details reliably
-        if (this.device.getItem('BSH.Common.Status.OperationState')
-            !== 'BSH.Common.EnumType.OperationState.Ready')
+        if (!this.device.isOperationState('Ready'))
             throw new Error('Appliance is not ready'
                             + ' (switched on without an active program)');
 
@@ -510,13 +505,8 @@ module.exports = {
         };
         this.device.on('BSH.Common.Root.ActiveProgram',
                        programKey => update(programKey === key));
-        this.device.on('BSH.Common.Status.OperationState', operationState => {
-            const inactiveStates = [
-                'BSH.Common.EnumType.OperationState.Inactive',
-                'BSH.Common.EnumType.OperationState.Ready',
-                'BSH.Common.EnumType.OperationState.Finished'
-            ];
-            if (inactiveStates.includes(operationState)) update(false);
+        this.device.on('BSH.Common.Status.OperationState', () => {
+            if (this.device.isOperationState('Inactive', 'Ready', 'Finished')) update(false);
         });
 
         // Return the service
@@ -533,20 +523,12 @@ module.exports = {
                                Characteristic.Perms.NOTIFY]})
             .on('set', this.callbackify(async value => {
                 // Use pause and resume if supported in the current state
-                let state = this.device.getItem('BSH.Common.Status.OperationState');
-                const pauseStates = [
-                    'BSH.Common.EnumType.OperationState.DelayedStart',
-                    'BSH.Common.EnumType.OperationState.Run',
-                    'BSH.Common.EnumType.OperationState.ActionRequired'
-                ];
-                const resumeStates = [
-                    'BSH.Common.EnumType.OperationState.Pause'
-                ];
-                if (!value && supportsPause && pauseStates.includes(state)) {
+                if (!value && supportsPause
+                    && this.device.isOperationState('DelayedStart', 'Run', 'ActionRequired')) {
                     this.log('PAUSE Program');
                     await this.device.pauseProgram(true);
                 } else if (value && supportsResume
-                           && resumeStates.includes(state)) {
+                           && this.device.isOperationState('Pause')) {
                     this.log('RESUME Program');
                     await this.device.pauseProgram(false);
                 } else {
@@ -565,7 +547,7 @@ module.exports = {
 
             // Log details of each program
             let json = {
-                [this.device.haId]: {
+                [this.device.ha.haId]: {
                     programs:       this.programs.map(program => {
                         let config = {
                             name:   this.simpleName(program.name, program.key),
