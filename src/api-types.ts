@@ -119,8 +119,8 @@ export interface ProgramsWrapper {
 }
 export interface Programs {
     programs:                   ProgramList[];
-    selected?:                  Program;
-    active?:                    Program;
+    selected?:                  ProgramPartial;
+    active?:                    ProgramPartial;
 }
 export interface ProgramList {
     key:                        string;
@@ -138,7 +138,10 @@ type ProgramExecution = 'none' | 'selectonly' | 'startonly' | 'selectandstart';
 export interface ProgramWrapper {
     data:                       Program;
 }
-export interface Program {
+export interface Program extends ProgramPartial {
+    key:                        string;
+}
+export interface ProgramPartial {
     key?:                       string;
     name?:                      string;
     options?:                   Option[];
