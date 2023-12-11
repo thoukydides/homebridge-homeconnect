@@ -57,7 +57,9 @@ export class Serialised<Value extends SerialisedValue, Returns = void> {
     // Wait for any active operation to complete and start a new one
     async startPending(): Promise<Returns> {
         // Wait for any active operation to complete
-        await this.activePromise;
+        try {
+            await this.activePromise;
+        } catch (err) { /* empty */ }
         await setImmediateP();
 
         // Start the pending operation and reset ready for the next
@@ -66,9 +68,11 @@ export class Serialised<Value extends SerialisedValue, Returns = void> {
         this.pendingPromise = undefined;
 
         // Wait for the active operation to complete
-        const result = await this.activePromise;
-        this.activePromise = undefined;
-        return result;
+        try {
+            return await this.activePromise;
+        } finally {
+            this.activePromise = undefined;
+        }
     }
 
     // Start a new operation
