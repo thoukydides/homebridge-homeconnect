@@ -2,6 +2,7 @@ src
 .*
 nodemon.json
 tsconfig.json
+RELEASE_HEAD.md
 /*.js
 *~
 [#]*[#]
