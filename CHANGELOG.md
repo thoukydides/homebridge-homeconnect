@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* Significant rewrite of the main accessory logic that bridges between Homebridge and the Home Connect API.
+* Keys and values returned by the Home Connect API are checked against known and expected values. Any issues are written to the log, but otherwise ignored.
+* Configuration of program switches in the `config.json` file are checked more thoroughly, including the list of options and their values.
+* Various log messages have been changed due to the rewrite.
+* Updated dependencies.
 
 ## [v0.30.2] - 2023-11-30
 ### Fixed
@@ -11,22 +17,12 @@ All notable changes to this project will be documented in this file.
 ## [v0.30.1] - 2023-11-29
 ### Fixed
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Avoid implicitly updating the Power State if an explicit event was received. Also infer from a change to Power State `Off` or `Standby` that the appliance Operation State is `Inactive` if no event has been been received. (#181)
-### Changed
-* Updated dependencies.
 
 ## [v0.30.0] - 2023-11-10
 ### Fixed
 * Accept `selected` and/or `active` program details when requesting the list of supported or available programs. (#175)
 ### Changed
 * Dropped Node 14 compatibility.
-* Updated dependencies.
-
-## [v0.29.8] - 2023-10-23
-### Changed
-* Updated dependencies.
-
-## [v0.29.7] - 2023-08-29
-### Changed
 * Updated dependencies.
 
 ## [v0.29.6] - 2023-07-31
@@ -36,8 +32,6 @@ All notable changes to this project will be documented in this file.
 ## [v0.29.5] - 2023-07-03
 ### Fixed
 * Properly corrected display of authorisation URI in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). (#151)
-### Changed
-* Updated dependencies.
 
 ## [v0.29.4] - 2023-07-03
 ### Fixed
@@ -56,13 +50,11 @@ All notable changes to this project will be documented in this file.
 ## [v0.29.1] - 2023-04-24
 ### Fixed
 * Accept `null` as the `value` in events. (#144)
-### Changed
-* Updated dependencies.
 
 ## [v0.29.0] - 2023-04-20
 ### Added
 * **Freezer/FridgeFreezer:** Added on/off control of ice water dispenser. (#94 / #141)
-* Added Node 20 the supported engines.
+* Added Node 20 to the supported engines.
 ### Changed
 * Complete rewrite of the Home Connect API client. More rigorous checking is performed on requests submitted to and responses returned from the API, which should detect problems and new features quicker.
 * Authorisation of the Home Connect client is only attempted once at start-up. If the user does not complete the Device Flow interaction steps before the code expires (currently 10 minutes) then it is necessary to restart Homebridge to try again.
@@ -447,9 +439,7 @@ Copyright © 2019-2023 Alexander Thoukydides
 [Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.2...HEAD
 [v0.30.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.1...v0.30.2
 [v0.30.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.0...v0.30.1
-[v0.30.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.8...v0.30.0
-[v0.29.8]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.7...v0.29.8
-[v0.29.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.6...v0.29.7
+[v0.30.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.6...v0.30.0
 [v0.29.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.5...v0.29.6
 [v0.29.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.4...v0.29.5
 [v0.29.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.3...v0.29.4

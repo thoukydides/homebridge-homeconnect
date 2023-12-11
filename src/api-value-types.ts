@@ -273,7 +273,7 @@ export type WasherTemperature =
   | 'LaundryCare.Washer.EnumType.Temperature.UlExtraHot';
 
 // State enumerated types
-export enum BatteryCharginState {
+export enum BatteryChargingState {
     Discharging             = 'BSH.Common.EnumType.BatteryChargingState.Discharging',
     Charging                = 'BSH.Common.EnumType.BatteryChargingState.Charging'
 }
@@ -495,7 +495,7 @@ export interface OptionValues {
 
 // Statuses
 export interface StatusValues {
-    'BSH.Common.Status.BatteryChargingState'?:                              BatteryCharginState;
+    'BSH.Common.Status.BatteryChargingState'?:                              BatteryChargingState;
     'BSH.Common.Status.BatteryLevel'?:                                      number;
     'BSH.Common.Status.ChargingConnection'?:                                ChargingConnection;
     'BSH.Common.Status.DoorState'?:                                         DoorState;

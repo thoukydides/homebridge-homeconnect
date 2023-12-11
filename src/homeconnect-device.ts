@@ -7,7 +7,7 @@ import { EventEmitter } from 'events';
 import { once } from 'node:events';
 
 import { APIStatusCodeError } from './api-errors';
-import { logError } from './utils';
+import { MS, logError } from './utils';
 import { HomeConnectAPI } from './api';
 import { HomeAppliance } from './api-types';
 import { OperationState, OptionValues, PowerState, ProgramKey } from './api-value-types';
@@ -17,18 +17,16 @@ import { CommandKV, EventKey, EventKV, EventValue, KVKey, KVValue, OptionKey,
 import { Scope } from './api-auth-types';
 
 // Minimum event stream interruption before treated as appliance disconnected
-const EVENT_DISCONNECT_DELAY = 3;           // (seconds)
+const EVENT_DISCONNECT_DELAY = 3 * MS;
 
 // Delay before retrying a failed read of appliance state when connected
-let readAllRetryDelay: number = 0;          // (seconds)
-const CONNECTED_RETRY_MIN_DELAY = 5;        // (seconds)
-const CONNECTED_RETRY_MAX_DELAY = 10 * 60;  // (seconds)
-const CONNECTED_RETRY_FACTOR = 2;           // (double delay on each retry)
+let readAllRetryDelay: number = 0; // (milliseconds)
+const CONNECTED_RETRY_MIN_DELAY =       5 * MS;
+const CONNECTED_RETRY_MAX_DELAY = 10 * 60 * MS;
+const CONNECTED_RETRY_FACTOR = 2;  // (double delay on each retry)
 
 // Blackout period for workaround implicitly setting power state
-const POWERSTATE_BLACKOUT = 2;              // (seconds)
-
-const MS = 1000;
+const POWERSTATE_BLACKOUT = 2 * MS;
 
 // All key-value pairs that can be get/set or included in events
 interface DeviceExtraValues {
@@ -65,14 +63,14 @@ export class HomeConnectDevice extends EventEmitter {
     private stopEvents: boolean = false;
 
     // Avoid multiple connection status updates in same poll cycle
-    private setConnectedScheduled?: NodeJS.Timeout;
+    private setConnectedScheduled?: ReturnType<typeof setImmediate>;
 
     // Treat extened event stream outage as an appliance disconnect
-    private stopScheduled?: NodeJS.Timeout;
+    private stopScheduled?: ReturnType<typeof setTimeout>;
 
     // Pending actions to read appliance state when (re)connected
     private readAllActions?: (() => void)[];
-    private readAllScheduled?: NodeJS.Timeout;
+    private readAllScheduled?: ReturnType<typeof setTimeout>;
     private readPrograms?: boolean;
 
     // Create a new API object
@@ -81,7 +79,8 @@ export class HomeConnectDevice extends EventEmitter {
         readonly api:   HomeConnectAPI,
         readonly ha:    HomeAppliance
     ) {
-        super();
+        super({ captureRejections: true });
+        super.on('error', err => logError(this.log, 'Device event', err));
 
         // Initial device state
         this.setConnectedState(this.ha.connected);
@@ -116,10 +115,10 @@ export class HomeConnectDevice extends EventEmitter {
     // Update cached values and notify listeners
     update<Key extends DeviceKey>(items: Item<Key>[]): void {
         // Update cached state for all items before notifying any listeners
-        items.forEach(item => Object.assign(this.items, { [item.key]: item }));
+        for (const item of items) Object.assign(this.items, { [item.key]: item });
 
         // Notify listeners for each item
-        items.forEach(item => {
+        for (const item of items) {
             const description = this.describe(item);
             this.log.debug(`${description} (${this.listenerCount(item.key)} listeners)`);
             try {
@@ -127,7 +126,7 @@ export class HomeConnectDevice extends EventEmitter {
             } catch (err) {
                 logError(this.log, `Update emit ${description}`, err);
             }
-        });
+        }
     }
 
     // Get a cached item's value
@@ -457,12 +456,12 @@ export class HomeConnectDevice extends EventEmitter {
     // Workaround appliances not reliably indicating power state
     inferPowerState(): void {
         // Disable workaround for blackout period after power status updated
-        let blackoutScheduled: NodeJS.Timeout | undefined;
+        let blackoutScheduled: ReturnType<typeof setTimeout> | undefined;
         this.on('BSH.Common.Setting.PowerState', () => {
             clearTimeout(blackoutScheduled);
             blackoutScheduled = setTimeout(() => {
                 blackoutScheduled = undefined;
-            }, POWERSTATE_BLACKOUT * MS);
+            }, POWERSTATE_BLACKOUT);
         });
 
         // Fake the power state when the operation state changes
@@ -489,8 +488,8 @@ export class HomeConnectDevice extends EventEmitter {
         if (isConnected === false) this.onDisconnected();
 
         // Only apply the most recent of multiple updates
-        clearTimeout(this.setConnectedScheduled);
-        this.setConnectedScheduled = setTimeout(() => {
+        clearImmediate(this.setConnectedScheduled);
+        this.setConnectedScheduled = setImmediate(() => {
             // Inform clients immediately when disconnected
             if (!this.ha.connected && this.getItem('connected') !== false) {
                 this.update([{ key: 'connected', value: false }]);
@@ -570,7 +569,7 @@ export class HomeConnectDevice extends EventEmitter {
                 this.log.debug('Still connected, so retrying appliance state'
                              + ` read in ${readAllRetryDelay} seconds...`);
                 this.readAllScheduled =
-                    setTimeout(() => this.readAll(), readAllRetryDelay * MS);
+                    setTimeout(() => this.readAll(), readAllRetryDelay);
             } else {
                 this.log.debug(`Ignoring appliance state read due to disconnection: ${err}`);
                 delete this.readAllScheduled;
@@ -674,7 +673,7 @@ export class HomeConnectDevice extends EventEmitter {
                 this.log.debug('Events may have been missed;'
                              + ' treating appliance as disconnected');
                 this.setConnectedState(false);
-            }, event.err ? 0 : EVENT_DISCONNECT_DELAY * MS);
+            }, event.err ? 0 : EVENT_DISCONNECT_DELAY);
             break;
         case 'PAIRED':
             // Check status if an appliance is added back to the account

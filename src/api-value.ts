@@ -14,7 +14,7 @@ import { Command, ConstraintsCommon, EventApplianceConnection,
          Programs, Setting, SettingCommon, Status, StatusCommon, Value } from './api-types';
 import { APIEvent, EventStart, EventStop } from './api-events';
 import valuesTI from './ti/api-value-types-ti';
-import { getValidationTree } from './utils';
+import { MS, getValidationTree } from './utils';
 
 // Checkers for API responses
 const checkers = createCheckers(valuesTI);
@@ -41,11 +41,11 @@ export type EventValue<Key, Event extends EventMapKey = EventMapKey> =
 // Strongly typed constraints
 interface ConstraintsForType<Type> extends ConstraintsCommon {
     default?:       Type;
-    min?:           MapValueType<Type, Type,  never, never, never>;
-    max?:           MapValueType<Type, Type,  never, never, never>;
-    stepsize?:      MapValueType<Type, Type,  never, never, never>;
-    allowedvalues?: MapValueType<Type, never, never, never, Array<Type>>;
-    displayvalues?: MapValueType<Type, never, never, never, Array<Type>>;
+    min?:           MapValueType<Type, number,  never, never, never>;
+    max?:           MapValueType<Type, number,  never, never, never>;
+    stepsize?:      MapValueType<Type, number,  never, never, never>;
+    allowedvalues?: MapValueType<Type, never,   never, never, Array<Type>>;
+    displayvalues?: MapValueType<Type, never,   never, never, Array<string>>;
 }
 type MapValueType<Type, IsNumber, IsBoolean, IsString, IsEnum> =
     Type extends number ? IsNumber
@@ -129,7 +129,7 @@ export type EventDataKV<EventU extends EventMapKey = EventMapKey, KeyU extends E
 } }[KeyU] }[EventU] & EventData;
 
 // Minimum interval between reporting unrecognised keys
-const REPORT_INTERVAL = 24 * 60 * 60 * 1000; // (24 hours in milliseconds)
+const REPORT_INTERVAL = 24 * 60 * 60 * MS; // (24 hours in milliseconds)
 
 // Home Connect key-value type checkers
 export class APICheckValues {
@@ -271,9 +271,9 @@ export class APICheckValues {
     logValidation(level: LogLevel, message: string, name: string, json: object,
                   details: string[]): void {
         this.log.log(level, `${message} in Home Connect API:`);
-        details.forEach(line => this.log.log(level, `    ${line}`));
+        for (const line of details) this.log.log(level, `    ${line}`);
         this.log.debug(`Received ${name} (reformatted)`);
         const jsonLines = JSON.stringify(json, null, 4).split('\n');
-        jsonLines.forEach(line => this.log.debug(`    ${line}`));
+        for (const line of jsonLines) this.log.debug(`    ${line}`);
     }
 }

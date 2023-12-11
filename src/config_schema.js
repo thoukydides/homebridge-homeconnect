@@ -3,10 +3,12 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import HomeConnectLanguages from './homeconnect_languages.json';
 import { join } from 'path';
 import { promises } from 'fs';
-import { sleep } from './utils';
+import { setTimeout as setTimeoutP } from 'timers/promises';
+
+import HomeConnectLanguages from './homeconnect_languages.json';
+import { MS } from './utils';
 
 // Platform identifier (must match index.js)
 const PLATFORM_NAME = 'HomeConnect';
@@ -23,7 +25,7 @@ const FOOTER = '© 2019-2021 [Alexander Thoukydides](https://www.thouky.co.uk/)'
 const MAX_ENUM_STEPS = 18;
 
 // Delay before writing the schema to allow multiple updates to be applied
-const WRITE_DELAY = 3 * 1000; // (milliseconds)
+const WRITE_DELAY = 3 * MS;
 
 // Schema generator for the Homebridge config.json configuration file
 export class ConfigSchema {
@@ -53,7 +55,7 @@ export class ConfigSchema {
 
         // Expire the authorisation URI
         if (uri !== null && uri.expires) {
-            await sleep(uri.expires - Date.now());
+            await setTimeoutP(uri.expires - Date.now());
             this.authorisation = false;
             this.writeSchema();
         }
@@ -275,7 +277,7 @@ export class ConfigSchema {
             // Add the superset of all program options to the schema
             let optionsSchema = {};
             for (let program of programs) {
-                for (let option of program.options || []) {
+                for (let option of program.options ?? []) {
                     let optionSchema = optionsSchema[option.key];
                     if (!optionSchema) {
                         optionSchema = optionsSchema[option.key] = {
@@ -324,7 +326,7 @@ export class ConfigSchema {
                                        + '.key == "' + program.key + '"';
 
                 // Add form items to customise the schema for this program
-                for (let option of program.options || []) {
+                for (let option of program.options ?? []) {
                     let schemaKey =
                         keyArrayPrefix + ".options.['" + option.key + "']";
                     let formOption = {
@@ -392,7 +394,7 @@ export class ConfigSchema {
                 }
 
                 // Add form items to remove options unsupported by this program
-                let supported = (program.options || [])
+                let supported = (program.options ?? [])
                     .map(option => option.key);
                 let unsupported = Object.keys(optionsSchema)
                     .filter(key => !supported.includes(key));

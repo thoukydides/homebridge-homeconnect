@@ -4,20 +4,21 @@
 import { create } from 'node-persist';
 import { join } from 'path';
 import { satisfies, coerce } from 'semver';
+import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { HomeConnectAPI } from './api';
 import { HomeConnectDevice } from './homeconnect-device';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
-         ApplianceWasher, ApplianceWasherDryer } from './appliance_cleaning';
+         ApplianceWasher, ApplianceWasherDryer } from './appliance-cleaning';
 import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
-         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance_cooking';
+         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance-cooking';
 import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
-         ApplianceWineCooler } from './appliance_cooling';
+         ApplianceWineCooler } from './appliance-cooling';
 import { ConfigSchema } from './config_schema';
 import { PACKAGE, PLUGIN_NAME, PLUGIN_VERSION, PLATFORM_NAME,
          REQUIRED_HOMEBRIDGE_API } from './settings';
 import { PrefixLogger } from './logger';
-import { sleep } from './utils';
+import { MS } from './utils';
 
 let UUID;
 
@@ -26,7 +27,7 @@ const HAP_REQUIRED = '>=0.9.0';
 
 // Interval between updating the list of appliances
 // (only 1000 API calls allowed per day, so only check once an hour)
-const UPDATE_APPLIANCES_DELAY = 60 * 60 * 1000; // (milliseconds)
+const UPDATE_APPLIANCES_DELAY = 60 * 60 * MS;
 
 // A Homebridge HomeConnect platform
 export class HomeConnectPlatform {
@@ -129,7 +130,7 @@ export class HomeConnectPlatform {
                 this.log.error('Failed to read list of'
                                + ' home appliances: ' + err);
             }
-            await sleep(UPDATE_APPLIANCES_DELAY);
+            await setTimeoutP(UPDATE_APPLIANCES_DELAY);
         }
     }
 
@@ -140,7 +141,7 @@ export class HomeConnectPlatform {
 
         // Add a Homebridge accessory for each new appliance
         let newAccessories = [];
-        appliances.forEach(ha => {
+        for (const ha of appliances) {
             // Select a constructor for this appliance
             let applianceConstructor = {
                 // Cooking appliances
@@ -195,13 +196,13 @@ export class HomeConnectPlatform {
             } catch (err) {
                 this.log.error('Failed to initialise accessory: ' + err);
             }
-        });
+        }
         this.homebridge.registerPlatformAccessories(
             PLUGIN_NAME, PLATFORM_NAME, newAccessories);
 
         // Delete accessories for which there is no matching appliance
         let oldAccessories = [];
-        Object.keys(this.accessories).forEach(uuid => {
+        for (const uuid of Object.keys(this.accessories)) {
             let accessory = this.accessories[uuid];
             if (!appliances.some(ha => { return ha.uuid === uuid; })) {
                 this.log.info("Removing accessory '"
@@ -210,7 +211,7 @@ export class HomeConnectPlatform {
                 oldAccessories.push(accessory);
                 delete this.accessories[uuid];
             }
-        });
+        }
         this.homebridge.unregisterPlatformAccessories(
             PLUGIN_NAME, PLATFORM_NAME, oldAccessories);
     }

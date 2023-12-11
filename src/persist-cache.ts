@@ -2,9 +2,11 @@
 // Copyright © 2019-2023 Alexander Thoukydides
 
 import { Logger } from 'homebridge';
-import { LocalStorage } from 'node-persist';
 
-import { formatDuration, immediate, logError } from './utils';
+import { LocalStorage } from 'node-persist';
+import { setImmediate as setImmediateP } from 'timers/promises';
+
+import { MS, formatMilliseconds, logError } from './utils';
 
 // An individual cache entry
 interface CacheItem {
@@ -30,7 +32,7 @@ export class PersistCache {
     private cache: Record<string, CacheItem> = {};
 
     // Length of time before values in the cache expire
-    private readonly ttl = 24 * 60 * 60 * 1000; // (24 hours in milliseconds)
+    private readonly ttl = 24 * 60 * 60 * MS; // (24 hours in milliseconds)
 
     // Initialise a cache
     constructor(
@@ -44,11 +46,11 @@ export class PersistCache {
     }
 
     // Retrieve an item from the cache
-    async get(key: string): Promise<unknown | undefined> {
+    async get<Type>(key: string): Promise<Type | undefined> {
         await this.initialised;
         const item = this.cache[key];
         if (!item) return;
-        return item.value;
+        return item.value as Type;
     }
 
     // Check whether an item in the cache has expired (or is missing)
@@ -61,7 +63,7 @@ export class PersistCache {
             expired = ' does not exist in cache';
         } else {
             const age = Date.now() - item.updated;
-            description += ` [${item.preferred}, updated ${formatDuration(age)} ago]`;
+            description += ` [${item.preferred}, updated ${formatMilliseconds(age)} ago]`;
             if (item.preferred !== this.preferred) {
                 expired = ` does not match preference ${this.preferred}`;
             } else if (this.ttl < age) {
@@ -105,7 +107,7 @@ export class PersistCache {
         if (!this.pendingSave) {
             const doSave = async () => {
                 if (this.saving) await this.saving;
-                await immediate();
+                await setImmediateP();
                 this.saving = this.pendingSave;
                 this.pendingSave = undefined;
                 await this.saveDeferred();

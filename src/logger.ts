@@ -5,8 +5,9 @@ import { Logger, LogLevel } from 'homebridge';
 
 import { createCheckers, CheckerT } from 'ts-interface-checker';
 
-import tokensTI from './ti/token-types-ti';
 import { AccessTokenHeader, AccessTokenPayload, RefreshToken, SimulatorToken } from './token-types';
+import { MS } from './utils';
+import tokensTI from './ti/token-types-ti';
 
 // Checkers for token types
 const checkers = createCheckers(tokensTI) as {
@@ -42,7 +43,7 @@ export class PrefixLogger {
 
         // Log each line of the message
         const prefix = this.prefix?.length ? `[${this.prefix}] ` : '';
-        message.split('\n').forEach(line => this.logger.log(level, prefix + line));
+        for (const line of message.split('\n')) this.logger.log(level, prefix + line);
     }
 
     // Log all DEBUG messages as INFO to avoid being dropped by Homebridge
@@ -90,8 +91,8 @@ function maskAccessToken(token: string): string {
         if (checkers.AccessTokenHeader.test(header)
          && checkers.AccessTokenPayload.test(payload)) {
             return maskToken('ACCESS_TOKEN', token, {
-                issued:     new Date(payload.iat * 1000).toISOString(),
-                expires:    new Date(payload.exp * 1000).toISOString(),
+                issued:     new Date(payload.iat * MS).toISOString(),
+                expires:    new Date(payload.exp * MS).toISOString(),
                 scopes:     payload.scope.join('/')
             });
         }

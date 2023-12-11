@@ -6,6 +6,7 @@ import { Logger, LogLevel } from 'homebridge';
 import { LocalStorage } from 'node-persist';
 import { bold, greenBright } from 'chalk';
 import { CheckerT, createCheckers } from 'ts-interface-checker';
+import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { AbsoluteToken, PersistAbsoluteTokens, AuthorisationError,
          AccessTokenRefreshRequest, AccessTokenRefreshResponse,
@@ -14,7 +15,7 @@ import { AbsoluteToken, PersistAbsoluteTokens, AuthorisationError,
          DeviceAccessTokenRequest, DeviceAccessTokenResponse,
          DeviceAuthorisationRequest, DeviceAuthorisationResponse } from './api-auth-types';
 import { APIUserAgent, Method, Request } from './api-ua';
-import { assertIsDefined, Copy, formatDuration, logError, sleep } from './utils';
+import { assertIsDefined, Copy, formatMilliseconds, formatSeconds, logError, MS } from './utils';
 import { APIAuthorisationError, APIError, APIStatusCodeError } from './api-errors';
 import { Config } from './config-types';
 import { API_SCOPES } from './settings';
@@ -41,15 +42,15 @@ const checkersT = checkers as {
 export class APIAuthoriseUserAgent extends APIUserAgent {
 
     // Time before token expiry to request a refresh
-    private readonly refreshWindow =  60 * 60 * 1000; // (milliseconds)
+    private readonly refreshWindow =  60 * 60 * MS;
 
     // Delay between retrying failed authorisation operations
-    private readonly refreshRetryDelay =    6 * 1000; // (milliseconds)
-    private readonly pollPersistDelay =     3 * 1000; // (milliseconds)
+    private readonly refreshRetryDelay =    6 * MS;
+    private readonly pollPersistDelay =     3 * MS;
 
     // Device Flow polling (normally set by API response) and prompt logging
-    private deviceFlowPollInterval =        5 * 1000; // (milliseconds)
-    private deviceFlowLogInterval =        12 * 1000; // (milliseconds)
+    private deviceFlowPollInterval =        5 * MS;
+    private deviceFlowLogInterval =        12 * MS;
 
     // Promise that is resolved by successful authorisation (or token refresh)
     private isAuthorised!:          Promise<void>;
@@ -114,7 +115,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
                 };
             });
             const expiresIn = this.token.accessExpires - Date.now();
-            await Promise.race([sleep(expiresIn - this.refreshWindow), refreshNow]);
+            await Promise.race([setTimeoutP(expiresIn - this.refreshWindow), refreshNow]);
 
             // Refresh the token
             this.log.info('Refreshing access token');
@@ -175,7 +176,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
                 return;
             } catch (cause) {
                 logError(this.log, 'API token refresh', cause);
-                await sleep(this.refreshRetryDelay);
+                await setTimeoutP(this.refreshRetryDelay);
             }
         }
     }
@@ -195,7 +196,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     async watchToken(oldToken?: AbsoluteToken): Promise<void> {
         let token: AbsoluteToken | undefined;
         while (!token || token.accessToken === oldToken?.accessToken) {
-            await sleep(this.pollPersistDelay);
+            await setTimeoutP(this.pollPersistDelay);
             try { token = await this.getSavedToken(); } catch { /* empty */ }
         }
     }
@@ -204,13 +205,13 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     async saveToken(newToken: AccessTokenResponse | DeviceAccessTokenResponse | AccessTokenRefreshResponse) {
         this.log.debug(`Refresh token ${newToken.refresh_token}`);
         this.log.debug(`Access token  ${newToken.access_token}`
-                   + ` (expires in ${formatDuration(newToken.expires_in * 1000)})`);
+                   + ` (expires in ${formatSeconds(newToken.expires_in)})`);
 
         // Convert the token to storage format, with an absolute expiry time
         this.token = {
             refreshToken:   newToken.refresh_token,
             accessToken:    newToken.access_token,
-            accessExpires:  Date.now() + newToken.expires_in * 1000,
+            accessExpires:  Date.now() + newToken.expires_in * MS,
             scopes:         newToken.scope.split(' ')
         };
 
@@ -252,34 +253,34 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     async deviceFlow(): Promise<DeviceAccessTokenResponse> {
         // Obtain verification URI, using defaults for any missing parameters
         const response = await this.deviceAuthorisationRequest();
-        if (response.interval) this.deviceFlowPollInterval = response.interval * 1000;
+        if (response.interval) this.deviceFlowPollInterval = response.interval * MS;
 
         // Provide the verification URI to any other interested party
         const uri: AuthorisationURI = response.verification_uri_complete
             ? { uri: response.verification_uri_complete }
             : { uri: response.verification_uri, code: response.user_code };
-        if (response.expires_in) uri.expires = Date.now() + response.expires_in * 1000;
+        if (response.expires_in) uri.expires = Date.now() + response.expires_in * MS;
         this.setAuthorisationURI(uri);
 
         // Display the verification URI in the log file
         let displayPrompts = true;
         const logPrompt = async () => {
             while (displayPrompts) {
-                const expiry = uri.expires ? ` within ${formatDuration(uri.expires - Date.now())}` : '';
+                const expiry = uri.expires ? ` within ${formatMilliseconds(uri.expires - Date.now())}` : '';
                 this.log.info(greenBright(`Please authorise access to your appliances${expiry}`
                                           + ' using the associated Home Connect or SingleKey ID'
                                           + ' email address by visiting:'));
                 this.log.info(response.verification_uri_complete
                     ? greenBright(`    ${bold(response.verification_uri_complete)}`)
                     : greenBright(`    ${bold(response.verification_uri)} and enter code ${bold(response.user_code)}`));
-                await sleep(this.deviceFlowLogInterval);
+                await setTimeoutP(this.deviceFlowLogInterval);
             }
         };
 
         // Wait for the user to authorise access (or expiry of device code)
         this.log.debug('Waiting for completion of Home Connect authorisation'
-                     + ` (poll every ${formatDuration(this.deviceFlowPollInterval)},`
-                     + (response.expires_in ? ` expires in ${formatDuration(response.expires_in * 1000)},` : '')
+                     + ` (poll every ${formatMilliseconds(this.deviceFlowPollInterval)},`
+                     + (response.expires_in ? ` expires in ${formatSeconds(response.expires_in)},` : '')
                      + ` device code ${response.device_code})...`);
         try {
             logPrompt();

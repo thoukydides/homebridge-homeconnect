@@ -8,7 +8,7 @@ import { CheckerT, createCheckers } from 'ts-interface-checker';
 
 import { Event } from './api-types';
 import { APIAuthoriseUserAgent } from './api-ua-auth';
-import { formatDuration, logError } from './utils';
+import { formatMilliseconds, logError } from './utils';
 import { APIEventStreamError, APIValidationError } from './api-errors';
 import { Request, Response, SSE } from './api-ua';
 import apiTI from './ti/api-types-ti';
@@ -50,7 +50,7 @@ export class APIEventStream extends EventEmitter {
                           : '/api/homeappliances/events';
         for (;;) {
             const startTime = Date.now();
-            const elapsed = () => formatDuration(Date.now() - startTime);
+            const elapsed = () => formatMilliseconds(Date.now() - startTime);
             try {
 
                 // Start the event stream

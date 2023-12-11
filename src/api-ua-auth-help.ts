@@ -86,7 +86,7 @@ export function deviceFlowHelp(log: Logger, err: unknown, clientid: string) {
     }
     if (editClient || newClient) {
         log.warn('Ensure that the application settings are configured as follows:');
-        columns(Object.entries(ensureClient)).forEach(line => log.warn(`    ${line}`));
+        for (const line of columns(Object.entries(ensureClient))) log.warn(`    ${line}`);
     }
     if (newClient || setClient) {
         log.warn('Accurately copy the Client ID value (64 hexadecimal characters)'

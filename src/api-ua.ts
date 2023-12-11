@@ -8,10 +8,11 @@ import { Client, Dispatcher } from 'undici';
 import { IncomingHttpHeaders } from 'undici/types/header';
 import { Checker, IErrorDetail } from 'ts-interface-checker';
 import querystring, { ParsedUrlQueryInput } from 'node:querystring';
+import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
 import { APIError, APIStatusCodeError, APIValidationError } from './api-errors';
-import { columns, formatDuration, getValidationTree, sleep } from './utils';
+import { columns, formatMilliseconds, getValidationTree, MS } from './utils';
 import { Config } from './config-types';
 
 export type Method     = Dispatcher.HttpMethod;
@@ -37,10 +38,10 @@ export class APIUserAgent {
     readonly url: string;
 
     // Default timeout applied to most requests
-    private readonly requestTimeout =     20 * 1000; // milliseconds
+    private readonly requestTimeout =     20 * MS;
 
     // Timeout applied to event stream, must be > 55 second keep-alive
-    private readonly streamTimeout =  2 * 60 * 1000; // milliseconds
+    private readonly streamTimeout =  2 * 60 * MS;
 
     // Default headers to include in all requests
     private readonly defaultHeaders: Headers;
@@ -237,9 +238,9 @@ export class APIUserAgent {
                 // Apply rate limiting
                 const retryDelay = this.retryDelay;
                 if (0 < retryDelay) {
-                    this.log.log(retryDelay < 10 * 1000 ? LogLevel.DEBUG : LogLevel.WARN,
-                                 `Waiting ${formatDuration(retryDelay)} before issuing Home Connect API request`);
-                    await sleep(retryDelay);
+                    this.log.log(retryDelay < 10 * MS ? LogLevel.DEBUG : LogLevel.WARN,
+                                 `Waiting ${formatMilliseconds(retryDelay)} before issuing Home Connect API request`);
+                    await setTimeoutP(retryDelay);
                 }
 
                 // Attempt the request
@@ -277,7 +278,7 @@ export class APIUserAgent {
         if (err instanceof APIStatusCodeError
             && err.response?.statusCode === 429
             && err.response.headers['retry-after']) {
-            this.retryDelay = Number(err.response.headers['retry-after']) * 1000;
+            this.retryDelay = Number(err.response.headers['retry-after']) * MS;
         }
 
         // Some status codes are never retried
@@ -362,15 +363,15 @@ export class APIUserAgent {
     logHeaders(name: string, headers: Headers): void {
         if (!this.config.debug?.includes('Log API Headers')) return;
         const rows: string[][] = [];
-        Object.keys(headers).sort().forEach(key => {
+        for (const key of Object.keys(headers).sort()) {
             const values = headers[key];
             if (typeof values === 'string') rows.push([`${key}:`, values]);
             else if (Array.isArray(values)) {
-                values?.forEach(value => rows.push([`${key}:`, value]));
+                for (const value of values) rows.push([`${key}:`, value]);
             }
-        });
+        }
         this.log.debug(`${name} headers:`);
-        columns(rows).forEach(line => this.log.debug(`    ${line}`));
+        for (const line of columns(rows)) this.log.debug(`    ${line}`);
     }
 
     // Log request or response body
@@ -379,7 +380,7 @@ export class APIUserAgent {
         if (typeof body !== 'string') return;
         if (body?.length) {
             this.log.debug(`${name} body:`);
-            body.split('\n').forEach(line => this.log.debug(`    ${line}`));
+            for (const line of body.split('\n')) this.log.debug(`    ${line}`);
         } else {
             this.log.debug(`${name} body: EMPTY`);
         }
@@ -391,9 +392,9 @@ export class APIUserAgent {
         this.log.log(level, `${message}:`);
         if (request) this.log.log(level, `${request.method} ${request.path}`);
         const validationLines = getValidationTree(errors);
-        validationLines.forEach((line: string) => this.log.log(level, line));
+        for (const line of validationLines) this.log.log(level, line);
         this.log.debug('Received response (reformatted):');
         const jsonLines = JSON.stringify(json, null, 4).split('\n');
-        jsonLines.forEach(line => this.log.debug(`    ${line}`));
+        for (const line of jsonLines) this.log.debug(`    ${line}`);
     }
 }
