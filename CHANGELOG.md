@@ -3,10 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.31.0] - 2023-12-13
 ### Changed
 * Significant rewrite of the main accessory logic that bridges between Homebridge and the Home Connect API.
 * Keys and values returned by the Home Connect API are checked against known and expected values. Any issues are written to the log, but otherwise ignored.
-* Configuration of program switches in the `config.json` file are checked more thoroughly, including the list of options and their values.
+* The validity of the `config.json` plugin configuration is checked more thoroughly.
 * Various log messages have been changed due to the rewrite.
 * Updated dependencies.
 
@@ -436,7 +438,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.31.0...HEAD
+[v0.31.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.2...v0.31.0
 [v0.30.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.1...v0.30.2
 [v0.30.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.0...v0.30.1
 [v0.30.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.29.6...v0.30.0
