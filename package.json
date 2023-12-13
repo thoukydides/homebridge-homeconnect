@@ -82,7 +82,7 @@
         "lint": "npm run checkers && eslint src/**.ts --max-warnings=0",
         "watch": "npm run build && nodemon",
         "checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts",
-        "schema": "node dist/config_schema.js",
+        "schema": "node dist/config-schema.js",
         "build": "rimraf ./dist && npm run checkers && tsc && npm run schema",
         "postversion": "git push && git push --tags",
         "prepublishOnly": "npm run lint && npm run build"

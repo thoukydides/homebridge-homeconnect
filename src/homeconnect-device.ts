@@ -702,11 +702,6 @@ export class HomeConnectDevice extends EventEmitter {
         }
     }
 
-    // Query the currently selected API language
-    getLanguage(): string {
-        return this.api.language;
-    }
-
     // Install a handler for a device key-value event
     on<Key extends DeviceKey>(key: Key, listener: (value: DeviceValue<Key>) => void): this {
         return super.on(key, listener);

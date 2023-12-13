@@ -1,24 +1,20 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-// The user plugin configuration
-export type Config = ConfigBase & ConfigAppliances;
-
 // Global (not per-appliance) configuration options
-export interface ConfigBase {
+export interface ConfigPlugin {
     // Fields required by Homebridge
     platform:               string;
     // Fields used by this plugin
     clientid:               string;
     clientsecret?:          string;
     simulator?:             boolean;
-    language?:              { api: string };
-    debug?:                 DebugFeatures[];
+    language:               { api: string };
+    debug:                  DebugFeatures[];
 }
 
 // Debugging features
-export type DebugFeatures = 'Log API Headers' | 'Log API Bodies'
-                          | 'Log Debug as Info';
+export type DebugFeatures = 'Log API Headers' | 'Log API Bodies' | 'Log Debug as Info';
 
 // Appliance configurations indexed by haId
 export interface ConfigAppliances {

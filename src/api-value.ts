@@ -3,8 +3,7 @@
 
 import { LogLevel, Logger } from 'homebridge';
 
-import { Checker } from 'ts-interface-checker';
-import { createCheckers } from 'ts-interface-checker';
+import { createCheckers, Checker } from 'ts-interface-checker';
 
 import { CommandValues, EventMapValues, OptionValues, ProgramKey, SettingValues,
          StatusValues } from './api-value-types';
@@ -14,7 +13,7 @@ import { Command, ConstraintsCommon, EventApplianceConnection,
          Programs, Setting, SettingCommon, Status, StatusCommon, Value } from './api-types';
 import { APIEvent, EventStart, EventStop } from './api-events';
 import valuesTI from './ti/api-value-types-ti';
-import { MS, getValidationTree } from './utils';
+import { MS, getValidationTree, keyofChecker } from './utils';
 
 // Checkers for API responses
 const checkers = createCheckers(valuesTI);
@@ -145,7 +144,7 @@ export class APICheckValues {
     // Check a list of programs
     programs(programs: Programs): ProgramsKV {
         programs.programs.forEach((program, index) =>
-            this.isKey(checkers.ProgramKey, LogLevel.INFO, `Programs.programs[${index}]`, program, program.key));
+            this.isLiteral(checkers.ProgramKey, LogLevel.INFO, `Programs.programs[${index}]`, program, program.key));
         if (programs.selected?.key) this.program(programs.selected as Program, 'Programs.selected');
         if (programs.active?.key)   this.program(programs.active   as Program, 'Programs.active');
         return programs as ProgramsKV;
@@ -153,7 +152,7 @@ export class APICheckValues {
 
     // Check a single program definition
     programDefinition<PKey extends ProgramKey>(program: ProgramDefinition): ProgramDefinitionKV<PKey> {
-        this.isKey(checkers.ProgramKey, LogLevel.INFO, 'ProgramDefinition', program, program.key);
+        this.isLiteral(checkers.ProgramKey, LogLevel.INFO, 'ProgramDefinition', program, program.key);
         if (program.options) {
             program.options.forEach((option, index) =>
                 this.isKey(checkers.OptionValues, LogLevel.INFO, `ProgramDefinition.options[${index}]`, option, option.key));
@@ -163,7 +162,7 @@ export class APICheckValues {
 
     // Check a single program (selected/active)
     program(program: Program, type: string = 'Program'): ProgramKV {
-        this.isKey(checkers.ProgramKey, LogLevel.INFO, type, program, program.key);
+        this.isLiteral(checkers.ProgramKey, LogLevel.INFO, type, program, program.key);
         if (program.options) this.options(program.options);
         return program as ProgramKV;
     }
@@ -237,16 +236,29 @@ export class APICheckValues {
         return event as EventKV;
     }
 
+    // Test whether a literal is recognised for the specified union type
+    isLiteral(checker: Checker, level: LogLevel, type: string, json: object, literal: string): boolean {
+        // Test whether the key exist in the type
+        if (checker.test(literal)) return true;
+
+        // Log the unrecognised literal, avoiding frequent reports of the same value
+        const now = Date.now();
+        if (!(literal in this.nextKeyReport) || this.nextKeyReport[literal] < now) {
+            this.logValidation(level, `Unrecognised ${type} literal`, type, json, [literal]);
+        }
+        this.nextKeyReport[literal] = now + REPORT_INTERVAL;
+        return false;
+    }
+
     // Test whether a key is recognised for the specified type
     isKey(checker: Checker, level: LogLevel, type: string, json: object, key: string): boolean {
         // Test whether the key exist in the type
-        const kv = { [key]: [null] };
-        if (!checker.test(kv)) return true; // Key exists (type mismatch detected)
+        if (keyofChecker(checker).includes(key)) return true;
 
         // Log the unrecognised key, avoiding frequent reports of the same key
         const now = Date.now();
         if (!(key in this.nextKeyReport) || this.nextKeyReport[key] < now) {
-            this.logValidation(level, `Unrecognised ${type} key`, type, json, [key]);
+            this.logValidation(level, `Unrecognised ${type}`, type, json, [key]);
         }
         this.nextKeyReport[key] = now + REPORT_INTERVAL;
         return false;

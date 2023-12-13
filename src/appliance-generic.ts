@@ -1,51 +1,25 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { API, CharacteristicSetHandler, CharacteristicValue, HAPStatus,
+import { CharacteristicSetHandler, CharacteristicValue, HAPStatus,
          Logger, Perms, PlatformAccessory, Service } from 'homebridge';
 
-import NodePersist from 'node-persist';
 import { setImmediate as setImmediateP } from 'timers/promises';
 
 import { HasPower } from './has-power';
 import { PersistCache } from './persist-cache';
 import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, formatMilliseconds, logError } from './utils';
-import { ProgramKey } from './api-value-types';
 import { ApplianceConfig } from './config-types';
 import { HomeConnectDevice } from './homeconnect-device';
 import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } from './serialised';
+import { HomeConnectPlatform } from './platform';
+import { SchemaUpdateFunctions } from './config-schema';
 
 // A HAP Service constructor
 type ServiceConstructor = typeof Service & {
     new (displayName?: string, subtype?: string): Service;
     UUID: string;
 };
-
-// Schema management for a single accessory
-export interface SchemaProgram {
-    key:            string;
-    name:           string;
-}
-export interface SchemaEnumValue {
-    key:            string;
-    name:           string;
-}
-export interface SchemaProgramOption {
-    key:            string;
-    name:           string;
-    type:           'number' | 'integer' | 'boolean' | 'string';
-    suffix?:        string;
-    default?:       number | boolean | string;
-    minimum?:       number;
-    maximum?:       number;
-    multipleOf?:    number;
-    values?:        SchemaEnumValue[];
-}
-export interface SchemaUpdateFunctions {
-    setHasControl:      (control: boolean) => void;
-    setPrograms:        (newPrograms: SchemaProgram[]) => void;
-    setProgramOptions:  (programKey: ProgramKey, options: SchemaProgramOption[]) => void;
-}
 
 // A typed accessory onSet() handler
 export type OnSetHandler<Type> = (value: Type) => Promise<unknown> | unknown;
@@ -63,6 +37,10 @@ export class ApplianceBase {
     // Appliance name
     readonly name: string;
 
+    // Configuration and schema update functions for this appliance
+    readonly config: ApplianceConfig;
+    readonly schema: SchemaUpdateFunctions;
+
     // Persistent cache
     readonly cache: PersistCache;
 
@@ -76,22 +54,24 @@ export class ApplianceBase {
     // Initialise an appliance
     constructor(
         readonly log:           Logger,
-        readonly homebridge:    API,
-        readonly persist:       NodePersist.LocalStorage,
-        readonly schema:        SchemaUpdateFunctions,
+        readonly platform:      HomeConnectPlatform,
         readonly device:        HomeConnectDevice,
-        readonly accessory:     PlatformAccessory,
-        readonly config:        ApplianceConfig) {
+        readonly accessory:     PlatformAccessory) {
         this.name           = accessory.displayName;
-        this.Service        = homebridge.hap.Service;
-        this.Characteristic = homebridge.hap.Characteristic;
+        this.Service        = platform.hb.hap.Service;
+        this.Characteristic = platform.hb.hap.Characteristic;
 
         // Log some basic information about this appliance
         this.log.info(`${device.ha.brand} ${device.ha.type} (E-Nr: ${device.ha.enumber})`);
 
+        // Configuration for this appliance
+        this.config = platform.configAppliances[device.ha.haId] || {};
+        assertIsDefined(this.platform.schema);
+        this.schema = this.platform.schema.getAppliance(device.ha.haId);
+
         // Initialise the cache for this appliance
-        const lang = this.device.getLanguage();
-        this.cache = new PersistCache(log, persist, device.ha.haId, lang);
+        assertIsDefined(platform.persist);
+        this.cache = new PersistCache(log, platform.persist, device.ha.haId, platform.configPlugin.language.api);
 
         // Remove anything created by old plugin versions that is no longer required
         this.cleanupOldVersions();
@@ -110,10 +90,9 @@ export class ApplianceBase {
             .setCharacteristic(this.Characteristic.SerialNumber,     device.ha.haId)
             .setCharacteristic(this.Characteristic.FirmwareRevision, '0');
 
-        // Update reachability when connection status changes
+        // Log connection status changes
         device.on('connected', connected => {
             this.log.info(connected ? 'Connected' : 'Disconnected');
-            this.accessory.updateReachability(connected);
         });
 
         // Wait for asynchronous initialisation to complete
@@ -311,7 +290,7 @@ export class ApplianceBase {
                 await handler(value);
             } catch (err) {
                 logError(this.log, `onSet(${value})`, err);
-                throw new this.homebridge.hap.HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+                throw new this.platform.hb.hap.HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
             }
         };
     }

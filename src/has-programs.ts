@@ -5,13 +5,14 @@ import { Perms, Service } from 'homebridge';
 
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
-import { ApplianceBase, SchemaProgramOption } from './appliance-generic';
+import { ApplianceBase } from './appliance-generic';
 import { Constructor, MS, columns, logError } from './utils';
 import { OptionValues, PowerState, ProgramKey } from './api-value-types';
 import { CommandKey, OptionDefinitionKV, OptionKey, OptionValue,
          ProgramDefinitionKV } from './api-value';
 import { Value } from './api-types';
 import { ApplianceProgramConfig, ConfigAppliances } from './config-types';
+import { SchemaProgramOption } from './config-schema';
 
 // A prgram configuration that has passed sanity checks
 export interface CheckedProgramConfig extends Omit<ApplianceProgramConfig, 'options'> {
@@ -649,7 +650,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             // Construct a mapping for enum and boolean types
             if (constraints.allowedvalues) {
                 schema.values = constraints.allowedvalues.map((key, i) => ({
-                    key:    key.toString(),
+                    key:    key,
                     name:   this.makeName(constraints.displayvalues?.[i], key)
                 }));
             }

@@ -4,7 +4,7 @@
 import { Logger } from 'homebridge';
 
 import assert from 'assert';
-import { IErrorDetail } from 'ts-interface-checker';
+import { Checker, IErrorDetail, TType } from 'ts-interface-checker';
 
 import { APIError } from './api-errors';
 
@@ -110,6 +110,21 @@ export function columns(rows: string[][], separator = '  '): string[] {
     return rows.map(row => row.map((value, index) => value.padEnd(width[index])).join(separator));
 }
 
+// Recursive object assignment, skipping undefined values
+export function deepMerge(...objects: object[]): object {
+    const isObject = (value: unknown): value is object =>
+        value !== undefined && typeof value === 'object' && !Array.isArray(value);
+    return objects.reduce((acc: Record<string, unknown>, object: object) => {
+        Object.entries(object).forEach(([key, value]) => {
+            const accValue = acc[key];
+            if (value === undefined) return;
+            if (isObject(accValue) && isObject(value)) acc[key] = deepMerge(accValue, value);
+            else acc[key] = value;
+        });
+        return acc;
+    }, {});
+}
+
 // Convert checker validation error into lines of text
 export function getValidationTree(errors: IErrorDetail[]): string[] {
     const lines: string[] = [];
@@ -122,4 +137,12 @@ export function getValidationTree(errors: IErrorDetail[]): string[] {
         }
     });
     return lines;
+}
+
+// Extract property keys from a checker
+export function keyofChecker(checker: TType | Checker): string[] {
+    const props = (checker as unknown as { props: unknown }).props;
+    if (props instanceof Map) return Array.from(props.keys());
+    if (Array.isArray(props)) return props.map(prop => prop.name);
+    throw new Error('Unable to extract property keys from checker');
 }

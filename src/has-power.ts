@@ -64,8 +64,7 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             const disconnected = !this.device.getItem('connected');
             const powerOn = !disconnected
                 && this.device.getItem('BSH.Common.Setting.PowerState') === PowerState.On;
-            this.log.info((powerOn ? 'On' : 'Off')
-                          + (disconnected ? ' (disconnected)' : ''));
+            this.log.info(`${powerOn ? 'On' : 'Off'}${disconnected ? ' (disconnected)' : ''}`);
             this.powerService.updateCharacteristic(this.Characteristic.On, powerOn);
         }
 

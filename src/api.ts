@@ -7,7 +7,7 @@ import { on } from 'events';
 import { LocalStorage } from 'node-persist';
 import { createCheckers } from 'ts-interface-checker';
 
-import { Config } from './config-types';
+import { ConfigPlugin } from './config-types';
 import { CommandsWrapper, ExecuteCommandWrapper, ProgramDefinitionWrapper,
          HomeAppliance, HomeApplianceWrapper, HomeAppliancesWrapper,
          OptionWrapper, OptionsWrapper, ProgramsWrapper, ProgramWrapper,
@@ -28,9 +28,6 @@ const checkers = createCheckers(apiTI);
 // Low-level access to the Home Connect API
 export class HomeConnectAPI {
 
-    // Language used for human-readable names and values
-    readonly language: string;
-
     // User agent used for all requests
     private readonly ua: APIAuthoriseUserAgent;
 
@@ -43,11 +40,10 @@ export class HomeConnectAPI {
     // Create a new API object
     constructor(
         readonly log:       Logger,
-        readonly config:    Config,
+        readonly config:    ConfigPlugin,
         readonly persist:   LocalStorage
     ) {
-        this.language = config.language?.api ?? 'en-GB';
-        this.ua = new APIAuthoriseUserAgent(log, config, persist, this.language);
+        this.ua = new APIAuthoriseUserAgent(log, config, persist, config.language.api);
         this.events = new APIEventStream(log, this.ua);
         this.checkValues = new APICheckValues(log);
     }

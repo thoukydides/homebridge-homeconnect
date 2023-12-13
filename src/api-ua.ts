@@ -13,7 +13,7 @@ import { setTimeout as setTimeoutP } from 'timers/promises';
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
 import { APIError, APIStatusCodeError, APIValidationError } from './api-errors';
 import { columns, formatMilliseconds, getValidationTree, MS } from './utils';
-import { Config } from './config-types';
+import { ConfigPlugin } from './config-types';
 
 export type Method     = Dispatcher.HttpMethod;
 export type Headers    = IncomingHttpHeaders;
@@ -55,7 +55,7 @@ export class APIUserAgent {
     // Create a new user agent
     constructor(
         readonly log:       Logger,
-        readonly config:    Config,
+        readonly config:    ConfigPlugin,
         readonly language:  string
     ) {
         this.url = this.config.simulator ? 'https://simulator.home-connect.com'

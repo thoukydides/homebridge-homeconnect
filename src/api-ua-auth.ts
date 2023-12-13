@@ -17,7 +17,7 @@ import { AbsoluteToken, PersistAbsoluteTokens, AuthorisationError,
 import { APIUserAgent, Method, Request } from './api-ua';
 import { assertIsDefined, Copy, formatMilliseconds, formatSeconds, logError, MS } from './utils';
 import { APIAuthorisationError, APIError, APIStatusCodeError } from './api-errors';
-import { Config } from './config-types';
+import { ConfigPlugin } from './config-types';
 import { API_SCOPES } from './settings';
 import { deviceFlowHelp } from './api-ua-auth-help';
 import authTI from './ti/api-auth-types-ti';
@@ -72,7 +72,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     // Create a new authorisation agent
     constructor(
         log:                Logger,
-        config:             Config,
+        config:             ConfigPlugin,
         readonly persist:   LocalStorage,
         language:           string
     ) {
