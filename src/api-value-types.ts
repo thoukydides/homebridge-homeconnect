@@ -19,6 +19,8 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Ristretto'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.WarmMilk'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.XLCoffee'
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOffRinsing' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOnRinsing' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Americano'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.BlackEye'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.CafeAuLait'
@@ -41,6 +43,7 @@ export type ProgramKey =
   | 'Cooking.Common.Program.Hood.Automatic'
   | 'Cooking.Common.Program.Hood.DelayedShutOff'
   | 'Cooking.Common.Program.Hood.Venting'
+  | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.BottomHeating'
   | 'Cooking.Oven.Program.HeatingMode.Defrost'
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
@@ -229,6 +232,10 @@ export type IntensiveSetting =
     'Cooking.Hood.EnumType.IntensiveStage.IntensiveStageOff'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2';
+export type PyrolysisLevel = // (undocumented)
+    'Cooking.Oven.EnumType.PyrolysisLevel.Level01'
+  | 'Cooking.Oven.EnumType.PyrolysisLevel.Level02'
+  | 'Cooking.Oven.EnumType.PyrolysisLevel.Level03';
 export type ReferenceMapID =
     'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.TempMap'
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map1'
@@ -460,10 +467,15 @@ export enum ProcessPhase {
 // Program options
 export interface OptionValues {
     'BSH.Common.Option.Duration'?:                                          number;
+    'BSH.Common.Option.ElapsedProgramTime'?:                                number;
+    'BSH.Common.Option.EnergyForecast'?:                                    number; // (undocumented)
     'BSH.Common.Option.FinishInRelative'?:                                  number;
+    'BSH.Common.Option.ProgramProgress'?:                                   number;
     'BSH.Common.Option.RemainingProgramTime'?:                              number;
     'BSH.Common.Option.StartInRelative'?:                                   number;
+    'BSH.Common.Option.WaterForecast'?:                                     number; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                  CleaningMode;
+    'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                  ProcessPhase;
     'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                ReferenceMapID;
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
@@ -475,6 +487,7 @@ export interface OptionValues {
     'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveSetting;
     'Cooking.Common.Option.Hood.VentingLevel'?:                             FanSetting;
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
+    'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
     'Cooking.Oven.Option.SetpointTemperature'?:                             number;
     'Cooking.Oven.Option.WarmingLevel'?:                                    WarmingLevel;
     'Dishcare.Dishwasher.Option.BrillianceDry'?:                            boolean;
@@ -485,12 +498,12 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
+    'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
     'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
     'LaundryCare.Washer.Option.SpinSpeed'?:                                 SpinSpeed;
     'LaundryCare.Washer.Option.Temperature'?:                               WasherTemperature;
-    'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
 }
 
 // Statuses
@@ -598,11 +611,6 @@ export interface EventNotifyValues extends OptionValues, SettingValues {
     // Program changes
     'BSH.Common.Root.SelectedProgram'?:                                     ProgramKey | null;
     'BSH.Common.Root.ActiveProgram'?:                                       ProgramKey | null;
-    // Program progress changes
-    'BSH.Common.Option.ElapsedProgramTime'?:                                number;
-    'BSH.Common.Option.ProgramProgress'?:                                   number;
-    'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                  ProcessPhase;
-
 }
 export type EventStatusValues = StatusValues;
 export interface EventEventValues {
