@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.32.0] - 2023-12-14
+### Added
+* The HomeKit services for appliance doors (`Door` service), mode settings (`Switch` services), and event buttons (`Stateless Programmable Switch` services), can be individually enabled or disabled via the `config.json` file.
+* Additional debug logging options can be configured via [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). These allow logging of the raw Home Connect API requests and responses, as well as redirection of `debug` level logging to `info` level (avoiding the need to use the `homebridge -D` option).
+### Fixed
+* Corrected checking of keys in Home Connect API events.
+
 ## [v0.31.0] - 2023-12-13
 ### Changed
 * Significant rewrite of the main accessory logic that bridges between Homebridge and the Home Connect API.
@@ -21,11 +28,11 @@ All notable changes to this project will be documented in this file.
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Avoid implicitly updating the Power State if an explicit event was received. Also infer from a change to Power State `Off` or `Standby` that the appliance Operation State is `Inactive` if no event has been been received. (#181)
 
 ## [v0.30.0] - 2023-11-10
-### Fixed
-* Accept `selected` and/or `active` program details when requesting the list of supported or available programs. (#175)
 ### Changed
 * Dropped Node 14 compatibility.
 * Updated dependencies.
+### Fixed
+* Accept `selected` and/or `active` program details when requesting the list of supported or available programs. (#175)
 
 ## [v0.29.6] - 2023-07-31
 ### Fixed
@@ -40,10 +47,10 @@ All notable changes to this project will be documented in this file.
 * Corrected display of authorisation URI in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). (#151)
 
 ## [v0.29.3] - 2023-05-07
-### Fixed
-* Accept a `displayvalue` in an option associated with an active or selected program. (#145)
 ### Changed
 * Dropped Node 14 compatibility.
+### Fixed
+* Accept a `displayvalue` in an option associated with an active or selected program. (#145)
 
 ## [v0.29.2] - 2023-04-24
 ### Fixed
@@ -78,10 +85,10 @@ All notable changes to this project will be documented in this file.
 * Respect the returned `retry-after` value when refreshing access tokens. Also increased the minimum retry interval from 5 to 6 seconds to remain under the 10 requests per minute limit.
 
 ## [v0.26.2] - 2022-10-31
-### Fixed
-* Always create new `Error` objects when prefixing new text to their `message`, instead of overwriting the existing property (which would fail if read-only). (#109)
 ### Changed
 * Bumped undici version to latest release.
+### Fixed
+* Always create new `Error` objects when prefixing new text to their `message`, instead of overwriting the existing property (which would fail if read-only). (#109)
 
 ## [v0.26.1] - 2022-09-23
 ### Fixed
@@ -438,7 +445,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.31.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.32.0...HEAD
+[v0.32.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.31.0...v0.32.0
 [v0.31.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.2...v0.31.0
 [v0.30.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.1...v0.30.2
 [v0.30.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.0...v0.30.1
