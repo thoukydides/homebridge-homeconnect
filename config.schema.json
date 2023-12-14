@@ -211,6 +211,18 @@
                         "required": true
                     }
                 }
+            },
+            "debug": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                    "type": "string",
+                    "enum": [
+                        "Log API Headers",
+                        "Log API Bodies",
+                        "Log Debug as Info"
+                    ]
+                }
             }
         }
     },
@@ -261,6 +273,19 @@
                     "condition": {
                         "functionBody": "return !model.simulator && model.clientid"
                     }
+                }
+            ]
+        },
+        {
+            "type": "fieldset",
+            "title": "Debug Options",
+            "expandable": true,
+            "expanded": false,
+            "items": [
+                {
+                    "key": "debug",
+                    "notitle": true,
+                    "description": "Leave all options unchecked unless debugging a problem."
                 }
             ]
         }

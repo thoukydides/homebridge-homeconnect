@@ -18,7 +18,7 @@ export type DebugFeatures = 'Log API Headers' | 'Log API Bodies' | 'Log Debug as
 
 // Appliance configurations indexed by haId
 export interface ConfigAppliances {
-    [index: string]:        ApplianceConfig;
+    [haId: string]:         ApplianceConfig;
 }
 
 // Configuration for a single appliance
@@ -26,6 +26,12 @@ export type AddProgramsConfig = 'none' | 'auto' | 'custom';
 export interface ApplianceConfig {
     addprograms?:           AddProgramsConfig;
     programs?:              ApplianceProgramConfig[];
+    features?:              ApplianceFeatures;
+}
+
+// Enable or disable optional features
+export interface ApplianceFeatures {
+    [feature: string]:      boolean;
 }
 
 // Configuration for a single appliance program

@@ -8,12 +8,13 @@ import { setImmediate as setImmediateP } from 'timers/promises';
 
 import { HasPower } from './has-power';
 import { PersistCache } from './persist-cache';
-import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, formatMilliseconds, logError } from './utils';
+import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, columns,
+         formatMilliseconds, logError } from './utils';
 import { ApplianceConfig } from './config-types';
 import { HomeConnectDevice } from './homeconnect-device';
 import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } from './serialised';
 import { HomeConnectPlatform } from './platform';
-import { SchemaUpdateFunctions } from './config-schema';
+import { ConfigSchema, SchemaOptionalFeature, SchemaOptionalFeatures } from './config-schema';
 
 // A HAP Service constructor
 type ServiceConstructor = typeof Service & {
@@ -24,8 +25,10 @@ type ServiceConstructor = typeof Service & {
 // A typed accessory onSet() handler
 export type OnSetHandler<Type> = (value: Type) => Promise<unknown> | unknown;
 
+// An optional feature
+
 // Initialisation timeout
-const INITIALISATION_WARN_INTERVAL = 5 * MS;
+const INITIALISATION_WARN_INTERVAL = 10 * MS;
 
 // A Homebridge accessory for a generic Home Connect home appliance
 export class ApplianceBase {
@@ -37,9 +40,10 @@ export class ApplianceBase {
     // Appliance name
     readonly name: string;
 
-    // Configuration and schema update functions for this appliance
+    // Configuration for this appliance
     readonly config: ApplianceConfig;
-    readonly schema: SchemaUpdateFunctions;
+    readonly schema: ConfigSchema;
+    readonly optionalFeatures: SchemaOptionalFeatures = [];
 
     // Persistent cache
     readonly cache: PersistCache;
@@ -65,9 +69,9 @@ export class ApplianceBase {
         this.log.info(`${device.ha.brand} ${device.ha.type} (E-Nr: ${device.ha.enumber})`);
 
         // Configuration for this appliance
-        this.config = platform.configAppliances[device.ha.haId] || {};
         assertIsDefined(this.platform.schema);
-        this.schema = this.platform.schema.getAppliance(device.ha.haId);
+        this.schema = this.platform.schema;
+        this.config = platform.configAppliances[device.ha.haId] || {};
 
         // Initialise the cache for this appliance
         assertIsDefined(platform.persist);
@@ -147,6 +151,9 @@ export class ApplianceBase {
 
         // Delete any obsolete services
         this.cleanupServices();
+
+        // Update the configuration schema with any optional features
+        this.setOptionalFeatures();
     }
 
     // Get or add a service
@@ -233,6 +240,40 @@ export class ApplianceBase {
         this.log.info('Identify: ' + this.device.ha.haId);
         const itemDesceiptions = Object.values(this.device.items).map(item => this.device.describe(item));
         for (const item of itemDesceiptions.sort()) this.log.info(item);
+    }
+
+    // Check whether an optional feature should be enabled
+    hasOptionalFeature(service: string, name: string, group: string = '', enableByDefault: boolean = true): boolean {
+        // Add to the list of optional features
+        this.optionalFeatures.push({ service, name, group, enableByDefault });
+
+        // Return whether the feature should be enabled
+        const enableByConfig = this.config.features?.[name];
+        const enabled = enableByConfig ?? enableByDefault;
+        this.log.info(`Optional ${group ? `${group} ` : ''}(${service} service) feature "${name}"`
+                      + ` ${enabled ? 'enabled' : 'disabled'} by ${enableByConfig === undefined ? 'default' : 'configuration'}`);
+        return enabled;
+    }
+
+    // Update the configuration schema with any optional features
+    setOptionalFeatures(): void {
+        // Log a summary of optional features
+        const list = (description: string, predicate: (feature: SchemaOptionalFeature) => boolean): void => {
+            const matched = this.optionalFeatures.filter(predicate);
+            if (matched.length) {
+                this.log.info(`${matched.length} optional feature${matched.length === 1 ? '' : 's'} ${description}:`);
+                const fields = matched.map(feature => [feature.name, feature.group, `(${feature.service} service)`]);
+                for (const line of columns(fields)) this.log.info(`    ${line}`);
+            }
+        };
+        const configured = (feature: SchemaOptionalFeature): boolean | undefined => this.config.features?.[feature.name];
+        list('disabled by configuration',          feature => configured(feature) === false);
+        list('enabled by configuration',           feature => configured(feature) === true);
+        list('disabled by default (unconfigured)', feature => configured(feature) === undefined && !feature.enableByDefault);
+        list('enabled by default (unconfigured)',  feature => configured(feature) === undefined &&  feature.enableByDefault);
+
+        // Update the configuration schema
+        this.schema.setOptionalFeatures(this.device.ha.haId, this.optionalFeatures);
     }
 
     // Query the appliance when connected and cache the result

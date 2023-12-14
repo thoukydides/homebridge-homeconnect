@@ -277,7 +277,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Update the configuration schema after updating the cached programs
         async savePrograms(): Promise<void> {
             // Programs can only be selected or started with Control scope
-            this.schema.setHasControl(this.device.hasScope('Control'));
+            this.schema.setHasControl(this.device.ha.haId, this.device.hasScope('Control'));
 
             // Update the list of programs and their options in the schema
             this.setSchemaPrograms(this.programs);
@@ -615,7 +615,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
 
         // Update the configuration schema with the latest program list
         setSchemaPrograms(allPrograms: ProgramDefinitionKV<ProgramKey>[]): void {
-            this.schema.setPrograms(allPrograms.map(program => ({
+            this.schema.setPrograms(this.device.ha.haId, allPrograms.map(program => ({
                 name:   this.makeName(program.name, program.key),
                 key:    program.key
             })));
@@ -624,7 +624,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Update the configuration schema with the options for a single program
         setSchemaProgramOptions<Key extends ProgramKey>(program: ProgramDefinitionKV<Key>): void {
             const options = program.options?.map(o => this.makeSchemaOption(o)) ?? [];
-            this.schema.setProgramOptions(program.key, options);
+            this.schema.setProgramOptions(this.device.ha.haId, program.key, options);
         }
 
         // Convert program options into the configuration schema format

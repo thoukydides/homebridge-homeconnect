@@ -121,7 +121,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
     // Check the user's configuration
     checkConfig(): [ConfigPlugin, ConfigAppliances] {
         // Split the configuration into plugin and appliance properties
-        const keyofConfigPlugin = keyofChecker(checkers.ConfigPlugin);
+        const keyofConfigPlugin = keyofChecker(configTI, configTI.ConfigPlugin);
         const select = (predicate: ([key, value]: [string, unknown]) => boolean) =>
             Object.fromEntries(Object.entries(this.platformConfig).filter(predicate));
         const configPluginPre  = select(([key]) =>  keyofConfigPlugin.includes(key));

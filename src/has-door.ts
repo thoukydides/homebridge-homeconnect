@@ -13,12 +13,15 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
     return class HasDoor extends Base {
 
         // Accessory services
-        readonly doorService: Service;
+        readonly doorService!: Service;
 
         // Mixin constructor
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
+
+            // Check whether the door should be suported
+            if (!this.hasOptionalFeature('Door', 'Door')) return;
 
             // Create a Door service for the appliance door
             this.doorService = this.makeService(this.Service.Door, 'Door');

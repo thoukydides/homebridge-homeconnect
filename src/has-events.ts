@@ -45,6 +45,11 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
             // Wait for synchronous initialisation to finish
             await setImmediateP();
 
+            // Check whether events should be supported
+            if (this.events.length && !this.hasOptionalFeature('Stateless Programmable Switch', 'Appliance Event Buttons')) {
+                this.events.length = 0;
+            }
+
             // Add a service for each event
             this.log.info(`Adding services for ${this.events.length} events`);
             const fields = this.events.map((event, index) => [`Button ${index + 1}:`, event.name, `(${event.event})`]);

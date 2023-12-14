@@ -3,7 +3,7 @@
 
 import { LogLevel, Logger } from 'homebridge';
 
-import { createCheckers, Checker } from 'ts-interface-checker';
+import { createCheckers, Checker, ITypeSuite, TType, TName } from 'ts-interface-checker';
 
 import { CommandValues, EventMapValues, OptionValues, ProgramKey, SettingValues,
          StatusValues } from './api-value-types';
@@ -155,7 +155,7 @@ export class APICheckValues {
         this.isLiteral(checkers.ProgramKey, LogLevel.INFO, 'ProgramDefinition', program, program.key);
         if (program.options) {
             program.options.forEach((option, index) =>
-                this.isKey(checkers.OptionValues, LogLevel.INFO, `ProgramDefinition.options[${index}]`, option, option.key));
+                this.isKey(valuesTI, valuesTI.OptionValues, LogLevel.INFO, `ProgramDefinition.options[${index}]`, option, option.key));
         }
         return program as ProgramDefinitionKV<PKey>;
     }
@@ -174,7 +174,7 @@ export class APICheckValues {
 
     // Check a single program option
     option<Key extends OptionKey>(option: Option): OptionKV<Key> {
-        if (this.isKey(  checkers.OptionValues, LogLevel.INFO,  'Option', option, option.key))
+        if (this.isKey(valuesTI, valuesTI.OptionValues, LogLevel.INFO,  'Option', option, option.key))
             this.isValue(checkers.OptionValues, LogLevel.ERROR, 'Option', option, option.key, option.value);
         return option as OptionKV<Key>;
     }
@@ -186,7 +186,7 @@ export class APICheckValues {
 
     // Check a single status
     status<Key extends StatusKey>(status: Status): StatusKV<Key> {
-        if (this.isKey(  checkers.StatusValues, LogLevel.WARN,  'Status', status, status.key))
+        if (this.isKey(valuesTI, valuesTI.StatusValues, LogLevel.WARN,  'Status', status, status.key))
             this.isValue(checkers.StatusValues, LogLevel.ERROR, 'Status', status, status.key, status.value);
         return status as StatusKV<Key>;
     }
@@ -198,7 +198,7 @@ export class APICheckValues {
 
     // Check a single setting
     setting<Key extends SettingKey>(setting: Setting): SettingKV<Key> {
-        if (this.isKey(  checkers.SettingValues, LogLevel.WARN,  'Setting', setting, setting.key))
+        if (this.isKey(valuesTI, valuesTI.SettingValues, LogLevel.WARN,  'Setting', setting, setting.key))
             this.isValue(checkers.SettingValues, LogLevel.ERROR, 'Setting', setting, setting.key, setting.value);
         return setting as SettingKV<Key>;
     }
@@ -206,31 +206,28 @@ export class APICheckValues {
     // Check a list of commands
     commands(commands: Command[]): CommandKV[] {
         commands.forEach(command =>
-            this.isKey(checkers.CommandValues, LogLevel.WARN, 'Command', command, command.key));
+            this.isKey(valuesTI, valuesTI.CommandValues, LogLevel.WARN, 'Command', command, command.key));
         return commands as CommandKV[];
     }
 
     // Check an event
     event(event: APIEvent): EventKV {
         if ('data' in event && event.data) {
-            const checker = {
-                CONNECTED:    checkers.EventConnectedValues,
-                DISCONNECTED: checkers.EventDisconnectedValues,
-                PAIRED:       checkers.EventPairedValues,
-                DEPAIRED:     checkers.EventDepairedValues,
-                NOTIFY:       checkers.EventNotifyValues,
-                STATUS:       checkers.EventStatusValues,
-                EVENT:        checkers.EventEventValues
-            }[event.event];
             const type = `${event.event} Event.data`;
-            const check = (type: string, data: EventData) => {
-                if (this.isKey(  checker, LogLevel.INFO,  type, data, data.key))
-                    this.isValue(checker, LogLevel.ERROR, type, data, data.key, data.value);
-            };
-            if ('items' in event.data) {
-                event.data.items.forEach((data, index) => check(`${type}.items[${index}]`, data));
+            const props = (valuesTI.EventMapValues as { props?: { name: string; ttype: TName}[] }).props;
+            const tname = props?.find(prop => prop.name === event.event)?.ttype?.name;
+            if (!tname) {
+                this.logValidation(LogLevel.ERROR, 'Unrecognised event', type, event, [event.event]);
             } else {
-                check(type, event.data);
+                const check = (type: string, data: EventData) => {
+                    if (this.isKey(valuesTI, valuesTI[tname], LogLevel.INFO,  type, data, data.key))
+                        this.isValue(checkers[tname], LogLevel.ERROR, type, data, data.key, data.value);
+                };
+                if ('items' in event.data) {
+                    event.data.items.forEach((data, index) => check(`${type}.items[${index}]`, data));
+                } else {
+                    check(type, event.data);
+                }
             }
         }
         return event as EventKV;
@@ -251,9 +248,9 @@ export class APICheckValues {
     }
 
     // Test whether a key is recognised for the specified type
-    isKey(checker: Checker, level: LogLevel, type: string, json: object, key: string): boolean {
+    isKey(typeSuite: ITypeSuite, checkerType: TType, level: LogLevel, type: string, json: object, key: string): boolean {
         // Test whether the key exist in the type
-        if (keyofChecker(checker).includes(key)) return true;
+        if (keyofChecker(typeSuite, checkerType).includes(key)) return true;
 
         // Log the unrecognised key, avoiding frequent reports of the same key
         const now = Date.now();

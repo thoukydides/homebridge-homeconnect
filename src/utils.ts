@@ -4,7 +4,7 @@
 import { Logger } from 'homebridge';
 
 import assert from 'assert';
-import { Checker, IErrorDetail, TType } from 'ts-interface-checker';
+import { IErrorDetail, ITypeSuite, TType } from 'ts-interface-checker';
 
 import { APIError } from './api-errors';
 
@@ -139,10 +139,45 @@ export function getValidationTree(errors: IErrorDetail[]): string[] {
     return lines;
 }
 
-// Extract property keys from a checker
-export function keyofChecker(checker: TType | Checker): string[] {
-    const props = (checker as unknown as { props: unknown }).props;
-    if (props instanceof Map) return Array.from(props.keys());
-    if (Array.isArray(props)) return props.map(prop => prop.name);
-    throw new Error('Unable to extract property keys from checker');
+// Extract property keys or union literal from a ti-interface-checker type
+export function keyofChecker(typeSuite: ITypeSuite, type: TType): string[] {
+    const checker = type as {
+        bases?:         string[];
+        ttypes?:        TType[];
+        propSet?:       Set<string>;
+        value?:         string;
+        name?:          string;
+        validValues?:   Set<string>;
+    };
+
+    // TIface
+    const props = [];
+    if (checker.propSet instanceof Set) {
+        props.push(...checker.propSet);
+    }
+    if (Array.isArray(checker.bases)) {
+        for (const base of checker.bases)
+            props.push(...keyofChecker(typeSuite, typeSuite[base]));
+    }
+
+    // TUnion or TIntersection
+    if (Array.isArray(checker.ttypes)) {
+        for (const ttype of checker.ttypes)
+            props.push(...keyofChecker(typeSuite, ttype));
+    }
+
+    // TEnum
+    if (checker.validValues instanceof Set) {
+        props.push(...checker.validValues);
+    }
+
+    if (typeof checker.value === 'string') {
+        // TLiteral
+        props.push(checker.value);
+    } else if (typeof checker.name === 'string') {
+        // TName
+        props.push(...keyofChecker(typeSuite, typeSuite[checker.name]));
+    }
+
+    return props;
 }

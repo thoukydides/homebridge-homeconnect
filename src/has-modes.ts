@@ -39,8 +39,7 @@ export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase,
             // Add services for each mode setting
             for (const key of allSettings.map(s => s.key)) {
                 const modeName = this.modes[key];
-                if (modeName) {
-                    this.log.info(`Supports ${modeName}`);
+                if (modeName && this.hasOptionalFeature('Switch', modeName, 'Appliance Settings')) {
                     this.addModeSwitch(key, modeName);
                 }
             }
