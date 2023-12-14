@@ -111,7 +111,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 const available = await this.device.getAvailablePrograms();
                 const availableKeys = available.map(p => p.key);
                 const unavailable = this.programs.length - available.length;
-                if (unavailable) this.log.warn(`${unavailable} of ${this.programs.length} programs are currently unavailable`);
+                if (0 < unavailable) this.log.warn(`${unavailable} of ${this.programs.length} programs are currently unavailable`);
 
                 // First read programs passively (less likely to generate errors)
                 const passiveKeys = availableKeys.filter(key => {
