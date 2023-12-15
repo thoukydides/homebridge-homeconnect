@@ -438,6 +438,7 @@ export enum LiquidVolumeUnit {
     MilliLiter              = 'BSH.Common.EnumType.LiquidVolumeUnit.MilliLiter'
 }
 export enum PowerState {
+    MainsOff                = 'BSH.Common.EnumType.PowerState.MainsOff', // (undocumented)
     Off                     = 'BSH.Common.EnumType.PowerState.Off',
     On                      = 'BSH.Common.EnumType.PowerState.On',
     Standby                 = 'BSH.Common.EnumType.PowerState.Standby'

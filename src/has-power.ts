@@ -14,6 +14,9 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         // Accessory services
         readonly powerService: Service;
 
+        // The power off setting to use if the appliance reports multuple
+        defaultOffValue?: PowerState;
+
         // Mixin constructor
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
@@ -41,22 +44,29 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             // Check whether the appliance supports off or standby
             const setting = await this.getCached(
                 'power', () => this.device.getSetting('BSH.Common.Setting.PowerState'));
-            const values = setting?.constraints?.allowedvalues ?? [];
+            const allValues = setting?.constraints?.allowedvalues ?? [];
+            let offValues = allValues.filter(value => value !== PowerState.On);
+            if (!offValues.length) return this.log.info('Cannot be switched off');
 
-            // Add the ability to switch off or to standby if supported
-            // (with workaround for appliances reporting unsupported combinations)
-            if (values.includes(PowerState.Off) && values.includes(PowerState.Standby)) {
-                this.log.warn('Claims can be both switched off and placed in standby;'
-                            + ' treating as cannot be switched off');
-            } else if (values.includes(PowerState.Off)) {
-                this.log.info('Can be switched off');
-                this.addPowerOff(PowerState.Off);
-            } else if (values.includes(PowerState.Standby)) {
-                this.log.info('Can be placed in standby');
-                this.addPowerOff(PowerState.Standby);
-            } else {
-                this.log.info('Cannot be switched off');
+            // Workaround appliances incorrectly reporting multiple off settings
+            if (1 < offValues.length) {
+                if (this.defaultOffValue && offValues.includes(this.defaultOffValue)) {
+                    this.log.debug(`Appliance reported multiple power off settings; using default (${this.defaultOffValue})`);
+                    offValues = [this.defaultOffValue];
+                } else {
+                    this.log.debug(`Appliance reported multiple power off settings; using the first (${offValues[0]})`);
+                    offValues.length = 1;
+                }
             }
+
+            // Make the power state characteristic writable
+            this.log.info(`Can be ${this.defaultOffValue === PowerState.Standby ? 'placed in standby' : 'switched off'}`);
+            this.powerService.getCharacteristic(this.Characteristic.On)
+                .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
+                .onSet(this.onSetBoolean(async value => {
+                    this.log.info(`SET ${value ? 'On' : 'Off'}`);
+                    await this.device.setSetting('BSH.Common.Setting.PowerState', value ? PowerState.On : offValues[0]);
+                }));
         }
 
         // Deferred update of HomeKit state from Home Connect events
@@ -68,16 +78,9 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             this.powerService.updateCharacteristic(this.Characteristic.On, powerOn);
         }
 
-        // Add the ability to switch the power off (or to standby)
-        addPowerOff(offValue: PowerState): void {
-            // Make the power state characteristic writable
-            this.powerService.getCharacteristic(this.Characteristic.On)
-                .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
-                .onSet(this.onSetBoolean(async value => {
-                    this.log.info(`SET ${value ? 'On' : 'Off'}`);
-                    await this.device.setSetting('BSH.Common.Setting.PowerState',
-                                                 value ? PowerState.On : offValue);
-                }));
+        // Explicitly specify the setting used to switch the appliance off
+        hasPowerOff(offValue: PowerState): void {
+            this.defaultOffValue = offValue;
         }
     };
 }

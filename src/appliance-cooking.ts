@@ -15,6 +15,7 @@ import { HasActive } from './has-active';
 import { HasPrograms } from './has-programs';
 import { HasRemainingTime } from './has-remainingtime';
 import { HasRemoteControl } from './has-remotecontrol';
+import { PowerState } from './api-value-types';
 
 // A Homebridge accessory for a Home Connect coffee maker
 export class ApplianceCoffeeMaker extends
@@ -120,6 +121,9 @@ export class ApplianceOven extends
 
         // Add Oven mode settings
         this.hasMode ('Cooking.Oven.Setting.SabbathMode',                                   'Sabbath Mode');
+
+        // Oven appliances incorrectly indicate support for PowerState.Off
+        this.hasPowerOff(PowerState.Standby);
     }
 }
 
