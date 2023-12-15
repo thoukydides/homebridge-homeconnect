@@ -7,8 +7,9 @@ import { createCheckers, Checker, ITypeSuite, TType, TName } from 'ts-interface-
 
 import { CommandValues, EventMapValues, OptionValues, ProgramKey, SettingValues,
          StatusValues } from './api-value-types';
-import { Command, ConstraintsCommon, EventApplianceConnection,
+import { Command, Constraints, ConstraintsCommon, EventApplianceConnection,
          EventApplianceData, EventData, Option, OptionConstraintsCommon,
+         OptionDefinition,
          OptionDefinitionCommon, Program, ProgramDefinition, ProgramList,
          Programs, Setting, SettingCommon, Status, StatusCommon, Value } from './api-types';
 import { APIEvent, EventStart, EventStop } from './api-events';
@@ -153,10 +154,7 @@ export class APICheckValues {
     // Check a single program definition
     programDefinition<PKey extends ProgramKey>(program: ProgramDefinition): ProgramDefinitionKV<PKey> {
         this.isLiteral(checkers.ProgramKey, LogLevel.INFO, 'ProgramDefinition', program, program.key);
-        if (program.options) {
-            program.options.forEach((option, index) =>
-                this.isKey(valuesTI, valuesTI.OptionValues, LogLevel.INFO, `ProgramDefinition.options[${index}]`, option, option.key));
-        }
+        if (program.options) this.optionDefinitions(program.options);
         return program as ProgramDefinitionKV<PKey>;
     }
 
@@ -174,9 +172,24 @@ export class APICheckValues {
 
     // Check a single program option
     option<Key extends OptionKey>(option: Option): OptionKV<Key> {
-        if (this.isKey(valuesTI, valuesTI.OptionValues, LogLevel.INFO,  'Option', option, option.key))
+        if (this.isKey(valuesTI, valuesTI.OptionValues, LogLevel.INFO,  'Option', option, option.key)) {
             this.isValue(checkers.OptionValues, LogLevel.ERROR, 'Option', option, option.key, option.value);
+        }
         return option as OptionKV<Key>;
+    }
+
+    // Check a list of program option definitionss
+    optionDefinitions(options: OptionDefinition[]): OptionDefinitionKV[] {
+        return options.map(option => this.optionDefinition(option));
+    }
+
+    // Check a single program option definition
+    optionDefinition<Key extends OptionKey>(option: OptionDefinition): OptionDefinitionKV<Key> {
+        if (this.isKey(valuesTI, valuesTI.OptionValues, LogLevel.INFO,  'OptionDefinition', option, option.key)) {
+            this.isConstraints(checkers.OptionValues, LogLevel.ERROR, 'OptionDefinition.constraints',
+                               option, option.key, option.constraints);
+        }
+        return option as OptionDefinitionKV<Key>;
     }
 
     // Check a list of statuses
@@ -186,8 +199,10 @@ export class APICheckValues {
 
     // Check a single status
     status<Key extends StatusKey>(status: Status): StatusKV<Key> {
-        if (this.isKey(valuesTI, valuesTI.StatusValues, LogLevel.WARN,  'Status', status, status.key))
+        if (this.isKey(valuesTI, valuesTI.StatusValues, LogLevel.WARN,  'Status', status, status.key)) {
             this.isValue(checkers.StatusValues, LogLevel.ERROR, 'Status', status, status.key, status.value);
+            this.isConstraints(checkers.StatusValues, LogLevel.ERROR, 'Status.constraints', status, status.key, status.constraints);
+        }
         return status as StatusKV<Key>;
     }
 
@@ -198,8 +213,10 @@ export class APICheckValues {
 
     // Check a single setting
     setting<Key extends SettingKey>(setting: Setting): SettingKV<Key> {
-        if (this.isKey(valuesTI, valuesTI.SettingValues, LogLevel.WARN,  'Setting', setting, setting.key))
+        if (this.isKey(valuesTI, valuesTI.SettingValues, LogLevel.WARN,  'Setting', setting, setting.key)) {
             this.isValue(checkers.SettingValues, LogLevel.ERROR, 'Setting', setting, setting.key, setting.value);
+            this.isConstraints(checkers.SettingValues, LogLevel.ERROR, 'Setting.constraints', setting, setting.key, setting.constraints);
+        }
         return setting as SettingKV<Key>;
     }
 
@@ -259,6 +276,31 @@ export class APICheckValues {
         }
         this.nextKeyReport[key] = now + REPORT_INTERVAL;
         return false;
+    }
+
+    // Test whether constraints are of the correct type
+    isConstraints(checker: Checker, level: LogLevel, type: string, json: object,
+                  key: string, constraints?: Constraints): boolean {
+        // Constraints are optional
+        if (constraints === undefined) return true;
+
+        const isValueResults: boolean[] = [];
+        const isValue = (type: string, value: Value) =>
+            isValueResults.push(this.isValue(checker, level, type, json, key, value));
+
+        // Check default value, if specified
+        if (constraints.default !== undefined) {
+            isValue(`${type}.default`, constraints.default);
+        }
+
+        // Check allowed values, if specified
+        if ('allowedvalues' in constraints) {
+            constraints.allowedvalues?.forEach((value, index) =>
+                isValue(`${type}.allowedvalues[${index}]`, value));
+        }
+
+        // Return whether all tests paassed
+        return !isValueResults.includes(false);
     }
 
     // Test whether a value is of the correct type
