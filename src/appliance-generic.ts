@@ -262,7 +262,9 @@ export class ApplianceBase {
             const matched = this.optionalFeatures.filter(predicate);
             if (matched.length) {
                 this.log.info(`${matched.length} optional feature${matched.length === 1 ? '' : 's'} ${description}:`);
-                const fields = matched.map(feature => [feature.name, feature.group, `(${feature.service} service)`]);
+                const sortBy = (feature: SchemaOptionalFeature) => `${feature.group} - ${feature.name}`;
+                const fields = matched.sort((a, b) => sortBy(a).localeCompare(sortBy(b)))
+                    .map(feature => [feature.name, feature.group, `(${feature.service} service)`]);
                 for (const line of columns(fields)) this.log.info(`    ${line}`);
             }
         };
