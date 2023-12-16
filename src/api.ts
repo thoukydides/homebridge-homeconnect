@@ -172,7 +172,7 @@ export class HomeConnectAPI {
     }
 
     // Get a specific option of the selected program
-    async getSelectedProgramOption(haid: string, key: OptionKey): Promise<OptionKV> {
+    async getSelectedProgramOption<Key extends OptionKey>(haid: string, key: Key): Promise<OptionKV<Key>> {
         const response = await this.ua.get<OptionWrapper>(
             checkers.OptionWrapper, `/api/homeappliances/${haid}/programs/selected/options/${key}`);
         return this.checkValues.option(response.data);
