@@ -52,6 +52,9 @@ type MapValueType<Type, IsNumber, IsBoolean, IsString, IsEnum> =
     : (Type extends boolean ? IsBoolean
        : (string extends Type ? IsString : IsEnum));
 
+// Extend and replace properties
+type ExtendKV<Super, Sub> = Sub & Omit<Super, keyof Sub>;
+
 // Srictly typed commands
 export interface CommandKV extends Command {
     key:            CommandKey;
@@ -74,59 +77,63 @@ export interface ProgramKV extends Program {
 }
 
 // Strongly typed program definition
-export interface ProgramDefinitionKV<PKey extends ProgramKey>
+export interface ProgramDefinitionKV<PKey extends ProgramKey = ProgramKey>
     extends Omit<ProgramDefinition, 'options'> {
     key:            PKey;
     options?:       OptionDefinitionKV[];
 }
-export type OptionDefinitionKV<KeyU extends OptionKey = OptionKey> =  { [Key in KeyU]: {
+export type OptionDefinitionKV<KeyU extends OptionKey = OptionKey> =
+{ [Key in KeyU]: ExtendKV<OptionDefinitionCommon, {
     key:            Key;
     type:           OptionTypeForType<OptionValue<Key>>;
     constraints?:   OptionConstraintsCommon & ConstraintsForType<OptionValue<Key>>;
-} }[KeyU] & OptionDefinitionCommon;
+}> }[KeyU];
 type OptionTypeForType<Type> = MapValueType<Type, 'Double' | 'Int', 'Boolean', 'String', string>;
 
 // Strongly typed option
-export type OptionKV<KeyU extends OptionKey = OptionKey> = { [Key in KeyU]: {
+export type OptionKV<KeyU extends OptionKey = OptionKey> =
+{ [Key in KeyU]: ExtendKV<Option, {
     key:            Key;
     value:          OptionValue<Key>;
-} }[KeyU] & Option;
+}> }[KeyU];
 
 // Strongly typed status
-export type StatusKV<KeyU extends StatusKey = StatusKey> = { [Key in KeyU]: {
+export type StatusKV<KeyU extends StatusKey = StatusKey> =
+{ [Key in KeyU]: ExtendKV<StatusCommon, {
     key:            Key;
     value:          StatusValue<Key>;
     constraints?:   ConstraintsForType<StatusValue<Key>>;
-} }[KeyU] & StatusCommon;
+}> }[KeyU];
 
 // Strongly typed setting
-export type SettingKV<KeyU extends SettingKey = SettingKey> = { [Key in KeyU]: {
+export type SettingKV<KeyU extends SettingKey = SettingKey> =
+{ [Key in KeyU]: ExtendKV<SettingCommon, {
     key:            Key;
     value:          SettingValue<Key>;
     constraints?:   ConstraintsForType<SettingValue<Key>>;
-} }[KeyU] & SettingCommon;
+}> }[KeyU];
 
 // Strongly typed events
 export type EventKV = EventApplianceConnectionKV | EventApplianceDataKV | EventStart | EventStop;
-type EventApplianceConnectionEvent = EventApplianceConnection['event'];
+export type EventApplianceConnectionEvent = EventApplianceConnection['event'];
 export type EventApplianceConnectionKV<EventU extends EventApplianceConnectionEvent = EventApplianceConnectionEvent> =
-{ [Event in EventU]: {
+{ [Event in EventU]: ExtendKV<EventApplianceConnection, {
     event:      Event;
     data?:      '' | EventDataKV<Event>;
-} }[EventU] & EventApplianceConnection;
-type EventApplianceDataEvent = EventApplianceData['event'];
+}> }[EventU];
+export type EventApplianceDataEvent = EventApplianceData['event'];
 export type EventApplianceDataKV<EventU extends EventApplianceDataEvent = EventApplianceDataEvent> =
-EventApplianceData & { [Event in EventU]: {
+{ [Event in EventU]: ExtendKV<EventApplianceData, {
     event:          Event;
     data:           Omit<EventApplianceData['data'], 'items'> & {
         items:      EventDataKV<Event>[];
     };
-} }[EventU];
+}> }[EventU];
 export type EventDataKV<EventU extends EventMapKey = EventMapKey, KeyU extends EventKey<EventU> = EventKey<EventU>> =
-{ [Event in EventU]: { [Key in KeyU]: {
+{ [Event in EventU]: { [Key in KeyU]: ExtendKV<EventData, {
     key:            Key;
     value:          EventValue<Key, Event>;
-} }[KeyU] }[EventU] & EventData;
+}> }[KeyU] }[EventU];
 
 // Minimum interval between reporting unrecognised keys
 const REPORT_INTERVAL = 24 * 60 * 60 * MS; // (24 hours in milliseconds)
