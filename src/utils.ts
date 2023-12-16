@@ -18,7 +18,6 @@ export type Copy<T> = { [K in keyof T]: T[K] };
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 // A mixin class must have a constructor with a single rest parameter of type 'any[]'.ts(2545)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Constructor<T = object> = new (...args: any[]) => T;
 
 // Type assertions

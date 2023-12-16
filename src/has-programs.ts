@@ -44,7 +44,6 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         autoSelectingPrograms: boolean = false;
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

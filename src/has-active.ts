@@ -14,7 +14,6 @@ export function HasActive<TBase extends Constructor<ApplianceBase>>(Base: TBase)
         readonly activeService: Service;
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

@@ -15,7 +15,6 @@ function HasCoolingModes<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
     return class HasCoolingModes extends HasModes(Base, 'cooling') {
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

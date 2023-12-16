@@ -11,7 +11,6 @@ export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerSe
     return class HasChildLock extends Base {
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

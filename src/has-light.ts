@@ -77,7 +77,6 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         ambientLightService?:    Service;
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

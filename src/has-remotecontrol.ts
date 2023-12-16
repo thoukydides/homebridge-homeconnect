@@ -12,7 +12,6 @@ export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { pow
     return class HasRemoteControl extends Base {
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

@@ -46,7 +46,6 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
         fanPercentStep: number = 0;
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

@@ -16,7 +16,6 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
         readonly doorService!: Service;
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

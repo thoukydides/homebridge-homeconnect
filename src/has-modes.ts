@@ -20,7 +20,6 @@ export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase,
         readonly modes: Partial<Record<SettingKey, string>> = {};
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 

@@ -87,6 +87,12 @@
         ],
         "@typescript-eslint/member-delimiter-style": [
             "warn"
+        ],
+        "@typescript-eslint/no-explicit-any": [
+            "error",
+            {
+                "ignoreRestArgs": true
+            }
         ]
     }
 }

@@ -19,7 +19,6 @@ export function HasRemainingTime<TBase extends Constructor<ApplianceBase & { act
     return class HasRemainingTime extends Base {
 
         // Mixin constructor
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         constructor(...args: any[]) {
             super(...args);
 
