@@ -106,6 +106,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
                 this.log.info(`Does not support ${type}`);
                 return;
             }
+            if (!this.hasOptionalFeature('Lightbulb', type, 'Light')) return;
 
             // Retrieve any previously cached light details
             const settings: LightSettings = await this.cache.get<LightSettings>(type) ?? {};
