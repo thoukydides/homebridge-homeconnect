@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+* **Dishwasher/Hood:** The HomeKit services for functional and ambient lights (`Lightbulb` service) can be individually enabled or disabled via the `config.json` file.
+### Changed
+* **Oven:** Improved workaround for appliances returning incorrect allowed Power State values.
+* Additional values (the default and allowed value contraints) returned by the Home Connect API are checked against expected values.
+### Fixed
+* Corrected retrieval of `undefined` values from the cache.
 
 ## [v0.32.0] - 2023-12-14
 ### Added

@@ -53,8 +53,8 @@ export class PersistCache {
         return item.value as Type;
     }
 
-    // Check whether an item in the cache has expired (or is missing)
-    async hasExpired(key: string): Promise<boolean> {
+    // Retrieve an item, if it exists checking that is has not expired
+    async getWithExpiry<Type>(key: string): Promise<{ value: Type; valid: boolean } | undefined> {
         await this.initialised;
         const item = this.cache[key];
         let description = `Cache "${key}"`;
@@ -71,7 +71,7 @@ export class PersistCache {
             }
         }
         this.log.debug(description + (expired ?? ''));
-        return expired !== undefined;
+        return item && { value: item.value as Type, valid: expired === undefined };
     }
 
     // Write an item to the cache

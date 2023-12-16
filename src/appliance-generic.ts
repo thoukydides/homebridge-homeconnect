@@ -282,11 +282,8 @@ export class ApplianceBase {
     async getCached<Type>(key: string, operation: () => Promise<Type>): Promise<Type> {
         // Use cached result if possible
         const cacheKey = `Appliance ${key}`;
-        if (!await this.cache.hasExpired(cacheKey)) {
-            const value = await this.cache.get<Type>(cacheKey);
-            assertIsDefined(value);
-            return value;
-        }
+        const cacheItem = await this.cache.getWithExpiry<Type>(cacheKey);
+        if (cacheItem?.valid) return cacheItem.value;
 
         try {
             // Wait for the appliance to connect and then attempt the operation
@@ -297,11 +294,10 @@ export class ApplianceBase {
             await this.cache.set(cacheKey, value);
             return value;
         } catch (err) {
-            const value = await this.cache.get<Type>(cacheKey);
-            if (value !== undefined) {
+            if (cacheItem) {
                 // Operation failed, so use the (expired) cache entry
                 this.log.warn(`Using expired cache result: ${err}`);
-                return value;
+                return cacheItem.value;
             } else {
                 logError(this.log, `Cached operation '${key}'`, err);
                 throw(err);
