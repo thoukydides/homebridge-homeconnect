@@ -420,7 +420,7 @@ export class ConfigSchema {
             groupForm.push({
                 type:           'flex',
                 'flex-flow':    'column',
-                title:          `Optional ${features[0].group || 'Features'}`,
+                title:          `Optional ${appliance.type} ${features[0].group || 'Features'}`,
                 items:          featuresForm
             });
         }

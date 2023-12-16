@@ -45,7 +45,7 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
             await setImmediateP();
 
             // Check whether events should be supported
-            if (this.events.length && !this.hasOptionalFeature('Stateless Programmable Switch', 'Appliance Event Buttons')) {
+            if (this.events.length && !this.hasOptionalFeature('Stateless Programmable Switch', 'Event Buttons')) {
                 this.events.length = 0;
             }
 
