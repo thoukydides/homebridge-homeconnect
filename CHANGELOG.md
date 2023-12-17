@@ -4,12 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.33.1] - 2023-12-17
+### Fixed
+* **Hood:** Corrected control of fan speed and ambient/functional lights. ([#185])
+
 ## [v0.33.0] - 2023-12-16
 ### Added
 * **Dishwasher/Hood:** The HomeKit services for functional and ambient lights (`Lightbulb` service) can be individually enabled or disabled via the `config.json` file.
 ### Changed
 * **Oven:** Improved workaround for appliances returning incorrect allowed Power State values.
-* Additional values returned by the Home Connect API (the default and allowed value contraints) are checked against expected values.
+* Additional values returned by the Home Connect API (the default and allowed value constraints) are checked against expected values.
 ### Fixed
 * Corrected retrieval of `undefined` values from the cache.
 
@@ -454,7 +458,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.1...HEAD
+[v0.33.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.0...v0.33.1
 [v0.33.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.32.0...v0.33.0
 [v0.32.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.31.0...v0.32.0
 [v0.31.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.30.2...v0.31.0

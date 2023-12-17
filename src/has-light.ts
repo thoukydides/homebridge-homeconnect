@@ -189,7 +189,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 
             // Control the light
             const updateHC = this.makeSerialisedObject<UpdateLightHCValue>(
-                value => this.updateFanHC(type, settings, service, value));
+                value => this.updateLightHC(type, settings, service, value));
 
             // Add the appropriate characteristics
             if (hasSettings(settings, 'on'))
@@ -206,8 +206,8 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         }
 
         // Deferred update of Home Connect state from HomeKit characteristics
-        async updateFanHC(type: string, settings: LightSettings, service: Service,
-                          value: UpdateLightHCValue): Promise<void> {
+        async updateLightHC(type: string, settings: LightSettings, service: Service,
+                            value: UpdateLightHCValue): Promise<void> {
             // Switch the light on or off
             if (hasSettings(settings, 'on') && value.on !== undefined) {
                 await this.setLightOn(type, settings, value.on);
