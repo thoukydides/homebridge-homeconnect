@@ -191,6 +191,11 @@ export type DryingTarget =
   | 'LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry'
   | 'LaundryCare.Dryer.EnumType.DryingTarget.CupboardDryPlus'
   | 'LaundryCare.Dryer.EnumType.DryingTarget.ExtraDry';
+export type DryingTargetAdjustment =
+    'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Off'
+  | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1'
+  | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2'
+  | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3';
 export type FanSetting =
     'Cooking.Hood.EnumType.Stage.FanOff'
   | 'Cooking.Hood.EnumType.Stage.FanStage01'
@@ -278,6 +283,10 @@ export type WasherTemperature =
   | 'LaundryCare.Washer.EnumType.Temperature.UlWarm'
   | 'LaundryCare.Washer.EnumType.Temperature.UlHot'
   | 'LaundryCare.Washer.EnumType.Temperature.UlExtraHot';
+export type WrinkleGuard =
+    'LaundryCare.Washer.EnumType.WrinkleGuard.Off'
+  | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min60'
+  | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min120';
 
 // State enumerated types
 export enum BatteryChargingState {
@@ -470,9 +479,11 @@ export interface OptionValues {
     'BSH.Common.Option.Duration'?:                                          number;
     'BSH.Common.Option.ElapsedProgramTime'?:                                number;
     'BSH.Common.Option.EnergyForecast'?:                                    number; // (undocumented)
+    'BSH.Common.Option.EstimatedTotalProgramTime'?:                         number; // (undocumented)
     'BSH.Common.Option.FinishInRelative'?:                                  number;
     'BSH.Common.Option.ProgramProgress'?:                                   number;
     'BSH.Common.Option.RemainingProgramTime'?:                              number;
+    'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   number; // (undocumented)
     'BSH.Common.Option.StartInRelative'?:                                   number;
     'BSH.Common.Option.WaterForecast'?:                                     number; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                  CleaningMode;
@@ -501,6 +512,9 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
+    'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
+    'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
+    'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
     'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
     'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
     'LaundryCare.Washer.Option.SpinSpeed'?:                                 SpinSpeed;
