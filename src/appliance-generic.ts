@@ -316,7 +316,7 @@ export class ApplianceBase {
     makeSerialisedObject<Value extends object, Returns = void>
     (operation: SerialisedOperation<Value, Returns>):
     (value?: Value) => Promise<Returns> {
-        const options: SerialisedOptions = { reset: true, verbose: true };
+        const options: SerialisedOptions = { reset: true };
         const serialised = new Serialised<Value, Returns>(this.log, operation, {} as Value, options);
         return (value?: Value) => serialised.trigger(value);
     }
