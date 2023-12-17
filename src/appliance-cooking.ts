@@ -36,6 +36,23 @@ export class ApplianceCoffeeMaker extends
         this.hasEvent('ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty',              'Bean Container Empty');
         this.hasEvent('ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty',                  'Water Tank Empty');
         this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DripTrayFull',                    'Drip Tray Full');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DescalingIn20Cups',               'Descaling In 20 Cups');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DescalingIn15Cups',               'Descaling In 15 Cups');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DescalingIn10Cups',               'Descaling In 10 Cups');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DescalingIn5Cups',                'Descaling In 5 Cups');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeDescaled',          'Device Should Be Descaled');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceDescalingOverdue',          'Device Descaling Overdue');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceDescalingBlockage',         'Device Descaling Blockage');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCleaned',           'Device Should Be Cleaned');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceCleaningOverdue',           'Device Cleaning Overdue');
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn20Cups',              "Calc'nClean In 20 Cups");
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn15Cups',              "Calc'NClean In 15 Cups");
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn10Cups',              "Calc'NClean In 10 Cups");
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn5Cups',               "Calc'NClean In 5 Cups");
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCalcNCleaned',      "Device Should Be Calc'NCleaned");
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanOverdue',         "Device Calc'NClean Overdue");
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanBlockage',        "Device Calc'NClean Blockage");
+        this.hasEvent('ConsumerProducts.CoffeeMaker.Event.KeepMilkTankCool',                'Keep Milk Tank Cool');
 
         // Add CoffeeMaker mode settings
         this.hasMode ('ConsumerProducts.CoffeeMaker.Setting.CupWarmer',                     'Cup Warmer');

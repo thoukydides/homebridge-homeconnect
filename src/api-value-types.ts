@@ -81,6 +81,7 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.MachineCare'
   | 'Dishcare.Dishwasher.Program.MagicDaily'
   | 'Dishcare.Dishwasher.Program.MaximumCleaning'
+  | 'Dishcare.Dishwasher.Program.MixedLoad'
   | 'Dishcare.Dishwasher.Program.NightWash'
   | 'Dishcare.Dishwasher.Program.Normal45'
   | 'Dishcare.Dishwasher.Program.Normal65'
@@ -178,6 +179,22 @@ export type CleaningMode =
     'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Silent'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Standard'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Power';
+export type CoffeeMilkRatio =
+    'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.10Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.20Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.25Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.30Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.40Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.50Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.55Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.60Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.65Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.67Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.70Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.75Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.80Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.85Percent'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.90Percent';
 export type CoffeeTemperature =
     'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.88C'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.90C'
@@ -479,11 +496,11 @@ export interface OptionValues {
     'BSH.Common.Option.Duration'?:                                          number;
     'BSH.Common.Option.ElapsedProgramTime'?:                                number;
     'BSH.Common.Option.EnergyForecast'?:                                    number; // (undocumented)
-    'BSH.Common.Option.EstimatedTotalProgramTime'?:                         number; // (undocumented)
+    'BSH.Common.Option.EstimatedTotalProgramTime'?:                         number;
     'BSH.Common.Option.FinishInRelative'?:                                  number;
     'BSH.Common.Option.ProgramProgress'?:                                   number;
     'BSH.Common.Option.RemainingProgramTime'?:                              number;
-    'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   number; // (undocumented)
+    'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   number;
     'BSH.Common.Option.StartInRelative'?:                                   number;
     'BSH.Common.Option.WaterForecast'?:                                     number; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                  CleaningMode;
@@ -491,6 +508,7 @@ export interface OptionValues {
     'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                ReferenceMapID;
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                 CoffeeMilkRatio;
     'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature'?:               CoffeeTemperature;
     'ConsumerProducts.CoffeeMaker.Option.FillQuantity'?:                    number;
     'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                        FlowRate;
@@ -510,6 +528,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
+    'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
@@ -640,7 +659,24 @@ export interface EventEventValues {
     'ConsumerProducts.CleaningRobot.Event.EmptyDustBoxAndCleanFilter'?:     EventPresentState;
     'ConsumerProducts.CleaningRobot.Event.RobotIsStuck'?:                   EventPresentState;
     'ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty'?:               EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn10Cups'?:               EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn15Cups'?:               EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn20Cups'?:               EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn5Cups'?:                EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn10Cups'?:                EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn15Cups'?:                EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn20Cups'?:                EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn5Cups'?:                 EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanBlockage'?:         EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanOverdue'?:          EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceCleaningOverdue'?:            EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceDescalingBlockage'?:          EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceDescalingOverdue'?:           EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCalcNCleaned'?:       EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCleaned'?:            EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeDescaled'?:           EventPresentState;
     'ConsumerProducts.CoffeeMaker.Event.DripTrayFull'?:                     EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.KeepMilkTankCool'?:                 EventPresentState;
     'ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty'?:                   EventPresentState;
     'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationNearlyReached'?:    EventPresentState;
     'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationReached'?:          EventPresentState;

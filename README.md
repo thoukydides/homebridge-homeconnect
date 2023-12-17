@@ -63,7 +63,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Switch on/off, start/stop programs with preset options, and turn cup warmer on/off.
     * Control child lock.
     * Monitor door, program time remaining, remote control, and general operation status.
-    * Automation triggers for bean container empty, water tank empty, and drip tray full.
+    * Automation triggers for bean container empty, water tank empty, drip tray full, milk requires cooling, and for when cleaning/descaling is needed.
   * **CookProcessor:**
     * Switch on/off.
     * Monitor program time remaining and general operation status.
