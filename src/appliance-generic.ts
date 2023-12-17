@@ -4,7 +4,7 @@
 import { CharacteristicSetHandler, CharacteristicValue, HAPStatus,
          Logger, Perms, PlatformAccessory, Service } from 'homebridge';
 
-import { setImmediate as setImmediateP } from 'timers/promises';
+import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers/promises';
 
 import { HasPower } from './has-power';
 import { PersistCache } from './persist-cache';
@@ -25,10 +25,9 @@ type ServiceConstructor = typeof Service & {
 // A typed accessory onSet() handler
 export type OnSetHandler<Type> = (value: Type) => Promise<unknown> | unknown;
 
-// An optional feature
-
 // Initialisation timeout
-const INITIALISATION_WARN_INTERVAL = 10 * MS;
+const INITIALISATION_WARN_FIRST    =     10 * MS; // (10 seconds)
+const INITIALISATION_WARN_INTERVAL = 5 * 60 * MS; // (5 minutes)
 
 // A Homebridge accessory for a generic Home Connect home appliance
 export class ApplianceBase {
@@ -115,36 +114,44 @@ export class ApplianceBase {
 
         // Summarise the initialisation tasks
         const startTime = Date.now();
-        let pendingTasks = this.asyncInitTasks.length;
-        this.log.debug(`Initialising ${pendingTasks} features: `
-                       + this.asyncInitTasks.map(task => task.name).join(', '));
+        const pendingNames = this.asyncInitTasks.map(task => task.name);
+        const features = (names: unknown[]) => `${names.length} feature${names.length === 1 ? '' : 's'}`;
+        this.log.debug(`Initialising ${features(pendingNames)}: ${pendingNames.join(', ')}`);
 
         // Log any initialisation errors as they occur
         const failedNames: string[] = [];
         const promises = this.asyncInitTasks.map(async task => {
             try {
                 await task.promise;
-                --pendingTasks;
                 this.log.debug(`${task.name} ready +${Date.now() - startTime}ms`);
             } catch (err) {
                 logError(this.log, `Initialising feature ${task.name}`, err);
                 failedNames.push(task.name);
+            } finally {
+                pendingNames.splice(pendingNames.indexOf(task.name), 1);
             }
         });
 
         // Wait for asynchronous initialisation to complete
-        const scheduled = setInterval(() => {
-            this.log.warn(`Waiting for ${pendingTasks} feature${pendingTasks === 1 ? '' : 's'} to finish initialising...`);
-        }, INITIALISATION_WARN_INTERVAL);
+        const initMonitor = async () => {
+            await Promise.race([setTimeoutP(INITIALISATION_WARN_FIRST)]);
+            if (pendingNames.length) {
+                this.log.warn('Appliance initialisation is taking longer than expected;'
+                              + ' some functionality will be limited until all features are ready');
+            }
+            while (pendingNames.length) {
+                this.log.warn(`Waiting for ${features(pendingNames)} to finish initialising: ${pendingNames.join(', ')}`);
+                await Promise.race([setTimeoutP(INITIALISATION_WARN_INTERVAL)]);
+            }
+        };
+        initMonitor();
         await Promise.allSettled(promises);
-        clearInterval(scheduled);
 
         // Summarise the initialisation result
         const initDuration = formatMilliseconds(Date.now() - startTime);
         if (failedNames.length) {
-            this.log.error(`Initialisation failed for ${failedNames.length}`
-                         + ` of ${this.asyncInitTasks.length} features (${initDuration}): `
-                         + failedNames.join(', '));
+            this.log.error(`Initialisation failed for ${failedNames.length} of ${features(this.asyncInitTasks)}`
+                           + ` (${initDuration}): ${failedNames.join(', ')}`);
         } else {
             this.log.info(`All features successfully initialised in ${initDuration}`);
         }
