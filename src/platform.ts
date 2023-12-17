@@ -9,7 +9,7 @@ import { join } from 'path';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 import { CheckerT, createCheckers, IErrorDetail } from 'ts-interface-checker';
 
-import { HomeConnectAPI } from './api';
+import { CloudAPI, HomeConnectAPI } from './api';
 import { HomeConnectDevice } from './homeconnect-device';
 import { ApplianceBase } from './appliance-generic';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
@@ -27,6 +27,7 @@ import { checkDependencyVersions } from './check-versions';
 import { HOMEBRIDGE_LANGUAGES } from './api-languages';
 import { HomeAppliance } from './api-types';
 import configTI from './ti/config-types-ti';
+import { MockAPI } from './mock-api';
 
 // Checkers for config.json configuration
 const checkers = createCheckers(configTI) as {
@@ -104,7 +105,9 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
                 this.schema = new ConfigSchema(this.log, this.persist, this.hb.user.storagePath());
 
                 // Connect to the Home Connect cloud
-                this.homeconnect = new HomeConnectAPI(this.log, this.configPlugin, this.persist);
+                this.homeconnect = this.configPlugin.debug.includes('Mock Appliances')
+                    ? new MockAPI (this.log, this.configPlugin, this.persist)
+                    : new CloudAPI(this.log, this.configPlugin, this.persist);
                 this.schema.setAuthorised(await this.homeconnect.getAuthorisationURI());
 
                 // Start polling the list of Home Connect appliances

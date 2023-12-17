@@ -220,7 +220,8 @@
                     "enum": [
                         "Log API Headers",
                         "Log API Bodies",
-                        "Log Debug as Info"
+                        "Log Debug as Info",
+                        "Mock Appliances"
                     ]
                 }
             }

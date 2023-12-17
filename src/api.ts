@@ -25,8 +25,40 @@ import apiTI from './ti/api-types-ti';
 // Checkers for API responses
 const checkers = createCheckers(apiTI);
 
+// Home Connect API methods
+export interface HomeConnectAPI {
+    hasScope                                       (scope: string):                                     boolean;
+    getAppliances                                  ():                                                  Promise<HomeAppliance[]>;
+    getAppliance                                   (haid: string):                                      Promise<HomeAppliance>;
+    getPrograms                                    (haid: string):                                      Promise<ProgramsKV>;
+    getAvailablePrograms                           (haid: string):                                      Promise<ProgramsKV>;
+    getAvailableProgram<Key extends ProgramKey>    (haid: string, key: Key):                            Promise<ProgramDefinitionKV<Key>>;
+    getActiveProgram                               (haid: string):                                      Promise<ProgramKV>;
+    setActiveProgram                               (haid: string, key: ProgramKey, options: OptionKV[]):Promise<void>;
+    stopActiveProgram                              (haid: string):                                      Promise<void>;
+    getActiveProgramOptions                        (haid: string):                                      Promise<OptionKV[]>;
+    setActiveProgramOptions                        (haid: string, options: OptionKV[]):                 Promise<void>;
+    getActiveProgramOption<Key extends OptionKey>  (haid: string, key: Key):                            Promise<OptionKV<Key>>;
+    setActiveProgramOption<Key extends OptionKey>  (haid: string, key: Key, value: OptionValue<Key>):   Promise<void>;
+    getSelectedProgram                             (haid: string):                                      Promise<ProgramKV>;
+    setSelectedProgram                             (haid: string, key: ProgramKey, options: OptionKV[]):Promise<void>;
+    getSelectedProgramOptions                      (haid: string):                                      Promise<OptionKV[]>;
+    setSelectedProgramOptions                      (haid: string, options: OptionKV[]):                 Promise<void>;
+    getSelectedProgramOption<Key extends OptionKey>(haid: string, key: Key):                            Promise<OptionKV<Key>>;
+    setSelectedProgramOption<Key extends OptionKey>(haid: string, key: Key, value: OptionValue<Key>):   Promise<void>;
+    getStatus                                      (haid: string):                                      Promise<StatusKV[]>;
+    getStatusSpecific<Key extends StatusKey>       (haid: string, key: Key):                            Promise<StatusKV<Key>>;
+    getSettings                                    (haid: string):                                      Promise<SettingKV[]>;
+    getSetting<Key extends SettingKey>             (haid: string, key: Key):                            Promise<SettingKV<Key>>;
+    setSetting<Key extends SettingKey>             (haid: string, key: Key, value: SettingValue<Key>):  Promise<void>;
+    getCommands                                    (haid: string):                                      Promise<CommandKV[]>;
+    setCommand                                     (haid: string, key: CommandKey):                     Promise<void>;
+    getEvents                                      (haid?: string):                                     AsyncGenerator<EventKV, void, void>;
+    getAuthorisationURI                            ():                                                  Promise<AuthorisationURI | null>;
+}
+
 // Low-level access to the Home Connect API
-export class HomeConnectAPI {
+export class CloudAPI implements HomeConnectAPI {
 
     // User agent used for all requests
     private readonly ua: APIAuthoriseUserAgent;
@@ -94,11 +126,11 @@ export class HomeConnectAPI {
     }
 
     // Get the details of a specific available programs
-    async getAvailableProgram<PKey extends ProgramKey>(haid: string, key: PKey): Promise<ProgramDefinitionKV<PKey>> {
+    async getAvailableProgram<Key extends ProgramKey>(haid: string, key: Key): Promise<ProgramDefinitionKV<Key>> {
         const response = await this.ua.get<ProgramDefinitionWrapper>(
             checkers.ProgramDefinitionWrapper,
             `/api/homeappliances/${haid}/programs/available/${key}`);
-        return this.checkValues.programDefinition<PKey>(response.data);
+        return this.checkValues.programDefinition<Key>(response.data);
     }
 
     // Get the program which is currently being executed
