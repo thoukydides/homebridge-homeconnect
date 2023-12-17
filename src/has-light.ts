@@ -194,7 +194,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             // Add the appropriate characteristics
             if (hasSettings(settings, 'on'))
                 this.addLightOn        (type, settings, service, updateHC);
-            if (hasSettings(settings, 'brightness'))
+            if (hasSettings(settings, 'brightness') || hasSettings(settings, 'colour', 'custom'))
                 this.addLightBrightness(type, settings, service, updateHC);
             if (hasSettings(settings, 'colourtemp'))
                 this.addLightColourTemp(type, settings, service, updateHC);
@@ -249,19 +249,28 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         }
 
         // Add brightness control of a light
-        addLightBrightness(type: string, settings: LightSettings<'brightness'>, service: Service, updateLightHC: UpdateLightHC): void {
-            // Set the supported brightness range
-            const constraints = settings.brightness.constraints ?? {};
-            service.getCharacteristic(this.Characteristic.Brightness)
-                .updateValue(Math.round(settings.brightness.value ?? 100))
-                .setProps({ minValue: constraints.min ?? 10, maxValue: constraints.max ?? 100 });
+        addLightBrightness(type: string, settings: LightSettings<'brightness'> | LightSettings<'colour' | 'custom'>,
+                           service: Service, updateLightHC: UpdateLightHC): void {
+            if (hasSettings(settings, 'brightness')) {
+                // The light has explicit brightness support
+                const constraints = settings.brightness.constraints;
+                service.getCharacteristic(this.Characteristic.Brightness)
+                    .updateValue(Math.round(settings.brightness.value ?? 100))
+                    .setProps({ minValue: constraints?.min ?? 10, maxValue: constraints?.max ?? 100 });
 
-            // Update the brightness
-            this.device.on(settings.brightness.key, percent => {
-                percent = Math.round(percent);
-                this.log.info(`Light ${type} ${percent}% brightness`);
-                service.updateCharacteristic(this.Characteristic.Brightness, percent);
-            });
+                // Update the brightness
+                this.device.on(settings.brightness.key, percent => {
+                    percent = Math.round(percent);
+                    this.log.info(`Light ${type} ${percent}% brightness`);
+                    service.updateCharacteristic(this.Characteristic.Brightness, percent);
+                });
+            } else {
+                // Using a custom colour to set arbitrary brightness
+                service.getCharacteristic(this.Characteristic.Brightness)
+                    .setProps({ minValue: 0, maxValue: 100 });
+            }
+
+            // Update the light's brightness when it changes in HomeKit
             service.getCharacteristic(this.Characteristic.Brightness)
                 .onSet(this.onSetNumber(value => updateLightHC({ brightness: value })));
         }
