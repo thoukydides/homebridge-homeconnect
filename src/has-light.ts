@@ -253,8 +253,8 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             // Set the supported brightness range
             const constraints = settings.brightness.constraints ?? {};
             service.getCharacteristic(this.Characteristic.Brightness)
-                .setProps({ minValue: constraints.min ?? 10, maxValue: constraints.max ?? 100 })
-                .updateValue(Math.round(settings.brightness.value ?? 100));
+                .updateValue(Math.round(settings.brightness.value ?? 100))
+                .setProps({ minValue: constraints.min ?? 10, maxValue: constraints.max ?? 100 });
 
             // Update the brightness
             this.device.on(settings.brightness.key, percent => {
