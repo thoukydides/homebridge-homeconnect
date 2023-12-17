@@ -658,8 +658,8 @@ export class HomeConnectDevice extends EventEmitter {
 
     // Process a single received event
     eventListener(event: EventKV): void {
-        const itemCount = 'data' in event && event.data !== ''
-                          ? (Array.isArray(event.data) ? event.data.length : 1) : 0;
+        const itemCount = 'data' in event && event.data
+                          ? ('items' in event.data ? event.data.items.length : 1) : 0;
         this.log.debug(`Event ${event.event} (${itemCount} items)`);
         switch (event.event) {
         case 'START':
