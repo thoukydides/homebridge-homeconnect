@@ -301,7 +301,7 @@ export type WasherTemperature =
   | 'LaundryCare.Washer.EnumType.Temperature.UlHot'
   | 'LaundryCare.Washer.EnumType.Temperature.UlExtraHot';
 export type WrinkleGuard =
-    'LaundryCare.Washer.EnumType.WrinkleGuard.Off'
+    'LaundryCare.Dryer.EnumType.WrinkleGuard.Off'
   | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min60'
   | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min120';
 
