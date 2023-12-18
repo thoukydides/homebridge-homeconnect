@@ -208,7 +208,7 @@ export type DryingTarget =
   | 'LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry'
   | 'LaundryCare.Dryer.EnumType.DryingTarget.CupboardDryPlus'
   | 'LaundryCare.Dryer.EnumType.DryingTarget.ExtraDry';
-export type DryingTargetAdjustment =
+export type DryingTargetAdjustment = // (undocumented)
     'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Off'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2'
@@ -265,6 +265,9 @@ export type ReferenceMapID =
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map3'
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map4'
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map5';
+export type RinsePlus = // (undocumented)
+    'LaundryCare.Washer.EnumType.RinsePlus.Off'
+  | 'LaundryCare.Washer.EnumType.RinsePlus.On';
 export type SpinSpeed =
     'LaundryCare.Washer.EnumType.SpinSpeed.Off'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM400'
@@ -278,6 +281,9 @@ export type SpinSpeed =
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlLow'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlMedium'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlHigh';
+export type Stains = // (undocumented)
+    'LaundryCare.Washer.EnumType.Stains.Off'
+  | 'LaundryCare.Washer.EnumType.Stains.On';
 export type VarioPerfect =
     'LaundryCare.Common.EnumType.VarioPerfect.Off'
   | 'LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect'
@@ -287,7 +293,8 @@ export type WarmingLevel =
   | 'Cooking.Oven.EnumType.WarmingLevel.Medium'
   | 'Cooking.Oven.EnumType.WarmingLevel.High';
 export type WasherTemperature =
-    'LaundryCare.Washer.EnumType.Temperature.Cold'
+    'LaundryCare.Washer.EnumType.Temperature.Auto' // (undocumented)
+  | 'LaundryCare.Washer.EnumType.Temperature.Cold'
   | 'LaundryCare.Washer.EnumType.Temperature.GC20'
   | 'LaundryCare.Washer.EnumType.Temperature.GC30'
   | 'LaundryCare.Washer.EnumType.Temperature.GC40'
@@ -300,7 +307,7 @@ export type WasherTemperature =
   | 'LaundryCare.Washer.EnumType.Temperature.UlWarm'
   | 'LaundryCare.Washer.EnumType.Temperature.UlHot'
   | 'LaundryCare.Washer.EnumType.Temperature.UlExtraHot';
-export type WrinkleGuard =
+export type WrinkleGuard = // (undocumented)
     'LaundryCare.Dryer.EnumType.WrinkleGuard.Off'
   | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min60'
   | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min120';
@@ -500,7 +507,7 @@ export interface OptionValues {
     'BSH.Common.Option.FinishInRelative'?:                                  number;
     'BSH.Common.Option.ProgramProgress'?:                                   number;
     'BSH.Common.Option.RemainingProgramTime'?:                              number;
-    'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   number;
+    'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   boolean;
     'BSH.Common.Option.StartInRelative'?:                                   number;
     'BSH.Common.Option.WaterForecast'?:                                     number; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                  CleaningMode;
@@ -529,6 +536,8 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;
+    'LaundryCare.Common.Option.LoadRecommendation'?:                        number; // (undocumented)
+    'LaundryCare.Common.Option.ReferToProgram'?:                            number; // (undocumented)
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
@@ -536,8 +545,16 @@ export interface OptionValues {
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
     'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
     'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
+    'LaundryCare.Washer.Option.LessIroning'?:                               boolean; // (undocumented)
+    'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
+    'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
+    'LaundryCare.Washer.Option.RinsePlus'?:                                 RinsePlus; // (undocumented)
+    'LaundryCare.Washer.Option.SilentWash'?:                                boolean; // (undocumented)
+    'LaundryCare.Washer.Option.Soak'?:                                      boolean; // (undocumented)
     'LaundryCare.Washer.Option.SpinSpeed'?:                                 SpinSpeed;
+    'LaundryCare.Washer.Option.Stains'?:                                    Stains; // (undocumented)
     'LaundryCare.Washer.Option.Temperature'?:                               WasherTemperature;
+    'LaundryCare.Washer.Option.WaterPlus'?:                                 boolean;
 }
 
 // Statuses
