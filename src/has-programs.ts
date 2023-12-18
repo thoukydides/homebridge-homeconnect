@@ -118,7 +118,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 const available = await this.device.getAvailablePrograms();
                 const availableKeys = available.map(p => p.key);
                 const unavailablePrograms = this.programs.filter(p => !availableKeys.includes(p.key));
-                warnPrograms(unavailablePrograms, 'advertised by appliance but currently unavailable');
+                warnPrograms(unavailablePrograms, 'advertised by appliance currently unavailable');
                 const unexpectedPrograms = available.filter(avail => !this.programs.some(p => p.key === avail.key));
                 warnPrograms(unexpectedPrograms, 'available but unexpected (not included in list of all supported programs)');
 
