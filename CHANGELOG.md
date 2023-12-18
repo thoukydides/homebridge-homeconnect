@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.34.1] - 2023-12-18
+### Changed
+* Tweaked the messages that are written to the log when the supported options cannot be read for some programs. This is because some appliances advertise support for programs that cannot be selected. (#186)
+
 ## [v0.34.0] - 2023-12-17
 ### Added
 * **CoffeeMaker:** Added new event buttons (`Stateless Programmable Switch` services) that can be used to trigger HomeKit automations. These indicate when when the milk container should be removed and put in a cool place, and when cleaning and/or descaling is required.
@@ -17,7 +21,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.33.1] - 2023-12-17
 ### Fixed
-* **Hood:** Corrected control of fan speed and ambient/functional lights. ([#185])
+* **Hood:** Corrected control of fan speed and ambient/functional lights. (#185)
 
 ## [v0.33.0] - 2023-12-16
 ### Added
@@ -469,7 +473,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.1...HEAD
+[v0.34.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.0...v0.34.1
 [v0.34.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.1...v0.34.0
 [v0.33.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.0...v0.33.1
 [v0.33.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.32.0...v0.33.0

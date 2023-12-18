@@ -98,6 +98,14 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
 
         // Refresh details of all programs
         async refreshPrograms(active: boolean = false): Promise<void> {
+            const warnPrograms = (programs: ProgramDefinitionKV[], description: string) => {
+                if (!programs.length) return;
+                this.log.warn(`${programs.length} program${programs.length === 1 ? '' : 's'}`
+                              + `${this.programs.length ? ` (of ${this.programs.length})` : ''} ${description}:`);
+                const fields = programs.map(program => [program.name ?? '?', `(${program.key})`]);
+                for (const line of columns(fields)) this.log.warn(`    ${line}`);
+            };
+
             try {
                 // Read the list of all supported programs
                 const all = await this.getCached('programs', () => this.device.getAllPrograms());
@@ -109,27 +117,22 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 // Read the list of currently available programs (not cached)
                 const available = await this.device.getAvailablePrograms();
                 const availableKeys = available.map(p => p.key);
-                const unavailable = this.programs.length - available.length;
-                if (0 < unavailable) this.log.warn(`${unavailable} of ${this.programs.length} programs are currently unavailable`);
+                const unavailablePrograms = this.programs.filter(p => !availableKeys.includes(p.key));
+                warnPrograms(unavailablePrograms, 'advertised by appliance but currently unavailable');
+                const unexpectedPrograms = available.filter(avail => !this.programs.some(p => p.key === avail.key));
+                warnPrograms(unexpectedPrograms, 'available but unexpected (not included in list of all supported programs)');
 
                 // First read programs passively (less likely to generate errors)
-                const passiveKeys = availableKeys.filter(key => {
-                    const program = this.programs.find(p => p.key === key);
-                    return program && !program.selected;
-                });
+                const passiveKeys = availableKeys.filter(key => this.programs.some(p => p.key === key && !p.selected));
                 if (passiveKeys.length) {
                     // Update details of the selected programs
                     this.log.info(`Passively reading options for ${passiveKeys.length} programs`);
                     await this.updateProgramsWithoutSelecting(passiveKeys);
                 }
 
-                // Check whether any programs should be actively read
-                const activeKeys = availableKeys.filter(key => {
-                    // Only read missing programs unless an active refresh
-                    const program = this.programs.find(p => p.key === key);
-                    return program && this.device.hasScope('Control') && (active || !program.selected);
-                });
-                if (activeKeys.length) {
+                // Actively read programs missing options (unless active refresh)
+                const activeKeys = availableKeys.filter(key => this.programs.some(p => p.key === key && (active || !p.selected)));
+                if (this.device.hasScope('Control') && activeKeys.length) {
                     // Check whether the appliance is in a suitable state
                     const problems = [];
                     if (!this.device.isOperationState('Inactive', 'Ready'))
@@ -153,23 +156,56 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 await this.savePrograms();
 
                 // Summarise the results
-                const missing = this.programs.filter(p => !p.options).length;
-                const unselected = this.device.hasScope('Control') && this.programs.filter(p => !p.selected).length;
-                if (missing || unselected) {
-                    if (missing) this.log.warn(`Missing options for ${missing} programs`);
-                    else this.log.warn(`Possible missing options for ${unselected} programs`);
-                    this.log.warn('To update the program options for this appliance:');
-                    if (this.device.hasScope('Control')) {
-                        this.log.warn('  - Enable remote control on the appliance');
-                        this.log.warn('  - Avoid operating the appliance locally');
-                    }
-                    this.log.warn('  - Ensure that no program is active');
-                    this.log.warn('  - Fill any consumables that may be required');
-                    this.log.warn("  - Either restart Homebridge or invoke the appliance's Identify routine");
+                const missingPrograms = this.programs.filter(p => !p.options);
+                const unselectedPrograms = this.device.hasScope('Control') ? this.programs.filter(p => p.options && !p.selected) : [];
+                if (missingPrograms.length || unselectedPrograms.length) {
+                    warnPrograms(missingPrograms, 'missing options (program never available to read supported options)');
+                    warnPrograms(unselectedPrograms, 'could not be selected (details of supported options may be unreliable)');
+                    this.missingOptionsHelp([...missingPrograms, ...unselectedPrograms]);
                 } else {
                     this.log.info('Finished reading available program options');
                 }
             }
+        }
+
+        // Suggest how to resolve missing program options
+        missingOptionsHelp(programs: ProgramDefinitionKV[]): void {
+            // General comments about the issue
+            this.log.info('This could be entirely expected if some programs are never available for use'
+                          + ' (e.g. some appliances require Sabbath programs to be enabled in'
+                          + ' the appliance setting before they can be selected)');
+            this.log.info('Unavailable programs may also be due to bugs in the appliance firmware or Home Connect API service');
+
+            // Appliance state that might affect reading of program options
+            const localControl  = this.device.getItem('BSH.Common.Status.LocalControlActive');
+            const remoteControl = this.device.getItem('BSH.Common.Status.RemoteControlActive');
+
+            // Detailed suggestions
+            let stepCount = 0;
+            const logStep = (step: string, subSteps: string[] = []) => {
+                this.log.info(`    ${++stepCount}.  ${step}`);
+                subSteps.forEach((sub, index) => this.log.info(`      (${String.fromCharCode('a'.charCodeAt(0) + index)})  ${sub}`));
+            };
+            this.log.info('However, if these programs should be usable then these steps may help resolve the issue:');
+            const preconditions = [];
+            preconditions.push('Replenish any consumables that are low or empty');
+            preconditions.push('Complete any required cleaning or other maintenance operations');
+            preconditions.push('Ensure that the appliance has power and that no program is active');
+            if (this.device.hasScope('Control') && remoteControl === false) {
+                preconditions.push('Enable remote control on the appliance; this setting is currently disabled)');
+            }
+            if (this.device.hasScope('Control') && localControl !== undefined) {
+                preconditions.push('Leave the appliance idle for a few minutes (so that it can be controlled remotely)'
+                                   + `${localControl ? '; it is currently being controlled locally' : ''}`);
+            }
+            logStep('Ensure that the appliance is in a suitable state to allow selection of all programs:', preconditions);
+            logStep('Manually select (but do not start) each program on the appliance,'
+                    + ' leaving the appliance idle for a couple of minutes after each selection:',
+                    programs.map(p => p.name ?? p.key.replace(/^.*\./, '')));
+            logStep('Trigger this plugin to re-read the details of all programs using one of these methods:', [
+                'Restart the Homebridge instance for this plugin',
+                'Invoke the HomeKit "Identify" routine for this appliance (e.g. using the "ID" button in the Eve app)'
+            ]);
         }
 
         // Update the details of specified programs without selecting them first
@@ -296,8 +332,8 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 if (!programKey) return this.log.info('No program selected');
 
                 // Check that the program is actually supported
-                const program = this.programs.find(program => program.key === programKey);
-                if (!program) return this.log.warn(`Selected program ${programKey} is not supported by the Home Connect API`);
+                const supported = this.programs.some(program => program.key === programKey);
+                if (!supported) return this.log.warn(`Selected program ${programKey} is not supported by the Home Connect API`);
 
                 // Read and save the options for this program
                 await setTimeoutP(READY_DELAY);
@@ -428,7 +464,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         addPrograms(programs: CheckedProgramConfig[]): void {
             // Add a service for each program
             this.log.info(`Adding services for ${programs.length} programs`);
-            const fields = programs.map(program => [program.name, `(${program.key})`, program.selectonly ? 'select only' : '']);
+            const fields = programs.map(program => [program.name || '?', `(${program.key})`, program.selectonly ? 'select only' : '']);
             const descriptions = columns(fields);
             let prevService;
             for (const program of programs) {
