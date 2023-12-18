@@ -120,6 +120,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 
   * **Freezer / FridgeFreezer / Refrigerator:**
     * Set freezer/refrigerator super, eco, sabbath, refrigerator vacation, refrigerator fresh, and ice dispenser modes.
+    * Switch interior/exterior light on/off and change brightness.
     * Open the door.
     * Control child lock.
     * Monitor power and door.
@@ -150,7 +151,7 @@ Before raising an issue please check whether it relates to an expected [error me
 
 Please attach the relevant section of the Homebridge log file, either pasted into the issue or attached as a text file (*not a screenshot*). Extra debug should be enabled and captured if appropriate:
 
-  * **Homebridge debug logging:** Start Homebridge with the `-D` option to capture the *debug* level messages. These are used by this plugin to log basic information about each request to the Home Connect servers (but not the actual contents of the requests or responses) and other internal state. Please enable this for any issues that involve problems connecting to the Home Connect servers, API errors, or other problems with appliance state or control.
+  * **Homebridge debug logging:** Start Homebridge with the `-D` option to capture the *debug* level messages. Alternatively, set the `Log Debug as Info` debug option in the plugin's [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json) configuration. These are used by this plugin to log basic information about each request to the Home Connect servers (but not the actual contents of the requests or responses) and other internal state. Please enable this for any issues that involve problems connecting to the Home Connect servers, API errors, or other problems with appliance state or control.
   * **HomeKit Accessory Protocol (HAP) logging:** Setting the `DEBUG=*` environment variable before starting Homebridge results in verbose logging of all [HAP-NodeJS](https://github.com/KhaosT/HAP-NodeJS) HomeKit exchanges. Please enable this for any issues that involve problems controlling appliances from HomeKit or Siri.
 
 ## License
