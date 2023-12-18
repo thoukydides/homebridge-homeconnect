@@ -35,10 +35,22 @@ const AMBIENT_LIGHT_KEY = {
     colour:     'BSH.Common.Setting.AmbientLightColor',
     custom:     'BSH.Common.Setting.AmbientLightCustomColor'
 } as const;
-type LightKeyRef = keyof typeof FUNCTIONAL_LIGHT_KEY | keyof typeof AMBIENT_LIGHT_KEY;
+const INTERNAL_LIGHT_KEY = {
+    on:         'Refrigeration.Common.Setting.Light.Internal.Power',
+    brightness: 'Refrigeration.Common.Setting.Light.Internal.Brightness'
+} as const;
+const EXTERNAL_LIGHT_KEY = {
+    on:         'Refrigeration.Common.Setting.Light.Internal.Power',
+    brightness: 'Refrigeration.Common.Setting.Light.Internal.Brightness'
+} as const;
+
+type LightKeyRef = keyof typeof FUNCTIONAL_LIGHT_KEY | keyof typeof AMBIENT_LIGHT_KEY
+                 | keyof typeof INTERNAL_LIGHT_KEY   | keyof typeof EXTERNAL_LIGHT_KEY;
 type LightKey<Ref extends LightKeyRef = LightKeyRef> =
     (Ref extends keyof typeof FUNCTIONAL_LIGHT_KEY ? (typeof FUNCTIONAL_LIGHT_KEY)[Ref] : never)
-  | (Ref extends keyof typeof AMBIENT_LIGHT_KEY    ? (typeof AMBIENT_LIGHT_KEY)   [Ref] : never);
+  | (Ref extends keyof typeof AMBIENT_LIGHT_KEY    ? (typeof AMBIENT_LIGHT_KEY)   [Ref] : never)
+  | (Ref extends keyof typeof INTERNAL_LIGHT_KEY   ? (typeof INTERNAL_LIGHT_KEY)  [Ref] : never)
+  | (Ref extends keyof typeof EXTERNAL_LIGHT_KEY   ? (typeof EXTERNAL_LIGHT_KEY)  [Ref] : never);
 export interface LightKeyDefinition {
     on:             LightKey<'on'>;
     brightness:     LightKey<'brightness'>;
@@ -73,8 +85,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
     return class HasLight extends Base {
 
         // Accessory services
-        functionalLightService?: Service;
-        ambientLightService?:    Service;
+        lightService: Service[] = [];
 
         // Mixin constructor
         constructor(...args: any[]) {
@@ -86,13 +97,16 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 
         // Asynchronous initialisation
         async initHasLight(): Promise<void> {
-            // Add a functional light and an ambient light, if supported
-            this.functionalLightService = await this.addLightIfSupported('Functional Light', FUNCTIONAL_LIGHT_KEY);
-            this.ambientLightService    = await this.addLightIfSupported('Ambient Light',    AMBIENT_LIGHT_KEY);
+            // Add all supported light types
+            await this.addLightIfSupported('Functional Light', FUNCTIONAL_LIGHT_KEY);
+            await this.addLightIfSupported('Ambient Light',    AMBIENT_LIGHT_KEY);
+            await this.addLightIfSupported('Internal Light',   INTERNAL_LIGHT_KEY);
+            await this.addLightIfSupported('External Light',   EXTERNAL_LIGHT_KEY);
 
-            // If both lights are supported then link their services
-            if (this.functionalLightService && this.ambientLightService) {
-                this.functionalLightService.addLinkedService(this.ambientLightService);
+            // If multiple lights are supported then link their services
+            if (1 < this.lightService.length) {
+                for (const service of this.lightService.slice(1))
+                    service.addLinkedService(this.lightService[0]);
             }
         }
 
@@ -116,7 +130,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             await this.refreshLight(type, keys, settings, !settings.on);
 
             // Add the light
-            return this.addLight(type, settings);
+            this.lightService.push(this.addLight(type, settings));
         }
 
         // Refresh details of a light

@@ -326,7 +326,12 @@ export enum DoorState {
     Closed                  = 'BSH.Common.EnumType.DoorState.Closed',
     Locked                  = 'BSH.Common.EnumType.DoorState.Locked'
 }
-export type DoorStateRefrigeration   = DoorState.Open | DoorState.Closed;
+export enum DoorStateRefrigeration {
+    Open                    = 'BSH.Common.EnumType.DoorState.Open',
+    Closed                  = 'BSH.Common.EnumType.DoorState.Closed',
+    RefrigerationOpen       = 'Refrigeration.Common.EnumType.Door.States.Open', // (undocumented)
+    RefrigerationClosed     = 'Refrigeration.Common.EnumType.Door.States.Closed' // (undocumented)
+}
 export type DoorStateBottleCooler    = DoorStateRefrigeration;
 export type DoorStateFlexCompartment = DoorStateRefrigeration;
 export type DoorStateFreezer         = DoorStateRefrigeration;
@@ -534,6 +539,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.HygienePlus'?:                              boolean;
     'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
+    'Dishcare.Dishwasher.Option.VarioSpeed'?:                               boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;
     'LaundryCare.Common.Option.LoadRecommendation'?:                        number; // (undocumented)
@@ -634,6 +640,10 @@ export interface SettingValues {
     'Refrigeration.Common.Setting.Door.AssistantTriggerFridge'?:            AssistantTrigger;
     'Refrigeration.Common.Setting.EcoMode'?:                                boolean;
     'Refrigeration.Common.Setting.FreshMode'?:                              boolean;
+    'Refrigeration.Common.Setting.Light.External.Brightness'?:              number; // (undocumented)
+    'Refrigeration.Common.Setting.Light.External.Power'?:                   boolean; // (undocumented)
+    'Refrigeration.Common.Setting.Light.Internal.Brightness'?:              number; // (undocumented)
+    'Refrigeration.Common.Setting.Light.Internal.Power'?:                   boolean; // (undocumented)
     'Refrigeration.Common.Setting.SabbathMode'?:                            boolean;
     'Refrigeration.Common.Setting.VacationMode'?:                           boolean;
     'Refrigeration.Common.Setting.WineCompartment.SetpointTemperature'?:    number;

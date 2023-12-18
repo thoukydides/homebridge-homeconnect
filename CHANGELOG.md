@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.35.0] - 2023-12-18
+### Added
+* **Freezer/Fridge/FridgeFreezer:** Added control of internal/external lights.
+### Changed
+* **Dishwasher:** Accept the undocumented option value `Dishcare.Dishwasher.Option.VarioSpeed`. (#189)
+* **Freezer/Fridge/FridgeFreezer:** Accept undocumented door state values. Added undocumented internal/external light settings. (#189)
+
 ## [v0.34.2] - 2023-12-18
 ### Changed
 * **Washer/WasherDryer:** Added undocumented option value `LaundryCare.Washer.EnumType.Temperature.Auto`. Added several other undocumented program options, with guesses at their possible values. 
@@ -479,8 +486,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.2...HEAD
-[v0.34.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.1...v0.34.2
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.35.0...HEAD
+[v0.35.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.1...v0.35.0
 [v0.34.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.0...v0.34.1
 [v0.34.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.1...v0.34.0
 [v0.33.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.0...v0.33.1
