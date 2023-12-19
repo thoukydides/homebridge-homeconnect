@@ -9,7 +9,7 @@ import { HasDoor, HasLockableDoor } from './has-door';
 import { HasEvents } from './has-events';
 import { HasActive } from './has-active';
 import { HasBattery } from './has-battery';
-import { HasLight } from './has-light';
+import { HasCleaningLight } from './has-light';
 import { HasPrograms } from './has-programs';
 import { HasRemainingTime } from './has-remainingtime';
 import { HasRemoteControl } from './has-remotecontrol';
@@ -40,7 +40,7 @@ export class ApplianceDishwasher extends
     HasPrograms(
     HasRemoteControl(
     HasRemainingTime(
-    HasLight(
+    HasCleaningLight(
     HasEvents(
     HasDoor(
     HasActive(

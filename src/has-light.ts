@@ -24,52 +24,45 @@ export interface UpdateLightHCValue extends Partial<HSV>{
 type UpdateLightHC = SerialisedOperation<UpdateLightHCValue, void>;
 
 // Setting keys used to control the light(s)
-const FUNCTIONAL_LIGHT_KEY = {
-    on:         'Cooking.Common.Setting.Lighting',
-    brightness: 'Cooking.Common.Setting.LightingBrightness',
-    colourtemp: 'Cooking.Hood.Setting.ColorTemperaturePercent'
+const LIGHT_KEY = {
+    'Functional Light': {
+        on:         'Cooking.Common.Setting.Lighting',
+        brightness: 'Cooking.Common.Setting.LightingBrightness',
+        colourtemp: 'Cooking.Hood.Setting.ColorTemperaturePercent'
+    },
+    'Ambient Light': {
+        on:         'BSH.Common.Setting.AmbientLightEnabled',
+        brightness: 'BSH.Common.Setting.AmbientLightBrightness',
+        colour:     'BSH.Common.Setting.AmbientLightColor',
+        custom:     'BSH.Common.Setting.AmbientLightCustomColor'
+    },
+    'Internal Light': {
+        on:         'Refrigeration.Common.Setting.Light.Internal.Power',
+        brightness: 'Refrigeration.Common.Setting.Light.Internal.Brightness'
+    },
+    'External Light': {
+        on:         'Refrigeration.Common.Setting.Light.External.Power',
+        brightness: 'Refrigeration.Common.Setting.Light.External.Brightness'
+    }
 } as const;
-const AMBIENT_LIGHT_KEY = {
-    on:         'BSH.Common.Setting.AmbientLightEnabled',
-    brightness: 'BSH.Common.Setting.AmbientLightBrightness',
-    colour:     'BSH.Common.Setting.AmbientLightColor',
-    custom:     'BSH.Common.Setting.AmbientLightCustomColor'
-} as const;
-const INTERNAL_LIGHT_KEY = {
-    on:         'Refrigeration.Common.Setting.Light.Internal.Power',
-    brightness: 'Refrigeration.Common.Setting.Light.Internal.Brightness'
-} as const;
-const EXTERNAL_LIGHT_KEY = {
-    on:         'Refrigeration.Common.Setting.Light.Internal.Power',
-    brightness: 'Refrigeration.Common.Setting.Light.Internal.Brightness'
-} as const;
+type LightType = keyof typeof LIGHT_KEY;
+type LightKey<TypeKey extends LightType = LightType> =
+    TypeKey extends TypeKey ? keyof (typeof LIGHT_KEY)[TypeKey] : never;
+type LightKeyOptional<Key extends LightKey = LightKey, TypeKey extends LightType = LightType> =
+    TypeKey extends TypeKey ? (Key extends Key ? (Key extends LightKey<TypeKey> ? never : Key) : never) : never;
+type LightKeyRequired<Key extends LightKey = LightKey> = Key extends LightKeyOptional ? never : Key;
+type LightValue<Key extends LightKey, TypeKey extends LightType = LightType> =
+    TypeKey extends TypeKey ? (Key extends LightKey<TypeKey> ? (typeof LIGHT_KEY)[TypeKey][Key] : never) : never;
+type LightKeyDefinition = { [Key in LightKeyRequired]:  LightValue<Key>; }
+                        & { [Key in LightKeyOptional]?: LightValue<Key>; };
 
-type LightKeyRef = keyof typeof FUNCTIONAL_LIGHT_KEY | keyof typeof AMBIENT_LIGHT_KEY
-                 | keyof typeof INTERNAL_LIGHT_KEY   | keyof typeof EXTERNAL_LIGHT_KEY;
-type LightKey<Ref extends LightKeyRef = LightKeyRef> =
-    (Ref extends keyof typeof FUNCTIONAL_LIGHT_KEY ? (typeof FUNCTIONAL_LIGHT_KEY)[Ref] : never)
-  | (Ref extends keyof typeof AMBIENT_LIGHT_KEY    ? (typeof AMBIENT_LIGHT_KEY)   [Ref] : never)
-  | (Ref extends keyof typeof INTERNAL_LIGHT_KEY   ? (typeof INTERNAL_LIGHT_KEY)  [Ref] : never)
-  | (Ref extends keyof typeof EXTERNAL_LIGHT_KEY   ? (typeof EXTERNAL_LIGHT_KEY)  [Ref] : never);
-export interface LightKeyDefinition {
-    on:             LightKey<'on'>;
-    brightness:     LightKey<'brightness'>;
-    colourtemp?:    LightKey<'colourtemp'>;
-    colour?:        LightKey<'colour'>;
-    custom?:        LightKey<'custom'>;
-}
-
-// Settings used to control a light
-type LightSettingValue<Key extends LightKeyRef> = Optional<SettingKV<LightKey<Key>>, 'value'> | null;
-type LightSettingsBase = {
-    [Key in LightKeyRef]?: LightSettingValue<Key>;
-};
-export type LightSettings<Keys extends keyof LightSettingsBase = never> =
+// Appliance settings for a light
+type LightSettingsBase = { [Key in LightKey]?: Optional<SettingKV<LightValue<Key>>, 'value'> | null; };
+export type LightSettings<Keys extends LightKey = never> =
     LightSettingsBase & { [P in Keys]-?: NonNullable<LightSettingsBase[P]> };
 
 // Test whether the settings support specific features
-function hasSettings<Keys extends LightKeyRef>(settings: LightSettings, ...keys: Keys[]):
-        settings is LightSettings<Keys> {
+function hasSettings<Keys extends LightKey>(settings: LightSettings, ...keys: Keys[]): settings is LightSettings<Keys> {
     return keys.every(key => settings[key]);
 }
 
@@ -81,7 +74,7 @@ const MIREK_WARM = 400; //  2,500K =   0% (incandescent lamp)
 const MIREK_COLD =  50; // 20,000K = 100% (clear blue sky)
 
 // Add a light to an accessory
-export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
+export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, lightTypes: LightType[]) {
     return class HasLight extends Base {
 
         // Accessory services
@@ -98,10 +91,8 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         // Asynchronous initialisation
         async initHasLight(): Promise<void> {
             // Add all supported light types
-            await this.addLightIfSupported('Functional Light', FUNCTIONAL_LIGHT_KEY);
-            await this.addLightIfSupported('Ambient Light',    AMBIENT_LIGHT_KEY);
-            await this.addLightIfSupported('Internal Light',   INTERNAL_LIGHT_KEY);
-            await this.addLightIfSupported('External Light',   EXTERNAL_LIGHT_KEY);
+            for (const type of lightTypes)
+                await this.addLightIfSupported(type, LIGHT_KEY[type]);
 
             // If multiple lights are supported then link their services
             if (1 < this.lightService.length) {
@@ -412,3 +403,11 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         }
     };
 }
+
+// Limit the types of light for different appliances
+export const HasCleaningLight = <TBase extends Constructor<ApplianceBase>>(Base: TBase) =>
+    HasLight(Base, ['Ambient Light']);
+export const HasHoodLight = <TBase extends Constructor<ApplianceBase>>(Base: TBase) =>
+    HasLight(Base, ['Ambient Light', 'Functional Light']);
+export const HasRefrigerationLight = <TBase extends Constructor<ApplianceBase>>(Base: TBase) =>
+    HasLight(Base, ['Internal Light', 'External Light']);

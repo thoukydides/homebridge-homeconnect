@@ -8,7 +8,7 @@ import { HasChildLock } from './has-childlock';
 import { HasDoor } from './has-door';
 import { HasEvents } from './has-events';
 import { HasModes } from './has-modes';
-import { HasLight } from './has-light';
+import { HasRefrigerationLight } from './has-light';
 import { Constructor } from './utils';
 
 // Add cooling appliance mode settings to an accessory
@@ -40,7 +40,7 @@ function HasCoolingModes<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 export class ApplianceFreezer extends
     HasChildLock(
     HasCoolingModes(
-    HasLight(
+    HasRefrigerationLight(
     HasEvents(
     HasDoor(
     ApplianceGeneric))))) {
@@ -58,7 +58,7 @@ export class ApplianceFreezer extends
 export class ApplianceFridgeFreezer extends
     HasChildLock(
     HasCoolingModes(
-    HasLight(
+    HasRefrigerationLight(
     HasEvents(
     HasDoor(
     ApplianceGeneric))))) {
@@ -77,7 +77,7 @@ export class ApplianceFridgeFreezer extends
 export class ApplianceRefrigerator extends
     HasChildLock(
     HasCoolingModes(
-    HasLight(
+    HasRefrigerationLight(
     HasEvents(
     HasDoor(
     ApplianceGeneric))))) {

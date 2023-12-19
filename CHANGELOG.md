@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Fixed
+* **Freezer/Fridge/FridgeFreezer:** Corrected control of external lights.
 
 ## [v0.35.0] - 2023-12-18
 ### Added

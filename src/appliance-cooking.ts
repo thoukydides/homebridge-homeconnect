@@ -10,7 +10,7 @@ import { HasDoor, HasLockableDoor } from './has-door';
 import { HasEvents } from './has-events';
 import { HasModes } from './has-modes';
 import { HasFan } from './has-fan';
-import { HasLight } from './has-light';
+import { HasHoodLight } from './has-light';
 import { HasActive } from './has-active';
 import { HasPrograms } from './has-programs';
 import { HasRemainingTime } from './has-remainingtime';
@@ -98,7 +98,7 @@ export class ApplianceHob extends
 export class ApplianceHood extends
     HasRemoteControl(
     HasRemainingTime(
-    HasLight(
+    HasHoodLight(
     HasFan(
     HasEvents(
     ApplianceGeneric))))) {
