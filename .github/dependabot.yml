@@ -12,3 +12,5 @@ updates:
     ignore:
       - dependency-name: "chalk"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "node-persist"
+        update-types: ["version-update:semver-major"]
