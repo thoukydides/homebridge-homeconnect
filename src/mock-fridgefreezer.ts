@@ -2,10 +2,10 @@
 // Copyright © 2023 Alexander Thoukydides
 
 import { SettingKV, StatusKV } from './api-value';
-import { DoorState, PowerState } from './api-value-types';
+import { DoorState, PowerState, DoorStateRefrigeration } from './api-value-types';
 import { MockAppliance } from './mock-appliance';
 
-// A mock FridgeFreezer (based on a simulated appliance)
+// A mock FridgeFreezer (based on a simulated appliance, with extensions)
 // https://developer.home-connect.com/simulator/fridge-freezer
 export class MockFridgeFreezer extends MockAppliance {
 
@@ -18,6 +18,24 @@ export class MockFridgeFreezer extends MockAppliance {
     readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.DoorState',
         value: DoorState.Closed
+    }, {
+        key: 'Refrigeration.Common.Status.Door.Freezer',
+        value: DoorStateRefrigeration.Open
+    }, {
+        key: 'Refrigeration.Common.Status.Door.FlexCompartment',
+        value: DoorStateRefrigeration.Closed
+    }, {
+        key: 'Refrigeration.Common.Status.Door.BottleCooler',
+        value: DoorStateRefrigeration.Closed
+    }, {
+        key: 'Refrigeration.Common.Status.Door.ChillerLeft',
+        value: DoorStateRefrigeration.Closed
+    }, {
+        key: 'Refrigeration.Common.Status.Door.ChillerRight',
+        value: DoorStateRefrigeration.Closed
+    }, {
+        key: 'Refrigeration.Common.Status.Door.Refrigerator',
+        value: DoorStateRefrigeration.Closed
     }];
 
     // Appliance settings

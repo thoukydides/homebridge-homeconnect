@@ -36,6 +36,33 @@ function HasCoolingModes<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
     };
 }
 
+// Add separate FridgeFreezer and Refrigerator doors to an accessory
+function HasCoolingDoors<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
+    return class HasCoolingDoors extends HasDoor(Base) {
+
+        // Mixin constructor
+        constructor(...args: any[]) {
+            super(...args);
+
+            // Add doors for all types of FridgeFreezer/Refrigerator appliance
+
+            // Freezer / FridgeFreezer
+            this.hasDoor('Refrigeration.Common.Status.Door.Freezer',                    'Freezer Door');
+            // FridgeFreezer
+            this.hasDoor('Refrigeration.Common.Status.Door.FlexCompartment',            'Flex Compartment Door');
+            // FridgeFreezer / Refrigerator
+            this.hasDoor('Refrigeration.Common.Status.Door.BottleCooler',               'Bottle Cooler Door');
+            this.hasDoor('Refrigeration.Common.Status.Door.ChillerCommon',              'Chiller Common Door');
+            this.hasDoor('Refrigeration.Common.Status.Door.Chiller',                    'Chiller Door');
+            this.hasDoor('Refrigeration.Common.Status.Door.ChillerLeft',                'Chiller Left Door');
+            this.hasDoor('Refrigeration.Common.Status.Door.ChillerRight',               'Chiller Right Door');
+            this.hasDoor('Refrigeration.Common.Status.Door.Refrigerator',               'Refrigerator Door');
+            this.hasDoor('Refrigeration.Common.Status.Door.Refrigerator2',              'Refrigerator Door 2');
+            this.hasDoor('Refrigeration.Common.Status.Door.Refrigerator3',              'Refrigerator Door 3');
+        }
+    };
+}
+
 // A Homebridge accessory for a Home Connect freezer
 export class ApplianceFreezer extends
     HasChildLock(
@@ -60,7 +87,7 @@ export class ApplianceFridgeFreezer extends
     HasCoolingModes(
     HasRefrigerationLight(
     HasEvents(
-    HasDoor(
+    HasCoolingDoors(
     ApplianceGeneric))))) {
 
     constructor(...args: ConstructorParameters<typeof ApplianceGeneric>) {
@@ -79,7 +106,7 @@ export class ApplianceRefrigerator extends
     HasCoolingModes(
     HasRefrigerationLight(
     HasEvents(
-    HasDoor(
+    HasCoolingDoors(
     ApplianceGeneric))))) {
 
     constructor(...args: ConstructorParameters<typeof ApplianceGeneric>) {

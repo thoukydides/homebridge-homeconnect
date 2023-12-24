@@ -327,10 +327,10 @@ export enum DoorState {
     Locked                  = 'BSH.Common.EnumType.DoorState.Locked'
 }
 export enum DoorStateRefrigeration {
-    Open                    = 'BSH.Common.EnumType.DoorState.Open',
-    Closed                  = 'BSH.Common.EnumType.DoorState.Closed',
-    RefrigerationOpen       = 'Refrigeration.Common.EnumType.Door.States.Open', // (undocumented)
-    RefrigerationClosed     = 'Refrigeration.Common.EnumType.Door.States.Closed' // (undocumented)
+    //Open                    = 'BSH.Common.EnumType.DoorState.Open',
+    //Closed                  = 'BSH.Common.EnumType.DoorState.Closed',
+    Open                      = 'Refrigeration.Common.EnumType.Door.States.Open', // (undocumented)
+    Closed                    = 'Refrigeration.Common.EnumType.Door.States.Closed' // (undocumented)
 }
 export type DoorStateBottleCooler    = DoorStateRefrigeration;
 export type DoorStateFlexCompartment = DoorStateRefrigeration;

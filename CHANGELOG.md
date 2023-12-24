@@ -3,15 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+* **Freezer/FridgeFreezer/Refrigerator:** Added separate `Door` services for each supported door type on the appliance. The additional doors that may exist are for the Bottle Cooler, Chiller Common, Chiller, Chiller Left, Chiller Right, Flex Compartment, Freezer, Refrigerator, Refrigerator 2, and Refrigerator 3. Any new separate doors are disabled by default and need to be explicitly enabled via the `config.json` file. (#193)
 ### Fixed
-* **Freezer/Fridge/FridgeFreezer:** Corrected control of external lights.
+* **Freezer/FridgeFreezer/Refrigerator:** Corrected control of external lights.
 
 ## [v0.35.0] - 2023-12-18
 ### Added
-* **Freezer/Fridge/FridgeFreezer:** Added control of internal/external lights.
+* **Freezer/FridgeFreezer/Refrigerator:** Added control of internal/external lights.
 ### Changed
 * **Dishwasher:** Accept the undocumented option value `Dishcare.Dishwasher.Option.VarioSpeed`. (#189)
-* **Freezer/Fridge/FridgeFreezer:** Accept undocumented door state values. Added undocumented internal/external light settings. (#189)
+* **Freezer/FridgeFreezer/Refrigerator:** Accept undocumented door state values. Added undocumented internal/external light settings. (#189)
 
 ## [v0.34.2] - 2023-12-18
 ### Changed

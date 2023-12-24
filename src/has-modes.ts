@@ -39,7 +39,7 @@ export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase,
             for (const key of allSettings.map(s => s.key)) {
                 const modeName = this.modes[key];
                 if (modeName && this.hasOptionalFeature('Switch', modeName, 'Settings')) {
-                    this.addModeSwitch(key, modeName);
+                    this.modeService[key] = this.addModeSwitch(key, modeName);
                 }
             }
         }
@@ -50,7 +50,7 @@ export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase,
         }
 
         // Add a switch for a mode setting
-        addModeSwitch(key: SettingKey, name: string) {
+        addModeSwitch(key: SettingKey, name: string): Service {
             // Add a switch service for this mode setting
             const service = this.makeService(this.Service.Switch, name, `${prefix} ${name}`);
 
@@ -66,6 +66,7 @@ export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase,
                 this.log.info(`${name} ${enabled ? 'on' : 'off'}`);
                 service.updateCharacteristic(this.Characteristic.On, enabled);
             });
+            return service;
         }
     };
 }
