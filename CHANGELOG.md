@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.36.0] - 2023-12-24
 ### Added
 * **Freezer/FridgeFreezer/Refrigerator:** Added separate `Door` services for each supported door type on the appliance. The additional doors that may exist are for the Bottle Cooler, Chiller Common, Chiller, Chiller Left, Chiller Right, Flex Compartment, Freezer, Refrigerator, Refrigerator 2, and Refrigerator 3. Any new separate doors are disabled by default and need to be explicitly enabled via the `config.json` file. (#193)
 ### Fixed
@@ -490,7 +492,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.35.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.36.0...HEAD
+[v0.36.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.35.0...v0.36.0
 [v0.35.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.1...v0.35.0
 [v0.34.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.0...v0.34.1
 [v0.34.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.1...v0.34.0
