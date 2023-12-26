@@ -45,6 +45,7 @@ export type ProgramKey =
   | 'Cooking.Common.Program.Hood.Venting'
   | 'Cooking.Hob.Program.FryingSensorMode' // (undocumented)
   | 'Cooking.Hob.Program.PowerLevelMode' // (undocumented)
+  | 'Cooking.Hob.Program.PowerMoveMode' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking'
