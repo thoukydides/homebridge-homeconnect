@@ -43,7 +43,11 @@ export type ProgramKey =
   | 'Cooking.Common.Program.Hood.Automatic'
   | 'Cooking.Common.Program.Hood.DelayedShutOff'
   | 'Cooking.Common.Program.Hood.Venting'
+  | 'Cooking.Hob.Program.FryingSensorMode' // (undocumented)
+  | 'Cooking.Hob.Program.PowerLevelMode' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.SubsequentCooking'
   | 'Cooking.Oven.Program.HeatingMode.BottomHeating'
   | 'Cooking.Oven.Program.HeatingMode.Defrost'
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
@@ -66,6 +70,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.TopBottomHeating'
   | 'Cooking.Oven.Program.HeatingMode.TopBottomHeatingEco'
   | 'Cooking.Oven.Program.HeatingMode.WarmingDrawer'
+  | 'Cooking.Oven.Program.Microwave.600Watt' // (undocumented)
   | 'Dishcare.Dishwasher.Program.Auto1'
   | 'Dishcare.Dishwasher.Program.Auto2'
   | 'Dishcare.Dishwasher.Program.Auto3'
@@ -121,10 +126,10 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.Auto40'
   | 'LaundryCare.Washer.Program.Auto60'
   | 'LaundryCare.Washer.Program.Chiffon'
-  | 'LaundryCare.Washer.Program.Cotton'
   | 'LaundryCare.Washer.Program.Cotton.Colour'
   | 'LaundryCare.Washer.Program.Cotton.CottonEco'
   | 'LaundryCare.Washer.Program.Cotton.Eco4060'
+  | 'LaundryCare.Washer.Program.Cotton'
   | 'LaundryCare.Washer.Program.Curtains'
   | 'LaundryCare.Washer.Program.DarkWash'
   | 'LaundryCare.Washer.Program.DelicatesSilk'
@@ -132,8 +137,8 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.DownDuvet.Duvet'
   | 'LaundryCare.Washer.Program.DrumClean'
   | 'LaundryCare.Washer.Program.EasyCare'
-  | 'LaundryCare.Washer.Program.Mix'
   | 'LaundryCare.Washer.Program.Mix.NightWash'
+  | 'LaundryCare.Washer.Program.Mix'
   | 'LaundryCare.Washer.Program.Monsoon'
   | 'LaundryCare.Washer.Program.Outdoor'
   | 'LaundryCare.Washer.Program.PlushToy'
@@ -147,8 +152,8 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.Towels'
   | 'LaundryCare.Washer.Program.WaterProof'
   | 'LaundryCare.Washer.Program.Wool'
-  | 'LaundryCare.WasherDryer.Program.Cotton'
   | 'LaundryCare.WasherDryer.Program.Cotton.Eco4060'
+  | 'LaundryCare.WasherDryer.Program.Cotton'
   | 'LaundryCare.WasherDryer.Program.EasyCare'
   | 'LaundryCare.WasherDryer.Program.Mix'
   | 'LaundryCare.WasherDryer.Program.WashAndDry.60'
