@@ -1,0 +1,40 @@
+name: :mag_right: Unexpected values or mismatched types
+description: "Report any log file warnings relating to keys or values returned by the Home Connect API."
+labels: ["bug"]
+
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Plugin Version
+      description: "Please state the version number of this plugin that warned about the keys/values. If this is not the most recent release then please try updating to the latest version before filing the report."
+    validations:
+      required: true
+  
+  - type: input
+    id: appliance
+    attributes:
+      label: Home Connect Appliance(s)
+      description: "Please provide the manufacturer, type, and model number of the associated appliance(s). These details can be found in the Apple Home app or the Homebridge log file."
+      placeholder: "e.g. Siemens Oven HB678GBS6B/50"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: log
+    attributes:
+      label: Log File
+      description: "Please copy/paste all relevant log entries. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its `-D` command line option). Be sure to remove any sensitive information (passwords, tokens, etc)."
+      placeholder: "Paste logging output..."
+      render: shell
+    validations:
+      required: true
+   
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: "Please provide any additional information that might assist with understanding the reported keys/values. This could include links to product web pages, user manuals, screenshots, or anything else you think might be relevant."
+      placeholder: "Any additional information that might be relevant..."
+    validations:
+      required: false
