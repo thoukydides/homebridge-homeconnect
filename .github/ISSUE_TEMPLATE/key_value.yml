@@ -1,5 +1,6 @@
-name: :mag_right: Unexpected values or mismatched types
+name: 🔎 Unexpected values or mismatched types
 description: "Report any log file warnings relating to keys or values returned by the Home Connect API."
+title: HomeConnect API unexpected values or mismatched types
 labels: ["bug"]
 
 body:
