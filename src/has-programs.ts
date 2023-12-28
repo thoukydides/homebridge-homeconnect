@@ -6,13 +6,14 @@ import { Perms, Service } from 'homebridge';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor, MS, columns, logError } from './utils';
+import { Constructor, MS, columns } from './utils';
+import { logError } from './log-error';
 import { OptionValues, PowerState, ProgramKey } from './api-value-types';
 import { CommandKey, OptionDefinitionKV, OptionKey, OptionValue,
          ProgramDefinitionKV } from './api-value';
 import { Value } from './api-types';
 import { ApplianceProgramConfig, ConfigAppliances } from './config-types';
-import { SchemaProgramOption } from './config-schema';
+import { SchemaProgramOption } from './homebridge-ui/schema-data';
 
 // A prgram configuration that has passed sanity checks
 export interface CheckedProgramConfig extends Omit<ApplianceProgramConfig, 'options'> {
@@ -112,7 +113,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 if (!all.length) this.log.warn('Does not support any programs');
 
                 // Merge any previous program details with the current list
-                this.programs = all.map(newProgram => Object.assign({}, this.programs.find(p => p.key === newProgram.key), newProgram));
+                this.programs = all.map(newProgram => ({ ...this.programs.find(p => p.key === newProgram.key), ...newProgram }));
 
                 // Read the list of currently available programs (not cached)
                 const available = await this.device.getAvailablePrograms();

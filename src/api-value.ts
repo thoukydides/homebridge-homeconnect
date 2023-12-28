@@ -9,12 +9,12 @@ import { CommandValues, EventMapValues, OptionValues, ProgramKey, SettingValues,
          StatusValues } from './api-value-types';
 import { Command, Constraints, ConstraintsCommon, EventApplianceConnection,
          EventApplianceData, EventData, Option, OptionConstraintsCommon,
-         OptionDefinition,
-         OptionDefinitionCommon, Program, ProgramDefinition, ProgramList,
-         Programs, Setting, SettingCommon, Status, StatusCommon, Value } from './api-types';
+         OptionDefinition, OptionDefinitionCommon, Program, ProgramDefinition,
+         ProgramList, Programs, Setting, SettingCommon, Status, StatusCommon,
+         Value } from './api-types';
 import { APIEvent, EventStart, EventStop } from './api-events';
-import valuesTI from './ti/api-value-types-ti';
 import { MS, getValidationTree, keyofChecker } from './utils';
+import valuesTI from './ti/api-value-types-ti';
 
 // Checkers for API responses
 const checkers = createCheckers(valuesTI);

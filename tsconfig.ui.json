@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "target": "es2022",
+        "lib": [ "ES2022", "DOM" ]
+    },
+    "include": [
+        "./src/homebridge-ui/public/"
+    ],
+    "exclude": [
+    ]
+}

@@ -1,0 +1,107 @@
+/* Homebridge plugin for Home Connect home appliances */
+/* Copyright © 2023 Alexander Thoukydides */
+
+/* Avoid unintentional scrollbars */
+
+body {
+    overflow:       hidden;
+}
+
+/* Transitions for collapsible alerts */
+
+.hc-foldable {
+    overflow:           clip;
+    transform:          scaleY(1);
+    transform-origin:   top;
+    transition:         all 1s ease-in-out;
+    max-height:         100%;
+    opacity:            1
+}
+
+.hc-foldable[hidden] {
+    display:        block !important;
+    visibility:     visible;
+    transform:      scaleY(0);
+    max-height:     0;
+    opacity:        0;
+}
+
+/* Home Connect client authoriation */
+
+.hc-client img {
+    height:         75px;
+}
+
+#hc-client-user-progress {
+    width:          100%;
+    transition:     none;
+}
+
+#hc-client-user-progress.hc-progress-zero {
+    width:                      0%;
+    transition-property:        width;
+    transition-timing-function: linear;
+}
+
+/* Restart required */
+
+#hc-modified .hc-scroll-x {
+    overflow-x:     auto;
+}
+
+#hc-modified tbody :is(th, td) {
+    font-family:    var(--font-family-monospace);
+    font-size:      0.7rem;
+    padding-top:    3px;
+    padding-bottom: 3px;
+    white-space:    pre;
+}
+
+#hc-modified tbody th {
+    white-space:    pre-wrap;
+}
+
+/* Cards listing global options and appliances */
+
+#hc-appliance-cards .col {
+    padding:        5px;
+    display:        flex;
+}
+
+#hc-appliance-cards .card {
+    flex-grow:      1;
+}
+
+#hc-appliance-cards .card:active {
+	transform:      translate(3px, 3px);
+}
+
+#hc-appliance-cards .card-body {
+    padding:        5px 5px 0px;
+    text-align:     center;
+    font-weight:    200 !important;
+}
+
+#hc-appliance-cards .card-footer {
+    padding:        0px 5px;
+    text-align:     center;
+    font-size:      0.7rem;
+    font-variant:   small-caps;
+}
+
+#hc-appliance-cards img {
+    margin:         auto;
+    width:          75px;
+    padding:        10px;
+    opacity:        0.5;
+}
+
+#hc-appliance-cards :is(.card:hover, .hc-selected) img {
+    padding:        5px;
+    opacity:        1;
+    transition:     all 0.35s;
+}
+
+#hc-appliance-cards :is(.card:hover, .hc-selected) .card-body {
+    font-weight:    700 !important;
+}

@@ -1,0 +1,165 @@
+<!-- Homebridge plugin for Home Connect home appliances -->
+<!-- Copyright © 2023 Alexander Thoukydides -->
+
+<link rel="stylesheet" type="text/css" href="./style.css">
+<script src="./bundle.js"></script>
+
+<div id="hc-modified" class="hc-foldable" hidden>
+    <div class="alert help-block">
+        <details>
+            <summary class="text-center">
+                <span id="hc-modified-unsaved">There are unsaved changes. Save the configuration and restart homebridge to apply the new settings.</span>
+                <span id="hc-modified-saved">Previous configuration changes have not yet been applied. Restart homebridge to use the modified settings.</span>
+            </summary>
+            <div class="hc-scroll-x">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Configuration Key</th>
+                            <th scope="col">Old</th>
+                            <th scope="col">New</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hc-modified-diff"></tbody>
+                </table>
+                <template id="hc-modified-diff-delta">
+                    <tr>
+                        <th slot="key" scope="row"></th>
+                        <td slot="from"></td>
+                        <td slot="to"></td>
+                    </tr>
+                </template>
+            </div>
+        </details>
+    </div>
+</div>
+
+<div id="hc-appliance-cards" class="row row-cols-3 row-cols-md-5" hidden></div>
+<template id="hc-appliance-card">
+    <div class="col">
+        <div class="card">
+            <img slot="icon" src="./images/icon-global.svg" class="card-img-top">
+            <div slot="name" class="card-body"></div>
+            <div slot="detail" class="card-footer text-body-secondary"></div>
+        </div>
+    </div>
+</template>
+
+<div id="hc-client-user" class="hc-foldable hc-client" hidden>
+    <div class="alert alert-primary">
+        <div class="d-flex">
+            <div class="p-2"><img src="./images/singlekey.svg"></div>
+            <div class="p-2 flex-grow-1">
+                <h4 class="alert-heading">Home Connect Authorisation Required</h4>
+                <p>Please authorise access to your appliances with the email address used to log in to the Home Connect app.</p>
+                <p>If code <samp slot="hc-client-user-code"></samp> is invalid or has expired then <a id="hc-client-user-retry" href="javascript:void(0)">generate a new code</a>.</p>
+            </div>
+            <div class="p-2">
+                <a id="hc-client-user-link" class="btn btn-primary" target="_blank">Authorise</a>
+            </div>
+        </div>
+        <div class="progress">
+            <div id="hc-client-user-progress"
+                class="progress-bar progress-bar-striped progress-bar-animated bg-primary">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="hc-client-fail" class="hc-foldable hc-client" hidden>
+    <div class="alert alert-warning">
+        <div class="d-flex">
+            <div class="p-2"><img src="./images/sign-danger.svg"></div>
+            <div class="p-2 flex-grow-1">
+                <h4 class="alert-heading">Home Connect Authorisation Failed</h4>
+                Home Connect client authorisation failed.
+                <span id="hc-client-fail-retryable">It may be possible to retry the authorisation.</span>
+            </div>
+            <div class="p-2 text-center">
+                <a id="hc-client-fail-uri" class="btn btn-warning" target="_blank">Application</a></br>
+                <a id="hc-client-fail-retry" class="btn btn-warning" tabindex="0">Retry</a>
+            </div>
+        </div>
+        <details open>
+            <summary><samp id="hc-client-fail-message"></samp></summary>
+            <div id="hc-client-fail-detail">
+                <template id="hc-client-fail-paragraph">
+                    <p slot="paragraph"></p>
+                </template>
+
+                <div id="hc-client-fail-prescript"></div>
+                <div id="hc-client-fail-client">
+                    Ensure that the application settings are configured as follows:
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="alert-warning">Setting</th>
+                                <th scope="col" class="alert-warning">Required Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hc-client-fail-client-settings"></tbody>
+                        <template id="hc-client-fail-client-setting">
+                            <tr>
+                                <th slot="key" class="alert-warning"></th>
+                                <td slot="value" class="alert-warning"></td>
+                            </tr>
+                        </template>
+                    </table>
+                </div>
+                <div id="hc-client-fail-postscript"></div>
+                <p>
+                    Descriptions of authorisation error messages can be found in the
+                    <a href="https://api-docs.home-connect.com/authorization?#authorization-errors">Home Connect API
+                        documentation</a>.
+                </p>
+                <p>
+                    For additional support <a href="https://developer.home-connect.com/support/contact">contact the Home
+                        Connect Developer team</a>.
+                </p>
+            </div>
+        </details>
+    </div>
+</div>
+
+<template id="hc-form-placeholder">
+    <div class="text-center">
+        <p></p>
+        <img src="./images/homebridge-homeconnect.svg" height="200px">
+        <p></p>
+        <h4>homebridge-homeconnect</h4>
+        <p>Home Connect home appliances plugin for Homebridge</p>
+    </div>
+</template>
+
+<template id="hc-form-unavailable">
+    <div class="text-center">
+        <p></p>
+        <img src="./images/sign-roadworks.svg" height="100px">
+        <p></p>
+        <h4>Appliance Configuration Unavailable</h4>
+        <p>Please save the configuration and restart Homebridge.</p>
+        <p class="help-block">
+            The plugin will then determine appliance capabilities and update the available configruation options.
+        </p>
+        <p class="help-block">
+            This can take several minutes due to <a href="https://api-docs.home-connect.com/general/?#rate-limiting" target="_blank">Home Connect API
+                rate limits</a>.<br>
+            Please be patient. Check the Homebridge log for progress.
+        </p>
+    </div>
+</template>
+
+<template id="hc-form-footer">
+    <hr>
+    <div class="d-flex justify-content-between help-block small">
+        <div>
+            For help please refer to the
+            <a href="https://github.com/thoukydides/homebridge-homeconnect/blob/master/README.md"
+                target="_blank">README</a>
+            and
+            <a href="https://github.com/thoukydides/homebridge-homeconnect/wiki/" target="_blank">Wiki</a>.
+        </div>
+        <div>
+            Copyright © 2019-2023 <a href="https://www.thouky.co.uk" target="_blank">Alexander Thoukydides</a>
+        </div>
+    </div>
+</template>

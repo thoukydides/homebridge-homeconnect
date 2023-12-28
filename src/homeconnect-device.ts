@@ -7,7 +7,8 @@ import { EventEmitter } from 'events';
 import { once } from 'node:events';
 
 import { APIStatusCodeError } from './api-errors';
-import { MS, logError } from './utils';
+import { MS } from './utils';
+import { logError } from './log-error';
 import { HomeConnectAPI } from './api';
 import { HomeAppliance } from './api-types';
 import { OperationState, OptionValues, PowerState, ProgramKey } from './api-value-types';

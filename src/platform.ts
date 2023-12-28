@@ -18,16 +18,17 @@ import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
          ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance-cooking';
 import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
          ApplianceWineCooler } from './appliance-cooling';
-import { ConfigSchema } from './config-schema';
+import { ConfigSchemaData } from './homebridge-ui/schema-data';
 import { PLUGIN_NAME, PLATFORM_NAME, DEFAULT_CONFIG, DEFAULT_CLIENTID } from './settings';
 import { PrefixLogger } from './logger';
-import { assertIsDefined, deepMerge, getValidationTree, keyofChecker, logError, MS } from './utils';
+import { assertIsDefined, deepMerge, getValidationTree, keyofChecker, MS } from './utils';
+import { logError } from './log-error';
 import { ConfigAppliances, ConfigPlugin } from './config-types';
 import { checkDependencyVersions } from './check-versions';
 import { HOMEBRIDGE_LANGUAGES } from './api-languages';
 import { HomeAppliance } from './api-types';
-import configTI from './ti/config-types-ti';
 import { MockAPI } from './mock-api';
+import configTI from './ti/config-types-ti';
 
 // Checkers for config.json configuration
 const checkers = createCheckers(configTI) as {
@@ -62,8 +63,8 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
     // Persistent storage in the Homebridge storage directory
     persist?: NodePersist.LocalStorage;
 
-    // Configuration schema
-    schema?: ConfigSchema;
+    // Data required to generate the configuration schema
+    schema?: ConfigSchemaData;
 
     // Home Connect API
     homeconnect?: HomeConnectAPI;
@@ -102,13 +103,12 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
 
                 // Prepare other resources required by this plugin
                 this.persist = await this.preparePersistentStorage();
-                this.schema = new ConfigSchema(this.log, this.persist, this.hb.user.storagePath());
+                this.schema = new ConfigSchemaData(this.log, this.persist);
+                this.schema.setConfig(this.platformConfig);
 
                 // Connect to the Home Connect cloud
-                this.homeconnect = this.configPlugin.debug.includes('Mock Appliances')
-                    ? new MockAPI (this.log, this.configPlugin, this.persist)
-                    : new CloudAPI(this.log, this.configPlugin, this.persist);
-                this.schema.setAuthorised(await this.homeconnect.getAuthorisationURI());
+                const api = this.configPlugin.debug.includes('Mock Appliances') ? MockAPI : CloudAPI;
+                this.homeconnect = new api(this.log, this.configPlugin, this.persist);
 
                 // Start polling the list of Home Connect appliances
                 this.updateAppliances();
@@ -134,6 +134,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         const configPlugin = deepMerge(DEFAULT_CONFIG, configPluginPre) as PlatformConfig;
         const defaultClientid = DEFAULT_CLIENTID(configPlugin['simulator']);
         if (!configPlugin['clientid'] && defaultClientid) configPlugin['clientid'] = defaultClientid;
+        if (!configPlugin['clientid'] && configPlugin.debug.includes('Mock Appliances')) configPlugin['clientid'] = '';
 
         // Ensure that all required fields are provided and are of suitable types
         checkers.ConfigPlugin.setReportedPath('<PLATFORM_CONFIG>');
@@ -203,8 +204,11 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         // Update the configuration schema (if initialised)
         await this.schema?.setAppliances(appliances);
 
+        // Remove any appliances that have been disabled in the configuration
+        const enabledAppliances = appliances.filter(ha => this.configAppliances[ha.haId]?.enabled ?? true);
+
         // Map the appliance haId identifiers to accessory UUIDs
-        const uuidMap = Object.fromEntries(appliances.map(ha => [this.makeUUID(ha.haId), ha]));
+        const uuidMap = Object.fromEntries(enabledAppliances.map(ha => [this.makeUUID(ha.haId), ha]));
 
         // Add a Homebridge accessory for each new appliance
         const newAccessories: PlatformAccessory[] = [];

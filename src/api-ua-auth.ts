@@ -15,19 +15,33 @@ import { AbsoluteToken, PersistAbsoluteTokens, AuthorisationError,
          DeviceAccessTokenRequest, DeviceAccessTokenResponse,
          DeviceAuthorisationRequest, DeviceAuthorisationResponse } from './api-auth-types';
 import { APIUserAgent, Method, Request } from './api-ua';
-import { assertIsDefined, Copy, formatMilliseconds, formatSeconds, logError, MS } from './utils';
+import { assertIsDefined, Copy, formatMilliseconds, formatSeconds, MS } from './utils';
+import { logError } from './log-error';
 import { APIAuthorisationError, APIError, APIStatusCodeError } from './api-errors';
 import { ConfigPlugin } from './config-types';
 import { API_SCOPES } from './settings';
-import { deviceFlowHelp } from './api-ua-auth-help';
+import { AuthHelp, AuthHelpDeviceFlow, AuthHelpMessage } from './api-ua-auth-help';
 import authTI from './ti/api-auth-types-ti';
 
-// URL that the user should use to authorise this client
-export interface AuthorisationURI {
-    uri:        string;
-    code?:      string;
-    expires?:   number;
+// Authorisation status update
+export interface AuthorisationStatusSuccess {
+    state:      'busy' | 'success';
 }
+export interface AuthorisationStatusUser {
+    state:      'user';
+    uri:        string;
+    code:       string;
+    expires:    number | null;
+}
+export interface AuthorisationStatusFailed {
+    state:      'fail';
+    retryable:  boolean;
+    error:      unknown;
+    message:    string;
+    help?:      AuthHelpMessage;
+}
+export type AuthorisationStatus =
+    AuthorisationStatusSuccess | AuthorisationStatusUser | AuthorisationStatusFailed;
 
 // Checkers for API responses
 const checkers = createCheckers(authTI);
@@ -37,6 +51,11 @@ const checkersT = checkers as {
     AbsoluteToken:          CheckerT<AbsoluteToken>;
     PersistAbsoluteTokens:  CheckerT<PersistAbsoluteTokens>;
 };
+
+// An authorisation abort and retry trigger
+export class AuthorisationRetry {
+    constructor(readonly reason: string) {}
+}
 
 // Authorisation for accessing the Home Connect API
 export class APIAuthoriseUserAgent extends APIUserAgent {
@@ -53,18 +72,20 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     private deviceFlowLogInterval =        12 * MS;
 
     // Promise that is resolved by successful authorisation (or token refresh)
-    private isAuthorised!:          Promise<void>;
+    private isAuthorised:               Promise<void>;
 
     // Triggers indicating that it may be worth reattempting authorisation
-    private readonly triggerAuthorisationRetry: Promise<void>[] = [];
-    private triggerDeviceFlow?:     () => void;
+    private readonly triggerAuthorisationRetry: Promise<AuthorisationRetry>[] = [];
+    private triggerDeviceFlow?:         (reason: AuthorisationRetry) => void;
+    private pollDeviceCode?:            string;
 
     // Abort signal used to abandon token refreshing
-    private triggerTokenRefresh?:   () => void;
+    private triggerTokenRefresh?:       () => void;
 
-    // Provide URL that the user should use to authorise this client
-    private authorisationURI!:          Promise<AuthorisationURI | null>;
-    private resolveAuthorisationURI?:   (uri: AuthorisationURI | null) => void;
+    // The current authorisation status
+    private status!:                    AuthorisationStatus;
+    private statusUpdate!:              Promise<void>;
+    private triggerStatusUpdate?:       () => void;
 
     // The current access and refresh token
     private token?: AbsoluteToken;
@@ -77,7 +98,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         language:           string
     ) {
         super(log, config, language);
-        this.authoriseUserAgent();
+        this.isAuthorised = this.authoriseUserAgent();
+        this.maintainAccessToken();
     }
 
     // Scopes that have (or will be) authorised
@@ -85,24 +107,33 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         return this.token?.scopes ?? API_SCOPES;
     }
 
-    // Authorise the user agent
-    async authoriseUserAgent(): Promise<never> {
-        // Attempt to obtain an access token
-        this.setAuthorisationURI();
+    // Attempt to obtain an access token
+    async authoriseUserAgent(): Promise<void> {
         while (!this.token) {
             try {
                 this.log.info('Attempting authorisation');
-                this.isAuthorised = this.obtainAccessToken();
-                await this.isAuthorised;
-                this.log.info('Successfully authorised');
+                this.setAuthorisationStatus({ state: 'busy' });
+                await this.obtainAccessToken();
             } catch (err) {
-                logError(this.log, 'API authorisation', err);
-                this.setAuthorisationURI();
-                this.log.error('Authorisation attempt abandoned; restart Homebridge to try again');
-                await Promise.race(this.triggerAuthorisationRetry);
+                if (err instanceof AuthorisationRetry) {
+                    this.log.info(`Restarting authorisation: ${err.reason}`);
+                } else {
+                    logError(this.log, 'API authorisation', err);
+                    this.setAuthorisationStatusFailed(err);
+                    this.log.error('Authorisation attempt abandoned; restart Homebridge to try again');
+                    await Promise.race(this.triggerAuthorisationRetry);
+                }
             }
         }
-        this.setAuthorisationURI(null);
+        this.log.info('Successfully authorised');
+        this.setAuthorisationStatus({ state: 'success' });
+    }
+
+    // Maintain the access token with periodic refreshes
+    async maintainAccessToken(): Promise<never> {
+        // Wait until an access token has been obtained
+        await this.isAuthorised;
+        assertIsDefined(this.token);
 
         // Periodically refresh the access token
         for (;;) {
@@ -154,11 +185,13 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
             } else {
                 try {
                     this.log.info('Requesting authorisation using the Device Flow');
+                    const promise = new Promise<AuthorisationRetry>(resolve => this.triggerDeviceFlow = resolve);
+                    this.triggerAuthorisationRetry.push(promise);
                     token = await this.deviceFlow();
                 } catch (err) {
-                    deviceFlowHelp(this.log, err, this.config.clientid);
-                    const promise = new Promise<void>(resolve => this.triggerDeviceFlow = resolve);
-                    this.triggerAuthorisationRetry.push(promise);
+                    const help = new AuthHelpDeviceFlow(err, this.config.clientid);
+                    help.log(this.log);
+                    this.setAuthorisationStatusFailed(err, true, help);
                     throw err;
                 }
             }
@@ -193,12 +226,13 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     }
 
     // Wait for any update to a saved token
-    async watchToken(oldToken?: AbsoluteToken): Promise<void> {
+    async watchToken(oldToken?: AbsoluteToken): Promise<AuthorisationRetry> {
         let token: AbsoluteToken | undefined;
         while (!token || token.accessToken === oldToken?.accessToken) {
             await setTimeoutP(this.pollPersistDelay);
             try { token = await this.getSavedToken(); } catch { /* empty */ }
         }
+        return new AuthorisationRetry('Saved token changed');
     }
 
     // Apply and save a new access token
@@ -256,17 +290,19 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         if (response.interval) this.deviceFlowPollInterval = response.interval * MS;
 
         // Provide the verification URI to any other interested party
-        const uri: AuthorisationURI = response.verification_uri_complete
-            ? { uri: response.verification_uri_complete }
-            : { uri: response.verification_uri, code: response.user_code };
-        if (response.expires_in) uri.expires = Date.now() + response.expires_in * MS;
-        this.setAuthorisationURI(uri);
+        const expires = response.expires_in ? Date.now() + response.expires_in * MS : null;
+        this.setAuthorisationStatus({
+            state: 'user',
+            uri:    response.verification_uri_complete ?? response.verification_uri,
+            code:   response.user_code,
+            expires
+        });
 
         // Display the verification URI in the log file
         let displayPrompts = true;
         const logPrompt = async () => {
             while (displayPrompts) {
-                const expiry = uri.expires ? ` within ${formatMilliseconds(uri.expires - Date.now())}` : '';
+                const expiry = expires ? ` within ${formatMilliseconds(expires - Date.now())}` : '';
                 this.log.info(greenBright(`Please authorise access to your appliances${expiry}`
                                           + ' using the associated Home Connect or SingleKey ID'
                                           + ' email address by visiting:'));
@@ -284,34 +320,45 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
                      + ` device code ${response.device_code})...`);
         try {
             logPrompt();
-            return await this.deviceAccessTokenRequest(response.device_code);
+            this.pollDeviceCode = response.device_code;
+            const token = await Promise.race([this.deviceAccessTokenRequest(response.device_code),
+                                              ...this.triggerAuthorisationRetry]);
+            if (token instanceof AuthorisationRetry) throw token;
+            return token;
         } finally {
+            this.pollDeviceCode = undefined;
             displayPrompts = false;
         }
     }
 
-    // Construct a Promise to indicate a new authorisation URI
-    setAuthorisationURI(uri?: AuthorisationURI | null): void {
-        if (uri !== undefined) {
-            // Resolve the promise or create a new resolved promise
-            if (this.resolveAuthorisationURI) {
-                this.resolveAuthorisationURI?.(uri);
-                this.resolveAuthorisationURI = undefined;
-            } else {
-                this.authorisationURI = Promise.resolve(uri);
-            }
-        } else {
-            // Create a new promise if there isn't already one pending
-            if (!this.resolveAuthorisationURI) {
-                this.authorisationURI = new Promise(resolve => this.resolveAuthorisationURI = resolve);
-            }
-        }
+    // Trigger a retry of Device Flow authorisation
+    retryDeviceFlow(reason: string = 'User requested retry'): void {
+        this.triggerDeviceFlow?.(new AuthorisationRetry(reason));
     }
 
-    // Obtain the URL that the user should use to authorise this client
-    async getAuthorisationURI(): Promise<AuthorisationURI | null> {
-        this.triggerDeviceFlow?.();
-        return this.authorisationURI;
+    // Update the authorisation status with an error
+    setAuthorisationStatusFailed(err: unknown, retryable: boolean = false, help?: AuthHelp): void {
+        // Ignore duplicates with the same error object and retry requests
+        if (this.status.state === 'fail' && this.status.error === err) return;
+        if (err instanceof AuthorisationRetry) return;
+
+        // Log the error
+        const status: AuthorisationStatusFailed = { state: 'fail', error: err, message: `${err}`, retryable };
+        if (help) status.help = help.getStructured();
+        this.setAuthorisationStatus(status);
+    }
+
+    // Update the authorisation status
+    setAuthorisationStatus(status: AuthorisationStatus): void {
+        this.status = status;
+        this.triggerStatusUpdate?.();
+        this.statusUpdate = new Promise(resolve => this.triggerStatusUpdate = resolve);
+    }
+
+    // Get authorisation status updates
+    async getAuthorisationStatus(immediate: boolean = false): Promise<AuthorisationStatus> {
+        if (!immediate) await this.statusUpdate;
+        return this.status;
     }
 
     // Authorisation Code Grant Flow: Automatic authorisation for simulator only
@@ -458,7 +505,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         if (err instanceof APIStatusCodeError && err.response) {
             switch (err.response.statusCode) {
             case 400:
-                if (err.key === 'authorization_pending' ) {
+                if (err.key === 'authorization_pending'
+                    && this.pollDeviceCode && err.request.body?.includes(this.pollDeviceCode)) {
                     // Device Flow user interaction steps not completed
                     this.retryDelay = this.deviceFlowPollInterval;
                     return true;

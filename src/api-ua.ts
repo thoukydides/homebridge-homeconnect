@@ -26,7 +26,6 @@ export interface Request {
     headers:            Headers;
     body?:              string;
     idempotent?:        boolean;
-    blocking?:          boolean;
 }
 
 // A generic Server-Sent Event (not restricted to standard field names)

@@ -6,13 +6,12 @@
         "sourceMap": true,
         "outDir": "./dist",
         "rootDir": "./src",
-        "resolveJsonModule": true,
-        "allowJs": true
+        "resolveJsonModule": true
     },
     "include": [
-        "src/"
+        "./src/"
     ],
     "exclude": [
-        "**/*.spec.ts"
+        "./src/homebridge-ui/public/"
     ]
 }

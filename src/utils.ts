@@ -1,12 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import assert from 'assert';
 import { IErrorDetail, ITypeSuite, TType } from 'ts-interface-checker';
-
-import { APIError } from './api-errors';
 
 // Milliseconds in a second
 export const MS = 1000;
@@ -22,47 +18,23 @@ export type Constructor<T = object> = new (...args: any[]) => T;
 
 // Type assertions
 export function assertIsDefined<Type>(value: Type): asserts value is NonNullable<Type> {
-    assert(value !== undefined && value !== null);
+    assert.notStrictEqual(value, undefined);
+    assert.notStrictEqual(value, null);
+}
+export function assertIsUndefined(value: unknown): asserts value is undefined {
+    assert.strictEqual(value, undefined);
 }
 export function assertIsString(value: unknown): asserts value is string {
-    assert(typeof value === 'string');
+    assert.strictEqual(typeof value, 'string');
 }
 export function assertIsNumber(value: unknown): asserts value is number {
-    assert(typeof value === 'number');
+    assert.strictEqual(typeof value, 'number');
 }
 export function assertIsBoolean(value: unknown): asserts value is boolean {
-    assert(typeof value === 'boolean');
+    assert.strictEqual(typeof value, 'boolean');
 }
-
-// Log an error
-let lastLoggedError: unknown;
-export function logError<Type>(log: Logger, when: string, err: Type): Type {
-    try {
-        // Suppress duplicate reports
-        if (lastLoggedError === err) return err;
-        lastLoggedError = err;
-
-        // Log the error message itself
-        log.error(`[${when}] ${err}`);
-
-        // Log the request details for API errors
-        if (err instanceof APIError) {
-            log.error(`${err.request.method} ${err.request.path}`);
-        }
-
-        // Log any history of causes for the error
-        let cause: unknown = err;
-        let prefix = ' '.repeat(when.length + 3);
-        while ((cause instanceof APIError) && cause.errCause) {
-            cause = cause.errCause;
-            log.error(`${prefix}└─ ${cause}`);
-            prefix += '   ';
-        }
-
-        // Log any stack backtrace
-        if (err instanceof Error && err.stack) log.debug(err.stack);
-    } catch { /* empty */ }
-    return err;
+export function assertIsInstanceOf<Type extends object>(value: unknown, type: Constructor<Type>): asserts value is Type {
+    assert(value instanceof type, `Not an instance of ${type.name}`);
 }
 
 // Format a milliseconds duration

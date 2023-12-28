@@ -6,7 +6,8 @@ import { Logger } from 'homebridge';
 import { LocalStorage } from 'node-persist';
 import { setImmediate as setImmediateP } from 'timers/promises';
 
-import { MS, formatMilliseconds, logError } from './utils';
+import { MS, formatMilliseconds } from './utils';
+import { logError } from './log-error';
 
 // An individual cache entry
 interface CacheItem {

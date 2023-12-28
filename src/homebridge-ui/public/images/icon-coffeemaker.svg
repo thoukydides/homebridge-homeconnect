@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--Generator: Xara Designer (www.xara.com), SVG filter version: 6.7.0.0-->
+<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="75.006pt" height="74.999pt" viewBox="18.75 -237.374 75.006 74.999">
+ <defs>
+  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="82.35" y2="0" gradientTransform="translate(87.297 164.765) rotate(131.67) skewX(-6.66058)">
+   <stop offset="0" stop-color="#5dc5ff"/>
+   <stop offset="1" stop-color="#375ee6"/>
+  </linearGradient>
+  <linearGradient id="LinearGradient_1" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="61.523" y2="0" gradientTransform="translate(91.14 213.602) rotate(180) skewX(89.9991)">
+   <stop offset="0" stop-color="#5dc5ff"/>
+   <stop offset="1" stop-color="#375ee6"/>
+  </linearGradient>
+ </defs>
+ <g id="Layer 1" transform="scale(1 -1)">
+  <g id="Group">
+   <rect x="18.754" y="162.376" width="74.999" height="74.999" stroke="none" stroke-width="0.596" stroke-linejoin="miter" stroke-linecap="round"/>
+   <g id="Group_1">
+    <rect x="18.754" y="168.751" width="74.999" height="62.249" rx="4.40170006559044" ry="4.40170006559044" stroke="none" stroke-width="0.376" fill-rule="evenodd" fill="url(#LinearGradient)"/>
+    <rect x="44.517" y="220.613" width="23.475" height="4.874" rx="1.37880002054572" ry="1.37880002054572" stroke="none" fill="#ffffff" stroke-width="1.7" stroke-linejoin="miter"/>
+    <path d="M 18.75,213.602 L 93.756,213.602" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="miter"/>
+    <rect x="36.354" y="178.268" width="39.798" height="35.334" rx="1.04" ry="1.04" stroke="#ffffff" stroke-width="3"/>
+    <rect x="49.782" y="203.694" width="12.942" height="9.909" rx="1.04" ry="1.04" stroke="#ffffff" fill="#ffffff" stroke-width="3"/>
+    <path d="M 60.257,191.643 C 62.297,192.633 64.41,193.163 66.317,192.543 C 67.607,192.123 68.704,191.487 68.777,189.573 C 68.895,186.463 62.277,184.563 60.287,184.923" fill="none" stroke="#ffffff" stroke-width="2.25" stroke-linejoin="miter"/>
+    <path d="M 48.031,196.285 C 48.031,196.557 48.257,196.767 48.529,196.767 L 63.977,196.767 C 64.249,196.767 64.475,196.557 64.475,196.285 C 64.477,191.699 62.535,185.314 61.533,182.319 L 50.973,182.319 C 49.971,185.314 48.029,191.699 48.031,196.285 Z" fill="#ffffff" stroke-width="0.498" fill-rule="nonzero" stroke="none" stroke-linejoin="miter" marker-start="none" marker-end="none"/>
+   </g>
+  </g>
+ </g>
+</svg>

@@ -12,13 +12,11 @@ import { CommandsWrapper, ExecuteCommandWrapper, ProgramDefinitionWrapper,
          HomeAppliance, HomeApplianceWrapper, HomeAppliancesWrapper,
          OptionWrapper, OptionsWrapper, ProgramsWrapper, ProgramWrapper,
          SettingWrapper, SettingsWrapper, StatusWrapper, StatusesWrapper } from './api-types';
-import { APIAuthoriseUserAgent, AuthorisationURI } from './api-ua-auth';
+import { APIAuthoriseUserAgent, AuthorisationStatus } from './api-ua-auth';
 import { APIEvent, APIEventStream } from './api-events';
-import { APICheckValues, CommandKey, CommandKV, EventKV, OptionKey,
-         OptionKV, ProgramDefinitionKV, ProgramKV,
-         ProgramsKV, SettingKey,  SettingKV,
-         SettingValue,
-         StatusKey, StatusKV, OptionValue } from './api-value';
+import { APICheckValues, CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
+         ProgramDefinitionKV, ProgramKV, ProgramsKV, SettingKey,  SettingKV,
+         SettingValue, StatusKey, StatusKV, OptionValue } from './api-value';
 import { ProgramKey } from './api-value-types';
 import apiTI from './ti/api-types-ti';
 
@@ -54,7 +52,8 @@ export interface HomeConnectAPI {
     getCommands                                    (haid: string):                                      Promise<CommandKV[]>;
     setCommand                                     (haid: string, key: CommandKey):                     Promise<void>;
     getEvents                                      (haid?: string):                                     AsyncGenerator<EventKV, void, void>;
-    getAuthorisationURI                            ():                                                  Promise<AuthorisationURI | null>;
+    getAuthorisationStatus                         (immediate?: boolean):                               Promise<AuthorisationStatus>;
+    retryAuthorisation                             ():                                                  void;
 }
 
 // Low-level access to the Home Connect API
@@ -274,8 +273,13 @@ export class CloudAPI implements HomeConnectAPI {
         }
     }
 
-    // Obtain the URL that the user should use to authorise this client
-    getAuthorisationURI(): Promise<AuthorisationURI | null> {
-        return this.ua.getAuthorisationURI();
+    // Get authorisation status updates
+    getAuthorisationStatus(immediate: boolean = false): Promise<AuthorisationStatus> {
+        return this.ua.getAuthorisationStatus(immediate);
+    }
+
+    // Trigger a retry of Device Flow authorisation
+    retryAuthorisation(): void {
+        this.ua.retryDeviceFlow();
     }
 }

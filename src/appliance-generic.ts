@@ -9,12 +9,13 @@ import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers
 import { HasPower } from './has-power';
 import { PersistCache } from './persist-cache';
 import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, columns,
-         formatMilliseconds, logError } from './utils';
+         formatMilliseconds } from './utils';
+import { logError } from './log-error';
 import { ApplianceConfig } from './config-types';
 import { HomeConnectDevice } from './homeconnect-device';
 import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } from './serialised';
 import { HomeConnectPlatform } from './platform';
-import { ConfigSchema, SchemaOptionalFeature, SchemaOptionalFeatures } from './config-schema';
+import { ConfigSchemaData, SchemaOptionalFeature } from './homebridge-ui/schema-data';
 
 // A HAP Service constructor
 type ServiceConstructor = typeof Service & {
@@ -41,8 +42,8 @@ export class ApplianceBase {
 
     // Configuration for this appliance
     readonly config: ApplianceConfig;
-    readonly schema: ConfigSchema;
-    readonly optionalFeatures: SchemaOptionalFeatures = [];
+    readonly schema: ConfigSchemaData;
+    readonly optionalFeatures: SchemaOptionalFeature[] = [];
 
     // Persistent cache
     readonly cache: PersistCache;

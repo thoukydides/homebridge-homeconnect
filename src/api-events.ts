@@ -8,7 +8,8 @@ import { CheckerT, createCheckers } from 'ts-interface-checker';
 
 import { Event } from './api-types';
 import { APIAuthoriseUserAgent } from './api-ua-auth';
-import { formatMilliseconds, logError } from './utils';
+import { formatMilliseconds } from './utils';
+import { logError } from './log-error';
 import { APIEventStreamError, APIValidationError } from './api-errors';
 import { Request, Response, SSE } from './api-ua';
 import apiTI from './ti/api-types-ti';

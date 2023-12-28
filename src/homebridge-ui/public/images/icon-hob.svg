@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--Generator: Xara Designer (www.xara.com), SVG filter version: 6.7.0.0-->
+<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="75.001pt" height="74.999pt" viewBox="203.571 -237.374 75.001 74.999">
+ <defs>
+  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="86.046" y2="0" gradientTransform="translate(275.187 164.765) rotate(134.365) skewX(-1.27082)">
+   <stop offset="0" stop-color="#5dc5ff"/>
+   <stop offset="1" stop-color="#375ee6"/>
+  </linearGradient>
+ </defs>
+ <g id="Layer 1" transform="scale(1 -1)">
+  <g id="Group">
+   <rect x="203.572" y="162.376" width="74.999" height="74.999" stroke="none" stroke-width="0.596" stroke-linejoin="miter" stroke-linecap="round"/>
+   <g id="Group_1">
+    <rect x="203.572" y="162.376" width="75.001" height="74.999" rx="5.30330007902533" ry="5.30330007902533" stroke="none" stroke-width="0.376" fill-rule="evenodd" fill="url(#LinearGradient)"/>
+    <path d="M 258.265,203.099 C 251.142,203.099 245.37,208.871 245.37,215.993 C 245.37,223.115 251.142,228.888 258.265,228.888 C 265.387,228.888 271.159,223.115 271.159,215.993 C 271.159,208.871 265.387,203.099 258.265,203.099 Z" stroke="#ffffff" stroke-width="3" fill-rule="nonzero" stroke-linejoin="miter" marker-start="none" marker-end="none"/>
+    <path d="M 259.338,170.862 C 253.999,170.862 249.667,175.192 249.667,180.532 C 249.667,185.873 253.999,190.205 259.338,190.205 C 264.679,190.205 269.01,185.873 269.01,180.532 C 269.01,175.192 264.679,170.862 259.338,170.862 Z" stroke="#ffffff" stroke-width="3" fill-rule="nonzero" stroke-linejoin="miter" marker-start="none" marker-end="none"/>
+    <path d="M 223.879,170.862 C 216.757,170.862 210.984,176.634 210.984,183.756 C 210.984,190.878 216.757,196.652 223.879,196.652 C 231.001,196.652 236.773,190.878 236.773,183.756 C 236.773,176.634 231.001,170.862 223.879,170.862 Z" stroke="#ffffff" stroke-width="3" fill-rule="nonzero" stroke-linejoin="miter" marker-start="none" marker-end="none"/>
+    <path d="M 222.804,228.888 C 228.144,228.888 232.475,224.557 232.475,219.217 C 232.475,213.876 228.144,209.546 222.804,209.546 C 217.463,209.546 213.133,213.876 213.133,219.217 C 213.133,224.557 217.463,228.888 222.804,228.888 Z" stroke="#ffffff" stroke-width="3" fill-rule="nonzero" stroke-linejoin="miter" marker-start="none" marker-end="none"/>
+   </g>
+  </g>
+ </g>
+</svg>

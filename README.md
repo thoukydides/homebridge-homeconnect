@@ -11,7 +11,7 @@
 [![Build and Lint](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml/badge.svg)](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml)
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
-Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/homebridge).
+Home Connect home appliances plugin for [Homebridge](https://github.com/homebridge/homebridge).
 
 </span>
 
@@ -19,23 +19,45 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 
 ## Installation
 
+### Step 1 - Setup Home Connect Appliances
+
 1. Connect your home appliances with Home Connect:
    1. Install Home Connect from the Apple App Store for your country (e.g. [UK](https://itunes.apple.com/gb/app/home-connect-app/id901397789) or [USA](https://itunes.apple.com/us/app/home-connect-america/id1134525430)).
    1. Create an account using your email address, click on the validation link in the email that will be received, and then return to the app and login.
    1. Connect the appliances to your home network, either via the app or using Wi-Fi Protected Setup (WPS).
    1. Connect the appliances to the app (by following the installation guide provided with the appliance).
 1. If you are using a legacy Home Connect account then also create a [SingleKey ID](https://singlekey-id.com/en/sign-up/) using the same email address, ensuring that it is all in lowercase. Verify that the SingleKey ID works in the Home Connect app.
-1. Obtain a Home Connect application *Client ID*:
-   1. Sign-up for a free [Home Connect Developer Program](https://developer.home-connect.com/user/register) account and login.
-   1. [Register a new application](https://developer.home-connect.com/applications/add), ensuring that *OAuth Flow* is set to *Device Flow*, the *Home Connect User Account* is the same as the SingleKey ID email address, the *Success Redirect* is left blank, *One Time Token* is not ticked, *Status* is `Enabled`, and *Client Secret Always Required* is `No`.
-   1. Save the displayed *Client ID* to include in the Homebridge `config.json` file.
-   1. Wait 15 minutes for changes to the application to be deployed to the Home Connect authorisation servers.
+
+### Step 2 - Obtain a Home Connect Client ID
+
+1. Sign-up for a free [Home Connect Developer Program](https://developer.home-connect.com/user/register) account and login.
+1. [Register a new application](https://developer.home-connect.com/applications/add), ensuring that
+   * *OAuth Flow* is set to **Device Flow**
+   * *Home Connect User Account for Testing* is the same as the **SingleKey ID email address**
+   * *Redirect URI* is **left blank**
+   * *Enable One Time Token Mode* is **not ticked**
+1. If the application is subsequently edited then additionally ensure that:
+   * *Forces the usage of PKCE* is **not ticked**
+   * *Status* is **Enabled**
+   * *Client Secret Always Required* is **No**
+1. Copy and save the displayed *Client ID*; it will be required to configure this plugin.
+1. Wait 15 minutes for changes to the application to be deployed to the Home Connect authorisation servers.
+
+### Step 3(a) - Homebridge Plugin Installation *(recommended approach using Homebridge UI)*
+
+1. On the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) Plugins page search for and install the **HomeConnect** plugin.
+1. Open the **HomeConnect** plugin settings and set the *Client ID* to the value obtained from the [Home Connect Developer Program](https://developer.home-connect.com/applications) for the created *Device Flow* application.
+1. Click on the *AUTHORISE* button to open a new Home Connect browser window. Login to your Home Connect account and approve access.
+1. Save the plugin settings and restart Homebridge.
+ 
+### Step 3(b) - Homebridge Plugin Installation *(alternative method using command line)*
+
 1. Install this plugin using: `npm install -g homebridge-homeconnect`
 1. Edit `config.json` and add the HomeConnect platform (see example below).
-1. Run [Homebridge](https://github.com/nfarina/homebridge).
-1. The Homebridge log output will include an authorisation URL. Copy the listed URL into a web browser and login to your Home Connect account. (The authorisation URL can also be found in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) graphical settings editor.)
- 
-### Example `config.json`
+1. Run (or restart) [Homebridge](https://github.com/homebridge/homebridge).
+1. The Homebridge log output will include an authorisation URL. Copy the listed URL into a web browser, login to your Home Connect account, and approve access.
+
+#### Example `config.json`
 ```JSON
 {
     "platforms":
@@ -47,9 +69,9 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/nfarina/
 ```
 The `clientid` should be set to the *Client ID* obtained from the [Home Connect Developer Program](https://developer.home-connect.com/applications) for the created *Device Flow* application.
 
-Additional configuration is recommended to [customise the appliance programs](https://github.com/thoukydides/homebridge-homeconnect/wiki/Programs). The easiest way to do this is via the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) (version 4.8.1 or later) graphical settings editor. This plugin dynamically updates its configuration schema with the appropriate options for the connected appliances.
+Additional configuration is recommended to [customise the appliance programs](https://github.com/thoukydides/homebridge-homeconnect/wiki/Programs), and to select optional features. See [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json) for a description of all supported configuration options.
 
-See [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json) for a description of all supported configuration options.
+The easiest way to configure this plugin is via the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) configuration editor. This plugin implements a [custom user interface](https://developers.homebridge.io/#/custom-plugin-ui) that dynamically updates with the appropriate options for the connected appliances. Manual configuration via the `config.json` file is possible, but not recommended.
 
 ## Appliance Support
 

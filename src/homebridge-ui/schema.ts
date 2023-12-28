@@ -1,78 +1,20 @@
 /* eslint-disable max-len */
-/* eslint-disable no-console */
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
-import NodePersist from 'node-persist';
-import { join } from 'path';
-import { promises } from 'fs';
-import { setTimeout as setTimeoutP } from 'timers/promises';
 import assert from 'assert';
 
-import { HOMEBRIDGE_LANGUAGES } from './api-languages';
-import { MS, keyofChecker } from './utils';
-import { DEFAULT_CONFIG, PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { AuthorisationURI } from './api-ua-auth';
-import { HomeAppliance } from './api-types';
-import configTI from './ti/config-types-ti';
-
-// Schema version to indicate incompatible changes to homebridge-config-ui-x
-const SCHEMA_VERSION = 1;
-
-// Header and footer (may contain Markdown but not HTML tags)
-const HEADER = 'For help please refer to the [README](https://github.com/thoukydides/homebridge-homeconnect/blob/master/README.md) and [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json).';
-const HEADER_DEFAULT = '*This is a temporary configuration schema for initial setup only. When the plugin runs it will replace this schema with one tailored to the available Home Connect appliances.*\n\n*Update [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) to version 4.8.1 or later if this message remains after the Home Connect Client has been configured.*\n\n' + HEADER;
-const FOOTER = '© 2019-2023 [Alexander Thoukydides](https://www.thouky.co.uk/)';
+import { HOMEBRIDGE_LANGUAGES } from '../api-languages';
+import { keyofChecker } from '../utils';
+import { DEFAULT_CONFIG, PLATFORM_NAME } from '../settings';
+import { ConfigSchemaData, SchemaAppliance, SchemaOptionalFeature,
+         SchemaProgramOption, SchemaProgramOptionType,
+         SchemaProgramOptionValue } from './schema-data';
+import { PlatformConfig } from 'homebridge';
+import configTI from '../ti/config-types-ti';
 
 // Maximum number of enum values for numeric types with multipleOf constraint
 const MAX_ENUM_STEPS = 18;
-
-// Delay before writing the schema to allow multiple updates to be applied
-const WRITE_DELAY = 3 * MS;
-
-// Appliance programs and their options
-export interface SchemaProgram {
-    key:                    string;
-    name:                   string;
-}
-export type SchemaProgramOptionType = 'number' | 'integer' | 'boolean' | 'string';
-export type SchemaProgramOptionValue = number | boolean | string;
-export interface SchemaEnumValue {
-    key:                    SchemaProgramOptionValue;
-    name:                   string;
-}
-export interface SchemaProgramOption {
-    key:                    string;
-    name:                   string;
-    type:                   SchemaProgramOptionType;
-    suffix?:                string;
-    default?:               SchemaProgramOptionValue;
-    minimum?:               number;
-    maximum?:               number;
-    multipleOf?:            number;
-    values?:                SchemaEnumValue[];
-}
-
-// Definte an optional feature supported by an appliance
-export interface SchemaOptionalFeature {
-    group:                  string;
-    name:                   string;
-    service:                string;
-    enableByDefault:        boolean;
-}
-export type SchemaOptionalFeatures = SchemaOptionalFeature[];
-
-// Details of appliances and their configuration options
-export interface SchemaProgramWithOptions extends SchemaProgram {
-    options?:               SchemaProgramOption[];
-}
-export interface SchemaAppliance extends HomeAppliance {
-    programs:               SchemaProgramWithOptions[];
-    hasControl:             boolean;
-    features:               SchemaOptionalFeatures;
-}
 
 // Component of a config schema
 export interface JSONSchemaEnumValue<Type> {
@@ -146,122 +88,41 @@ export interface FormItemHelp extends FormItemCommon {
 }
 export type FormItem = FormItemValue | FormItemGroup | FormItemHelp;
 
-// Config schema for homebridge-ui-x config
+// Config schema for homebridge-config-ui-x config
 export interface SchemaFormFragment {
     schema:                 JSONSchemaProperties;
     form:                   FormItem[];
     code?:                  string;
 }
-export interface PluginSchema {
-  pluginAlias:              string;
-  pluginType:               string;
-  dynamicSchemaVersion?:    number;
-  singular?:                boolean;
-  headerDisplay?:           string;
-  footerDisplay?:           string;
-  schema?:                  JSONSchema;
-  layout?:                  unknown;
+export interface FormSchema {
+  schema:                   JSONSchema;
   form?:                    FormItem[];
-  display?:                 null;
+  layout?:                  Record<string, unknown>[] | null;
 }
 
 // Schema generator for the Homebridge config.json configuration file
-export class ConfigSchema {
+export class ConfigSchema extends ConfigSchemaData {
 
-    // Full path to the schema file
-    readonly schemaFile: string;
-
-    // Details of known appliances, indexed by haId
-    appliances: Record<string, SchemaAppliance> = {};
-
-    // Promise fulfilled when any previous state has been restored
-    readonly readyPromise: Promise<void>;
-
-    // Deferred schema write
-    pendingWritePromise?: Promise<void>;
-    activeWritePromise?: Promise<void>;
-
-    // Home Connect authorisation URI if available or authorisation status
-    authorisation: AuthorisationURI | boolean = false;
-
-    // The most recently saved schema (as a JSON string)
-    oldSchema?: string;
-
-    // Create a new schema generator
-    constructor(
-        readonly logRaw?:   Logger,
-        readonly persist?:  NodePersist.LocalStorage,
-        path?:              string
-    ) {
-        // Construct the full path to the schema file
-        this.schemaFile = path ? join(path, `.${PLUGIN_NAME}-v${SCHEMA_VERSION}.schema.json`)
-                               : join(__dirname, '../config.schema.json');
-        // Initial state
-        this.appliances = {};
-
-        // Read any previous schema and persistent state
-        this.readyPromise = this.readSchema();
-    }
-
-    // Update the schema if the user needs to authorise the client
-    async setAuthorised(uri: AuthorisationURI | null): Promise<void> {
-        // Set the verification URI or authorisation status
-        await this.readyPromise;
-        this.authorisation = uri ?? true;
-        this.writeSchema();
-
-        // Expire the authorisation URI
-        if (uri !== null && uri.expires) {
-            await setTimeoutP(uri.expires - Date.now());
-            this.authorisation = false;
-            this.writeSchema();
-        }
-    }
-
-    // Update the list of accessories
-    async setAppliances(newAppliances: HomeAppliance[]): Promise<void> {
-        await this.readyPromise;
-        this.authorisation = true;
-        const appliances: Record<string, SchemaAppliance> = {};
-        for (const ha of newAppliances) {
-            const appliance = Object.assign({}, this.appliances[ha.haId], ha);
-            appliance.programs ??= [];
-            appliance.features ??= [];
-            appliances[ha.haId] = appliance;
-        }
-        this.appliances = appliances;
-        this.writeSchema();
-    }
-
-    // Set whether the Control scope has been authorised for an appliance
-    setHasControl(haId: string, control: boolean): void {
-        const appliance = this.appliances[haId];
-        if (appliance) appliance.hasControl = control;
-        this.writeSchema();
-    }
-
-    // Add the list of programs for an appliance to the schema
-    setPrograms(haId: string, newPrograms: SchemaProgram[]): void {
-        const appliance = this.appliances[haId];
-        if (!appliance) return;
-        const findProgram = (key: string) => appliance?.programs.find(p => p.key === key);
-        appliance.programs = newPrograms.map(program => Object.assign({}, findProgram(program.key), program));
-        this.writeSchema();
-    }
-
-    // Add the options for an appliance program to the schema
-    setProgramOptions(haId: string, programKey: string, options: SchemaProgramOption[]): void {
-        const appliance = this.appliances[haId];
-        const program = appliance?.programs.find(p => p.key === programKey);
-        if (program) program.options = options;
-        this.writeSchema();
-    }
-
-    // Add the list of optional features for an appliance to the schema
-    setOptionalFeatures(haId: string, features: SchemaOptionalFeatures): void {
-        const appliance = this.appliances[haId];
-        if (appliance) appliance.features = features;
-        this.writeSchema();
+    // Construct a schema fragment for this plugin
+    getSchemaFragmentPlugin(): SchemaFormFragment {
+        const schema: JSONSchemaProperties = {
+            platform: {
+                type:       'string',
+                default:    PLATFORM_NAME,
+                required:   true
+            },
+            name: {
+                type:       'string',
+                minLength:  1,
+                default:    PLATFORM_NAME
+            }
+        };
+        const form: FormItem[] = [{
+            key:            'name',
+            notitle:        true,
+            description:    'This is used to prefx entries in the Homebridge log.'
+        }];
+        return { schema, form };
     }
 
     // Convert the supported Home Connect API languages into a schema
@@ -290,7 +151,7 @@ export class ConfigSchema {
     }
 
     // Construct a schema for the Home Connect Client
-    getSchemaClient(): SchemaFormFragment {
+    getSchemaFragmentClient(): SchemaFormFragment {
         const schema: JSONSchemaProperties = {
             clientid: {
                 type:       'string',
@@ -320,9 +181,28 @@ export class ConfigSchema {
                 true:       'Simulated Appliances (test server)'
             }
         }, {
+            type:           'help',
+            helpvalue:      '<div class="help-block">Create an application via the <a href="https://developer.home-connect.com/applications">Home Connect Developer Program</a>, ensuring that:'
+                          + '<ul>'
+                          + '<li><i>OAuth Flow</i> is set to <b>Device Flow</b></li>'
+                          + '<li><i>Home Connect User Account for Testing</i> is the same as the <b>SingleKey ID email address</b></li>'
+                          + '<li><i>Redirect URI</i> is <b>left blank</b></li>'
+                          + '<li><i>Enable One Time Token Mode</i> is <b>not ticked</b></li>'
+                          + '</ul>'
+                          + 'If the application is subsequently edited then additionally ensure that:'
+                          + '<ul>'
+                          + '<li><i>Forces the usage of PKCE</i> is <b>not ticked</b></li>'
+                          + '<li><i>Status</i> is <b>Enabled</b></li>'
+                          + '<li><i>Client Secret Always Required</i> is <b>No</b></li>'
+                          + '</ul>'
+                          + 'Wait 15 minutes after creating (or editing) an application for changes to the application to be deployed to the Home Connect authorisation servers.</div>',
+            condition: {
+                functionBody: 'return !model.simulator'
+            }
+        }, {
             key:            'clientid',
             title:          'Client ID',
-            description:    'Create an application via the <a href="https://developer.home-connect.com/applications">Home Connect Developer Program</a>, with <strong>OAuth Flow</strong> set to <strong>Device Flow</strong>.',
+            description:    'Enter the Client ID of the registered Home Connect application.',
             placeholder:    'e.g. 0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
             condition: {
                 functionBody: 'return !model.simulator'
@@ -346,36 +226,28 @@ export class ConfigSchema {
         return { schema, form };
     }
 
-    // Construct any authorisation help to include in the schema
-    getSchemaAuthorisation(): FormItem | undefined {
-        if (this.authorisation === true) {
-
-            // Authorisation complete
-            return;
-
-        } else if (this.authorisation) {
-
-            // Authorisation is required via the provided URI
-            return {
-                type:       'help',
-                helpvalue:  '<em class="primary-text">AUTHORISATION REQUIRED</em><br>To authorise this plugin to access your Home Connect appliances please visit:<div align=center><a href="' + this.authorisation.uri + '">' + this.authorisation.uri + '</a></div>'
-            };
-
-        } else {
-
-            // Not authorised, so warn if using physical appliances
-            return {
-                type:       'help',
-                helpvalue:  '<p>This plugin requires authorisation to access Home Connect appliances.</p><p>The authorisation link will appear here (and in the Homebridge log file) after the Client ID has been configured and the plugin started.</p>',
-                condition: {
-                    functionBody: 'return !model.simulator && model.clientid'
+    // Construct a schema for debug options
+    getSchemaFragmentDebug(): SchemaFormFragment {
+        const schema: JSONSchemaProperties = {
+            debug: {
+                type:           'array',
+                uniqueItems:    true,
+                items: {
+                    type:           'string',
+                    enum:           keyofChecker(configTI, configTI.DebugFeatures)
                 }
-            };
-        }
+            }
+        };
+        const form: FormItem[] = [{
+            key:            'debug',
+            notitle:        true,
+            description:    'Leave all options unchecked unless debugging a problem.'
+        }];
+        return { schema, form };
     }
 
     // Construct a schema for an appliance's optional features
-    getSchemaApplianceOptionalFeatures(appliance: SchemaAppliance, keyPrefix: string): SchemaFormFragment {
+    getSchemaFragmentApplianceOptionalFeatures(appliance: SchemaAppliance): SchemaFormFragment {
         // Special case if the appliance does not have any optional features
         if (!Object.keys(appliance.features).length) return {
             schema:     {},
@@ -384,7 +256,7 @@ export class ConfigSchema {
 
         // Create the schema for each optional feature
         const featuresSchema: JSONSchemaProperties = {};
-        const groups: Record<string, SchemaOptionalFeatures> = {};
+        const groups: Record<string, SchemaOptionalFeature[]> = {};
         for (const feature of appliance.features) {
             featuresSchema[feature.name] = {
                 type:       'boolean',
@@ -411,7 +283,7 @@ export class ConfigSchema {
                     });
                 }
                 featuresForm.push({
-                    key:            `${keyPrefix}.features.${feature.name}`,
+                    key:            `features.${feature.name}`,
                     title:          feature.name
                 });
             }
@@ -442,7 +314,7 @@ export class ConfigSchema {
     }
 
     // Construct a schema for an appliance's programs
-    getSchemaAppliancePrograms(appliance: SchemaAppliance, keyPrefix: string): SchemaFormFragment {
+    getSchemaFragmentAppliancePrograms(appliance: SchemaAppliance): SchemaFormFragment {
         // Special case if the appliance does not support any programs
         if (!appliance.programs.length) return {
             schema:     {},
@@ -452,8 +324,8 @@ export class ConfigSchema {
             }]
         };
 
-        const keyArrayPrefix = `${keyPrefix}.programs[]`;
-        const keyConditionPrefix = `model["${keyPrefix}"].programs[arrayIndices[arrayIndices.length-1]]`;
+        const keyArrayPrefix = 'programs[]';
+        const keyConditionPrefix = 'model.programs[arrayIndices[arrayIndices.length-1]]';
 
         // Values that are common to all programs
         let programForm: FormItem[] = [{
@@ -641,20 +513,19 @@ export class ConfigSchema {
                 }
             }
         };
-        const modelPrefix = `model["${keyPrefix}"]`;
         const programListCondition = {
-            functionBody: `try { return ${modelPrefix}.addprograms == "custom"; } catch (err) { return true; }`
+            functionBody: 'try { return model.addprograms == "custom"; } catch (err) { return true; }'
         };
         const form: FormItem[] = [{
-            key:            `${keyPrefix}.addprograms`,
+            key:            'addprograms',
             title:          'Program Switches',
             description:    'A separate Switch service can be created for individual appliance programs. These indicate which program is running, and (if authorised) can be used to select options and start a specific program.'
         }, {
             type:           'help',
-            helpvalue:      '<p>Specify a unique HomeKit Name for each program (preferably short and without punctuation).</p><p>The same Appliance Program may be used multiple times with different options.</p>',
+            helpvalue:      '<div class="help-block"><p>Specify a unique HomeKit Name for each program (preferably short and without punctuation).</p><p>The same Appliance Program may be used multiple times with different options.</p></div>',
             condition:      programListCondition
         }, {
-            key:            `${keyPrefix}.programs`,
+            key:            'programs',
             notitle:        true,
             startEmpty:     true,
             items:          programForm,
@@ -663,210 +534,93 @@ export class ConfigSchema {
 
         // Delete the programs member or set an empty array if appropriate
         // (workaround homebridge-config-ui-x / angular6-json-schema-form)
-        const code = `switch (${modelPrefix}.addprograms) {`
-                   + `case "none": ${modelPrefix}.programs = [];   break;`
-                   + `case "auto": delete ${modelPrefix}.programs; break;`
-                   + '}';
+        const code = 'switch (model.addprograms) { case "none": model.programs = []; break; case "auto": delete model.programs; break; }';
 
         return { schema, form, code };
     }
 
-    // Construct a schema for an appliance
-    getSchemaAppliance(appliance: SchemaAppliance, keyPrefix: string): SchemaFormFragment {
-        const schema: JSONSchemaProperties = {};
-        const form: FormItem[] = [{
-            type:       'help',
-            helpvalue:  `${appliance.brand} ${appliance.type} (E-Nr: ${appliance.enumber})`
-        }];
-        let code = '';
-
-        // Add any optional features supported by the appliance
-        const featuresSchema = this.getSchemaApplianceOptionalFeatures(appliance, keyPrefix);
-        Object.assign(schema, featuresSchema.schema);
-        form.push(...featuresSchema.form);
-
-        // Add any programs supported by the appliance
-        const programsSchema = this.getSchemaAppliancePrograms(appliance, keyPrefix);
-        Object.assign(schema, programsSchema.schema);
-        form.push(...programsSchema.form);
-        if (programsSchema.code) code += programsSchema.code;
-
-        // Return the schema for this appliance
-        return { schema, form, code };
+    // Retrieve the active plugin configuration
+    async getConfig(): Promise<PlatformConfig | undefined> {
+        await this.load(true);
+        return this.config;
     }
 
-    // Construct a schema for debug options
-    getSchemaDebug(): SchemaFormFragment {
-        const schema: JSONSchemaProperties = {
-            debug: {
-                type:           'array',
-                uniqueItems:    true,
-                items: {
-                    type:           'string',
-                    enum:           keyofChecker(configTI, configTI.DebugFeatures)
-                }
-            }
-        };
-        const form: FormItem[] = [{
-            key:            'debug',
-            notitle:        true,
-            description:    'Leave all options unchecked unless debugging a problem.'
-        }];
+    // Retrieve the global configuration schema
+    async getSchemaGlobal(): Promise<FormSchema> {
+        await this.load(true);
 
-        // Return the schema for this appliance
-        return { schema, form };
-    }
+        // Generate schema fragments for non-appliance configuration
+        const clientSchema = this.getSchemaFragmentClient();
+        const pluginSchema = this.getSchemaFragmentPlugin();
+        const debugSchema  = this.getSchemaFragmentDebug();
 
-    // Construct the complete configuration schema
-    getSchema(): PluginSchema {
+        // Combine the schema fragments
         const schema: JSONSchema = {
             type:       'object',
-            properties: {}
+            properties: { ...pluginSchema.schema, ...clientSchema.schema, ...debugSchema.schema }
         };
-        const form: FormItem[] = [];
-
-        // Add the Home Connect Client
-        const clientSchema = this.getSchemaClient();
-        Object.assign(schema.properties, clientSchema.schema);
-        form.push({
+        const form: FormItem[] = [{
             type:       'fieldset',
             title:      'Home Connect Client',
             expandable: false,
-            items:      clientSchema.form
-        });
-
-        // Add any Home Connect authorisation
-        const authForm = this.getSchemaAuthorisation();
-        if (authForm) clientSchema.form.push(authForm);
-
-        // Per-appliance configuration
-        const appliances = Object.values(this.appliances).sort((a, b) => a.name.localeCompare(b.name));
-        for (const appliance of appliances) {
-            const keyPrefix = appliance.haId;
-            const appSchema = this.getSchemaAppliance(appliance, keyPrefix);
-            schema.properties[appliance.haId] = {
-                type:       'object',
-                properties: appSchema.schema
-            };
-            form.push({
-                type:       'fieldset',
-                title:      appliance.name,
-                expandable: true,
-                expanded:   false,
-                items:      appSchema.form,
-                condition: {
-                    functionBody: `try { ${appSchema.code} } catch (err) {} return true;`
-                }
-            });
-        }
-
-        // Debug configuration
-        const debugSchema = this.getSchemaDebug();
-        Object.assign(schema.properties, debugSchema.schema);
-        form.push({
+            items:      clientSchema.form,
+            condition:  {
+                functionBody: 'try { return !model.debug.includes("Mock Appliances") } catch (err) { return true; }'
+            }
+        }, {
             type:       'fieldset',
             title:      'Debug Options',
             expandable: true,
             expanded:   false,
             items:      debugSchema.form
-        });
+        }];
 
         // Return the schema
-        return {
-            pluginAlias:            PLATFORM_NAME,
-            pluginType:             'platform',
-            dynamicSchemaVersion:   SCHEMA_VERSION,
-            singular:               true,
-            headerDisplay:          this.persist ? HEADER : HEADER_DEFAULT,
-            footerDisplay:          FOOTER,
-            schema:                 schema,
-            form:                   form,
-            display:                null
-        };
+        return { schema, form };
     }
 
-    // Read any existing schema file
-    async readSchema(): Promise<void> {
-        // First read any persistent data
-        if (this.persist) {
-            try {
-                const persist = await this.persist.getItem('config.schema.json');
-                if (persist) Object.assign(this, persist);
-            } catch (err) {
-                this.log(`Failed to read configuration schema cache: ${err}`);
+    // Retrieve the configuration schema for a specified appliance
+    async getSchemaAppliance(haid: string): Promise<FormSchema | undefined> {
+        await this.load(true);
+        const appliance = this.appliances[haid];
+        if (!appliance) return;
+
+        // Generate schema fragments for the appliance configuration
+        const featuresSchema = this.getSchemaFragmentApplianceOptionalFeatures(appliance);
+        const programsSchema = this.getSchemaFragmentAppliancePrograms(appliance);
+
+        // Combine the schema fragments
+        const schema: JSONSchema = {
+            type:       'object',
+            properties: {
+                enabled: {
+                    type:       'boolean',
+                    default:    true
+                },
+                ...featuresSchema.schema,
+                ...programsSchema.schema
             }
-        }
+        };
+        const form: FormItem[] = [{
+            key:            'enabled',
+            title:          appliance.name,
+            description:    `${appliance.brand} ${appliance.type} (E-Nr: ${appliance.enumber})`
+        }, {
+            type:           'help',
+            helpvalue:      'This appliance will not be exposed to HomeKit.',
+            condition: {
+                functionBody: 'return !model.enabled;'
+            }
+        }, {
+            type:           'fieldset',
+            notitle:        true,
+            items:          [...featuresSchema.form, ...programsSchema.form],
+            condition: {
+                functionBody: `try { ${programsSchema.code ?? ''} } catch (err) {} return !!model.enabled;`
+            }
+        }];
 
-        // Then try reading a schema file (does not exist initially)
-        try {
-            const data = await promises.readFile(this.schemaFile, 'utf8');
-            this.oldSchema = data;
-        } catch (err) {
-            this.debug(`Failed to read the current configuration schema: ${err}`);
-        }
+        // Return the schema
+        return { schema, form };
     }
-
-    // Schedule writing a new schema file, if changed
-    writeSchema(): Promise<void> {
-        this.pendingWritePromise ??= this.writeSchemaPending();
-        return this.pendingWritePromise;
-    }
-
-    // Wait for any previous write to complete and then write a new version
-    async writeSchemaPending(): Promise<void> {
-        // Wait for any previous write to complete and a further delay
-        this.debug('Scheduling configuration schema write');
-        try {
-            await this.readyPromise;
-            await this.activeWritePromise;
-            await setTimeoutP(WRITE_DELAY);
-        } catch (err) { /* empty */ }
-
-        // Perform the schema write
-        this.debug('Starting configuration schema write');
-        this.pendingWritePromise = undefined;
-        this.activeWritePromise = this.writeSchemaActive();
-        try {
-            await this.activeWritePromise;
-        } catch (err) {
-            this.error(`Failed to write configuration schema: ${err}`);
-            if (err instanceof Error && err.stack) this.debug(err.stack);
-        }
-        this.activeWritePromise = undefined;
-    }
-
-    // Write a new schema file, if changed
-    async writeSchemaActive(): Promise<void> {
-        // First write persistent data
-        if (this.persist) {
-            await this.persist.setItem('config.schema.json', {
-                authorisation:  this.authorisation,
-                appliances:     this.appliances
-            });
-        }
-
-        // Construct the new schema and check whether it has changed
-        const schema = this.getSchema();
-        const data = JSON.stringify(schema, null, 4);
-        if (data === this.oldSchema) {
-            return this.debug('Configuration schema unchanged');
-        }
-
-        // Attempt to write the new schema
-        await promises.writeFile(this.schemaFile, data, 'utf8');
-        this.oldSchema = data;
-        this.log(`Configuration schema file updated: ${this.schemaFile}`);
-    }
-
-    // Logging
-    error(msg: string): void { this.logRaw ? this.logRaw.error(msg) : console.error(msg); }
-    warn (msg: string): void { this.logRaw ? this.logRaw.warn(msg)  : console.warn(msg);  }
-    log  (msg: string): void { this.logRaw ? this.logRaw.info(msg)  : console.log(msg);   }
-    debug(msg: string): void { this.logRaw ? this.logRaw.debug(msg) : console.debug(msg); }
-}
-
-// If this script is being run interactively then generate the default schema
-if (require.main === module) {
-    const schema = new ConfigSchema();
-    schema.writeSchema();
 }

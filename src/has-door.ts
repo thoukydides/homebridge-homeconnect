@@ -90,7 +90,6 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
 
             // Update the door status
             this.device.on(key, doorState => {
-                // HERE - Also need to support
                 const isOpen = doorState === DoorState.Open || doorState === DoorStateRefrigeration.Open;
                 const isLocked = doorState === DoorState.Locked;
                 this.log.info(`Door ${isOpen ? 'open' : 'closed'}${isLocked ? ' and locked' : ''}`);

@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--Generator: Xara Designer (www.xara.com), SVG filter version: 6.7.0.0-->
+<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="74.999pt" height="74.999pt" viewBox="388.389 -237.374 74.999 74.999">
+ <defs>
+  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="82.35" y2="0" gradientTransform="translate(456.933 164.765) rotate(131.67) skewX(-6.66058)">
+   <stop offset="0" stop-color="#5dc5ff"/>
+   <stop offset="1" stop-color="#375ee6"/>
+  </linearGradient>
+  <linearGradient id="LinearGradient_1" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="55.981" y2="0" gradientTransform="translate(457.633 219.977) rotate(180) skewX(89.999)">
+   <stop offset="0" stop-color="#5dc5ff"/>
+   <stop offset="1" stop-color="#375ee6"/>
+  </linearGradient>
+ </defs>
+ <g id="Layer 1" transform="scale(1 -1)">
+  <g id="Group">
+   <rect x="388.39" y="162.376" width="74.999" height="74.999" stroke="none" stroke-width="0.596" stroke-linejoin="miter" stroke-linecap="round"/>
+   <g id="Group_1">
+    <rect x="391.765" y="162.376" width="68.249" height="74.999" rx="5.30330007902533" ry="5.30330007902533" stroke="none" stroke-width="0.376" fill-rule="evenodd" fill="url(#LinearGradient)"/>
+    <rect x="414.153" y="226.988" width="23.475" height="4.874" rx="1.37880002054572" ry="1.37880002054572" stroke="none" fill="#ffffff" stroke-width="1.7" stroke-linejoin="miter"/>
+    <path d="M 391.764,219.977 L 460.014,219.977" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="miter"/>
+    <path d="M 448.663,211.467 L 403.116,211.467" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="miter" stroke-linecap="round"/>
+    <rect x="407.377" y="178.415" width="37.026" height="24.542" rx="1.04" ry="1.04" stroke="#ffffff" stroke-width="3"/>
+   </g>
+  </g>
+ </g>
+</svg>

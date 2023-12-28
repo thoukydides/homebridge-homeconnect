@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--Generator: Xara Designer (www.xara.com), SVG filter version: 6.7.0.0-->
+<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="74.999pt" height="74.999pt" viewBox="295.982 -139.1 74.999 74.999">
+ <defs>
+  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="-74.931" gradientTransform="translate(335.088 139.066)">
+   <stop offset="0" stop-color="#512472"/>
+   <stop offset="1" stop-color="#441d53"/>
+  </linearGradient>
+ </defs>
+ <g id="Layer 1" transform="scale(1 -1)">
+  <g id="Group" stroke="none">
+   <rect x="295.983" y="64.102" width="74.999" height="74.999" stroke-width="0.596" stroke-linejoin="miter" stroke-linecap="round"/>
+   <path d="M 309.612,72.674 C 293.644,85.85 291.378,109.503 304.554,125.47 C 317.731,141.438 341.384,143.704 357.351,130.528 C 371.835,118.576 375.045,98.005 365.684,82.368 L 368.882,68.066 C 369.141,66.906 368.098,65.869 366.939,66.136 L 352.736,69.408 C 339.503,61.499 322.177,62.304 309.612,72.674 Z" stroke-width="0.405" stroke-linejoin="miter" marker-start="none" marker-end="none" fill="url(#LinearGradient)"/>
+   <g id="Group_1" stroke-width="0.096" fill="#ffffff">
+    <path d="M 344.226,99.805 L 344.206,99.805 L 344.206,110.366 L 344.453,110.366 C 345.401,110.366 346.17,111.112 346.17,112.059 L 346.17,118.204 C 346.17,119.152 345.401,119.888 344.453,119.888 L 340.422,119.888 C 339.474,119.888 338.725,119.152 338.725,118.204 L 338.725,112.059 C 338.725,111.112 339.475,110.367 340.422,110.367 L 340.687,110.367 L 340.687,99.806 L 340.651,99.806 C 338.944,99.806 337.571,98.387 337.571,96.68 L 337.571,86.301 C 337.571,84.595 338.944,83.246 340.651,83.246 L 344.227,83.246 C 345.932,83.246 347.322,84.595 347.322,86.301 L 347.322,96.68 C 347.322,98.385 345.932,99.805 344.226,99.805 Z" marker-start="none" marker-end="none"/>
+    <path d="M 324.358,105.492 L 324.358,85.659 C 324.358,84.317 325.433,83.245 326.774,83.245 L 329.328,83.245 C 330.669,83.245 331.744,84.317 331.744,85.659 L 331.744,105.492 C 334.514,106.859 336.461,109.729 336.461,113.048 C 336.461,115.815 334.888,118.265 332.94,119.795 C 332.716,119.97 332.415,120.002 332.161,119.879 C 331.906,119.755 331.744,119.497 331.744,119.213 L 331.744,115.114 C 331.744,113.806 330.683,112.788 329.372,112.788 L 326.734,112.788 C 325.423,112.788 324.358,113.805 324.358,115.114 L 324.358,119.216 C 324.358,119.5 324.199,119.758 323.943,119.882 C 323.69,120.006 323.388,119.973 323.163,119.799 C 321.211,118.267 319.64,115.817 319.64,113.049 C 319.64,109.73 321.531,106.86 324.358,105.492 Z" marker-start="none" marker-end="none"/>
+   </g>
+   <rect x="295.983" y="64.102" width="74.999" height="74.999" stroke-width="0.596" stroke-linejoin="miter" stroke-linecap="round"/>
+  </g>
+ </g>
+</svg>

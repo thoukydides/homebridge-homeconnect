@@ -8,7 +8,6 @@ import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { ConfigPlugin } from './config-types';
 import { HomeAppliance } from './api-types';
-import { AuthorisationURI } from './api-ua-auth';
 import { CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
          ProgramDefinitionKV, ProgramKV, ProgramsKV, SettingKey,  SettingKV,
          SettingValue, StatusKey, StatusKV, OptionValue } from './api-value';
@@ -23,6 +22,7 @@ import { MockFridgeFreezer } from './mock-fridgefreezer';
 import { MockCoffeeMaker } from './mock-coffeemaker';
 import { MockDryer } from './mock-dryer';
 import { MockWasher } from './mock-washer';
+import { AuthorisationStatus } from './api-ua-auth';
 
 // Random delay before completing API requests
 const MOCK_MIN_DELAY =  1; // (milliseconds)
@@ -89,6 +89,14 @@ export class MockAPI implements HomeConnectAPI {
         return true || scope;
     }
 
+    // Get authorisation status updates
+    async getAuthorisationStatus(): Promise<AuthorisationStatus> {
+        return { state: 'success' };
+    }
+
+    // Trigger a retry of Device Flow authorisation
+    retryAuthorisation(): void {}
+
     // Get a list of paired home appliances
     async getAppliances(): Promise<HomeAppliance[]> {
         return Object.values(this.appliances).map(appliance => appliance.getAppliance());
@@ -148,10 +156,5 @@ export class MockAPI implements HomeConnectAPI {
             eventPromise = new Promise(resolve => eventResolve = resolve);
             yield event;
         }
-    }
-
-    // Obtain the URL that the user should use to authorise this client
-    async getAuthorisationURI(): Promise<AuthorisationURI | null> {
-        return null;
     }
 }

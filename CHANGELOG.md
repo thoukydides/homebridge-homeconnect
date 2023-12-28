@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* Significiant rewrite of the plugin configuration handling. This now implements a [custom user interface](https://developers.homebridge.io/#/custom-plugin-ui) instead of a [dynamic schema](https://github.com/homebridge/homebridge-config-ui-x/blob/f63405f68a55416be3f9bb3ee4d47227b78d691c/src/modules/plugins/plugins.service.ts#L767) (semi-static `.homebridge-homeconnect-v1.schema.json` schema file in the `.homebridge` directory). Home Connect client authorisation and feedback is handled interactively within the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) interface. The settings for each application are presented under separate tabs to make larger configurations more manageable.
+* Individual appliances can be disabled in the `config.json` file. This removes any associated HomeKit services and prevents all Home Connect API requests for that appliance. (#57)
+* An optional `name` property is now accepted in the `config.json` file to change the prefix used for the plugin in the Homebridge log file. This setting is not exposed in the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) interface. (#194)
+* **Hob/Oven:** Added a few undocumented program keys, but almost certainly incomplete. (#190)
+* Updated dependencies.
 
 ## [v0.36.0] - 2023-12-24
 ### Added
@@ -54,7 +60,7 @@ All notable changes to this project will be documented in this file.
 ## [v0.32.0] - 2023-12-14
 ### Added
 * The HomeKit services for appliance doors (`Door` service), mode settings (`Switch` services), and event buttons (`Stateless Programmable Switch` services), can be individually enabled or disabled via the `config.json` file.
-* Additional debug logging options can be configured via [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). These allow logging of the raw Home Connect API requests and responses, as well as redirection of `debug` level logging to `info` level (avoiding the need to use the `homebridge -D` option).
+* Additional debug logging options can be configured via [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x). These allow logging of the raw Home Connect API requests and responses, as well as redirection of `debug` level logging to `info` level (avoiding the need to use the `homebridge -D` option).
 ### Fixed
 * Corrected checking of keys in Home Connect API events.
 
@@ -87,11 +93,11 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.29.5] - 2023-07-03
 ### Fixed
-* Properly corrected display of authorisation URI in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). (#151)
+* Properly corrected display of authorisation URI in the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x). (#151)
 
 ## [v0.29.4] - 2023-07-03
 ### Fixed
-* Corrected display of authorisation URI in the [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). (#151)
+* Corrected display of authorisation URI in the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x). (#151)
 
 ## [v0.29.3] - 2023-05-07
 ### Changed
@@ -348,13 +354,13 @@ All notable changes to this project will be documented in this file.
 ### Added
 * **CleaningRobot:** Added a `Battery Service` service to indicate the battery charge level and its charging status.
 ### Changed
-* Use the new dynamic configuration schema support in [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) version 4.8.1. This saves the schema as `~/.homebridge/.homebridge-homeconnect-v1.schema.json` instead of overwriting `config.schema.json` in the installation directory, so works even if the plugin does not have write access to its installation directory.
+* Use the new dynamic configuration schema support in [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) version 4.8.1. This saves the schema as `~/.homebridge/.homebridge-homeconnect-v1.schema.json` instead of overwriting `config.schema.json` in the installation directory, so works even if the plugin does not have write access to its installation directory.
 * The OAuth `access_token` and `refresh_token` are now obfuscated before being written to the log file; only the first 4 and final 8 characters are recorded. This is sufficient for debugging purposes, but prevents account access if a log file is posted publicly. Note that codes used during the initial authorisation are still logged, but these have very short validity periods (the `device_code` and `user_code` for physical appliances are only valid for 5 minutes, and the `authorization_code` for the simulator is valid for 10 minutes).
 
 ## [v0.15.0] - 2020-01-21
 ### Changed
 * A single events stream is used to monitor all appliances instead of a separate stream per appliance, reducing the number of requests issued to the Home Connect servers. This only works with physical appliances, so a separate stream is still established for each simulator appliance.
-* Preparation for using the upcoming dynamic configuration schema support in [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x).
+* Preparation for using the upcoming dynamic configuration schema support in [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x).
 ### Fixed
 * **Hood:** Fixed a stupid error that prevented the `Fan` service from being initialised. (#2)
 * Fixed an error that prevented accessories from being removed when no configuration is provided for this plugin.
@@ -363,7 +369,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.14.0] - 2020-01-18
 ### Added
-* Added an experimental configuration schema (`config.schema.json`) for [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x). The schema is dynamically updated by the plugin to add the authorisation link and settings for appliance programs. This only works if the plugin has write access to the schema file in its installation directory.
+* Added an experimental configuration schema (`config.schema.json`) for [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x). The schema is dynamically updated by the plugin to add the authorisation link and settings for appliance programs. This only works if the plugin has write access to the schema file in its installation directory.
 * New configuration option `"language": { "api": "en-GB" }` enables selection of the Home Connect API language. This affects the names of program `Switch` services and options in the configuration schema.
 ### Changed
 * **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/Washer/WasherDryer:** Created a new `Switch` service to indicate when a program is active. This replaces the `Active` characteristic that was previously on the main power `Switch` service (which caused problems with Siri switching the appliance power on or off). The `Remaining Duration`, `Status Active`, and `Status Fault` characteristics have also been relocated to the new `Switch`. (#10)

@@ -5,6 +5,7 @@
 export interface ConfigPlugin {
     // Fields required by Homebridge
     platform:               string;
+    name?:                  string;
     // Fields used by this plugin
     clientid:               string;
     clientsecret?:          string;
@@ -24,6 +25,7 @@ export interface ConfigAppliances {
 // Configuration for a single appliance
 export type AddProgramsConfig = 'none' | 'auto' | 'custom';
 export interface ApplianceConfig {
+    enabled?:               boolean;
     addprograms?:           AddProgramsConfig;
     programs?:              ApplianceProgramConfig[];
     features?:              ApplianceFeatures;

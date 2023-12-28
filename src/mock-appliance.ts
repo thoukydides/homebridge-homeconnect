@@ -7,10 +7,10 @@ import { setImmediate as setImmediateP } from 'timers/promises';
 
 import { ErrorResponse, HomeAppliance } from './api-types';
 import { CommandKV, CommandKey, EventApplianceConnectionEvent,
-         EventApplianceDataEvent, EventApplianceDataKV, EventDataKV, EventKV, EventKey,
-         EventMapKey, EventValue, OptionDefinitionKV, OptionKV, OptionKey,
-         OptionValue, ProgramDefinitionKV, ProgramKV, ProgramsKV, SettingKV,
-         SettingKey, SettingValue, StatusKV, StatusKey, StatusValue } from './api-value';
+         EventApplianceDataEvent, EventApplianceDataKV, EventDataKV, EventKV,
+         EventKey, EventMapKey, EventValue, OptionDefinitionKV, OptionKV,
+         OptionKey, OptionValue, ProgramDefinitionKV, ProgramKV, ProgramsKV,
+         SettingKV, SettingKey, SettingValue, StatusKV, StatusKey, StatusValue } from './api-value';
 import { OperationState, ProgramKey } from './api-value-types';
 import { Request, Response } from './api-ua';
 import { APIStatusCodeError } from './api-errors';
