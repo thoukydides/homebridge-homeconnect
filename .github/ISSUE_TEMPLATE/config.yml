@@ -15,3 +15,6 @@ contact_links:
   - name: 📧 Contact the Home Connect Developer team
     url: https://developer.home-connect.com/support/contact
     about: Contact the Home Connect Developer team if you are having problems with authorisation, or if you want support for additional appliance programs or options.
+  - name: 📧 Contact HOOBS support
+    url: https://support.hoobs.org/ticket
+    about: This is not a HOOBS plugin. Contact the HOOBS support team with any issues that cannot be reproduced with a vanilla (non-HOOBS) Homebridge installation.
