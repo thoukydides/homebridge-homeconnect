@@ -122,6 +122,7 @@ export class APIKeyValuesLog {
 
         // Add to the pending report
         if (report) {
+            thisKey.report = true;
             thisLiteral.report = true;
             this.applianceReports.add(haid);
             this.scheduleSummary(key, `${value}`);
@@ -155,19 +156,21 @@ export class APIKeyValuesLog {
         const lines: string[] = [];
         const reportValues = this.getValuesOfEnumType()
             .filter(value => Object.values(value.values).some(literal => literal.report));
-        lines.push('', '// Union types');
-        for (const value of reportValues) {
-            if (!this.isEnumPreferred(value))
+        const reportUnions = reportValues.filter(value => !this.isEnumPreferred(value));
+        if (reportUnions.length) {
+            lines.push('', '// Union types');
+            for (const value of reportValues)
                 lines.push(...this.makeValueUnion(value));
         }
-        lines.push('', '// Enumerated types');
-        for (const value of reportValues) {
-            if (this.isEnumPreferred(value))
+        const reportEnums = reportValues.filter(value => this.isEnumPreferred(value));
+        if (reportEnums.length) {
+            lines.push('', '// Enumerated types');
+            for (const value of reportValues)
                 lines.push(...this.makeValueEnum(value));
         }
-        lines.push('');
 
         // Construct interfaces for groups with unrecognised keys
+        lines.push('');
         for (const groupName of Object.keys(this.groups).sort()) {
             if (Object.values(this.groups[groupName].keys).some(key => key.report)) {
                 lines.push(...this.makeGroupInterface(groupName), '');
