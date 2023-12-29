@@ -100,28 +100,28 @@ export class CloudAPI implements HomeConnectAPI {
     async getAppliances(): Promise<HomeAppliance[]> {
         const response = await this.ua.get<HomeAppliancesWrapper>(
             checkers.HomeAppliancesWrapper, '/api/homeappliances');
-        return response.data.homeappliances;
+        return this.checkValues.appliances(response.data.homeappliances);
     }
 
     // Get details of a specific paired home appliances
     async getAppliance(haid: string): Promise<HomeAppliance> {
         const response = await this.ua.get<HomeApplianceWrapper>(
             checkers.HomeApplianceWrapper, `/api/homeappliances/${haid}`);
-        return response.data;
+        return this.checkValues.appliance(haid, response.data);
     }
 
     // Get all programs
     async getPrograms(haid: string): Promise<ProgramsKV> {
         const response = await this.ua.get<ProgramsWrapper>(
             checkers.ProgramsWrapper, `/api/homeappliances/${haid}/programs`);
-        return this.checkValues.programs(response.data);
+        return this.checkValues.programs(haid, response.data);
     }
 
     // Get a list of the available programs
     async getAvailablePrograms(haid: string): Promise<ProgramsKV> {
         const response = await this.ua.get<ProgramsWrapper>(
             checkers.ProgramsWrapper, `/api/homeappliances/${haid}/programs/available`);
-        return this.checkValues.programs(response.data);
+        return this.checkValues.programs(haid, response.data);
     }
 
     // Get the details of a specific available programs
@@ -129,14 +129,14 @@ export class CloudAPI implements HomeConnectAPI {
         const response = await this.ua.get<ProgramDefinitionWrapper>(
             checkers.ProgramDefinitionWrapper,
             `/api/homeappliances/${haid}/programs/available/${key}`);
-        return this.checkValues.programDefinition<Key>(response.data);
+        return this.checkValues.programDefinition<Key>(haid, response.data);
     }
 
     // Get the program which is currently being executed
     async getActiveProgram(haid: string): Promise<ProgramKV> {
         const response = await this.ua.get<ProgramWrapper>(
             checkers.ProgramWrapper, `/api/homeappliances/${haid}/programs/active`);
-        return this.checkValues.program(response.data);
+        return this.checkValues.program(haid, response.data);
     }
 
     // Start a specified program
@@ -154,7 +154,7 @@ export class CloudAPI implements HomeConnectAPI {
     async getActiveProgramOptions(haid: string): Promise<OptionKV[]> {
         const response = await this.ua.get<OptionsWrapper>(
             checkers.OptionsWrapper, `/api/homeappliances/${haid}/programs/active/options`);
-        return this.checkValues.options(response.data.options);
+        return this.checkValues.options(haid, response.data.options);
     }
 
     // Set all options of the active program
@@ -167,7 +167,7 @@ export class CloudAPI implements HomeConnectAPI {
     async getActiveProgramOption<Key extends OptionKey>(haid: string, key: Key): Promise<OptionKV<Key>> {
         const response = await this.ua.get<OptionWrapper>(
             checkers.OptionWrapper, `/api/homeappliances/${haid}/programs/active/options/${key}`);
-        return this.checkValues.option<Key>(response.data);
+        return this.checkValues.option<Key>(haid, response.data);
     }
 
     // Set a specific option of the active program
@@ -180,7 +180,7 @@ export class CloudAPI implements HomeConnectAPI {
     async getSelectedProgram(haid: string): Promise<ProgramKV> {
         const response = await this.ua.get<ProgramWrapper>(
             checkers.ProgramWrapper, `/api/homeappliances/${haid}/programs/selected`);
-        return this.checkValues.program(response.data);
+        return this.checkValues.program(haid, response.data);
     }
 
     // Select a program
@@ -193,7 +193,7 @@ export class CloudAPI implements HomeConnectAPI {
     async getSelectedProgramOptions(haid: string): Promise<OptionKV[]> {
         const response = await this.ua.get<OptionsWrapper>(
             checkers.OptionsWrapper, `/api/homeappliances/${haid}/programs/selected/options`);
-        return this.checkValues.options(response.data.options);
+        return this.checkValues.options(haid, response.data.options);
     }
 
     // Set all options of the selected program
@@ -206,7 +206,7 @@ export class CloudAPI implements HomeConnectAPI {
     async getSelectedProgramOption<Key extends OptionKey>(haid: string, key: Key): Promise<OptionKV<Key>> {
         const response = await this.ua.get<OptionWrapper>(
             checkers.OptionWrapper, `/api/homeappliances/${haid}/programs/selected/options/${key}`);
-        return this.checkValues.option(response.data);
+        return this.checkValues.option(haid, response.data);
     }
 
     // Set a specific option of the selected program
@@ -219,28 +219,28 @@ export class CloudAPI implements HomeConnectAPI {
     async getStatus(haid: string): Promise<StatusKV[]> {
         const response = await this.ua.get<StatusesWrapper>(
             checkers.StatusesWrapper, `/api/homeappliances/${haid}/status`);
-        return this.checkValues.statuses(response.data.status);
+        return this.checkValues.statuses(haid, response.data.status);
     }
 
     // Get a specific status
     async getStatusSpecific<Key extends StatusKey>(haid: string, key: Key): Promise<StatusKV<Key>> {
         const response = await this.ua.get<StatusWrapper>(
             checkers.StatusWrapper, `/api/homeappliances/${haid}/status/${key}`);
-        return this.checkValues.status<Key>(response.data);
+        return this.checkValues.status<Key>(haid, response.data);
     }
 
     // Get all settings
     async getSettings(haid: string): Promise<SettingKV[]> {
         const response = await this.ua.get<SettingsWrapper>(
             checkers.SettingsWrapper, `/api/homeappliances/${haid}/settings`);
-        return this.checkValues.settings(response.data.settings);
+        return this.checkValues.settings(haid, response.data.settings);
     }
 
     // Get a specific setting
     async getSetting<Key extends SettingKey>(haid: string, key: Key): Promise<SettingKV<Key>> {
         const response = await this.ua.get<SettingWrapper>(
             checkers.SettingWrapper, `/api/homeappliances/${haid}/settings/${key}`);
-        return this.checkValues.setting<Key>(response.data);
+        return this.checkValues.setting<Key>(haid, response.data);
     }
 
     // Set a specific setting
@@ -253,7 +253,7 @@ export class CloudAPI implements HomeConnectAPI {
     async getCommands(haid: string): Promise<CommandKV[]> {
         const response = await this.ua.get<CommandsWrapper>(
             checkers.CommandsWrapper, `/api/homeappliances/${haid}/commands`);
-        return this.checkValues.commands(response.data.commands);
+        return this.checkValues.commands(haid, response.data.commands);
     }
 
     // Issue a command
@@ -268,7 +268,7 @@ export class CloudAPI implements HomeConnectAPI {
         for await (const [event] of events) {
             if (event.event !== 'KEEP-ALIVE'
                 && (haid === undefined || !('id' in event) || event.id === haid)) {
-                yield this.checkValues.event(event);
+                yield this.checkValues.event('id' in event ? event.id : '', event);
             }
         }
     }
