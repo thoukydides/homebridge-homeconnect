@@ -3,7 +3,7 @@
 
 import { Logger } from 'homebridge';
 
-import { Chalk, greenBright } from 'chalk';
+import { Chalk, green, greenBright } from 'chalk';
 
 import { APIStatusCodeError } from './api-errors';
 import { columns } from './utils';
@@ -22,6 +22,10 @@ export interface AuthHelpMessage {
 // Possible fixes for the application or clientid
 export type ClientAction = 'create' | 'modify' | 'set' | undefined;
 
+// Colours for the help message
+const COLOUR_LO = green.dim;
+const COLOUR_HI = greenBright;
+
 // Generate helpful information for authorisation errors
 export abstract class AuthHelp {
 
@@ -38,25 +42,30 @@ export abstract class AuthHelp {
         // Help isn't always available
         if (!this.message) return [];
 
-        // Write the pre-script
-        const text: string[] = [...this.message.prescript];
-
-        // Write the client creation/modification guide
-        const addLink = (description: string, uri: string, chalk?: Chalk) => {
+        // Add text with optional formatting
+        const text: string[] = [];
+        const addLines = (lines: string[], chalk: Chalk = COLOUR_LO) =>
+            text.push(...lines.map(line => colour && chalk ? chalk(line) : line));
+        const addLink = (description: string, uri: string, chalk: Chalk = COLOUR_LO) => {
             let lines = [`${description}:`, `    ${uri}`];
             if (colour && chalk) lines = [chalk(lines[0]), chalk.bold(lines[1])];
             text.push(...lines);
         };
+
+        // Prescript
+        addLines(this.message.prescript, COLOUR_HI);
+
+        // Write the client creation/modification guide
         if (this.message.client) {
             const { action, uri, settings } = this.message.client;
             addLink(`${{ create: 'Create a new', modify: 'Edit the'}[action]} application`,
-                    uri, greenBright);
-            text.push('Ensure that the application settings are configured as follows:',
-                      ...columns(Object.entries(settings)).map(line => `    ${line}`));
+                    uri, COLOUR_HI);
+            addLines(['Ensure that the application settings are configured as follows:']);
+            addLines(columns(Object.entries(settings)).map(line => `    ${line}`));
         }
 
         // Postscript with extra support from the Home Connect Developer Portal
-        text.push(...this.message.postscript);
+        addLines(this.message.postscript);
         addLink('Descriptions of authorisation error messages can be found in the Home Connect API documentation',
                 'https://api-docs.home-connect.com/authorization?#authorization-errors');
         addLink('For additional support contact the Home Connect Developer team',
