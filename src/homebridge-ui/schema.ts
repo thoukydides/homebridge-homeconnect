@@ -2,6 +2,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { PlatformConfig } from 'homebridge';
+
 import assert from 'assert';
 
 import { HOMEBRIDGE_LANGUAGES } from '../api-languages';
@@ -10,7 +12,6 @@ import { DEFAULT_CONFIG, PLATFORM_NAME } from '../settings';
 import { ConfigSchemaData, SchemaAppliance, SchemaOptionalFeature,
          SchemaProgramOption, SchemaProgramOptionType,
          SchemaProgramOptionValue } from './schema-data';
-import { PlatformConfig } from 'homebridge';
 import configTI from '../ti/config-types-ti';
 
 // Maximum number of enum values for numeric types with multipleOf constraint

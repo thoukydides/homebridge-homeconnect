@@ -46,7 +46,9 @@ export class ApplianceBase {
     readonly optionalFeatures: SchemaOptionalFeature[] = [];
 
     // Persistent cache
-    readonly cache: PersistCache;
+    readonly cache:             PersistCache;
+    readonly cachedOperation:   Record<string, string>           = {};
+    readonly cachedPromise:     Record<string, Promise<unknown>> = {};
 
     // Asynchronous initialisation tasks
     readonly asyncInitTasks: { name: string; promise: Promise<void> }[] = [];
@@ -288,6 +290,30 @@ export class ApplianceBase {
 
     // Query the appliance when connected and cache the result
     async getCached<Type>(key: string, operation: () => Promise<Type>): Promise<Type> {
+        // Check that the operation matches any other use of the same key
+        const previousOperation = this.cachedOperation[key];
+        if (previousOperation && previousOperation.toString() !== operation.toString()) {
+            this.log.error(`Mismatched "${key}" cache operations:`);
+            this.log.error(`    ${previousOperation}`);
+            this.log.error(`!== ${operation}`);
+        }
+
+        // Wait for any previous operation to complete
+        await this.cachedPromise[key];
+
+        // Perform the cached operation
+        try {
+            const promise = this.doCachedOperation(key, operation);
+            this.cachedPromise[key] = promise;
+            const value = await promise;
+            return value;
+        } finally {
+            delete this.cachedPromise[key];
+        }
+    }
+
+    // Perform a cache query with fallback to querying the appliance
+    async doCachedOperation<Type>(key: string, operation: () => Promise<Type>): Promise<Type> {
         // Use cached result if possible
         const cacheKey = `Appliance ${key}`;
         const cacheItem = await this.cache.getWithExpiry<Type>(cacheKey);

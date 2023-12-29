@@ -59,12 +59,10 @@ export class ConfigSchemaData {
     // Details of known appliances, indexed by haId
     appliances:             Record<string, SchemaAppliance> = {};
 
-    // Promise fulfilled when any previous state has been restored
+    // Avoid overlapping persistent store operations
     loadPromise?:           Promise<void>;
-
-    // Deferred schema write
-    pendingSavePromise?:    Promise<void>;
     savePromise?:           Promise<void>;
+    busyPromise?:           Promise<void>;
 
     // Create a new schema generator
     constructor(
@@ -73,104 +71,131 @@ export class ConfigSchemaData {
     ) {}
 
     // Update the active plugin configuration
-    async setConfig(config: PlatformConfig): Promise<void> {
-        await this.load();
-        this.config = config;
-        await this.save();
+    setConfig(config: PlatformConfig): Promise<void> {
+        return this.applyUpdate(() => {
+            this.config = config;
+        });
     }
 
     // Update the list of accessories
-    async setAppliances(newAppliances: HomeAppliance[]): Promise<void> {
-        await this.load();
-        const appliances: Record<string, SchemaAppliance> = {};
-        for (const ha of newAppliances) {
-            const appliance = { ...this.appliances[ha.haId], ...ha };
-            appliance.programs ??= [];
-            appliance.features ??= [];
-            appliances[ha.haId] = appliance;
-        }
-        this.appliances = appliances;
-        await this.save();
+    setAppliances(newAppliances: HomeAppliance[]): Promise<void> {
+        return this.applyUpdate(() => {
+            const appliances: Record<string, SchemaAppliance> = {};
+            for (const ha of newAppliances) {
+                const appliance = { ...this.appliances[ha.haId], ...ha };
+                appliance.programs ??= [];
+                appliance.features ??= [];
+                appliances[ha.haId] = appliance;
+            }
+            this.appliances = appliances;
+        });
     }
 
     // Set whether the Control scope has been authorised for an appliance
-    async setHasControl(haId: string, control: boolean): Promise<void> {
-        await this.load();
-        const appliance = this.appliances[haId];
-        if (appliance) appliance.hasControl = control;
-        await this.save();
+    setHasControl(haId: string, control: boolean): Promise<void> {
+        return this.applyUpdate(() => {
+            const appliance = this.appliances[haId];
+            if (appliance) appliance.hasControl = control;
+        });
     }
 
     // Add the list of optional features for an appliance to the schema
-    async setOptionalFeatures(haId: string, features: SchemaOptionalFeature[]): Promise<void> {
-        await this.load();
-        const appliance = this.appliances[haId];
-        if (appliance) appliance.features = features;
-        await this.save();
+    setOptionalFeatures(haId: string, features: SchemaOptionalFeature[]): Promise<void> {
+        return this.applyUpdate(() => {
+            const appliance = this.appliances[haId];
+            if (appliance) appliance.features = features;
+        });
     }
 
     // Add the list of programs for an appliance to the schema
-    async setPrograms(haId: string, newPrograms: SchemaProgram[]): Promise<void> {
-        await this.load();
-        const appliance = this.appliances[haId];
-        if (!appliance) return;
-        const findProgram = (key: string) => appliance?.programs.find(p => p.key === key);
-        appliance.programs = newPrograms.map(program => ({ ...findProgram(program.key), ...program }));
-        await this.save();
+    setPrograms(haId: string, newPrograms: SchemaProgram[]): Promise<void> {
+        return this.applyUpdate(() => {
+            const appliance = this.appliances[haId];
+            if (!appliance) return;
+            const findProgram = (key: string) => appliance?.programs.find(p => p.key === key);
+            appliance.programs = newPrograms.map(program => ({ ...findProgram(program.key), ...program }));
+        });
     }
 
     // Add the options for an appliance program to the schema
-    async setProgramOptions(haId: string, programKey: string, options: SchemaProgramOption[]): Promise<void> {
+    setProgramOptions(haId: string, programKey: string, options: SchemaProgramOption[]): Promise<void> {
+        return this.applyUpdate(() => {
+            const appliance = this.appliances[haId];
+            const program = appliance?.programs.find(p => p.key === programKey);
+            if (program) program.options = options;
+        });
+    }
+
+    // Apply an update to the schema data
+    async applyUpdate(update: () => void): Promise<void> {
+        // Load the old schema data
         await this.load();
-        const appliance = this.appliances[haId];
-        const program = appliance?.programs.find(p => p.key === programKey);
-        if (program) program.options = options;
-        await this.save();
+
+        // Perform the required update
+        update();
+
+        // Save the updated data
+        const save = async () => {
+            // Coalesce updates from the same event loop
+            await setImmediateP();
+
+            // Perform the write
+            this.exclusive(async () => {
+                delete this.savePromise;
+                this.log.debug('Saving configuration schema data');
+                await this.trySet();
+            });
+        };
+        this.savePromise ??= save();
+        await this.savePromise;
     }
 
     // Read any previously saved data
-    load(reload: boolean = false): Promise<void> {
-        const doLoad = async () => {
-            try {
-                const persist = await this.persist.getItem('config.schema.json');
-                if (persist) {
-                    this.config     = persist.config;
-                    this.appliances = persist.appliances ?? {};
-                }
-            } catch (err) {
-                logError(this.log, 'Failed to load configuration schema data', err);
-            }
-        };
-        this.loadPromise = (reload ? undefined : this.loadPromise) ?? doLoad();
-        return this.loadPromise;
+    async load(reload: boolean = false): Promise<void> {
+        if (reload || !this.loadPromise)
+            this.loadPromise = this.exclusive(() => this.tryGet());
+        await this.loadPromise;
     }
 
-    // Schedule saving the schema data following any changes
-    save(): Promise<void> {
-        this.pendingSavePromise ??= this.savePending();
-        return this.pendingSavePromise;
-    }
+    // Perform an operation that must be exclusive
+    async exclusive(operation: () => Promise<void>): Promise<void> {
+        // Wait for any previous operation to complete
+        while (this.busyPromise) await this.busyPromise;
 
-    // Wait for any previous save to complete and then save a new version
-    async savePending(): Promise<void> {
-        await this.savePromise;
-        await setImmediateP();
-
-        // Perform the schema write
-        const doSave = async () => {
+        // Perform the requested operation
+        const busyOperation = async () => {
             try {
-                await this.persist.setItem('config.schema.json', {
-                    config:     this.config,
-                    appliances: this.appliances
-                });
-            } catch (err) {
-                logError(this.log, 'Failed to save configuration schema data', err);
+                await operation();
+            } finally {
+                delete this.busyPromise;
             }
         };
-        this.log.debug('Saving configuration schema data');
-        this.pendingSavePromise = undefined;
-        this.savePromise = doSave();
-        await this.savePromise;
-        this.savePromise = undefined;
+        this.busyPromise = busyOperation();
+        await this.busyPromise;
+    }
+
+    // Attempt to read previously saved data
+    async tryGet(): Promise<void> {
+        try {
+            const persist = await this.persist.getItem('config.schema.json');
+            if (persist) {
+                this.config     = persist.config;
+                this.appliances = persist.appliances ?? {};
+            }
+        } catch (err) {
+            logError(this.log, 'Failed to load configuration schema data', err);
+        }
+    }
+
+    // Attempt to write new data
+    async trySet(): Promise<void> {
+        try {
+            await this.persist.setItem('config.schema.json', {
+                config:     this.config,
+                appliances: this.appliances
+            });
+        } catch (err) {
+            logError(this.log, 'Failed to save configuration schema data', err);
+        }
     }
 }
