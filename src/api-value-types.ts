@@ -227,11 +227,11 @@ export type FanSetting =
   | 'Cooking.Hood.EnumType.Stage.FanStage04'
   | 'Cooking.Hood.EnumType.Stage.FanStage05';
 export type FlowRate =
-  'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Normal'
+    'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Normal'
   | 'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Intense'
   | 'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.IntensePlus';
 export type HotWaterTemperature =
-  'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.WhiteTea'
+    'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.WhiteTea'
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.GreenTea'
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.BlackTea'
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.50C'
