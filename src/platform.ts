@@ -21,7 +21,8 @@ import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
 import { ConfigSchemaData } from './homebridge-ui/schema-data';
 import { PLUGIN_NAME, PLATFORM_NAME, DEFAULT_CONFIG, DEFAULT_CLIENTID } from './settings';
 import { PrefixLogger } from './logger';
-import { assertIsDefined, deepMerge, getValidationTree, keyofChecker, MS } from './utils';
+import { assertIsDefined, deepMerge, formatList, getValidationTree,
+         keyofChecker, MS, plural } from './utils';
 import { logError } from './log-error';
 import { ConfigAppliances, ConfigPlugin } from './config-types';
 import { checkDependencyVersions } from './check-versions';
@@ -158,7 +159,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         const languageTags = Object.values(HOMEBRIDGE_LANGUAGES).flatMap(country => Object.values(country));
         if (!languageTags.includes(configPlugin.language.api)) {
             this.log.error('Plugin configuration specifies an unsupported API language');
-            this.log.info(`Supported language tags are: ${languageTags.join(', ')}`);
+            this.log.info(`Supported language tags are: ${formatList(languageTags)}`);
             this.logCheckerValidation(LogLevel.ERROR);
             throw new Error('Invalid plugin configuration');
         }
@@ -278,7 +279,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         this.hb.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, oldAccessories);
 
         // Log a summary
-        this.log.info(`Found ${appliances.length} appliance${appliances.length === 1 ? '' : 's'}`
+        this.log.info(`Found ${plural(appliances.length, 'appliance')}`
                     + ` (${newAccessories.length} added, ${oldAccessories.length} removed)`);
     }
 }

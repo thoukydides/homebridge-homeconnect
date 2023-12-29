@@ -9,7 +9,7 @@ import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers
 import { HasPower } from './has-power';
 import { PersistCache } from './persist-cache';
 import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, columns,
-         formatMilliseconds } from './utils';
+         formatList, formatMilliseconds, plural} from './utils';
 import { logError } from './log-error';
 import { ApplianceConfig } from './config-types';
 import { HomeConnectDevice } from './homeconnect-device';
@@ -118,8 +118,7 @@ export class ApplianceBase {
         // Summarise the initialisation tasks
         const startTime = Date.now();
         const pendingNames = this.asyncInitTasks.map(task => task.name);
-        const features = (names: unknown[]) => `${names.length} feature${names.length === 1 ? '' : 's'}`;
-        this.log.debug(`Initialising ${features(pendingNames)}: ${pendingNames.join(', ')}`);
+        this.log.debug(`Initialising ${plural(pendingNames.length, 'feature')}: ${formatList(pendingNames)}`);
 
         // Log any initialisation errors as they occur
         const failedNames: string[] = [];
@@ -143,7 +142,7 @@ export class ApplianceBase {
                               + ' some functionality will be limited until all features are ready');
             }
             while (pendingNames.length) {
-                this.log.warn(`Waiting for ${features(pendingNames)} to finish initialising: ${pendingNames.join(', ')}`);
+                this.log.warn(`Waiting for ${plural(pendingNames.length, 'feature')} to finish initialising: ${formatList(pendingNames)}`);
                 await Promise.race([setTimeoutP(INITIALISATION_WARN_INTERVAL)]);
             }
         };
@@ -153,8 +152,8 @@ export class ApplianceBase {
         // Summarise the initialisation result
         const initDuration = formatMilliseconds(Date.now() - startTime);
         if (failedNames.length) {
-            this.log.error(`Initialisation failed for ${failedNames.length} of ${features(this.asyncInitTasks)}`
-                           + ` (${initDuration}): ${failedNames.join(', ')}`);
+            this.log.error(`Initialisation failed for ${failedNames.length} of ${plural(this.asyncInitTasks.length, 'feature')}`
+                           + ` (${initDuration}): ${formatList(failedNames)}`);
         } else {
             this.log.info(`All features successfully initialised in ${initDuration}`);
         }
@@ -271,7 +270,7 @@ export class ApplianceBase {
         const list = (description: string, predicate: (feature: SchemaOptionalFeature) => boolean): void => {
             const matched = this.optionalFeatures.filter(predicate);
             if (matched.length) {
-                this.log.info(`${matched.length} optional feature${matched.length === 1 ? '' : 's'} ${description}:`);
+                this.log.info(`${plural(matched.length, 'optional feature')} ${description}:`);
                 const sortBy = (feature: SchemaOptionalFeature) => `${feature.group} - ${feature.name}`;
                 const fields = matched.sort((a, b) => sortBy(a).localeCompare(sortBy(b)))
                     .map(feature => [feature.name, feature.group, `(${feature.service} service)`]);

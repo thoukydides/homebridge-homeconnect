@@ -4,7 +4,7 @@
 import { Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor } from './utils';
+import { Constructor, formatList } from './utils';
 import { StatusKey } from './api-value';
 
 // Add local and remote control state to an accessory
@@ -45,7 +45,7 @@ export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { pow
                                        { true: 'allowed',   false: 'disallowed'    }, 'remote start');
             const localControl  = read('BSH.Common.Status.LocalControlActive',
                                        { true: 'being operated locally' });
-            const detail = `(${detailBits.join(', ')})`;
+            const detail = `(${formatList(detailBits)})`;
 
             // Map the state to the most appropriate Program Mode characteristic
             const { NO_PROGRAM_SCHEDULED, PROGRAM_SCHEDULED, PROGRAM_SCHEDULED_MANUAL_MODE_ } = this.Characteristic.ProgramMode;

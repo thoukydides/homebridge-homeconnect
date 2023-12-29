@@ -57,13 +57,44 @@ export function formatMilliseconds(ms: number, maxParts = 2): string {
     // Combine the required number of remaining components
     return keys.slice(0, maxParts)
         .filter(key => duration[key] !== 0)
-        .map(key => `${duration[key]} ${key}${duration[key] === 1 ? '' : 's'}`)
+        .map(key => plural(duration[key], key))
         .join(' ');
 }
 
 // Format a seconds duration
 export function formatSeconds(seconds: number, maxParts = 2): string {
     return formatMilliseconds(seconds * 1000, maxParts);
+}
+
+// Format a list (with Oxford comma)
+export function formatList(items: string[]): string {
+    switch (items.length) {
+    case 0:     return 'n/a';
+    case 1:     return items[0];
+    case 2:     return `${items[0]} and ${items[1]}`;
+    default:    return [...items.slice(0, -1), `and ${items[items.length - 1]}`].join(', ');
+    }
+}
+
+// Format a counted noun (handling most regular cases automatically)
+export function plural(count: number, noun: string | [string, string], showCount: boolean = true): string {
+    const [singular, plural] = Array.isArray(noun) ? noun : [noun, ''];
+    noun = count === 1 ? singular : plural;
+    if (!noun) {
+        // Apply regular rules
+        const rules: [string, string, number][] = [
+            ['on$',                 'a',   2], // phenomenon/phenomena criterion/criteria
+            ['us$',                 'i',   1], //     cactus/cacti         focus/foci
+            ['[^aeiou]y$',          'ies', 1], //        cty/cites         puppy/puppies
+            ['(ch|is|o|s|sh|x|z)$', 'es',  0], //       iris/irises        truss/trusses
+            ['',                    's',   0]  //        cat/cats          house/houses
+        ];
+        const rule = rules.find(([ending]) => new RegExp(ending, 'i').test(singular));
+        assertIsDefined(rule);
+        const matchCase = (s: string) => singular === singular.toUpperCase() ? s.toUpperCase() : s;
+        noun = singular.substring(0, singular.length - rule[2]).concat(matchCase(rule[1]));
+    }
+    return showCount ? `${count} ${noun}` : noun;
 }
 
 // Format strings in columns

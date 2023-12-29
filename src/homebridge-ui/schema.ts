@@ -7,7 +7,7 @@ import { PlatformConfig } from 'homebridge';
 import assert from 'assert';
 
 import { HOMEBRIDGE_LANGUAGES } from '../api-languages';
-import { keyofChecker } from '../utils';
+import { keyofChecker, plural } from '../utils';
 import { DEFAULT_CONFIG, PLATFORM_NAME } from '../settings';
 import { ConfigSchemaData, SchemaAppliance, SchemaOptionalFeature,
          SchemaProgramOption, SchemaProgramOptionType,
@@ -280,7 +280,7 @@ export class ConfigSchema extends ConfigSchemaData {
                     const count = features.filter(f => f.service === feature.service).length;
                     featuresForm.push({
                         type:       'help',
-                        helpvalue:  `<span class="help-block"><em>${feature.service}</em> service${count === 1 ? '' : 's'}:</span>`
+                        helpvalue:  `<span class="help-block"><em>${feature.service}</em> ${plural(count, 'service', false)}:</span>`
                     });
                 }
                 featuresForm.push({

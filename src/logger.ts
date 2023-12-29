@@ -6,7 +6,7 @@ import { Logger, LogLevel } from 'homebridge';
 import { createCheckers, CheckerT } from 'ts-interface-checker';
 
 import { AccessTokenHeader, AccessTokenPayload, RefreshToken, SimulatorToken } from './token-types';
-import { MS } from './utils';
+import { formatList, MS } from './utils';
 import tokensTI from './ti/token-types-ti';
 
 // Checkers for token types
@@ -106,7 +106,7 @@ function maskAccessToken(token: string): string {
 function maskToken(type: string, token: string, details: Record<string, string> = {}): string {
     let masked = `${token.slice(0, 4)}...${token.slice(-8)}`;
     const parts = Object.entries(details).map(([key, value]) => `${key}=${value}`);
-    if (parts.length) masked += ` (${parts.join(', ')})`;
+    if (parts.length) masked += ` (${formatList(parts)})`;
     return `<${type}: ${masked}>`;
 }
 

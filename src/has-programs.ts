@@ -6,7 +6,7 @@ import { Perms, Service } from 'homebridge';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor, MS, columns } from './utils';
+import { Constructor, MS, columns, formatList, plural } from './utils';
 import { logError } from './log-error';
 import { OptionValues, PowerState, ProgramKey } from './api-value-types';
 import { CommandKey, OptionDefinitionKV, OptionKey, OptionValue,
@@ -101,8 +101,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         async refreshPrograms(active: boolean = false): Promise<void> {
             const warnPrograms = (programs: ProgramDefinitionKV[], description: string) => {
                 if (!programs.length) return;
-                this.log.warn(`${programs.length} program${programs.length === 1 ? '' : 's'}`
-                              + `${this.programs.length ? ` (of ${this.programs.length})` : ''} ${description}:`);
+                this.log.warn(`${programs.length} of ${plural(this.programs.length, 'program')} ${description}:`);
                 const fields = programs.map(program => [program.name ?? '?', `(${program.key})`]);
                 for (const line of columns(fields)) this.log.warn(`    ${line}`);
             };
@@ -143,7 +142,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     if (this.device.getItem('BSH.Common.Status.RemoteControlActive') === false)
                         problems.push('remote control is not enabled');
                     if (problems.length) {
-                        this.log.warn(`Unable to actively read options for ${activeKeys.length} programs (${problems.join(', ')})`);
+                        this.log.warn(`Unable to actively read options for ${activeKeys.length} programs (${formatList(problems)})`);
                     } else {
                         // Update details of the selected programs
                         this.log.info(`Actively reading options for ${activeKeys.length} programs`);
