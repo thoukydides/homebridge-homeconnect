@@ -92,7 +92,7 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
             this.device.on(key, doorState => {
                 const isOpen = doorState === DoorState.Open || doorState === DoorStateRefrigeration.Open;
                 const isLocked = doorState === DoorState.Locked;
-                this.log.info(`Door ${isOpen ? 'open' : 'closed'}${isLocked ? ' and locked' : ''}`);
+                this.log.info(`${name} ${isOpen ? 'open' : 'closed'}${isLocked ? ' and locked' : ''}`);
                 const targetPosition = service.getCharacteristic(this.Characteristic.TargetPosition).value;
                 assertIsNumber(targetPosition);
                 if (isOpen && 0 < targetPosition) {
