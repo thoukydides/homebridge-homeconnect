@@ -551,8 +551,8 @@ export class ConfigSchema extends ConfigSchemaData {
         await this.load(true);
 
         // Generate schema fragments for non-appliance configuration
-        const clientSchema = this.getSchemaFragmentClient();
         const pluginSchema = this.getSchemaFragmentPlugin();
+        const clientSchema = this.getSchemaFragmentClient();
         const debugSchema  = this.getSchemaFragmentDebug();
 
         // Combine the schema fragments
@@ -561,6 +561,14 @@ export class ConfigSchema extends ConfigSchemaData {
             properties: { ...pluginSchema.schema, ...clientSchema.schema, ...debugSchema.schema }
         };
         const form: FormItem[] = [{
+            type:       'fieldset',
+            title:      'Homebridge Plugin Name',
+            expandable: false,
+            items:      pluginSchema.form,
+            condition: {
+                functionBody: `return model.name !== "${PLATFORM_NAME}";`
+            }
+        }, {
             type:       'fieldset',
             title:      'Home Connect Client',
             expandable: false,
