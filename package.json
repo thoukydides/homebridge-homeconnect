@@ -1,7 +1,7 @@
 {
     "name": "homebridge-homeconnect",
     "displayName": "HomeConnect",
-    "version": "0.36.0",
+    "version": "0.37.0",
     "description": "Home Connect home appliances plugin for Homebridge",
     "license": "ISC",
     "keywords": [
@@ -43,19 +43,24 @@
         "name": "Alexander Thoukydides",
         "url": "https://www.thouky.co.uk/"
     },
-    "funding": [{
-        "type": "github",
-        "url": "https://github.com/sponsors/thoukydides"
-    },{
-        "type": "paypal",
-        "url": "https://paypal.me/thoukydides"
-    },{
-        "type": "ko-fi",
-        "url": "https://ko-fi.com/thouky"
-    },{
-        "type": "buymeacoffee",
-        "url": "https://www.buymeacoffee.com/thouky"
-    }],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/thoukydides"
+        },
+        {
+            "type": "paypal",
+            "url": "https://paypal.me/thoukydides"
+        },
+        {
+            "type": "ko-fi",
+            "url": "https://ko-fi.com/thouky"
+        },
+        {
+            "type": "buymeacoffee",
+            "url": "https://www.buymeacoffee.com/thouky"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "git://github.com/thoukydides/homebridge-homeconnect.git"
