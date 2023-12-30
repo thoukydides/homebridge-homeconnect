@@ -247,6 +247,74 @@ export class ConfigSchema extends ConfigSchemaData {
         return { schema, form };
     }
 
+    // Construct a schema for an appliance's service names
+    getSchemaFragmentApplianceNames(appliance: SchemaAppliance): SchemaFormFragment {
+        // Create the schema for the service name configuration
+        const schema: JSONSchemaProperties = {
+            names: {
+                type:       'object',
+                properties: {
+                    prefix: {
+                        type:       'object',
+                        properties: {
+                            programs: {
+                                type:       'boolean',
+                                default:    false
+                            },
+                            other: {
+                                type:       'boolean',
+                                default:    true
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Create the form items for the relevant service name configuration
+        const namesForm: FormItem[] = [];
+        const addPrefixForm = (key: string, title: string, name: string, enabledByDefault: boolean) => {
+            namesForm.push({
+                type:           'flex',
+                'flex-flow':    'column',
+                notitle:        true,
+                items: [{
+                    key:            `names.prefix.${key}`,
+                    title:          title,
+                    default:        enabledByDefault,
+                    description:    `e.g. "<i>${name}</i>"`,
+                    condition: {
+                        functionBody:   `return !model.names.prefix.${key};`
+                    }
+                }, {
+                    key:            `names.prefix.${key}`,
+                    title:          title,
+                    default:        enabledByDefault,
+                    description:    `e.g. "<i>${appliance.name} ${name}</i>"`,
+                    condition: {
+                        functionBody:   `return model.names.prefix.${key};`
+                    }
+                }]
+            });
+        };
+        if (appliance.programs.length) {
+            const program = appliance.programs[0].name;
+            addPrefixForm('programs',   'Prefix Program Names',                 program,    false);
+            addPrefixForm('other',      'Prefix Other Service Names',           'Power',    true);
+        } else {
+            addPrefixForm('other',      'Prefix Appliance Name to Services',    'Power',    true);
+        }
+
+        // Create the top-level schema for the service names
+        const form: FormItem[] = [{
+            type:           'flex',
+            notitle:        true,
+            'flex-flow':    'row',
+            items:          namesForm
+        }];
+        return { schema, form };
+    }
+
     // Construct a schema for an appliance's optional features
     getSchemaFragmentApplianceOptionalFeatures(appliance: SchemaAppliance): SchemaFormFragment {
         // Special case if the appliance does not have any optional features
@@ -595,6 +663,7 @@ export class ConfigSchema extends ConfigSchemaData {
         if (!appliance) return;
 
         // Generate schema fragments for the appliance configuration
+        const namesSchema    = this.getSchemaFragmentApplianceNames(appliance);
         const featuresSchema = this.getSchemaFragmentApplianceOptionalFeatures(appliance);
         const programsSchema = this.getSchemaFragmentAppliancePrograms(appliance);
 
@@ -606,6 +675,7 @@ export class ConfigSchema extends ConfigSchemaData {
                     type:       'boolean',
                     default:    true
                 },
+                ...namesSchema.schema,
                 ...featuresSchema.schema,
                 ...programsSchema.schema
             }
@@ -623,7 +693,7 @@ export class ConfigSchema extends ConfigSchemaData {
         }, {
             type:           'fieldset',
             notitle:        true,
-            items:          [...featuresSchema.form, ...programsSchema.form],
+            items:          [...namesSchema.form, ...featuresSchema.form, ...programsSchema.form],
             condition: {
                 functionBody: `try { ${programsSchema.code ?? ''} } catch (err) {} return !!model.enabled;`
             }

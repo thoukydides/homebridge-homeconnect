@@ -26,9 +26,16 @@ export interface ConfigAppliances {
 export type AddProgramsConfig = 'none' | 'auto' | 'custom';
 export interface ApplianceConfig {
     enabled?:               boolean;
+    names?:                 { prefix: ApplianceNamesPrefix };
+    features?:              ApplianceFeatures;
     addprograms?:           AddProgramsConfig;
     programs?:              ApplianceProgramConfig[];
-    features?:              ApplianceFeatures;
+}
+
+// Configuration of service names
+export interface ApplianceNamesPrefix {
+    programs?:              boolean;
+    other?:                 boolean;
 }
 
 // Enable or disable optional features

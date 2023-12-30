@@ -2,20 +2,21 @@
 // Copyright © 2023 Alexander Thoukydides
 
 import { CharacteristicSetHandler, CharacteristicValue, HAPStatus,
-         Logger, Perms, PlatformAccessory, Service } from 'homebridge';
+         Logger, PlatformAccessory, Service } from 'homebridge';
 
 import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers/promises';
 
 import { HasPower } from './has-power';
 import { PersistCache } from './persist-cache';
-import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, columns,
-         formatList, formatMilliseconds, plural} from './utils';
+import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, assertIsString,
+         columns, formatList, formatMilliseconds, plural} from './utils';
 import { logError } from './log-error';
 import { ApplianceConfig } from './config-types';
 import { HomeConnectDevice } from './homeconnect-device';
 import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } from './serialised';
 import { HomeConnectPlatform } from './platform';
 import { ConfigSchemaData, SchemaOptionalFeature } from './homebridge-ui/schema-data';
+import { ServiceNames } from './service-name';
 
 // A HAP Service constructor
 type ServiceConstructor = typeof Service & {
@@ -37,9 +38,6 @@ export class ApplianceBase {
     readonly Service;
     readonly Characteristic;
 
-    // Appliance name
-    readonly name: string;
-
     // Configuration for this appliance
     readonly config: ApplianceConfig;
     readonly schema: ConfigSchemaData;
@@ -53,6 +51,9 @@ export class ApplianceBase {
     // Asynchronous initialisation tasks
     readonly asyncInitTasks: { name: string; promise: Promise<void> }[] = [];
 
+    // Servuce naming service
+    serviceNames: ServiceNames;
+
     // Accessory services
     readonly accessoryInformationService: Service;
     readonly obsoleteServices; // (removed after async initialisation)
@@ -63,7 +64,6 @@ export class ApplianceBase {
         readonly platform:      HomeConnectPlatform,
         readonly device:        HomeConnectDevice,
         readonly accessory:     PlatformAccessory) {
-        this.name           = accessory.displayName;
         this.Service        = platform.hb.hap.Service;
         this.Characteristic = platform.hb.hap.Characteristic;
 
@@ -81,6 +81,9 @@ export class ApplianceBase {
 
         // Remove anything created by old plugin versions that is no longer required
         this.cleanupOldVersions();
+
+        // Create a service naming service
+        this.serviceNames = new ServiceNames(this);
 
         // List of restored services to remove if not explicitly added
         this.obsoleteServices = [...accessory.services];
@@ -166,7 +169,7 @@ export class ApplianceBase {
     }
 
     // Get or add a service
-    makeService(serviceConstructor: ServiceConstructor, displayName = '', subtype?: string): Service {
+    makeService(serviceConstructor: ServiceConstructor, suffix = '', subtype?: string): Service {
         // Check whether the service already exists
         let service = subtype
                       ? this.accessory.getServiceById(serviceConstructor, subtype)
@@ -177,25 +180,16 @@ export class ApplianceBase {
             if (serviceIndex !== -1) this.obsoleteServices.splice(serviceIndex, 1);
         } else {
             // Create a new service
+            const displayName = this.serviceNames.makeServiceName(suffix, subtype);
             this.log.debug(`Adding new service "${displayName}"`);
             service = this.accessory.addService(serviceConstructor, displayName, subtype);
         }
 
         // Add a Configured Name characteristic if a custom name was supplied
-        if (displayName.length) this.addServiceName(service, displayName);
+        if (suffix.length) this.serviceNames.addConfiguredName(service, suffix, subtype);
 
         // Return the service
         return service;
-    }
-
-    // Add a read-only Configured Name characteristic
-    addServiceName(service: Service, displayName: string): void {
-        if (!service.testCharacteristic(this.Characteristic.ConfiguredName)) {
-            service.addOptionalCharacteristic(this.Characteristic.ConfiguredName);
-        }
-        service.getCharacteristic(this.Characteristic.ConfiguredName)
-            .updateValue(displayName)
-            .setProps({ perms: [Perms.NOTIFY, Perms.PAIRED_READ] });
     }
 
     // Check and tidy services after the accessory has been configured
@@ -369,6 +363,7 @@ export class ApplianceBase {
 
     onSetBoolean(handler: OnSetHandler<boolean>): CharacteristicSetHandler { return this.onSet(handler, assertIsBoolean); }
     onSetNumber (handler: OnSetHandler<number>):  CharacteristicSetHandler { return this.onSet(handler, assertIsNumber); }
+    onSetString (handler: OnSetHandler<string>):  CharacteristicSetHandler { return this.onSet(handler, assertIsString); }
 
     // Wrap an operation with an error trap
     async trap<Type>(when: string, promise: Promise<Type> | Type, canThrow?: boolean): Promise<Type | undefined> {
