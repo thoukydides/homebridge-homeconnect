@@ -15,7 +15,7 @@ import { logError } from './log-error';
 const SUMMARY_DELAY = 2 * 60 * MS;
 
 // URL to create a new GitHub issue
-const NEW_ISSUE_URL = 'https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=key_value.yml';
+const NEW_ISSUE_URL = 'https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=key_value.yml&labels=api+keys%2Fvalues';
 
 // Comment to tag unrecognised/mismatched values
 const REPORT_COMMENT = '(unrecognised)';
