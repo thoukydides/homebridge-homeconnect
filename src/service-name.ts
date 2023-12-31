@@ -52,6 +52,7 @@ export class ServiceNames {
     addConfiguredName(service: Service, suffix: string, subtype?: string): void {
         assert.notStrictEqual(suffix, '');
         const description = `${suffix} Service`;
+        const defaultName = this.makeServiceName(suffix, subtype);
 
         // Add the Configured Name characteristic
         if (!service.testCharacteristic(this.Characteristic.ConfiguredName)) {
@@ -62,33 +63,39 @@ export class ServiceNames {
 
         // Current and default names
         let currentName = characteristic.value;
-        const defaultName = this.makeServiceName(suffix, subtype);
-
-        // Set the initial value
         assertIsString(currentName);
-        if (currentName === this.customNames[suffix]) {
-            // Name was set via HomeKit, so preserve it
-            this.log.debug(`Preserving ${description} name "${currentName}" set via HomeKit`);
-        } else {
-            // Current name does not match value set by HomeKit, so remove override
-            if (this.customNames[suffix]) this.setCustomName(suffix, '', false);
 
-            // Probably not changed by the user via HomeKit, so set explicitly
-            if (currentName !== defaultName) {
-                if (currentName === '') this.log.debug(`Naming ${description} as "${defaultName}"`);
-                else this.log.info(`Renaming ${description} to "${defaultName}" (was "${currentName}")`);
+        // Set the initial value (asynchronously)
+        this.withCustomNames('read-only', () => {
+            if (currentName === this.customNames[suffix]) {
+                // Name was set via HomeKit, so preserve it
+                this.log.debug(`Preserving ${description} name "${currentName}" set via HomeKit`);
+            } else {
+                // Probably not changed by the user via HomeKit, so set explicitly
+                if (currentName !== defaultName) {
+                    if (currentName === '') this.log.debug(`Naming ${description} as "${defaultName}"`);
+                    else this.log.info(`Renaming ${description} to "${defaultName}" (was "${currentName}")`);
+                }
+                characteristic.updateValue(defaultName);
+                currentName = defaultName;
             }
-            characteristic.updateValue(defaultName);
-            currentName = defaultName;
-        }
+        });
 
         // Monitor changes to the name
         characteristic.onSet(this.appliance.onSetString(async name => {
-            if (name !== currentName) {
-                this.log.info(`SET ${description} name to "${name}" (was "${currentName}")`);
-                currentName = name;
-                await this.setCustomName(suffix, name, name !== defaultName);
-            }
+            await this.withCustomNames('read-write', () => {
+                if (name !== currentName) {
+                    this.log.info(`SET ${description} name to "${name}" (was "${currentName}")`);
+                    currentName = name;
+                    if (name !== defaultName) {
+                        if (this.customNames[suffix] === undefined) this.log.info(`HomeKit override on ${suffix} service name`);
+                        this.customNames[suffix] = name;
+                    } else {
+                        this.log.info(`Removing HomeKit override on ${suffix} service name`);
+                        delete this.customNames[suffix];
+                    }
+                }
+            });
         }));
     }
 
@@ -144,18 +151,14 @@ export class ServiceNames {
         return `${plural(badCharacters.length, issue, false)} (${formatList(badCharacters.map(c => `"${c}"`))})`;
     }
 
-    // Remember that a custom name has been set
-    async setCustomName(suffix: string, name: string, isCustom: boolean): Promise<void> {
+    // Perform an operation using the custom names
+    async withCustomNames(type: 'read-only' | 'read-write', operation: () => void): Promise<void> {
         while (this.busyPromise) await this.busyPromise;
-        if (isCustom) {
-            if (this.customNames[suffix] === undefined) this.log.info(`HomeKit override on ${suffix} service name`);
-            this.customNames[suffix] = name;
-        } else {
-            this.log.info(`Removing HomeKit override on ${suffix} service name`);
-            delete this.customNames[suffix];
+        operation();
+        if (type === 'read-write') {
+            this.busyPromise = this.saveCustomNames();
+            await this.busyPromise;
         }
-        this.busyPromise = this.saveCustomNames();
-        await this.busyPromise;
     }
 
     // Restore any previous custom names
