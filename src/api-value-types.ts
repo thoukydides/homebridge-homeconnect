@@ -46,6 +46,7 @@ export type ProgramKey =
   | 'Cooking.Hob.Program.FryingSensorMode' // (undocumented)
   | 'Cooking.Hob.Program.PowerLevelMode' // (undocumented)
   | 'Cooking.Hob.Program.PowerMoveMode' // (undocumented)
+  | 'Cooking.Oven.Program.Cleaning.Ecolysis' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking'
@@ -53,15 +54,18 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.Defrost'
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
   | 'Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial'
+  | 'Cooking.Oven.Program.HeatingMode.GrillLargeArea' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.HotAir'
   | 'Cooking.Oven.Program.HeatingMode.HotAir100Steam'
   | 'Cooking.Oven.Program.HeatingMode.HotAir30Steam'
   | 'Cooking.Oven.Program.HeatingMode.HotAir60Steam'
   | 'Cooking.Oven.Program.HeatingMode.HotAir80Steam'
   | 'Cooking.Oven.Program.HeatingMode.HotAirEco'
+  | 'Cooking.Oven.Program.HeatingMode.HotAirGentle' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.HotAirGrilling'
   | 'Cooking.Oven.Program.HeatingMode.IntensiveHeat'
   | 'Cooking.Oven.Program.HeatingMode.KeepWarm'
+  | 'Cooking.Oven.Program.HeatingMode.LetRest' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.PizzaSetting'
   | 'Cooking.Oven.Program.HeatingMode.PreHeating'
   | 'Cooking.Oven.Program.HeatingMode.PreheatOvenware'
@@ -99,6 +103,9 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.AntiShrink'
   | 'LaundryCare.Dryer.Program.Blankets'
   | 'LaundryCare.Dryer.Program.BusinessShirts'
+  | 'LaundryCare.Dryer.Program.ColdRefresh.1Piece' // (undocumented)
+  | 'LaundryCare.Dryer.Program.ColdRefresh.5Piece' // (undocumented)
+  | 'LaundryCare.Dryer.Program.ColdRefresh.Business' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton'
   | 'LaundryCare.Dryer.Program.Delicates'
   | 'LaundryCare.Dryer.Program.Dessous'
@@ -138,9 +145,11 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.DownDuvet.Duvet'
   | 'LaundryCare.Washer.Program.DrumClean'
   | 'LaundryCare.Washer.Program.EasyCare'
+  | 'LaundryCare.Washer.Program.HygienePlus' // (undocumented)
   | 'LaundryCare.Washer.Program.Mix.NightWash'
   | 'LaundryCare.Washer.Program.Mix'
   | 'LaundryCare.Washer.Program.Monsoon'
+  | 'LaundryCare.Washer.Program.MyTime' // (undocumented)
   | 'LaundryCare.Washer.Program.Outdoor'
   | 'LaundryCare.Washer.Program.PlushToy'
   | 'LaundryCare.Washer.Program.PowerSpeed59'
@@ -151,6 +160,8 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.Super153045.Super15'
   | 'LaundryCare.Washer.Program.Super153045.Super1530'
   | 'LaundryCare.Washer.Program.Towels'
+  | 'LaundryCare.Washer.Program.WashAndDry.60' // (undocumented)
+  | 'LaundryCare.Washer.Program.WashAndDry.90' // (undocumented)
   | 'LaundryCare.Washer.Program.WaterProof'
   | 'LaundryCare.Washer.Program.Wool'
   | 'LaundryCare.WasherDryer.Program.Cotton.Eco4060'
@@ -256,10 +267,42 @@ export type HotWaterTemperature =
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.194F'
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.203F'
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.Max';
+export type IDosingLevel = // (undocumented)
+  | 'LaundryCare.Washer.EnumType.IDosingLevel.High'
+  | 'LaundryCare.Washer.EnumType.IDosingLevel.Light'
+  | 'LaundryCare.Washer.EnumType.IDosingLevel.Normal'
+  | 'LaundryCare.Washer.EnumType.IDosingLevel.Off'
+  | 'LaundryCare.Washer.EnumType.IDosingLevel.Strong';
 export type IntensiveSetting =
     'Cooking.Hood.EnumType.IntensiveStage.IntensiveStageOff'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2';
+export type MultipleSoak = // (undocumented)
+  | 'LaundryCare.Washer.EnumType.MultipleSoak.Off'
+  | 'LaundryCare.Washer.EnumType.MultipleSoak.On';
+export type ProcessPhaseCleaningRobot =
+    'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MovingToTarget'
+  | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Cleaning'
+  | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.SearchingBaseStation'
+  | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MovingToHome'
+  | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.ChargingBreak'
+  | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MapValidationByUser'
+  | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Exploring'
+  | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Localizing';
+export type ProcessPhaseLaundryCare = // (undocumented)
+  | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Heating'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Prewash'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.SpinningFinal'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Washing'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.DetergentDispensing'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.FinalSpinning'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.Rinsing'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.Undefined'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.Washing';
 export type PyrolysisLevel = // (undocumented)
     'Cooking.Oven.EnumType.PyrolysisLevel.Level01'
   | 'Cooking.Oven.EnumType.PyrolysisLevel.Level02'
@@ -273,20 +316,27 @@ export type ReferenceMapID =
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map5';
 export type RinsePlus = // (undocumented)
     'LaundryCare.Washer.EnumType.RinsePlus.Off'
-  | 'LaundryCare.Washer.EnumType.RinsePlus.On';
+  | 'LaundryCare.Washer.EnumType.RinsePlus.Plus1'
+  | 'LaundryCare.Washer.EnumType.RinsePlus.Plus2'
+  | 'LaundryCare.Washer.EnumType.RinsePlus.Plus3';
 export type SpinSpeed =
-    'LaundryCare.Washer.EnumType.SpinSpeed.Off'
+    'LaundryCare.Washer.EnumType.SpinSpeed.Auto' // (undocumented)
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.Max' // (undocumented)
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.Off'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM400'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM600'
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM700' // (undocumented)
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM800'
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM900' // (undocumented)
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1000'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1200'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1400'
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1500' // (undocumented)
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1600'
-  | 'LaundryCare.Washer.EnumType.SpinSpeed.UlOff'
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.UlHigh'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlLow'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlMedium'
-  | 'LaundryCare.Washer.EnumType.SpinSpeed.UlHigh';
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.UlOff';
 export type Stains = // (undocumented)
     'LaundryCare.Washer.EnumType.Stains.Off'
   | 'LaundryCare.Washer.EnumType.Stains.On';
@@ -309,10 +359,16 @@ export type WasherTemperature =
   | 'LaundryCare.Washer.EnumType.Temperature.GC70'
   | 'LaundryCare.Washer.EnumType.Temperature.GC80'
   | 'LaundryCare.Washer.EnumType.Temperature.GC90'
+  | 'LaundryCare.Washer.EnumType.Temperature.Max' // (undocumented)
   | 'LaundryCare.Washer.EnumType.Temperature.UlCold'
   | 'LaundryCare.Washer.EnumType.Temperature.UlWarm'
   | 'LaundryCare.Washer.EnumType.Temperature.UlHot'
   | 'LaundryCare.Washer.EnumType.Temperature.UlExtraHot';
+export type WaterAndRinsePlus = // (undocumented)
+  | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Off'
+  | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus1'
+  | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2'
+  | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3';
 export type WrinkleGuard = // (undocumented)
     'LaundryCare.Dryer.EnumType.WrinkleGuard.Off'
   | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min60'
@@ -322,6 +378,15 @@ export type WrinkleGuard = // (undocumented)
 export enum BatteryChargingState {
     Discharging             = 'BSH.Common.EnumType.BatteryChargingState.Discharging',
     Charging                = 'BSH.Common.EnumType.BatteryChargingState.Charging'
+}
+export enum CameraState {
+    Disabled                = 'BSH.Common.EnumType.Video.CameraState.Disabled',
+    Sleeping                = 'BSH.Common.EnumType.Video.CameraState.Sleeping',
+    Ready                   = 'BSH.Common.EnumType.Video.CameraState.Ready',
+    StreamingLocal          = 'BSH.Common.EnumType.Video.CameraState.StreamingLocal',
+    StreamingCloud          = 'BSH.Common.EnumType.Video.CameraState.StreamingCloud',
+    StreamingLocalAndCloud  = 'BSH.Common.EnumType.Video.CameraState.StreamingLocalAndCloud',
+    Error                   = 'BSH.Common.EnumType.Video.CameraState.Error'
 }
 export enum ChargingConnection {
     Disconnected            = 'BSH.Common.EnumType.ChargingConnection.Disconnected',
@@ -354,17 +419,16 @@ export enum OperationState {
     Error                   = 'BSH.Common.EnumType.OperationState.Error',
     Aborting                = 'BSH.Common.EnumType.OperationState.Aborting'
 }
-export enum CameraState {
-    Disabled                = 'BSH.Common.EnumType.Video.CameraState.Disabled',
-    Sleeping                = 'BSH.Common.EnumType.Video.CameraState.Sleeping',
-    Ready                   = 'BSH.Common.EnumType.Video.CameraState.Ready',
-    StreamingLocal          = 'BSH.Common.EnumType.Video.CameraState.StreamingLocal',
-    StreamingCloud          = 'BSH.Common.EnumType.Video.CameraState.StreamingCloud',
-    StreamingLocalAndCloud  = 'BSH.Common.EnumType.Video.CameraState.StreamingLocalAndCloud',
-    Error                   = 'BSH.Common.EnumType.Video.CameraState.Error'
+export enum PowerLevel {
+    Off                     = 'Cooking.Hob.EnumType.PowerLevel.Off',
+    On                      = 'Cooking.Hob.EnumType.PowerLevel.On'
 }
 
 // Setting enumerated types
+export enum AddedSteam { // (undocumented)
+    Off                     = 'Cooking.Oven.EnumType.AddedSteam.Off',
+    On                      = 'Cooking.Oven.EnumType.AddedSteam.On'
+}
 export enum AmbientLightColor {
     CustomColor             = 'BSH.Common.EnumType.AmbientLightColor.CustomColor',
     Color1                  = 'BSH.Common.EnumType.AmbientLightColor.Color1',
@@ -396,8 +460,8 @@ export enum AmbientLightColor {
     Color27                 = 'BSH.Common.EnumType.AmbientLightColor.Color27',
     Color28                 = 'BSH.Common.EnumType.AmbientLightColor.Color28',
     Color29                 = 'BSH.Common.EnumType.AmbientLightColor.Color29',
-    Color30                 = 'BSH.Common.EnumType.AmbientLightColor.Color30',
-    Color31                 = 'BSH.Common.EnumType.AmbientLightColor.Color31',
+    Color30                 = 'BSH.Common.EnumType.AmbientLightColor.Color30', // Blue
+    Color31                 = 'BSH.Common.EnumType.AmbientLightColor.Color31', // Light blue
     Color32                 = 'BSH.Common.EnumType.AmbientLightColor.Color32',
     Color33                 = 'BSH.Common.EnumType.AmbientLightColor.Color33',
     Color34                 = 'BSH.Common.EnumType.AmbientLightColor.Color34',
@@ -406,19 +470,19 @@ export enum AmbientLightColor {
     Color37                 = 'BSH.Common.EnumType.AmbientLightColor.Color37',
     Color38                 = 'BSH.Common.EnumType.AmbientLightColor.Color38',
     Color39                 = 'BSH.Common.EnumType.AmbientLightColor.Color39',
-    Color40                 = 'BSH.Common.EnumType.AmbientLightColor.Color40',
-    Color41                 = 'BSH.Common.EnumType.AmbientLightColor.Color41',
-    Color42                 = 'BSH.Common.EnumType.AmbientLightColor.Color42',
-    Color43                 = 'BSH.Common.EnumType.AmbientLightColor.Color43',
-    Color44                 = 'BSH.Common.EnumType.AmbientLightColor.Color44',
-    Color45                 = 'BSH.Common.EnumType.AmbientLightColor.Color45',
-    Color46                 = 'BSH.Common.EnumType.AmbientLightColor.Color46',
-    Color47                 = 'BSH.Common.EnumType.AmbientLightColor.Color47',
-    Color48                 = 'BSH.Common.EnumType.AmbientLightColor.Color48',
-    Color49                 = 'BSH.Common.EnumType.AmbientLightColor.Color49',
-    Color50                 = 'BSH.Common.EnumType.AmbientLightColor.Color50',
-    Color51                 = 'BSH.Common.EnumType.AmbientLightColor.Color51',
-    Color52                 = 'BSH.Common.EnumType.AmbientLightColor.Color52',
+    Color40                 = 'BSH.Common.EnumType.AmbientLightColor.Color40', // Cold white
+    Color41                 = 'BSH.Common.EnumType.AmbientLightColor.Color41', // White (lemon)
+    Color42                 = 'BSH.Common.EnumType.AmbientLightColor.Color42', // Warm (ocher)
+    Color43                 = 'BSH.Common.EnumType.AmbientLightColor.Color43', // White (gold)
+    Color44                 = 'BSH.Common.EnumType.AmbientLightColor.Color44', // White (apricot)
+    Color45                 = 'BSH.Common.EnumType.AmbientLightColor.Color45', // Red
+    Color46                 = 'BSH.Common.EnumType.AmbientLightColor.Color46', // Orange
+    Color47                 = 'BSH.Common.EnumType.AmbientLightColor.Color47', // Yellow
+    Color48                 = 'BSH.Common.EnumType.AmbientLightColor.Color48', // Green
+    Color49                 = 'BSH.Common.EnumType.AmbientLightColor.Color49', // Blue
+    Color50                 = 'BSH.Common.EnumType.AmbientLightColor.Color50', // Purple
+    Color51                 = 'BSH.Common.EnumType.AmbientLightColor.Color51', // Cold white
+    Color52                 = 'BSH.Common.EnumType.AmbientLightColor.Color52', // White
     Color53                 = 'BSH.Common.EnumType.AmbientLightColor.Color53',
     Color54                 = 'BSH.Common.EnumType.AmbientLightColor.Color54',
     Color55                 = 'BSH.Common.EnumType.AmbientLightColor.Color55',
@@ -491,22 +555,18 @@ export enum TemperatureUnit {
     Celsius                 = 'BSH.Common.EnumType.TemperatureUnit.Celsius',
     Fahrenheit              = 'BSH.Common.EnumType.TemperatureUnit.Fahrenheit'
 }
+export enum ZoneSelector { // (undocumented)
+    FrontLeft               = 'Cooking.Hob.EnumType.ZoneSelector.FrontLeft',
+    FrontRight              = 'Cooking.Hob.EnumType.ZoneSelector.FrontRight',
+    RearLeft                = 'Cooking.Hob.EnumType.ZoneSelector.RearLeft',
+    RearRight               = 'Cooking.Hob.EnumType.ZoneSelector.RearRight'
+}
 
 // Event enumerated types
 export enum EventPresentState {
     Present                 = 'BSH.Common.EnumType.EventPresentState.Present',
     Off                     = 'BSH.Common.EnumType.EventPresentState.Off',
     Confirmed               = 'BSH.Common.EnumType.EventPresentState.Confirmed'
-}
-export enum ProcessPhase {
-    MovingToTarget          = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MovingToTarget',
-    Cleaning                = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Cleaning',
-    SearchingBaseStation    = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.SearchingBaseStation',
-    MovingToHome            = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MovingToHome',
-    ChargingBreak           = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.ChargingBreak',
-    MapValidationByUser     = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MapValidationByUser',
-    Exploring               = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Exploring',
-    Localizing              = 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Localizing'
 }
 
 // Program options
@@ -522,7 +582,7 @@ export interface OptionValues {
     'BSH.Common.Option.StartInRelative'?:                                   number;
     'BSH.Common.Option.WaterForecast'?:                                     number; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                  CleaningMode;
-    'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                  ProcessPhase;
+    'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                  ProcessPhaseCleaningRobot;
     'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                ReferenceMapID;
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
@@ -539,24 +599,29 @@ export interface OptionValues {
     'Cooking.Oven.Option.SetpointTemperature'?:                             number;
     'Cooking.Oven.Option.WarmingLevel'?:                                    WarmingLevel;
     'Dishcare.Dishwasher.Option.BrillianceDry'?:                            boolean;
+    'Dishcare.Dishwasher.Option.DelicateBasket'?:                           boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.EcoDry'?:                                   boolean;
     'Dishcare.Dishwasher.Option.ExtraDry'?:                                 boolean;
     'Dishcare.Dishwasher.Option.HalfLoad'?:                                 boolean;
     'Dishcare.Dishwasher.Option.HygienePlus'?:                              boolean;
     'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
+    'Dishcare.Dishwasher.Option.SanitationUC'?:                             boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
     'Dishcare.Dishwasher.Option.VarioSpeed'?:                               boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;
     'LaundryCare.Common.Option.LoadRecommendation'?:                        number; // (undocumented)
-    'LaundryCare.Common.Option.ReferToProgram'?:                            number; // (undocumented)
+    'LaundryCare.Common.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
+    'LaundryCare.Common.Option.ReferToProgram'?:                            ProgramKey; // (undocumented)
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
     'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
     'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
+    'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
     'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
+    'LaundryCare.Washer.Option.IDos2.Active'?:                              boolean; // (undocumented)
     'LaundryCare.Washer.Option.LessIroning'?:                               boolean; // (undocumented)
     'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
     'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)

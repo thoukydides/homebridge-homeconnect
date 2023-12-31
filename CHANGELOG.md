@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.37.1] - 2023-12-31
+### Changed
+* Delay reporting unrecognised or mismatched keys/values in the log if any type information is not yet known. Improved collection of values for unrecognised keys.
+* **Dishwasher/Washer/WasherDryer:** Added undocumented (and incorrectly documented) program options. (#198, #199)
+
 ## [v0.37.0] - 2023-12-30
 ### Changed
 * Significiant rewrite of the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) configuration handling. This plugin previously implemented a [dynamic schema](https://github.com/homebridge/homebridge-config-ui-x/blob/f63405f68a55416be3f9bb3ee4d47227b78d691c/src/modules/plugins/plugins.service.ts#L767), which wrote a semi-static schema file `.homebridge/.homebridge-homeconnect-v1.schema.json`. This has been replaced by a [custom user interface](https://developers.homebridge.io/#/custom-plugin-ui) with interactive functionality running within the web interface. Home Connect client authorisation is checked each time the plugin settings are opened or the `clientid` is changed, with prompts to perform authorisation when required, and feedback of any issues and how to resolve them. Additionally, the settings for each appliance are presented as separate pages to make larger configurations more manageable.
@@ -505,7 +510,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2023 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.1...HEAD
+[v0.37.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.0...v0.37.1
 [v0.37.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.36.0...v0.37.0
 [v0.36.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.35.0...v0.36.0
 [v0.35.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.1...v0.35.0
