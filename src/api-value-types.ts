@@ -601,6 +601,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.BrillianceDry'?:                            boolean;
     'Dishcare.Dishwasher.Option.DelicateBasket'?:                           boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.EcoDry'?:                                   boolean;
+    'Dishcare.Dishwasher.Option.EnergySafe'?:                               boolean; // (unrecognised)
     'Dishcare.Dishwasher.Option.ExtraDry'?:                                 boolean;
     'Dishcare.Dishwasher.Option.HalfLoad'?:                                 boolean;
     'Dishcare.Dishwasher.Option.HygienePlus'?:                              boolean;
