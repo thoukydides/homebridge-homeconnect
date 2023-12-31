@@ -4,11 +4,12 @@
 import { Logger } from 'homebridge';
 
 import { green, greenBright } from 'chalk';
+import assert from 'node:assert';
 
 import { MS, columns, formatList, plural } from './utils';
 import { HomeAppliance, OptionDefinition, Setting, Status, Value } from './api-types';
 import { PLUGIN_VERSION } from './settings';
-import assert from 'node:assert';
+import { logError } from './log-error';
 
 // Delay before summary log (longer than 1 minute rate-limit interval)
 const SUMMARY_DELAY = 2 * 60 * MS;
@@ -141,10 +142,33 @@ export class APIKeyValuesLog {
         // Schedule (or reschedule) a summary report
         clearTimeout(this.pendingScheduled);
         this.pendingScheduled = setTimeout(() => {
-            this.logSummary();
-            for (const id of this.pending) this.reported.add(id);
-            this.pending.clear();
+            try {
+                // Check whether the report is ready
+                const unknownKeys = this.getUnknownTypes();
+                if (unknownKeys.length) {
+                    // Wait for more details before reporting
+                    this.log.info('Delaying report of unrecognised keys/values until these types are known:');
+                    for (const key of unknownKeys) {
+                        this.log.info(`    ${key}`);
+                        this.log.debug(`    ${JSON.stringify(this.keys[key])}`);
+                    }
+                } else {
+                    // Generate the report
+                    this.logSummary();
+                    for (const id of this.pending) this.reported.add(id);
+                    this.pending.clear();
+                }
+            } catch (err) {
+                logError(this.log, 'Reporting unrecognised keys/values', err);
+            }
         }, SUMMARY_DELAY);
+    }
+
+    // Generate a list of keys that currently have unknown types
+    getUnknownTypes(): string[] {
+        const unknownKeys = Object.values(this.keys).filter(key =>
+            key.report && this.getTypeof(key.value) === 'unknown');
+        return unknownKeys.map(key => key.key).sort();
     }
 
     // Generate summary report
@@ -192,9 +216,9 @@ export class APIKeyValuesLog {
 
         // Output the unrecognised keys/values with delimiter lines
         const maxLength = Math.max(...lines.map(line => line.length));
-        this.log.warn(greenBright('▼'.repeat(maxLength)));
+        this.log.warn(greenBright('='.repeat(maxLength)));
         for (const line of lines) this.log.warn(green.dim(line));
-        this.log.warn(greenBright('▲'.repeat(maxLength)));
+        this.log.warn(greenBright('='.repeat(maxLength)));
     }
 
     // Construct an interface for a group of keys
@@ -282,9 +306,15 @@ export class APIKeyValuesLog {
     }
 
     // Typescript type based on the typeof literals
-    getTypeof(value?: APIValue) {
-        const literals = Object.values(value?.values ?? {});
-        const types = literals.map(literal => typeof literal.value);
+    getTypeof(value?: APIValue): 'string' | 'number' | 'boolean' | 'unknown' {
+        function assertisLiteral(type: string): asserts type is 'string' | 'number' | 'boolean' {
+            assert.match(type, /^(string|number|boolean)$/);
+        }
+        const types = Object.values(value?.values ?? {}).map(literal => {
+            const type = typeof literal.value;
+            assertisLiteral(type);
+            return type;
+        });
         return types.length && types.every(type => type === types[0]) ? types[0] : 'unknown';
     }
 

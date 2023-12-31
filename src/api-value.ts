@@ -144,6 +144,7 @@ export interface APICheckValueContext {
     subGroup?:  string;
     type?:      string;
     json:       object;
+    keyFailed?: boolean;
 }
 
 // Minimum interval between reporting unrecognised keys
@@ -212,9 +213,8 @@ export class APICheckValues {
     // Check a single program option
     option<Key extends OptionKey>(haid: string, option: Option): OptionKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Option', json: option };
-        if (this.isKey(valuesTI, valuesTI.OptionValues, context, option.key)) {
-            this.isValue(checkers.OptionValues, context, option.key, option.value);
-        }
+        this.isKey(valuesTI, valuesTI.OptionValues, context, option.key);
+        this.isValue(checkers.OptionValues, context, option.key, option.value);
         return option as OptionKV<Key>;
     }
 
@@ -227,9 +227,8 @@ export class APICheckValues {
     optionDefinition<Key extends OptionKey>(haid: string, option: OptionDefinition): OptionDefinitionKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Option', type: 'OptionDefinition', json: option };
         this.logValues.addDetail(option);
-        if (this.isKey(valuesTI, valuesTI.OptionValues, context, option.key)) {
-            this.isConstraints(checkers.OptionValues, context, option.key, option.constraints);
-        }
+        this.isKey(valuesTI, valuesTI.OptionValues, context, option.key);
+        this.isConstraints(checkers.OptionValues, context, option.key, option.constraints);
         return option as OptionDefinitionKV<Key>;
     }
 
@@ -242,10 +241,9 @@ export class APICheckValues {
     status<Key extends StatusKey>(haid: string, status: Status): StatusKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Status', json: status };
         this.logValues.addDetail(status);
-        if (this.isKey(valuesTI, valuesTI.StatusValues, context, status.key)) {
-            this.isValue(checkers.StatusValues, context, status.key, status.value);
-            this.isConstraints(checkers.StatusValues, context, status.key, status.constraints);
-        }
+        this.isKey(valuesTI, valuesTI.StatusValues, context, status.key);
+        this.isValue(checkers.StatusValues, context, status.key, status.value);
+        this.isConstraints(checkers.StatusValues, context, status.key, status.constraints);
         return status as StatusKV<Key>;
     }
 
@@ -258,18 +256,18 @@ export class APICheckValues {
     setting<Key extends SettingKey>(haid: string, setting: Setting): SettingKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Setting', json: setting };
         this.logValues.addDetail(setting);
-        if (this.isKey(valuesTI, valuesTI.SettingValues, context, setting.key)) {
-            this.isValue(checkers.SettingValues, context, setting.key, setting.value);
-            this.isConstraints(checkers.SettingValues, context, setting.key, setting.constraints);
-        }
+        this.isKey(valuesTI, valuesTI.SettingValues, context, setting.key);
+        this.isValue(checkers.SettingValues, context, setting.key, setting.value);
+        this.isConstraints(checkers.SettingValues, context, setting.key, setting.constraints);
         return setting as SettingKV<Key>;
     }
 
     // Check a list of commands
     commands(haid: string, commands: Command[]): CommandKV[] {
-        const context: APICheckValueContext = { haid, group: 'Command', json: {} };
-        commands.forEach(command =>
-            this.isKey(valuesTI, valuesTI.CommandValues, { ...context, json: command }, command.key));
+        commands.forEach(command => {
+            const context: APICheckValueContext = { haid, group: 'Command', json: command };
+            this.isKey(valuesTI, valuesTI.CommandValues, context, command.key);
+        });
         return commands as CommandKV[];
     }
 
@@ -282,10 +280,10 @@ export class APICheckValues {
             if (!tname) {
                 this.logValidation('Unrecognised event', type, event, [event.event]);
             } else {
-                const context: APICheckValueContext = { haid, group: 'Event', subGroup: event.event, json: {} };
                 const check = (type: string, data: EventData) => {
-                    if (this.isKey(valuesTI, valuesTI[tname], { ...context, type, json: data }, data.key))
-                        this.isValue(checkers[tname], { ...context, type, json: data }, data.key, data.value);
+                    const context: APICheckValueContext = { haid, group: 'Event', subGroup: event.event, type, json: data };
+                    this.isKey(valuesTI, valuesTI[tname], context, data.key);
+                    this.isValue(checkers[tname], context, data.key, data.value);
                 };
                 if ('items' in event.data) {
                     event.data.items.forEach((data, index) => check(`${type}.items[${index}]`, data));
@@ -318,6 +316,7 @@ export class APICheckValues {
     isKey(typeSuite: ITypeSuite, checkerType: TType, context: APICheckValueContext, key: string): boolean {
         // Test whether the key exist in the type
         const isCorrect = keyofChecker(typeSuite, checkerType).includes(key);
+        context.keyFailed = !isCorrect;
         this.logValues.addKey(context.haid, context.group, context.subGroup, key, !isCorrect);
         if (isCorrect) return true;
 
@@ -363,7 +362,7 @@ export class APICheckValues {
         const validation = checker.validate(kv);
         const isCorrect = validation === null; // Key exists and value correct type
         this.logValues.addValue(context.haid, key, value, !isCorrect);
-        if (isCorrect) return true;
+        if (context.keyFailed || isCorrect) return true;
 
         // Log details of the mismatched value type
         const type = context.type ?? context.group;
