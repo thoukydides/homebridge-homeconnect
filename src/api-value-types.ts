@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023 Alexander Thoukydides
+// Copyright © 2023-2024 Alexander Thoukydides
 
 // Program keys (not a comprehensive list)
 export type ProgramKey =
@@ -237,6 +237,8 @@ export type FanSetting =
   | 'Cooking.Hood.EnumType.Stage.FanStage03'
   | 'Cooking.Hood.EnumType.Stage.FanStage04'
   | 'Cooking.Hood.EnumType.Stage.FanStage05';
+export type FlexSprayIntensity = never; // (undocumented)
+export type FlexSprayType = never; // (undocumented)
 export type FlowRate =
     'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Normal'
   | 'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Intense'
@@ -601,8 +603,13 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.BrillianceDry'?:                            boolean;
     'Dishcare.Dishwasher.Option.DelicateBasket'?:                           boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.EcoDry'?:                                   boolean;
-    'Dishcare.Dishwasher.Option.EnergySafe'?:                               boolean; // (unrecognised)
+    'Dishcare.Dishwasher.Option.EnergySafe'?:                               boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.ExtraDry'?:                                 boolean;
+    'Dishcare.Dishwasher.Option.FlexSpray.BackLeft'?:                       FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.BackRight'?:                      FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.FrontLeft'?:                      FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.FrontRight'?:                     FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.Type'?:                           FlexSprayType; // (undocumented)
     'Dishcare.Dishwasher.Option.HalfLoad'?:                                 boolean;
     'Dishcare.Dishwasher.Option.HygienePlus'?:                              boolean;
     'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
@@ -619,10 +626,10 @@ export interface OptionValues {
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
     'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
-    'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
     'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
-    'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
+    'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
     'LaundryCare.Washer.Option.IDos2.Active'?:                              boolean; // (undocumented)
+    'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
     'LaundryCare.Washer.Option.LessIroning'?:                               boolean; // (undocumented)
     'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
     'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
