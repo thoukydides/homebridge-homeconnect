@@ -100,7 +100,7 @@
         "typescript": "^5.3.3"
     },
     "scripts": {
-        "lint": "npm run checkers && eslint src/**.ts --max-warnings=0",
+        "lint": "npm run checkers && eslint src/ --max-warnings=0",
         "watch": "npm run build && nodemon",
         "browserify": "browserify -d dist/homebridge-ui/public/client.js -o dist/homebridge-ui/public/bundle.js",
         "browserify-list": "browserify --list -d dist/homebridge-ui/public/client.js | sort",
