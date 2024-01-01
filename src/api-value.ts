@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023 Alexander Thoukydides
+// Copyright © 2023-2024 Alexander Thoukydides
 
 import { Logger } from 'homebridge';
 
@@ -361,7 +361,7 @@ export class APICheckValues {
         const kv = { [key]: value };
         const validation = checker.validate(kv);
         const isCorrect = validation === null; // Key exists and value correct type
-        this.logValues.addValue(context.haid, key, value, !isCorrect);
+        this.logValues.addValue(context.haid, key, value, context.keyFailed || !isCorrect);
         if (context.keyFailed || isCorrect) return true;
 
         // Log details of the mismatched value type

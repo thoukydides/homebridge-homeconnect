@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.37.3] - 2024-01-01
+### Fixed
+* Corrected logging of unrecognised enumerated types from the Home Connect API. (#202)
+
 ## [v0.37.2] - 2023-12-31
 ### Changed
 * **Dishwasher:** Added another undocumented program option. (#200)
@@ -512,9 +516,10 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-Copyright © 2019-2023 Alexander Thoukydides
+Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.3...HEAD
+[v0.37.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.2...v0.37.3
 [v0.37.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.1...v0.37.2
 [v0.37.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.0...v0.37.1
 [v0.37.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.36.0...v0.37.0
