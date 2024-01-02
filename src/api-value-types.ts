@@ -77,7 +77,9 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.TopBottomHeating'
   | 'Cooking.Oven.Program.HeatingMode.TopBottomHeatingEco'
   | 'Cooking.Oven.Program.HeatingMode.WarmingDrawer'
+  | 'Cooking.Oven.Program.Microwave.180Watt' // (undocumented)
   | 'Cooking.Oven.Program.Microwave.600Watt' // (undocumented)
+  | 'Cooking.Oven.Program.SubsequentMode.Microwave' // (undocumented)
   | 'Dishcare.Dishwasher.Program.Auto1'
   | 'Dishcare.Dishwasher.Program.Auto2'
   | 'Dishcare.Dishwasher.Program.Auto3'

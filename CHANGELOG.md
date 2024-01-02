@@ -4,10 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.37.5] - 2024-01-02
+### Changed
+* **Oven:** Added a couple of undocumented programs. (#204)
+
 ## [v0.37.4] - 2024-01-02
 ### Changed
 * **CoffeeMaker:** Added an undocumented program and a few undocumented options. (#203)
-* **Dishwasher:** Added values for undocumented program options. (#200)
+* **Dishwasher:** Added values for undocumented program options. (#202)
 
 ## [v0.37.3] - 2024-01-01
 ### Fixed
@@ -523,7 +527,9 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.3...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.5...HEAD
+[v0.37.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.4...v0.37.5
+[v0.37.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.3...v0.37.4
 [v0.37.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.2...v0.37.3
 [v0.37.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.1...v0.37.2
 [v0.37.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.0...v0.37.1
