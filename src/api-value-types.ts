@@ -3,10 +3,12 @@
 
 // Program keys (not a comprehensive list)
 export type ProgramKey =
-    'ConsumerProducts.CleaningRobot.Program.Basic.GoHome'
+    'BSH.Common.Program.Favorite.001' // (undocumented)
+  | 'ConsumerProducts.CleaningRobot.Program.Basic.GoHome'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanAll'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanMap'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande'
+  | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee'
@@ -196,6 +198,10 @@ export type CleaningMode =
     'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Silent'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Standard'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Power';
+export type CoarsnessExtended = // (undocumented)
+    'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness1'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness2'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness3';
 export type CoffeeMilkRatio =
     'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.10Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.20Percent'
@@ -212,13 +218,20 @@ export type CoffeeMilkRatio =
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.80Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.85Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.90Percent';
+export type CoffeeStrength = // (undocumented)
+    'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength1'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength2'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength3'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength4'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength5';
 export type CoffeeTemperature =
     'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.88C'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.90C'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.92C'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.94C'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.95C'
-  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.96C';
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.96C'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.98C'; // (undocumented)
 export type DryingTarget =
     'LaundryCare.Dryer.EnumType.DryingTarget.IronDry'
   | 'LaundryCare.Dryer.EnumType.DryingTarget.GentleDry'
@@ -573,11 +586,13 @@ export enum EventPresentState {
 
 // Program options
 export interface OptionValues {
+    'BSH.Common.Option.BaseProgram'?:                                       ProgramKey; // (undocumented)
     'BSH.Common.Option.Duration'?:                                          number;
     'BSH.Common.Option.ElapsedProgramTime'?:                                number;
     'BSH.Common.Option.EnergyForecast'?:                                    number; // (undocumented)
     'BSH.Common.Option.EstimatedTotalProgramTime'?:                         number;
     'BSH.Common.Option.FinishInRelative'?:                                  number;
+    'BSH.Common.Option.ProgramName'?:                                       string; // (undocumented)
     'BSH.Common.Option.ProgramProgress'?:                                   number;
     'BSH.Common.Option.RemainingProgramTime'?:                              number;
     'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   boolean;
@@ -588,7 +603,9 @@ export interface OptionValues {
     'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                ReferenceMapID;
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
+    'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                       CoarsnessExtended; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                 CoffeeMilkRatio;
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength'?:                  CoffeeStrength; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature'?:               CoffeeTemperature;
     'ConsumerProducts.CoffeeMaker.Option.FillQuantity'?:                    number;
     'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                        FlowRate;
