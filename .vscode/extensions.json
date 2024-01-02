@@ -1,5 +1,8 @@
 {
   "recommendations": [
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "amazonwebservices.aws-toolkit-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "tyriar.sort-lines"
   ]
 }
