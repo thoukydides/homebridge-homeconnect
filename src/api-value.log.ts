@@ -290,8 +290,10 @@ export class APIKeyValuesLog {
         if (literalsType === 'string') {
             const literals = Object.keys(value?.values ?? {});
             if (literals.every(literal => /\.Program\./.test(literal))) return 'ProgramKey';
+            const isString = literals.some(literal => /[ :]/.test(literal));
             const types = literals.map(literal => this.makeEnumName(literal.replace(/\.[^.]*$/, '')));
-            if (types.every(type => type === types[0])) return types[0];
+            const isEnum = types.every(type => type === types[0]);
+            if (!isString && isEnum) return types[0];
         }
 
         // Fallback to the 'typeof' value
