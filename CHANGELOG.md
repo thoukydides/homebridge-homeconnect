@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.37.4] - 2024-01-02
+### Changed
+* **CoffeeMaker:** Added an undocumented program and a few undocumented options. (#203)
+* **Dishwasher:** Added values for undocumented program options. (#200)
+
 ## [v0.37.3] - 2024-01-01
 ### Fixed
 * Corrected logging of unrecognised enumerated types from the Home Connect API. (#202)

@@ -250,8 +250,10 @@ export type FanSetting =
   | 'Cooking.Hood.EnumType.Stage.FanStage03'
   | 'Cooking.Hood.EnumType.Stage.FanStage04'
   | 'Cooking.Hood.EnumType.Stage.FanStage05';
-export type FlexSprayIntensity = never; // (undocumented)
-export type FlexSprayType = never; // (undocumented)
+export type FlexSprayIntensity = // (undocumented)
+    'Dishcare.Dishwasher.EnumType.FlexSpray.Intensity.Normal';
+export type FlexSprayType = // (undocumented)
+    'Dishcare.Dishwasher.EnumType.FlexSpray.Type.Individual';
 export type FlowRate =
     'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Normal'
   | 'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Intense'
