@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.37.6] - 2024-01-03
+### Changed
+* Treat data cached by previous plugin versions as expired.
+* **Washer/WasherDryer:** Adding a couple of undocumented program option. (#205, #206)
+
 ## [v0.37.5] - 2024-01-02
 ### Changed
 * **Oven:** Added a couple of undocumented programs. (#204)
@@ -28,9 +33,9 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.37.0] - 2023-12-30
 ### Changed
-* Significiant rewrite of the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) configuration handling. This plugin previously implemented a [dynamic schema](https://github.com/homebridge/homebridge-config-ui-x/blob/f63405f68a55416be3f9bb3ee4d47227b78d691c/src/modules/plugins/plugins.service.ts#L767), which wrote a semi-static schema file `.homebridge/.homebridge-homeconnect-v1.schema.json`. This has been replaced by a [custom user interface](https://developers.homebridge.io/#/custom-plugin-ui) with interactive functionality running within the web interface. Home Connect client authorisation is checked each time the plugin settings are opened or the `clientid` is changed, with prompts to perform authorisation when required, and feedback of any issues and how to resolve them. Additionally, the settings for each appliance are presented as separate pages to make larger configurations more manageable.
+* Significant rewrite of the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) configuration handling. This plugin previously implemented a [dynamic schema](https://github.com/homebridge/homebridge-config-ui-x/blob/f63405f68a55416be3f9bb3ee4d47227b78d691c/src/modules/plugins/plugins.service.ts#L767), which wrote a semi-static schema file `.homebridge/.homebridge-homeconnect-v1.schema.json`. This has been replaced by a [custom user interface](https://developers.homebridge.io/#/custom-plugin-ui) with interactive functionality running within the web interface. Home Connect client authorisation is checked each time the plugin settings are opened or the `clientid` is changed, with prompts to perform authorisation when required, and feedback of any issues and how to resolve them. Additionally, the settings for each appliance are presented as separate pages to make larger configurations more manageable.
 * A new configuration option allows whole appliances to be disabled. This removes any associated HomeKit services and prevents all Home Connect API requests for that appliance. (#57)
-* Enhanced naming of HomeKit services. The appliance name can be included as an optional prefix in the names of the individual services; this is disabled by default for program `Switch` services and enabled for all other services. The `Configured Name` services are now writable, allowing the service names to be changed within HomeKit; any names changed from their plugin defaults will not be modified if the prefix configuration options are changed. (#196)
+* Enhanced naming of HomeKit services. The appliance name can be included as an optional prefix in the names of the individual services; this is disabled by default for program `Switch` services and enabled for all other services. The `Configured Name` services are now writeable, allowing the service names to be changed within HomeKit; any names changed from their plugin defaults will not be modified if the prefix configuration options are changed. (#196)
 * Improved logging of unrecognised or mismatched keys/values returned by the Home Connect API. This now outputs a single summary (2 minutes after the last detected problem), with a link to raise a GitHub issue to report the unrecognised keys/values. The link will automatically complete most of the issue template; it is just necessary to copy-and-paste the relevant section from the log file. (#190)
 * An optional `name` property is now accepted in the `config.json` file to change the prefix used for the plugin's messages in the Homebridge log file. This setting is only visible in the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) interface if not set to the default value. (#194)
 * **Hob/Oven:** Added a few undocumented program keys, but almost certainly incomplete. (#190)
@@ -527,7 +532,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.5...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.6...HEAD
+[v0.37.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.5...v0.37.6
 [v0.37.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.4...v0.37.5
 [v0.37.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.3...v0.37.4
 [v0.37.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.2...v0.37.3

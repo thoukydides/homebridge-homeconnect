@@ -655,8 +655,10 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
     'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
     'LaundryCare.Washer.Option.RinsePlus'?:                                 RinsePlus; // (undocumented)
+    'LaundryCare.Washer.Option.RinsePlus1'?:                                boolean; // (undocumented)
     'LaundryCare.Washer.Option.SilentWash'?:                                boolean; // (undocumented)
     'LaundryCare.Washer.Option.Soak'?:                                      boolean; // (undocumented)
+    'LaundryCare.Washer.Option.SpeedPerfect'?:                              boolean; // (undocumented)
     'LaundryCare.Washer.Option.SpinSpeed'?:                                 SpinSpeed;
     'LaundryCare.Washer.Option.Stains'?:                                    Stains; // (undocumented)
     'LaundryCare.Washer.Option.Temperature'?:                               WasherTemperature;
