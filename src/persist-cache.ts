@@ -6,14 +6,16 @@ import { Logger } from 'homebridge';
 import { LocalStorage } from 'node-persist';
 import { setImmediate as setImmediateP } from 'timers/promises';
 
-import { MS, formatMilliseconds } from './utils';
+import { MS, formatList, formatMilliseconds } from './utils';
 import { logError } from './log-error';
+import { PLUGIN_VERSION } from './settings';
 
 // An individual cache entry
 interface CacheItem {
     value:      unknown;
     preferred:  string;
     updated:    number;
+    version:    string;
 }
 
 // A simple persistent cache, with soft expiry
@@ -58,21 +60,19 @@ export class PersistCache {
     async getWithExpiry<Type>(key: string): Promise<{ value: Type; valid: boolean } | undefined> {
         await this.initialised;
         const item = this.cache[key];
-        let description = `Cache "${key}"`;
-        let expired: string | undefined;
+        let description = `"${key}"`;
+        const expired: string[] = [];
         if (!item) {
-            expired = ' does not exist in cache';
+            expired.push('does not exist in cache');
         } else {
             const age = Date.now() - item.updated;
-            description += ` [${item.preferred}, updated ${formatMilliseconds(age)} ago]`;
-            if (item.preferred !== this.preferred) {
-                expired = ` does not match preference ${this.preferred}`;
-            } else if (this.ttl < age) {
-                expired = ' is too old';
-            }
+            description += ` [${item.preferred}, v${item.version ?? '?'}, updated ${formatMilliseconds(age)} ago]`;
+            if (item.version !== PLUGIN_VERSION) expired.push(`not written by v${PLUGIN_VERSION}`);
+            if (item.preferred !== this.preferred) expired.push(`does not match preference ${this.preferred}`);
+            if (this.ttl < age) expired.push('is too old');
         }
-        this.log.debug(description + (expired ?? ''));
-        return item && { value: item.value as Type, valid: expired === undefined };
+        this.log.debug(expired.length ? `Expired cache ${description} ${formatList(expired)}` : `Cache ${description}`);
+        return item && { value: item.value as Type, valid: !expired.length };
     }
 
     // Write an item to the cache
@@ -81,7 +81,8 @@ export class PersistCache {
         this.cache[key] = {
             value:      value,
             preferred:  this.preferred,
-            updated:    Date.now()
+            updated:    Date.now(),
+            version:    PLUGIN_VERSION
         };
         this.log.debug(`"${key}" written to cache`);
         await this.save();
