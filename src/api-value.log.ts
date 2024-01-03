@@ -447,9 +447,9 @@ export class APIKeyValuesLog {
         try {
             await this.persist.setItem(this.persistKey, {
                 keys:   Object.entries(this.groups).flatMap(([group, groupDetail]) =>
-                    Object.values(groupDetail.keys).map(key => ({ group, key }))),
+                    Object.values(groupDetail.keys).map(({ key }) => ({ group, key }))),
                 values: Object.values(this.keys).flatMap(key =>
-                    Object.values(key.value?.values ?? {}).map(({ value }) => ({ key, value })))
+                    Object.values(key.value?.values ?? {}).map(({ value }) => ({ key: key.key, value })))
             });
         } catch (err) {
             logError(this.log, 'Write keys/values', err);
