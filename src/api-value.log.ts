@@ -4,6 +4,7 @@
 import { Logger } from 'homebridge';
 
 import { green, greenBright } from 'chalk';
+import { LocalStorage } from 'node-persist';
 import assert from 'node:assert';
 
 import { MS, columns, formatList, plural } from './utils';
@@ -56,6 +57,18 @@ export interface APIGroup {
     keys:       Record<string, APIKey>;
 }
 
+// Persistent key-value data
+interface APIKeyValuePersist {
+    keys:       {
+        group:  string;
+        key:    string;
+    }[];
+    values:     {
+        key:    string;
+        value:  Value;
+    }[];
+}
+
 // Home Connect unrecognised/mismatched key-value logging
 export class APIKeyValuesLog {
 
@@ -66,6 +79,7 @@ export class APIKeyValuesLog {
     // Known keys/values
     private readonly groups:    Record<string, APIGroup> = {};
     private readonly keys:      Record<string, APIKey> = {};
+    private readonly persistKey: string;
 
     // Reported keys/values
     private readonly reported:  Set<string> = new Set();
@@ -73,7 +87,13 @@ export class APIKeyValuesLog {
     private pendingScheduled?:  ReturnType<typeof setTimeout>;
 
     // Construct a key-value logger
-    constructor(readonly log: Logger) {}
+    constructor(readonly log:       Logger,
+                readonly clientid:  string,
+                readonly persist:   LocalStorage) {
+        // Restore cache of previously seen keys and values
+        this.persistKey = `key-value ${PLUGIN_VERSION} ${clientid}`;
+        this.readPersist();
+    }
 
     // Update the dictionary of appliance descriptions
     setAppliances(appliances: HomeAppliance[]): void {
@@ -143,6 +163,9 @@ export class APIKeyValuesLog {
         clearTimeout(this.pendingScheduled);
         this.pendingScheduled = setTimeout(() => {
             try {
+                // Save the cache of known keys and values
+                this.writePersist();
+
                 // Check whether the report is ready
                 const unknownKeys = this.getUnknownTypes();
                 if (unknownKeys.length) {
@@ -309,12 +332,12 @@ export class APIKeyValuesLog {
 
     // Typescript type based on the typeof literals
     getTypeof(value?: APIValue): 'string' | 'number' | 'boolean' | 'unknown' {
-        function assertisLiteral(type: string): asserts type is 'string' | 'number' | 'boolean' {
+        function assertIsLiteral(type: string): asserts type is 'string' | 'number' | 'boolean' {
             assert.match(type, /^(string|number|boolean)$/);
         }
         const types = Object.values(value?.values ?? {}).map(literal => {
             const type = typeof literal.value;
-            assertisLiteral(type);
+            assertIsLiteral(type);
             return type;
         });
         return types.length && types.every(type => type === types[0]) ? types[0] : 'unknown';
@@ -402,5 +425,34 @@ export class APIKeyValuesLog {
     isEnumPreferred(value: APIValue): boolean {
         const keys = Object.values(this.keys).filter(key => key.value === value);
         return keys.some(key => /\.(Event|Setting|State)\./.test(key.key));
+    }
+
+    // Restore keys and values from previous sessions
+    async readPersist(): Promise<void> {
+        try {
+            const persist = await this.persist.getItem(this.persistKey) as APIKeyValuePersist | undefined;
+            if (persist) {
+                const haid = 'Restored from previous session';
+                for (const { group, key } of persist.keys)   this.addKey(haid, group, undefined, key, false);
+                for (const { key, value } of persist.values) this.addValue(haid, key, value, false);
+                this.log.debug(`Restored ${plural(persist.keys.length, 'key')} and ${plural(persist.values.length, 'value')}`);
+            }
+        } catch (err) {
+            logError(this.log, 'Read keys/values', err);
+        }
+    }
+
+    // Save the keys and values that have been seen
+    async writePersist(): Promise<void> {
+        try {
+            await this.persist.setItem(this.persistKey, {
+                keys:   Object.entries(this.groups).flatMap(([group, groupDetail]) =>
+                    Object.values(groupDetail.keys).map(key => ({ group, key }))),
+                values: Object.values(this.keys).flatMap(key =>
+                    Object.values(key.value?.values ?? {}).map(({ value }) => ({ key, value })))
+            });
+        } catch (err) {
+            logError(this.log, 'Write keys/values', err);
+        }
     }
 }

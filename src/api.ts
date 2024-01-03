@@ -76,7 +76,7 @@ export class CloudAPI implements HomeConnectAPI {
     ) {
         this.ua = new APIAuthoriseUserAgent(log, config, persist, config.language.api);
         this.events = new APIEventStream(log, this.ua);
-        this.checkValues = new APICheckValues(log);
+        this.checkValues = new APICheckValues(log, config, persist);
     }
 
     // Check whether a particular scope has been authorised

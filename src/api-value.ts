@@ -5,6 +5,7 @@ import { Logger } from 'homebridge';
 
 import { createCheckers, Checker, ITypeSuite, TType, TName } from 'ts-interface-checker';
 import assert from 'node:assert';
+import { LocalStorage } from 'node-persist';
 
 import { CommandValues, EventMapValues, OptionValues, ProgramKey, SettingValues,
          StatusValues } from './api-value-types';
@@ -15,8 +16,9 @@ import { Command, Constraints, ConstraintsCommon, EventApplianceConnection,
          Value } from './api-types';
 import { APIEvent, EventStart, EventStop } from './api-events';
 import { MS, getValidationTree, keyofChecker } from './utils';
-import valuesTI from './ti/api-value-types-ti';
 import { APIKeyValuesLog } from './api-value.log';
+import { ConfigPlugin } from './config-types';
+import valuesTI from './ti/api-value-types-ti';
 
 // Checkers for API responses
 const checkers = createCheckers(valuesTI);
@@ -160,8 +162,11 @@ export class APICheckValues {
     private readonly logValues: APIKeyValuesLog;
 
     // Create a key-value type checker
-    constructor(readonly log: Logger) {
-        this.logValues = new APIKeyValuesLog(log);
+    constructor(
+        readonly log:       Logger,
+        readonly config:    ConfigPlugin,
+        readonly persist:   LocalStorage) {
+        this.logValues = new APIKeyValuesLog(log, config.clientid, persist);
     }
 
     // Validation errors are logged, but values still returned with type assertion regardless
