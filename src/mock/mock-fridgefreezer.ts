@@ -1,8 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { SettingKV, StatusKV } from './api-value';
-import { DoorState, PowerState, DoorStateRefrigeration } from './api-value-types';
+import { SettingKV, StatusKV } from '../api-value';
+import { DoorState, PowerState, DoorStateRefrigeration } from '../api-value-types';
 import { MockAppliance } from './mock-appliance';
 
 // A mock FridgeFreezer (based on a simulated appliance, with extensions)

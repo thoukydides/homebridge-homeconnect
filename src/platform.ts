@@ -28,7 +28,7 @@ import { ConfigAppliances, ConfigPlugin } from './config-types';
 import { checkDependencyVersions } from './check-versions';
 import { HOMEBRIDGE_LANGUAGES } from './api-languages';
 import { HomeAppliance } from './api-types';
-import { MockAPI } from './mock-api';
+import { MockAPI } from './mock';
 import configTI from './ti/config-types-ti';
 
 // Checkers for config.json configuration

@@ -9,7 +9,7 @@ import { LocalStorage } from 'node-persist';
 import { CloudAPI, HomeConnectAPI } from '../api';
 import { HomeAppliance } from '../api-types';
 import { ConfigPlugin } from '../config-types';
-import { MockAPI } from '../mock-api';
+import { MockAPI } from '../mock';
 import { Constructor, assertIsDefined } from '../utils';
 import { logError } from '../log-error';
 import { AuthorisationStatus } from '../api-ua-auth';

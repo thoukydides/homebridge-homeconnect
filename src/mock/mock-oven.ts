@@ -1,8 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { CommandKV, ProgramDefinitionKV, SettingKV, StatusKV } from './api-value';
-import { OperationState, PowerState } from './api-value-types';
+import { CommandKV, ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value';
+import { OperationState, PowerState } from '../api-value-types';
 import { MockAppliance } from './mock-appliance';
 
 // A mock Oven (based on a physical Siemens iQ700 appliance)

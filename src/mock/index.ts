@@ -6,13 +6,13 @@ import { Logger } from 'homebridge';
 import { LocalStorage } from 'node-persist';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
-import { ConfigPlugin } from './config-types';
-import { HomeAppliance } from './api-types';
+import { ConfigPlugin } from '../config-types';
+import { HomeAppliance } from '../api-types';
 import { CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
          ProgramDefinitionKV, ProgramKV, ProgramsKV, SettingKey,  SettingKV,
-         SettingValue, StatusKey, StatusKV, OptionValue } from './api-value';
-import { ProgramKey } from './api-value-types';
-import { HomeConnectAPI } from './api';
+         SettingValue, StatusKey, StatusKV, OptionValue } from '../api-value';
+import { ProgramKey } from '../api-value-types';
+import { HomeConnectAPI } from '../api';
 import { MockAppliance } from './mock-appliance';
 import { MockDishwasher } from './mock-dishwasher';
 import { MockHob } from './mock-hob';
@@ -22,7 +22,7 @@ import { MockFridgeFreezer } from './mock-fridgefreezer';
 import { MockCoffeeMaker } from './mock-coffeemaker';
 import { MockDryer } from './mock-dryer';
 import { MockWasher } from './mock-washer';
-import { AuthorisationStatus } from './api-ua-auth';
+import { AuthorisationStatus } from '../api-ua-auth';
 
 // Random delay before completing API requests
 const MOCK_MIN_DELAY =  1; // (milliseconds)

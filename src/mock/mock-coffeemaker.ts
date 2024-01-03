@@ -1,8 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { ProgramDefinitionKV, SettingKV, StatusKV } from './api-value';
-import { DoorState, OperationState, PowerState } from './api-value-types';
+import { ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value';
+import { DoorState, OperationState, PowerState } from '../api-value-types';
 import { MockAppliance } from './mock-appliance';
 
 // A mock CoffeeMaker (based on a simulated appliance)
