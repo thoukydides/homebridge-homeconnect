@@ -5,6 +5,7 @@ import { Logger } from 'homebridge';
 
 import { LocalStorage } from 'node-persist';
 import { setImmediate as setImmediateP } from 'timers/promises';
+import semver from 'semver';
 
 import { MS, formatList, formatMilliseconds } from './utils';
 import { logError } from './log-error';
@@ -67,7 +68,7 @@ export class PersistCache {
         } else {
             const age = Date.now() - item.updated;
             description += ` [${item.preferred}, v${item.version ?? '?'}, updated ${formatMilliseconds(age)} ago]`;
-            if (item.version !== PLUGIN_VERSION) expired.push(`not written by v${PLUGIN_VERSION}`);
+            if (!semver.satisfies(PLUGIN_VERSION, `^${item.version}`)) expired.push(`not written by v${PLUGIN_VERSION}`);
             if (item.preferred !== this.preferred) expired.push(`does not match preference ${this.preferred}`);
             if (this.ttl < age) expired.push('is too old');
         }

@@ -6,6 +6,7 @@ import { Logger } from 'homebridge';
 import { green, greenBright } from 'chalk';
 import { LocalStorage } from 'node-persist';
 import assert from 'node:assert';
+import semver from 'semver';
 
 import { MS, columns, formatList, plural } from './utils';
 import { HomeAppliance, OptionDefinition, Setting, Status, Value } from './api-types';
@@ -67,6 +68,7 @@ interface APIKeyValuePersist {
         key:    string;
         value:  Value;
     }[];
+    version?:   string;
 }
 
 // Home Connect unrecognised/mismatched key-value logging
@@ -91,7 +93,7 @@ export class APIKeyValuesLog {
                 readonly clientid:  string,
                 readonly persist:   LocalStorage) {
         // Restore cache of previously seen keys and values
-        this.persistKey = `key-value ${PLUGIN_VERSION} ${clientid}`;
+        this.persistKey = `key-value ${clientid}`;
         this.readPersist();
     }
 
@@ -431,7 +433,7 @@ export class APIKeyValuesLog {
     async readPersist(): Promise<void> {
         try {
             const persist = await this.persist.getItem(this.persistKey) as APIKeyValuePersist | undefined;
-            if (persist) {
+            if (persist && persist.version && semver.satisfies(PLUGIN_VERSION, `^${persist.version}`)) {
                 const haid = 'Restored from previous session';
                 for (const { group, key } of persist.keys)   this.addKey(haid, group, undefined, key, false);
                 for (const { key, value } of persist.values) this.addValue(haid, key, value, false);
@@ -446,10 +448,11 @@ export class APIKeyValuesLog {
     async writePersist(): Promise<void> {
         try {
             await this.persist.setItem(this.persistKey, {
-                keys:   Object.entries(this.groups).flatMap(([group, groupDetail]) =>
+                keys:       Object.entries(this.groups).flatMap(([group, groupDetail]) =>
                     Object.values(groupDetail.keys).map(({ key }) => ({ group, key }))),
-                values: Object.values(this.keys).flatMap(key =>
-                    Object.values(key.value?.values ?? {}).map(({ value }) => ({ key: key.key, value })))
+                values:     Object.values(this.keys).flatMap(key =>
+                    Object.values(key.value?.values ?? {}).map(({ value }) => ({ key: key.key, value }))),
+                version:    PLUGIN_VERSION
             });
         } catch (err) {
             logError(this.log, 'Write keys/values', err);
