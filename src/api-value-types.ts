@@ -4,6 +4,25 @@
 // Program keys (not a comprehensive list)
 export type ProgramKey =
     'BSH.Common.Program.Favorite.001' // (undocumented)
+  | 'BSH.Common.Program.Favorite.002' // (undocumented)
+  | 'BSH.Common.Program.Favorite.003' // (undocumented)
+  | 'BSH.Common.Program.Favorite.004' // (undocumented)
+  | 'BSH.Common.Program.Favorite.005' // (undocumented)
+  | 'BSH.Common.Program.Favorite.006' // (undocumented)
+  | 'BSH.Common.Program.Favorite.007' // (undocumented)
+  | 'BSH.Common.Program.Favorite.008' // (undocumented)
+  | 'BSH.Common.Program.Favorite.009' // (undocumented)
+  | 'BSH.Common.Program.Favorite.010' // (undocumented)
+  | 'BSH.Common.Program.Favorite.011' // (undocumented)
+  | 'BSH.Common.Program.Favorite.012' // (undocumented)
+  | 'BSH.Common.Program.Favorite.013' // (undocumented)
+  | 'BSH.Common.Program.Favorite.014' // (undocumented)
+  | 'BSH.Common.Program.Favorite.015' // (undocumented)
+  | 'BSH.Common.Program.Favorite.016' // (undocumented)
+  | 'BSH.Common.Program.Favorite.017' // (undocumented)
+  | 'BSH.Common.Program.Favorite.018' // (undocumented)
+  | 'BSH.Common.Program.Favorite.019' // (undocumented)
+  | 'BSH.Common.Program.Favorite.020' // (undocumented)
   | 'ConsumerProducts.CleaningRobot.Program.Basic.GoHome'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanAll'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanMap'
@@ -636,6 +655,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
     'Dishcare.Dishwasher.Option.SanitationUC'?:                             boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
+    'Dishcare.Dishwasher.Option.Turbo'?:                                    boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.VarioSpeed'?:                               boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;

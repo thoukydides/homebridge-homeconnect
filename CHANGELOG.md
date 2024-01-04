@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.37.7] - 2024-01-04
+### Changed
+* **CoffeeMaker:** Added undocumented programs. (#209)
+* **Dishwasher:** Added an undocumented program option. (#207)
+
 ## [v0.37.6] - 2024-01-03
 ### Changed
 * Treat data cached by previous plugin versions as expired.
@@ -532,7 +537,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.6...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.7...HEAD
+[v0.37.7]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.6...v0.37.7
 [v0.37.6]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.5...v0.37.6
 [v0.37.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.4...v0.37.5
 [v0.37.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.3...v0.37.4
