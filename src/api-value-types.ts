@@ -153,6 +153,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.TimeWarmFix.TimeWarm40'
   | 'LaundryCare.Dryer.Program.TimeWarmFix.TimeWarm60'
   | 'LaundryCare.Dryer.Program.Towels'
+  | 'LaundryCare.Dryer.Program.WoolFinish' // (undocumented)
   | 'LaundryCare.Washer.Program.Auto30'
   | 'LaundryCare.Washer.Program.Auto40'
   | 'LaundryCare.Washer.Program.Auto60'
@@ -332,6 +333,7 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Heating'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.IntermediateSpin'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Prewash'
   | 'LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener'
   | 'LaundryCare.Common.EnumType.ProcessPhase.SpinningFinal'
