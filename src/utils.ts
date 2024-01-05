@@ -113,7 +113,7 @@ export function columns(rows: string[][], separator = '  '): string[] {
 }
 
 // Recursive object assignment, skipping undefined values
-export function deepMerge(...objects: object[]): object {
+export function deepMerge<Type extends object>(...objects: [Type, ...Partial<Type>[]]): Type {
     const isObject = (value: unknown): value is object =>
         value !== undefined && typeof value === 'object' && !Array.isArray(value);
     return objects.reduce((acc: Record<string, unknown>, object: object) => {
@@ -124,7 +124,7 @@ export function deepMerge(...objects: object[]): object {
             else acc[key] = value;
         });
         return acc;
-    }, {});
+    }, {}) as Type;
 }
 
 // Convert checker validation error into lines of text

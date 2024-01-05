@@ -132,10 +132,10 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         const configAppliances = select(([key]) => !keyofConfigPlugin.includes(key));
 
         // Apply default values
-        const configPlugin = deepMerge(DEFAULT_CONFIG, configPluginPre) as PlatformConfig;
+        const configPlugin = deepMerge(DEFAULT_CONFIG, configPluginPre);
         const defaultClientid = DEFAULT_CLIENTID(configPlugin['simulator']);
         if (!configPlugin['clientid'] && defaultClientid) configPlugin['clientid'] = defaultClientid;
-        if (!configPlugin['clientid'] && configPlugin.debug.includes('Mock Appliances')) configPlugin['clientid'] = '';
+        if (!configPlugin['clientid'] && configPlugin.debug?.includes('Mock Appliances')) configPlugin['clientid'] = '';
 
         // Ensure that all required fields are provided and are of suitable types
         checkers.ConfigPlugin.setReportedPath('<PLATFORM_CONFIG>');
