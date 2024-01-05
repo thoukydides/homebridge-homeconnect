@@ -552,7 +552,8 @@ Copyright © 2019-2024 Alexander Thoukydides
 [v0.37.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.0...v0.37.1
 [v0.37.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.36.0...v0.37.0
 [v0.36.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.35.0...v0.36.0
-[v0.35.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.1...v0.35.0
+[v0.35.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.2...v0.35.0
+[v0.34.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.1...v0.34.2
 [v0.34.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.34.0...v0.34.1
 [v0.34.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.1...v0.34.0
 [v0.33.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.33.0...v0.33.1
