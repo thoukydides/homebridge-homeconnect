@@ -639,6 +639,7 @@ export interface OptionValues {
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
     'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
     'Cooking.Oven.Option.SetpointTemperature'?:                             number;
+    'Cooking.Oven.Option.SteamAssistLevel'?:                                AddedSteam; // (undocumented)
     'Cooking.Oven.Option.WarmingLevel'?:                                    WarmingLevel;
     'Dishcare.Dishwasher.Option.BrillianceDry'?:                            boolean;
     'Dishcare.Dishwasher.Option.DelicateBasket'?:                           boolean; // (undocumented)
@@ -661,7 +662,8 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;
     'LaundryCare.Common.Option.LoadRecommendation'?:                        number; // (undocumented)
     'LaundryCare.Common.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
-    'LaundryCare.Common.Option.ReferToProgram'?:                            ProgramKey; // (undocumented)
+    'LaundryCare.Common.Option.ReferToProgram'?:                            ProgramKey | number; // (undocumented)
+    'LaundryCare.Common.Option.SilentMode'?:                                boolean; // (undocumented)
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)

@@ -328,21 +328,21 @@ export class APIKeyValuesLog {
     // Test whether a value is of enum type
     isEnumType(value: APIValue): boolean | undefined {
         if (value.type) return TYPE_MAP[value.type] === undefined;
-        if (['boolean', 'number'].includes(this.getTypeof(value))) return false;
+        if (/\b(boolean|number)\b/.test(this.getTypeof(value))) return false;
         return undefined;
     }
 
     // Typescript type based on the typeof literals
-    getTypeof(value?: APIValue): 'string' | 'number' | 'boolean' | 'unknown' {
+    getTypeof(value?: APIValue): string {
         function assertIsLiteral(type: string): asserts type is 'string' | 'number' | 'boolean' {
             assert.match(type, /^(string|number|boolean)$/);
         }
-        const types = Object.values(value?.values ?? {}).map(literal => {
+        const types = [...new Set(Object.values(value?.values ?? {}).map(literal => {
             const type = typeof literal.value;
             assertIsLiteral(type);
             return type;
-        });
-        return types.length && types.every(type => type === types[0]) ? types[0] : 'unknown';
+        }))];
+        return types.length ? types.join(' | ') : 'unknown';
     }
 
     // Merge values that have the same enum name

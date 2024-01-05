@@ -48,18 +48,19 @@ interface ConstraintsForType<Type> extends ConstraintsCommon {
     min?:           MapValueType<Type, number,  never, never, never>;
     max?:           MapValueType<Type, number,  never, never, never>;
     stepsize?:      MapValueType<Type, number,  never, never, never>;
-    allowedvalues?: MapValueType<Type, never,   never, never, Array<Type>>;
+    allowedvalues?: MapValueType<Type, never,   never, never, Array<EnumType<Type>>>;
     displayvalues?: MapValueType<Type, never,   never, never, Array<string>>;
 }
 type MapValueType<Type, IsNumber, IsBoolean, IsString, IsEnum> =
     Type extends number ? IsNumber
     : (Type extends boolean ? IsBoolean
        : (string extends Type ? IsString : IsEnum));
+type EnumType<Type> = Type extends string ? (string extends Type ? never : Type) : never;
 
 // Extend and replace properties
 type ExtendKV<Super, Sub> = Sub & Omit<Super, keyof Sub>;
 
-// Srictly typed commands
+// Strictly typed commands
 export interface CommandKV extends Command {
     key:            CommandKey;
 }
@@ -223,7 +224,7 @@ export class APICheckValues {
         return option as OptionKV<Key>;
     }
 
-    // Check a list of program option definitionss
+    // Check a list of program option definitions
     optionDefinitions(haid: string, options: OptionDefinition[]): OptionDefinitionKV[] {
         return options.map(option => this.optionDefinition(haid, option));
     }
@@ -281,14 +282,14 @@ export class APICheckValues {
         if ('data' in event && event.data) {
             const type = `${event.event} Event.data`;
             const props = (valuesTI.EventMapValues as { props?: { name: string; ttype: TName}[] }).props;
-            const tname = props?.find(prop => prop.name === event.event)?.ttype?.name;
-            if (!tname) {
+            const typeName = props?.find(prop => prop.name === event.event)?.ttype?.name;
+            if (!typeName) {
                 this.logValidation('Unrecognised event', type, event, [event.event]);
             } else {
                 const check = (type: string, data: EventData) => {
                     const context: APICheckValueContext = { haid, group: 'Event', subGroup: event.event, type, json: data };
-                    this.isKey(valuesTI, valuesTI[tname], context, data.key);
-                    this.isValue(checkers[tname], context, data.key, data.value);
+                    this.isKey(valuesTI, valuesTI[typeName], context, data.key);
+                    this.isValue(checkers[typeName], context, data.key, data.value);
                 };
                 if ('items' in event.data) {
                     event.data.items.forEach((data, index) => check(`${type}.items[${index}]`, data));
@@ -356,7 +357,7 @@ export class APICheckValues {
                 isValue(`${type}.allowedvalues[${index}]`, value));
         }
 
-        // Return whether all tests paassed
+        // Return whether all tests passed
         return !isValueResults.includes(false);
     }
 
