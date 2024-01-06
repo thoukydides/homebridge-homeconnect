@@ -7,10 +7,17 @@
 	"image": "mcr.microsoft.com/devcontainers/javascript-node:18",
 
 	// VS Code extensions to install automatically
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"streetsidesoftware.code-spell-checker"
-	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"streetsidesoftware.code-spell-checker",
+				"bierner.markdown-preview-github-styles",
+				"amazonwebservices.aws-toolkit-vscode",
+				"Tyriar.sort-lines"
+			],
+		}
+	},
 
 	// Finish setup after creating the container
 	"postCreateCommand": {

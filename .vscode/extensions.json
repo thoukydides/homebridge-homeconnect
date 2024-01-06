@@ -3,6 +3,7 @@
     "dbaeumer.vscode-eslint",
     "amazonwebservices.aws-toolkit-vscode",
     "streetsidesoftware.code-spell-checker",
-    "tyriar.sort-lines"
+    "tyriar.sort-lines",
+    "bierner.markdown-preview-github-styles"
   ]
 }
