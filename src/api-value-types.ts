@@ -669,6 +669,7 @@ export interface OptionValues {
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
+    'LaundryCare.Dryer.Option.ConnectedDry.OriginalProgramTime'?:           number; // (undocumented)
     'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
     'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
@@ -680,6 +681,7 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
     'LaundryCare.Washer.Option.RinsePlus'?:                                 RinsePlus; // (undocumented)
     'LaundryCare.Washer.Option.RinsePlus1'?:                                boolean; // (undocumented)
+    'LaundryCare.Washer.Option.IntensivePlus'?:                             boolean; // (undocumented)
     'LaundryCare.Washer.Option.SilentWash'?:                                boolean; // (undocumented)
     'LaundryCare.Washer.Option.Soak'?:                                      boolean; // (undocumented)
     'LaundryCare.Washer.Option.SpeedPerfect'?:                              boolean; // (undocumented)
