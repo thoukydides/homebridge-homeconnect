@@ -196,6 +196,8 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.WashAndDry.90';
 
 // Program option enumerated types
+export type AromaSelect = // (undocumented)
+    'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.balanced';
 export type BeanAmount =
     'ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryMild'
   | 'ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Mild'
@@ -626,6 +628,7 @@ export interface OptionValues {
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                  CleaningMode;
     'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                  ProcessPhaseCleaningRobot;
     'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                ReferenceMapID;
+    'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                     AromaSelect; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
     'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                       CoarsnessExtended; // (undocumented)

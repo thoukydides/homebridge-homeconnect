@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* **CoffeeMaker:** Added an undocumented program option. (#216)
 
 ## [v0.37.9] - 2024-01-05
 ### Changed
