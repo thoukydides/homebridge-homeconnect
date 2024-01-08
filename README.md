@@ -164,6 +164,7 @@ Before raising an issue please check whether it relates to an expected [error me
     * Confirm that the appliance can be properly controlled as expected.
     * Open the appliance Settings, scroll to the Network section, and verify that all three lines (for the links between the appliance, cloud, and phone) and green.
   * Check the [Home Connect Server Status](https://homeconnect.thouky.co.uk).
+[![Home Connect Server Status](https://homeconnect.thouky.co.uk/api/images/markdown.svg)](https://homeconnect.thouky.co.uk)
 
 Please attach the relevant section of the Homebridge log file, either pasted into the issue or attached as a text file (*not a screenshot*). Extra debug should be enabled and captured if appropriate:
 

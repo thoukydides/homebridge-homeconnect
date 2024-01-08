@@ -267,7 +267,7 @@ export type DryingTargetAdjustment = // (undocumented)
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3';
-export type FanSetting =
+export type FanStage =
     'Cooking.Hood.EnumType.Stage.FanOff'
   | 'Cooking.Hood.EnumType.Stage.FanStage01'
   | 'Cooking.Hood.EnumType.Stage.FanStage02'
@@ -314,7 +314,7 @@ export type IDosingLevel = // (undocumented)
   | 'LaundryCare.Washer.EnumType.IDosingLevel.Normal'
   | 'LaundryCare.Washer.EnumType.IDosingLevel.Off'
   | 'LaundryCare.Washer.EnumType.IDosingLevel.Strong';
-export type IntensiveSetting =
+export type IntensiveStage =
     'Cooking.Hood.EnumType.IntensiveStage.IntensiveStageOff'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2';
@@ -639,8 +639,8 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                        FlowRate;
     'ConsumerProducts.CoffeeMaker.Option.HotWaterTemperature'?:             HotWaterTemperature;
     'ConsumerProducts.CoffeeMaker.Option.MultipleBeverages'?:               boolean;
-    'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveSetting;
-    'Cooking.Common.Option.Hood.VentingLevel'?:                             FanSetting;
+    'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveStage;
+    'Cooking.Common.Option.Hood.VentingLevel'?:                             FanStage;
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
     'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
     'Cooking.Oven.Option.SetpointTemperature'?:                             number;
@@ -670,21 +670,25 @@ export interface OptionValues {
     'LaundryCare.Common.Option.ReferToProgram'?:                            ProgramKey | number; // (undocumented)
     'LaundryCare.Common.Option.SilentMode'?:                                boolean; // (undocumented)
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
+    'LaundryCare.Dryer.Option.ConnectedDry.OriginalProgramTime'?:           number; // (undocumented)
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
-    'LaundryCare.Dryer.Option.ConnectedDry.OriginalProgramTime'?:           number; // (undocumented)
     'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
+    'LaundryCare.Dryer.Option.ProcessPhase'?:                               ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
     'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
     'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
+    'LaundryCare.Washer.Option.IDos1DosingLevel'?:                          IDosingLevel; // (undocumented)
     'LaundryCare.Washer.Option.IDos2.Active'?:                              boolean; // (undocumented)
     'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
+    'LaundryCare.Washer.Option.IDos2DosingLevel'?:                          IDosingLevel; // (undocumented)
+    'LaundryCare.Washer.Option.IntensivePlus'?:                             boolean; // (undocumented)
     'LaundryCare.Washer.Option.LessIroning'?:                               boolean; // (undocumented)
     'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
+    'LaundryCare.Washer.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
     'LaundryCare.Washer.Option.RinsePlus'?:                                 RinsePlus; // (undocumented)
     'LaundryCare.Washer.Option.RinsePlus1'?:                                boolean; // (undocumented)
-    'LaundryCare.Washer.Option.IntensivePlus'?:                             boolean; // (undocumented)
     'LaundryCare.Washer.Option.SilentWash'?:                                boolean; // (undocumented)
     'LaundryCare.Washer.Option.Soak'?:                                      boolean; // (undocumented)
     'LaundryCare.Washer.Option.SpeedPerfect'?:                              boolean; // (undocumented)
