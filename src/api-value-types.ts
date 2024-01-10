@@ -669,11 +669,13 @@ export interface OptionValues {
     'LaundryCare.Common.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Common.Option.ReferToProgram'?:                            ProgramKey | number; // (undocumented)
     'LaundryCare.Common.Option.SilentMode'?:                                boolean; // (undocumented)
+    'LaundryCare.Common.Option.SpeedPerfect'?:                              boolean; // (undocumented)
     'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
     'LaundryCare.Dryer.Option.ConnectedDry.OriginalProgramTime'?:           number; // (undocumented)
     'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
     'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
     'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
+    'LaundryCare.Dryer.Option.HalfLoad'?:                                   boolean; // (undocumented)
     'LaundryCare.Dryer.Option.ProcessPhase'?:                               ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
     'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
@@ -684,6 +686,7 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.IDos2DosingLevel'?:                          IDosingLevel; // (undocumented)
     'LaundryCare.Washer.Option.IntensivePlus'?:                             boolean; // (undocumented)
     'LaundryCare.Washer.Option.LessIroning'?:                               boolean; // (undocumented)
+    'LaundryCare.Washer.Option.MiniLoad'?:                                  boolean; // (undocumented)
     'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
     'LaundryCare.Washer.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
