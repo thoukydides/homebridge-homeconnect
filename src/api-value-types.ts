@@ -26,7 +26,6 @@ export type ProgramKey =
   | 'ConsumerProducts.CleaningRobot.Program.Basic.GoHome'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanAll'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanMap'
-  | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino'
