@@ -278,7 +278,8 @@ export type FlexSprayIntensity = // (undocumented)
     'Dishcare.Dishwasher.EnumType.FlexSpray.Intensity.Heavy'
   | 'Dishcare.Dishwasher.EnumType.FlexSpray.Intensity.Normal';
 export type FlexSprayType = // (undocumented)
-    'Dishcare.Dishwasher.EnumType.FlexSpray.Type.Front'
+    'Dishcare.Dishwasher.EnumType.FlexSpray.Type.Back'
+  | 'Dishcare.Dishwasher.EnumType.FlexSpray.Type.Front'
   | 'Dishcare.Dishwasher.EnumType.FlexSpray.Type.Individual';
 export type FlowRate =
     'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Normal'
