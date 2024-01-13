@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.38.0] - 2024-01-13
+### Added
+* **Dryer/WasherDryer:** Added a new event button (`Stateless Programmable Switch` service) that can trigger HomeKit automations when the drying process has finished.
+### Changed
+* **Dryer:** Added undocumented program options. (#223)
+
 ## [v0.37.12] - 2024-01-12
 ### Changed
 * **Dishwasher:** Added undocumented program options. (#220, #221, #222)
@@ -557,7 +563,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.12...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.38.0...HEAD
+[v0.38.0]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.12...v0.38.0
 [v0.37.12]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.11...v0.37.12
 [v0.37.11]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.10...v0.37.11
 [v0.37.10]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.9...v0.37.10

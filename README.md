@@ -129,12 +129,17 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Start/stop programs with preset options.
     * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
-    * Automation triggers for finished and aborted.
-  * **Washer / WasherDryer:**
+    * Automation triggers for finished, aborted, and drying finished.
+  * **Washer:**
     * Start/stop programs with preset options.
     * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, i-Dos 1 fill level low, and i-Dos 2 fill level low.
+  * **WasherDryer:**
+    * Start/stop programs with preset options.
+    * Control child lock.
+    * Monitor power, door, program time remaining, remote control, and general operation status.
+    * Automation triggers for finished, aborted, i-Dos 1 fill level low, i-Dos 2 fill level low, and drying finished.
     
 ### Cooling Appliances
 

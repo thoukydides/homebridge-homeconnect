@@ -343,6 +343,9 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener'
   | 'LaundryCare.Common.EnumType.ProcessPhase.SpinningFinal'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Washing'
+  | 'LaundryCare.Dryer.EnumType.ProcessPhase.CupboardDryReached'
+  | 'LaundryCare.Dryer.EnumType.ProcessPhase.Drying'
+  | 'LaundryCare.Dryer.EnumType.ProcessPhase.IronDryReached'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.DetergentDispensing'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.FinalSpinning'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Rinsing'
@@ -850,6 +853,7 @@ export interface EventEventValues {
     'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationReached'?:          EventPresentState;
     'Dishcare.Dishwasher.Event.RinseAidNearlyEmpty'?:                       EventPresentState;
     'Dishcare.Dishwasher.Event.SaltNearlyEmpty'?:                           EventPresentState;
+    'LaundryCare.Dryer.Event.DryingProcessFinished'?:                       EventPresentState; // (undocumented)
     'LaundryCare.Washer.Event.IDos1FillLevelPoor'?:                         EventPresentState;
     'LaundryCare.Washer.Event.IDos2FillLevelPoor'?:                         EventPresentState;
     'Refrigeration.FridgeFreezer.Event.DoorAlarmFreezer'?:                  EventPresentState;

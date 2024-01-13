@@ -78,11 +78,12 @@ export class ApplianceDryer extends ApplianceLaundry {
         // Add Dryer events
         this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
         this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
+        this.hasEvent('LaundryCare.Dryer.Event.DryingProcessFinished',                      'Drying Finished');
     }
 }
 
-// A Homebridge accessory for a Home Connect washer or washer/dryer
-export class ApplianceWasherDryer extends ApplianceLaundry {
+// A Homebridge accessory for a Home Connect washer
+export class ApplianceWasher extends ApplianceLaundry {
 
     constructor(...args: ConstructorParameters<typeof ApplianceGeneric>) {
         super(...args);
@@ -94,4 +95,18 @@ export class ApplianceWasherDryer extends ApplianceLaundry {
         this.hasEvent('LaundryCare.Washer.Event.IDos2FillLevelPoor',                        'i-Dos 2 Low');
     }
 }
-export class ApplianceWasher extends ApplianceWasherDryer {}
+
+// A Homebridge accessory for a Home Connect washer/dryer
+export class ApplianceWasherDryer extends ApplianceLaundry {
+
+    constructor(...args: ConstructorParameters<typeof ApplianceGeneric>) {
+        super(...args);
+
+        // Add Washer/WasherDryer events
+        this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
+        this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
+        this.hasEvent('LaundryCare.Washer.Event.IDos1FillLevelPoor',                        'i-Dos 1 Low');
+        this.hasEvent('LaundryCare.Washer.Event.IDos2FillLevelPoor',                        'i-Dos 2 Low');
+        this.hasEvent('LaundryCare.Dryer.Event.DryingProcessFinished',                      'Drying Finished');
+    }
+}
