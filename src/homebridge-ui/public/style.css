@@ -80,6 +80,7 @@ body {
     padding:        5px 5px 0px;
     text-align:     center;
     font-weight:    200 !important;
+    transition:     all 0.35s;
 }
 
 #hc-appliance-cards .card-footer {
@@ -89,17 +90,35 @@ body {
     font-variant:   small-caps;
 }
 
-#hc-appliance-cards img {
+#hc-appliance-cards .card-icon {
     margin:         auto;
-    width:          75px;
     padding:        10px;
-    opacity:        0.5;
 }
 
-#hc-appliance-cards :is(.card:hover, .hc-selected) img {
-    padding:        5px;
-    opacity:        1;
+#hc-appliance-cards .card-icon svg {
+    width:          100px;
+    height:         100px;
+}
+
+#hc-appliance-cards svg .Foreground {
     transition:     all 0.35s;
+}
+
+#hc-appliance-cards svg .Background {
+    filter:         brightness(0.5);
+    transition:     all 0.35s;
+}
+
+#hc-appliance-cards :is(.card:hover, .hc-selected) svg .Foreground {
+    filter:         drop-shadow(0 0 3px);
+}
+
+#hc-appliance-cards :is(.card:hover, .hc-selected) svg .Background {
+    filter:         brightness(1);
+}
+
+#hc-appliance-cards :is(.card:hover) svg .Background {
+    filter:         brightness(1.1);
 }
 
 #hc-appliance-cards :is(.card:hover, .hc-selected) .card-body {

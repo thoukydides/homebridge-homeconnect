@@ -4,7 +4,7 @@
 import { Logger } from 'homebridge';
 
 import { HomeAppliance } from '../../api-types';
-import { assertIsInstanceOf } from '../../utils';
+import { assertIsDefined, assertIsInstanceOf } from '../../utils';
 import { cloneTemplate, getElementById, getSlot } from './utils-dom';
 
 
@@ -76,7 +76,7 @@ export class Cards {
         // Create a new card from the template
         if (detail === undefined) detail = ' '; // (non-breaking space)
         const card = cloneTemplate('hc-appliance-card', { name, detail });
-        getSlot(card, 'icon').setAttribute('src', `./images/icon-${icon}.svg`);
+        this.loadCardIcon(getSlot(card, 'icon'), `./images/icon-${icon}.svg`, id);
 
         // Handle card selection
         const element = card.children[0];
@@ -84,6 +84,35 @@ export class Cards {
         element.dataset.id = id;
         element.onclick = () => this.selectCard(id);
         return card;
+    }
+
+    // Load the icon image for a card
+    async loadCardIcon(element: HTMLElement, url: string, id: string) {
+        try {
+            // Load the icon and add it to the card
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Failed to fetch icon ${response.url}: ${response.statusText}`);
+            element.innerHTML = await response.text();
+
+            // Change the group (layer) IDs to classes
+            element.querySelectorAll('g[id]').forEach(group => {
+                const id = group.getAttribute('id');
+                assertIsDefined(id);
+                group.removeAttribute('id');
+                group.classList.add(id);
+            });
+
+            // Assign unique IDs to gradient fills
+            element.querySelectorAll('defs [id]').forEach(def => {
+                const oldId = def.getAttribute('id');
+                const newId = `${id}-${oldId}`;
+                def.setAttribute('id', newId);
+                element.querySelectorAll(`[fill='url(#${oldId})']`).forEach(ref =>
+                    ref.setAttribute('fill', `url(#${newId})`));
+            });
+        } catch (err) {
+            this.log.error(`loadCardIcon(${element}) =>`, err);
+        }
     }
 
     // A card has been selected
