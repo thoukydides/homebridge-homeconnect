@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 * **Dryer/WasherDryer:** Added a new event button (`Stateless Programmable Switch` service) that can trigger HomeKit automations when the drying process has finished.
 ### Changed
 * **Dryer:** Added undocumented program options. (#223)
+* Updated dependencies.
 
 ## [v0.37.12] - 2024-01-12
 ### Changed
