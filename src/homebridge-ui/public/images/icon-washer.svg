@@ -1,21 +1,17 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!--Generator: Xara Designer (www.xara.com), SVG filter version: 6.7.0.0-->
-<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="74.999pt" height="75pt" viewBox="850.434 -237.375 74.999 75">
+<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="60.749pt" height="74.999pt" viewBox="857.559 -237.375 60.749 74.999">
  <defs>
-  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="79.163" y2="0" gradientTransform="translate(916.187 164.766) rotate(129.008) skewX(-11.9846)">
+  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="78.479" y2="0" gradientTransform="translate(915.566 164.766) rotate(128.387) skewX(-13.227)">
    <stop offset="0" stop-color="#5dc5ff"/>
    <stop offset="1" stop-color="#375ee6"/>
   </linearGradient>
  </defs>
- <g id="Layer 1" transform="scale(1 -1)">
-  <g id="Group" stroke="none">
-   <rect x="850.435" y="162.376" width="74.999" height="74.999" stroke-width="0.596" stroke-linejoin="miter" stroke-linecap="round"/>
-   <g id="Group_1">
-    <rect x="857.56" y="162.377" width="60.748" height="74.999" rx="5.30330007902533" ry="5.30330007902533" stroke-width="0.376" fill-rule="evenodd" fill="url(#LinearGradient)"/>
-    <path d="M 877.976,180.18 C 871.63,184.202 868.486,191.377 869.287,198.376 C 872.137,201.1 877.477,200.988 880.123,198.046 C 884.067,193.66 891.803,193.664 895.744,198.045 C 898.495,201.105 904.15,201.105 906.9,198.046 C 906.937,198.004 906.975,197.966 907.016,197.929 C 907.388,193.9 906.481,189.722 904.15,186.044 C 898.545,177.202 886.818,174.575 877.976,180.18 Z M 882.354,200.051 C 879.387,203.352 874.268,204.168 870.237,202.497 C 870.704,203.823 871.327,205.116 872.112,206.354 C 877.717,215.196 889.444,217.823 898.286,212.218 C 902.092,209.805 904.746,206.257 906.088,202.294 C 901.995,204.227 896.595,203.479 893.513,200.052 C 890.764,196.995 885.105,196.992 882.354,200.051 Z" stroke-linejoin="miter" stroke-width="1.7" fill="#ffffff" marker-start="none" marker-end="none"/>
-    <rect x="876.19" y="223.354" width="23.475" height="4.874" rx="1.37880002054572" ry="1.37880002054572" stroke-linejoin="miter" stroke-width="1.7" fill="#ffffff"/>
-   </g>
-  </g>
+ <g id="Background" transform="scale(1 -1)">
+  <path d="M 857.559,232.072 L 857.559,167.679 C 857.559,164.752 859.935,162.376 862.862,162.376 L 913.005,162.376 C 915.932,162.376 918.308,164.752 918.308,167.679 L 918.308,232.072 C 918.308,234.999 915.932,237.375 913.005,237.375 L 862.862,237.375 C 859.935,237.375 857.559,234.999 857.559,232.072 Z" stroke="none" stroke-width="0.376" fill-rule="evenodd" marker-start="none" marker-end="none" fill="url(#LinearGradient)"/>
+ </g>
+ <g id="Foreground" transform="scale(1 -1)">
+  <path d="M 877.976,180.18 C 871.63,184.202 868.486,191.377 869.287,198.376 C 872.137,201.1 877.477,200.988 880.123,198.046 C 884.067,193.66 891.803,193.664 895.744,198.045 C 898.495,201.105 904.15,201.105 906.9,198.046 C 906.937,198.004 906.975,197.966 907.016,197.929 C 907.388,193.9 906.481,189.722 904.15,186.044 C 898.545,177.202 886.818,174.575 877.976,180.18 Z M 882.354,200.051 C 879.387,203.352 874.268,204.168 870.237,202.497 C 870.704,203.823 871.327,205.116 872.112,206.354 C 877.717,215.196 889.444,217.823 898.286,212.218 C 902.092,209.805 904.746,206.257 906.088,202.294 C 901.995,204.227 896.595,203.479 893.513,200.052 C 890.764,196.995 885.105,196.992 882.354,200.051 Z M 876.189,224.731 L 876.189,226.85 C 876.189,227.61 876.807,228.228 877.567,228.228 L 898.286,228.228 C 899.046,228.228 899.664,227.61 899.664,226.85 L 899.664,224.731 C 899.664,223.971 899.046,223.353 898.286,223.353 L 877.567,223.353 C 876.807,223.353 876.189,223.971 876.189,224.731 Z" stroke="none" fill="#ffffff" stroke-linejoin="miter" stroke-width="1.7" marker-start="none" marker-end="none"/>
  </g>
 </svg>

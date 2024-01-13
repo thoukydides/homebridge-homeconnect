@@ -1,29 +1,17 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!--Generator: Xara Designer (www.xara.com), SVG filter version: 6.7.0.0-->
-<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="74.999pt" height="74.999pt" viewBox="1127.66 -237.374 74.999 74.999">
+<svg fill="none" fill-rule="evenodd" stroke="black" stroke-width="0.501" stroke-linejoin="bevel" stroke-miterlimit="10" font-family="Times New Roman" font-size="16" style="font-variant-ligatures:none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="47.251pt" height="74.999pt" viewBox="1141.54 -237.374 47.251 74.999">
  <defs>
-  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="72.705" y2="0" gradientTransform="translate(1187.14 164.765) rotate(122.212) skewX(-25.5765)">
-   <stop offset="0" stop-color="#5dc5ff"/>
-   <stop offset="1" stop-color="#375ee6"/>
-  </linearGradient>
-  <linearGradient id="LinearGradient_1" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="38.756" y2="0" gradientTransform="translate(1187.14 206.045) rotate(180) skewX(89.9985)">
+  <linearGradient id="LinearGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="72.255" y2="0" gradientTransform="translate(1186.65 164.765) rotate(121.641) skewX(-26.7184)">
    <stop offset="0" stop-color="#5dc5ff"/>
    <stop offset="1" stop-color="#375ee6"/>
   </linearGradient>
  </defs>
- <g id="Layer 1" transform="scale(1 -1)">
-  <g id="Group">
-   <rect x="1127.662" y="162.376" width="74.999" height="74.999" stroke="none" stroke-width="0.596" stroke-linejoin="miter" stroke-linecap="round"/>
-   <g id="Group_1">
-    <g id="Group_2">
-     <rect x="1141.536" y="162.376" width="47.25" height="74.999" rx="5.30330007902533" ry="5.30330007902533" stroke="none" stroke-width="0.376" fill-rule="evenodd" fill="url(#LinearGradient)"/>
-     <path d="M 1151.27,219.839 L 1151.27,212.917" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="miter" stroke-linecap="round"/>
-    </g>
-    <path d="M 1151.27,219.839 L 1151.27,212.917" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="miter" stroke-linecap="round"/>
-    <path d="M 1141.54,206.045 L 1188.79,206.045" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="miter"/>
-    <path d="M 1151.27,199.173 L 1151.27,192.251" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="miter" stroke-linecap="round"/>
-   </g>
-  </g>
+ <g id="Background" transform="scale(1 -1)">
+  <path d="M 1141.54,232.071 L 1141.54,167.678 C 1141.54,164.751 1143.91,162.375 1146.84,162.375 L 1183.48,162.375 C 1186.41,162.375 1188.79,164.751 1188.79,167.678 L 1188.79,232.071 C 1188.79,234.998 1186.41,237.374 1183.48,237.374 L 1146.84,237.374 C 1143.91,237.374 1141.54,234.998 1141.54,232.071 Z" fill-rule="evenodd" stroke="none" stroke-width="0.376" marker-start="none" marker-end="none" fill="url(#LinearGradient)"/>
+ </g>
+ <g id="Foreground" transform="scale(1 -1)">
+  <path d="M 1149.77,192.251 L 1149.77,199.173 C 1149.77,200 1150.44,200.673 1151.27,200.673 C 1152.1,200.673 1152.77,200 1152.77,199.173 L 1152.77,192.251 C 1152.77,191.423 1152.1,190.751 1151.27,190.751 C 1150.44,190.751 1149.77,191.423 1149.77,192.251 Z M 1141.54,204.545 L 1141.54,207.545 L 1188.79,207.545 L 1188.79,204.545 L 1141.54,204.545 Z M 1149.77,212.917 L 1149.77,219.839 C 1149.77,220.666 1150.44,221.339 1151.27,221.339 C 1152.1,221.339 1152.77,220.666 1152.77,219.839 L 1152.77,212.917 C 1152.77,212.089 1152.1,211.417 1151.27,211.417 C 1150.44,211.417 1149.77,212.089 1149.77,212.917 Z" fill-rule="evenodd" stroke="none" fill="#ffffff" stroke-width="0.5" marker-start="none" marker-end="none"/>
  </g>
 </svg>
