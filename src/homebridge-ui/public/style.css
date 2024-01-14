@@ -110,7 +110,7 @@ body {
 }
 
 #hc-appliance-cards :is(.card:hover, .hc-selected) svg .Foreground {
-    filter:         drop-shadow(0 0 3px);
+    filter:         drop-shadow(0 0 3px rgb(255, 255, 255));
 }
 
 #hc-appliance-cards :is(.card:hover, .hc-selected) svg .Background {
