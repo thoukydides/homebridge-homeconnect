@@ -26,6 +26,13 @@ body {
     opacity:        0;
 }
 
+/* Home Connect API status */
+
+#hc-api-svg {
+    text-align:     center;
+    padding:        14px;
+}
+
 /* Home Connect client authoriation */
 
 .hc-client img {

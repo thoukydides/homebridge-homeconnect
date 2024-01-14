@@ -34,6 +34,19 @@
     </div>
 </div>
 
+<div id="hc-api-status" class="hc-foldable" hidden>
+    <div class="alert help-block">
+        <details>
+            <summary class="text-center">
+                <span id="hc-api-up">The Home Connect API servers appear to have had issues recently.</span>
+                <span id="hc-api-down">Home Connect API server issues may be adversely affecting operation of this plugin.</span>
+            </summary>
+            <div id="hc-api-svg"></div>
+            <p><span id="hc-api-current"></span> since <span id="hc-api-since"></span>. Check the <a href="https://homeconnect.thouky.co.uk/">Home Connect Server Status</a> for more details.</p>
+        </details>
+    </div>
+</div>
+
 <div id="hc-appliance-cards" class="row row-cols-3 row-cols-md-5" hidden></div>
 <template id="hc-appliance-card">
     <div class="col">

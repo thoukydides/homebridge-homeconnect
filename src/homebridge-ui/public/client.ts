@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023 Alexander Thoukydides
+// Copyright © 2023-2024 Alexander Thoukydides
 
 import '@homebridge/plugin-ui-utils/dist/ui.interface';
 import { LogLevel, Logger } from 'homebridge';
@@ -10,8 +10,9 @@ import { Cards } from './cards';
 import { ClientClientID } from './client-clientid';
 import { FormId, Forms } from './forms';
 import { ClientIPC } from './client-ipc';
+import { APIStatus } from './api-status';
 
-// A Homebridge HomeConnect custon UI client
+// A Homebridge HomeConnect custom UI client
 class Client {
 
     // Custom loggers
@@ -42,8 +43,9 @@ class Client {
         const forms  = new Forms(this.log, this.ipc, config);
         const cards  = new Cards(this.log);
         const client = new ClientClientID(this.log, this.ipc);
+        new APIStatus(this.log);
 
-        // Create cards for the global setings and each available appliance
+        // Create cards for the global settings and each available appliance
         cards.setNonAppliances([{ id: FormId.Global, icon: 'global', name: 'General Settings' }]);
         client.onAppliances = appliances => cards.setAppliances(appliances ?? []);
         cards.onSelect = (id?: string) => forms.showForm(id);
