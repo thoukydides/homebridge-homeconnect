@@ -128,6 +128,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.ColdRefresh.1Piece' // (undocumented)
   | 'LaundryCare.Dryer.Program.ColdRefresh.5Piece' // (undocumented)
   | 'LaundryCare.Dryer.Program.ColdRefresh.Business' // (undocumented)
+  | 'LaundryCare.Dryer.Program.ConnectedDry' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton'
   | 'LaundryCare.Dryer.Program.Delicates'
   | 'LaundryCare.Dryer.Program.Dessous'
