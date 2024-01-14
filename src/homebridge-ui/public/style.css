@@ -101,20 +101,24 @@ body {
 }
 
 #hc-appliance-cards svg .Foreground {
+    opacity:        0.9;
     transition:     all 0.35s;
 }
 
 #hc-appliance-cards svg .Background {
-    filter:         brightness(0.5);
+    /*filter:         brightness(0.5);*/
+    opacity:        0.5;
     transition:     all 0.35s;
 }
 
 #hc-appliance-cards :is(.card:hover, .hc-selected) svg .Foreground {
+    opacity:        1;
     filter:         drop-shadow(0 0 3px rgb(255, 255, 255));
 }
 
 #hc-appliance-cards :is(.card:hover, .hc-selected) svg .Background {
-    filter:         brightness(1);
+    opacity:        1;
+    /*filter:         brightness(1);*/
 }
 
 #hc-appliance-cards :is(.card:hover) svg .Background {
