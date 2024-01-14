@@ -106,7 +106,6 @@ body {
 }
 
 #hc-appliance-cards svg .Background {
-    /*filter:         brightness(0.5);*/
     opacity:        0.5;
     transition:     all 0.35s;
 }
@@ -118,7 +117,6 @@ body {
 
 #hc-appliance-cards :is(.card:hover, .hc-selected) svg .Background {
     opacity:        1;
-    /*filter:         brightness(1);*/
 }
 
 #hc-appliance-cards :is(.card:hover) svg .Background {
