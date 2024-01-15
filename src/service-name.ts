@@ -57,6 +57,8 @@ export class ServiceNames {
         // Add the Configured Name characteristic
         if (!service.testCharacteristic(this.Characteristic.ConfiguredName)) {
             service.addOptionalCharacteristic(this.Characteristic.ConfiguredName);
+            service.setCharacteristic(this.Characteristic.Name, defaultName);
+            service.setCharacteristic(this.Characteristic.ConfiguredName, defaultName);
         }
         const characteristic = service.getCharacteristic(this.Characteristic.ConfiguredName);
         characteristic.setProps({ perms: [Perms.NOTIFY, Perms.PAIRED_READ, Perms.PAIRED_WRITE] });
