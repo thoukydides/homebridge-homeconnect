@@ -107,26 +107,21 @@ body {
     height:         100px;
 }
 
-#hc-appliance-cards svg .Foreground {
-    opacity:        0.9;
+#hc-appliance-cards svg :is(.active-bg, .active-fg) {
+    opacity:        0;
     transition:     all 0.35s;
 }
 
-#hc-appliance-cards svg .Background {
-    opacity:        0.5;
-    transition:     all 0.35s;
-}
-
-#hc-appliance-cards :is(.card:hover, .hc-selected) svg .Foreground {
+#hc-appliance-cards :is(.card:hover, .hc-selected) svg .active-fg {
     opacity:        1;
     filter:         drop-shadow(0 0 3px rgb(255, 255, 255));
 }
 
-#hc-appliance-cards :is(.card:hover, .hc-selected) svg .Background {
+#hc-appliance-cards :is(.card:hover, .hc-selected) svg .active-bg {
     opacity:        1;
 }
 
-#hc-appliance-cards :is(.card:hover) svg .Background {
+#hc-appliance-cards :is(.card:hover) svg .active-bg {
     filter:         brightness(1.1);
 }
 
