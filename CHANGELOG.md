@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.38.1] - 2024-01-15
+### Added
+* Added a check of the Home Connect API server status when the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) configuration editor is opened, with a warning displayed if problems are detected.
+### Changed
+* Tweaked appearance of appliance icons in the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) configuration editor.
+* **Dryer:** Added undocumented programs. (#228, #230)
+
 ## [v0.38.0] - 2024-01-13
 ### Added
 * **Dryer/WasherDryer:** Added a new event button (`Stateless Programmable Switch` service) that can trigger HomeKit automations when the drying process has finished.
@@ -564,8 +571,9 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.38.0...HEAD
-[v0.38.0]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.12...v0.38.0
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.38.1...HEAD
+[v0.38.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.38.0...v0.38.1
+[v0.38.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.12...v0.38.0
 [v0.37.12]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.11...v0.37.12
 [v0.37.11]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.10...v0.37.11
 [v0.37.10]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.9...v0.37.10
