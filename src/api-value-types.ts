@@ -66,6 +66,8 @@ export type ProgramKey =
   | 'Cooking.Hob.Program.FryingSensorMode' // (undocumented)
   | 'Cooking.Hob.Program.PowerLevelMode' // (undocumented)
   | 'Cooking.Hob.Program.PowerMoveMode' // (undocumented)
+  | 'Cooking.Oven.Program.Cleaning.Draining' // (undocumented)
+  | 'Cooking.Oven.Program.Cleaning.Drying' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Ecolysis' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
@@ -97,6 +99,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.WarmingDrawer'
   | 'Cooking.Oven.Program.Microwave.180Watt' // (undocumented)
   | 'Cooking.Oven.Program.Microwave.600Watt' // (undocumented)
+  | 'Cooking.Oven.Program.SteamModes.Reheat' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.Microwave' // (undocumented)
   | 'Dishcare.Dishwasher.Program.Auto1'
   | 'Dishcare.Dishwasher.Program.Auto2'
@@ -129,8 +132,8 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.ColdRefresh.5Piece' // (undocumented)
   | 'LaundryCare.Dryer.Program.ColdRefresh.Business' // (undocumented)
   | 'LaundryCare.Dryer.Program.ConnectedDry' // (undocumented)
-  | 'LaundryCare.Dryer.Program.Cotton'
   | 'LaundryCare.Dryer.Program.Cotton.CottonEco' // (undocumented)
+  | 'LaundryCare.Dryer.Program.Cotton'
   | 'LaundryCare.Dryer.Program.Delicates'
   | 'LaundryCare.Dryer.Program.Dessous'
   | 'LaundryCare.Dryer.Program.DownFeathers'
@@ -139,6 +142,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.Jeans'
   | 'LaundryCare.Dryer.Program.Mix'
   | 'LaundryCare.Dryer.Program.MyTime.MyDryingTime'
+  | 'LaundryCare.Dryer.Program.Outdoor.Sportswear' // (undocumented)
   | 'LaundryCare.Dryer.Program.Outdoor'
   | 'LaundryCare.Dryer.Program.Pillow'
   | 'LaundryCare.Dryer.Program.Shirts15'
