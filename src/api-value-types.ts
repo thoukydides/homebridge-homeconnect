@@ -343,6 +343,7 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.GuardingWrinkle'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Heating'
   | 'LaundryCare.Common.EnumType.ProcessPhase.IntermediateSpin'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Prewash'
