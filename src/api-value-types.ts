@@ -113,6 +113,7 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.Intensiv70'
   | 'Dishcare.Dishwasher.Program.IntensivPower'
   | 'Dishcare.Dishwasher.Program.Kurz60'
+  | 'Dishcare.Dishwasher.Program.LearningDishwasher' // (undocumented)
   | 'Dishcare.Dishwasher.Program.MachineCare'
   | 'Dishcare.Dishwasher.Program.MagicDaily'
   | 'Dishcare.Dishwasher.Program.MaximumCleaning'
@@ -328,6 +329,12 @@ export type IntensiveStage =
     'Cooking.Hood.EnumType.IntensiveStage.IntensiveStageOff'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2';
+export type LearningDishwasherCleaningLevel = // (undocumented)
+  'Dishcare.Dishwasher.EnumType.LearningDishwasher.CleaningLevel.Level0';
+export type LearningDishwasherDryingLevel = // (undocumented)
+  'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level0';
+export type LearningDishwasherDurationLevel = // (undocumented)
+  'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level0';
 export type MultipleSoak = // (undocumented)
   | 'LaundryCare.Washer.EnumType.MultipleSoak.Off'
   | 'LaundryCare.Washer.EnumType.MultipleSoak.On';
@@ -673,6 +680,9 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.HalfLoad'?:                                 boolean;
     'Dishcare.Dishwasher.Option.HygienePlus'?:                              boolean;
     'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
+    'Dishcare.Dishwasher.Option.LearningDishwasher.CleaningLevel'?:         LearningDishwasherCleaningLevel; // (undocumented)
+    'Dishcare.Dishwasher.Option.LearningDishwasher.DryingLevel'?:           LearningDishwasherDryingLevel; // (undocumented)
+    'Dishcare.Dishwasher.Option.LearningDishwasher.DurationLevel'?:         LearningDishwasherDurationLevel; // (undocumented)
     'Dishcare.Dishwasher.Option.SanitationUC'?:                             boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
     'Dishcare.Dishwasher.Option.Turbo'?:                                    boolean; // (undocumented)
