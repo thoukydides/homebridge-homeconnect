@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.39.1] - 2024-01-24
+### Changed
+* **CoffeeMaker/Dryer/Oven:** Added undocumented programs and options. (#231, #233, #235)
+* Updated dependencies.
+
 ## [v0.39.0] - 2024-01-15
 ### Added
 * Added a check of the Home Connect API server status when the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) configuration editor is opened, with a warning displayed if problems are detected.
@@ -571,7 +576,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.1...HEAD
+[v0.39.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.0...v0.39.1
 [v0.39.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.38.0...v0.39.0
 [v0.38.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.12...v0.38.0
 [v0.37.12]:         https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.11...v0.37.12
