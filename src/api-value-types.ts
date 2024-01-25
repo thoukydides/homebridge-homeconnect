@@ -274,6 +274,8 @@ export type DryingTargetAdjustment = // (undocumented)
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3';
+export type EstimationState = // (unrecognised)
+    'BSH.Common.EnumType.EstimationState.Inactive';
 export type FanStage =
     'Cooking.Hood.EnumType.Stage.FanOff'
   | 'Cooking.Hood.EnumType.Stage.FanStage01'
@@ -330,11 +332,13 @@ export type IntensiveStage =
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2';
 export type LearningDishwasherCleaningLevel = // (undocumented)
-  'Dishcare.Dishwasher.EnumType.LearningDishwasher.CleaningLevel.Level0';
+    'Dishcare.Dishwasher.EnumType.LearningDishwasher.CleaningLevel.Level0';
 export type LearningDishwasherDryingLevel = // (undocumented)
-  'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level0';
+    'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level0';
 export type LearningDishwasherDurationLevel = // (undocumented)
-  'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level0';
+    'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level0';
+export type MeatProbeTemperatureV2 = // (unrecognised)
+    'Cooking.Oven.EnumType.MeatProbeTemperatureV2.Off';
 export type MultipleSoak = // (undocumented)
   | 'LaundryCare.Washer.EnumType.MultipleSoak.Off'
   | 'LaundryCare.Washer.EnumType.MultipleSoak.On';
@@ -643,6 +647,7 @@ export interface OptionValues {
     'BSH.Common.Option.ProgramName'?:                                       string; // (undocumented)
     'BSH.Common.Option.ProgramProgress'?:                                   number;
     'BSH.Common.Option.RemainingProgramTime'?:                              number;
+    'BSH.Common.Option.RemainingProgramTimeEstimationState'?:               EstimationState; // (undocumented)
     'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   boolean;
     'BSH.Common.Option.StartInRelative'?:                                   number;
     'BSH.Common.Option.WaterForecast'?:                                     number; // (undocumented)
@@ -663,6 +668,7 @@ export interface OptionValues {
     'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveStage;
     'Cooking.Common.Option.Hood.VentingLevel'?:                             FanStage;
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
+    'Cooking.Oven.Option.MeatProbeTemperatureV2'?:                          MeatProbeTemperatureV2; // (undocumented)
     'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
     'Cooking.Oven.Option.SetpointTemperature'?:                             number;
     'Cooking.Oven.Option.SteamAssistLevel'?:                                AddedSteam; // (undocumented)
