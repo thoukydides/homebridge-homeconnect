@@ -47,6 +47,7 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
             // Check whether events should be supported
             if (this.events.length && !this.hasOptionalFeature('Stateless Programmable Switch', 'Event Buttons')) {
                 this.events.length = 0;
+                return;
             }
 
             // Add a service for each event
