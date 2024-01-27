@@ -241,8 +241,8 @@ export class ApplianceBase {
     async identify(): Promise<void> {
         // Log the current status of this appliance
         this.log.info('Identify: ' + this.device.ha.haId);
-        const itemDesceiptions = Object.values(this.device.items).map(item => this.device.describe(item));
-        for (const item of itemDesceiptions.sort()) this.log.info(item);
+        const itemDescriptions = Object.values(this.device.items).map(item => this.device.describe(item));
+        for (const item of itemDescriptions.sort()) this.log.info(item);
     }
 
     // Check whether an optional feature should be enabled
