@@ -275,7 +275,7 @@ export type DryingTargetAdjustment = // (undocumented)
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3';
-export type EstimationState = // (unrecognised)
+export type EstimationState = // (undocumented)
     'BSH.Common.EnumType.EstimationState.Inactive';
 export type FanStage =
     'Cooking.Hood.EnumType.Stage.FanOff'
