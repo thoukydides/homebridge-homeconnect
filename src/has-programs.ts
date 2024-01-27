@@ -6,7 +6,7 @@ import { Perms, Service } from 'homebridge';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor, MS, columns, formatList, plural } from './utils';
+import { Constructor, MS, assertIsDefined, columns, formatList, plural } from './utils';
 import { logError } from './log-error';
 import { OptionValues, PowerState, ProgramKey } from './api-value-types';
 import { CommandKey, OptionDefinitionKV, OptionKey, OptionValue,
@@ -15,7 +15,7 @@ import { Value } from './api-types';
 import { ApplianceProgramConfig, ConfigAppliances } from './config-types';
 import { SchemaProgramOption } from './homebridge-ui/schema-data';
 
-// A prgram configuration that has passed sanity checks
+// A program configuration that has passed sanity checks
 export interface CheckedProgramConfig extends Omit<ApplianceProgramConfig, 'options'> {
     key:        ProgramKey;
     options?:   OptionValues;
@@ -32,7 +32,7 @@ const READY_TIMEOUT = 2 * 60 * MS;
 const READY_DELAY = 1 * MS;
 
 // Add program support to an accessory
-export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeService: Service }>>(Base: TBase) {
+export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeService?: Service }>>(Base: TBase) {
     return class HasPrograms extends Base {
 
         // Accessory services
@@ -70,7 +70,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             }
 
             // Add start, stop, pause, and resume if supported by the appliance
-            if (this.device.hasScope('Control')) {
+            if (this.activeService && this.device.hasScope('Control')) {
                 // Read the list of supported commands
                 const commands = await this.getCached('commands', () => this.device.getCommands());
                 const supports = (key: CommandKey) => commands.some(command => command.key === key);
@@ -428,7 +428,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             const option = (program?.options ?? []).find(option => option.key === optionKey);
             if (!option) throw new Error(`Option '${optionKey}' specified for optionless program '${programKey}'`);
 
-            // Special case for relatve time values specified as an absolute time
+            // Special case for relative time values specified as an absolute time
             const description = `for '${programKey}' option '${optionKey}'`;
             if (this.isOptionRelative(optionKey) && typeof value === 'string') {
                 try {
@@ -479,7 +479,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 this.programService.push(service);
 
                 // Link the program services
-                this.activeService.addLinkedService(service);
+                if (this.activeService) this.activeService.addLinkedService(service);
                 if (prevService) prevService.addLinkedService(service);
                 prevService = service;
             }
@@ -561,6 +561,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         addActiveProgramControl(supportsPause: boolean = false, supportsResume: boolean = false): void {
             // Make the (Operation State) active On characteristic writable
             // (status update is performed by the normal Operation State handler)
+            assertIsDefined(this.activeService);
             this.activeService.getCharacteristic(this.Characteristic.On)
                 .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
                 .onSet(this.onSetBoolean(async value => {

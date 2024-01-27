@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.40.0] - 2024-01-27
+### Added
+* **CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Hob/Oven/WarmingDrawer/washer/WasherDryer:** The HomeKit `Switch` service for the active program can be enabled or disabled via the `config.json` file. This service is also used to indicate other aspects of the appliance state, including error conditions and the `Remaining Duration` characteristic, so disabling it also affects those features. (#240)
+### Changed
+* **Dishwasher/Oven/Washer/WasherDryer:** Added undocumented program and options. (#236, #237, #238)
+* Updated dependencies.
+
 ## [v0.39.1] - 2024-01-24
 ### Changed
 * **CoffeeMaker/Dryer/Oven:** Added undocumented programs and options. (#231, #233, #235)
@@ -576,7 +583,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.0...HEAD
+[v0.40.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.1...v0.40.0
 [v0.39.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.0...v0.39.1
 [v0.39.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.38.0...v0.39.0
 [v0.38.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.37.12...v0.38.0

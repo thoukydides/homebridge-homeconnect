@@ -4,7 +4,7 @@
 import { Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor, formatSeconds } from './utils';
+import { Constructor, assertIsDefined, formatSeconds } from './utils';
 
 // Maximum remaining program duration (Home Connect documentation specifies 38340 seconds)
 const MAX_DELAY_DURATION     = 86340; // (seconds)
@@ -15,12 +15,15 @@ const MAX_REMAINING_DURATION = MAX_DELAY_DURATION + MAX_PROGRAM_DURATION;
 type RemainingTimeState = 'idle' | 'delayed start' | 'active';
 
 // Add remaining program time to an accessory
-export function HasRemainingTime<TBase extends Constructor<ApplianceBase & { activeService: Service }>>(Base: TBase) {
+export function HasRemainingTime<TBase extends Constructor<ApplianceBase & { activeService?: Service }>>(Base: TBase) {
     return class HasRemainingTime extends Base {
 
         // Mixin constructor
         constructor(...args: any[]) {
             super(...args);
+
+            // Remaining duration only supported if active program switch enabled
+            if (!this.activeService) return;
 
             // Add a progress position
             this.activeService.addOptionalCharacteristic(this.Characteristic.RemainingDuration);
@@ -60,6 +63,7 @@ export function HasRemainingTime<TBase extends Constructor<ApplianceBase & { act
             }
 
             // Update the characteristic if the duration has changed
+            assertIsDefined(this.activeService);
             const prevRemainingDuration = this.activeService.getCharacteristic(this.Characteristic.RemainingDuration).value;
             if (remainingDuration !== prevRemainingDuration) {
                 this.log.info(description);

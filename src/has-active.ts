@@ -4,18 +4,21 @@
 import { Perms, Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor } from './utils';
+import { Constructor, assertIsDefined } from './utils';
 
 // Add operation state to an accessory
 export function HasActive<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
     return class HasActive extends Base {
 
         // Accessory services
-        readonly activeService: Service;
+        readonly activeService?: Service;
 
         // Mixin constructor
         constructor(...args: any[]) {
             super(...args);
+
+            // Check whether an active program switch should be supported
+            if (!this.hasOptionalFeature('Switch', 'Active Program')) return;
 
             // Create a Switch service for the active program
             this.activeService = this.makeService(this.Service.Switch, 'Active Program', 'active');
@@ -46,6 +49,7 @@ export function HasActive<TBase extends Constructor<ApplianceBase>>(Base: TBase)
 
             // Update the characteristics
             const { NO_FAULT, GENERAL_FAULT } = this.Characteristic.StatusFault;
+            assertIsDefined(this.activeService);
             this.activeService.updateCharacteristic(this.Characteristic.On, isActive);
             this.activeService.updateCharacteristic(this.Characteristic.StatusActive, isStatus);
             this.activeService.updateCharacteristic(this.Characteristic.StatusFault, isFault ? GENERAL_FAULT : NO_FAULT);
