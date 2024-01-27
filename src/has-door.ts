@@ -32,7 +32,7 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
 
         // Asynchronous initialisation
         async initHasDoor(): Promise<void> {
-            // Check whether a single appliance door should be suported
+            // Check whether a single appliance door should be supported
             if (this.hasOptionalFeature('Door', 'Door', 'Doors')) {
                 // Add the door
                 const service = this.addDoor('BSH.Common.Status.DoorState', 'Door');
