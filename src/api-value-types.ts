@@ -99,6 +99,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.WarmingDrawer'
   | 'Cooking.Oven.Program.Microwave.180Watt' // (undocumented)
   | 'Cooking.Oven.Program.Microwave.600Watt' // (undocumented)
+  | 'Cooking.Oven.Program.SteamModes.DoughProving' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.Reheat' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.Microwave' // (undocumented)
   | 'Dishcare.Dishwasher.Program.Auto1'
