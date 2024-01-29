@@ -698,6 +698,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;
     'LaundryCare.Common.Option.LoadRecommendation'?:                        number; // (undocumented)
+    'LaundryCare.Common.Option.LowTemperatureHygiene'?:                     boolean; // (undocumented)
     'LaundryCare.Common.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Common.Option.ReferToProgram'?:                            ProgramKey | number; // (undocumented)
     'LaundryCare.Common.Option.SilentMode'?:                                boolean; // (undocumented)
