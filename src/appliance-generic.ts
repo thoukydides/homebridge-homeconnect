@@ -51,7 +51,7 @@ export class ApplianceBase {
     // Asynchronous initialisation tasks
     readonly asyncInitTasks: { name: string; promise: Promise<void> }[] = [];
 
-    // Servuce naming service
+    // Service naming service
     serviceNames: ServiceNames;
 
     // Accessory services
@@ -376,5 +376,5 @@ export class ApplianceBase {
     }
 }
 
-// All Homebridge applianceshave power state
+// All Homebridge appliances have power state
 export const ApplianceGeneric = HasPower(ApplianceBase);
