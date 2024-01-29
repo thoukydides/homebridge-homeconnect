@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import { Perms, Service } from 'homebridge';
+import { HAPStatus, Perms, Service } from 'homebridge';
 
 import { PowerState } from './api-value-types';
 import { ApplianceBase } from './appliance-generic';
@@ -14,7 +14,7 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         // Accessory services
         readonly powerService: Service;
 
-        // The power off setting to use if the appliance reports multuple
+        // The power off setting to use if the appliance reports multiple
         defaultOffValue?: PowerState;
 
         // Mixin constructor
@@ -70,11 +70,15 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 
         // Deferred update of HomeKit state from Home Connect events
         updatePowerHK(): void {
-            const disconnected = !this.device.getItem('connected');
-            const powerOn = !disconnected
-                && this.device.getItem('BSH.Common.Setting.PowerState') === PowerState.On;
-            this.log.info(`${powerOn ? 'On' : 'Off'}${disconnected ? ' (disconnected)' : ''}`);
-            this.powerService.updateCharacteristic(this.Characteristic.On, powerOn);
+            if (this.device.getItem('connected')) {
+                const powerOn = this.device.getItem('BSH.Common.Setting.PowerState') === PowerState.On;
+                this.log.info(powerOn ? 'On' : 'Off');
+                this.powerService.updateCharacteristic(this.Characteristic.On, powerOn);
+            } else {
+                const powerOn = new this.platform.hb.hap.HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+                this.log.info('Disconnected (setting On error status)');
+                this.powerService.updateCharacteristic(this.Characteristic.On, powerOn);
+            }
         }
 
         // Explicitly specify the setting used to switch the appliance off

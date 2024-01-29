@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* Disconnected appliances now indicate an error status to HomeKit, which results in a `No Response` status being shown in the Apple Home app.
 
 ## [v0.40.0] - 2024-01-27
 ### Added
