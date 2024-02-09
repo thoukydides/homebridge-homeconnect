@@ -3,8 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v0.40.1] - 2024-02-09
 ### Changed
 * Disconnected appliances now indicate an error status to HomeKit, which results in a `No Response` status being shown in the Apple Home app.
+* **CoffeeMaker/Oven/Washer/WasherDryer:** Added undocumented program and options. (#243, #244, #246)
+* Updated dependencies.
 
 ## [v0.40.0] - 2024-01-27
 ### Added
@@ -585,7 +589,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.1...HEAD
+[v0.40.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.0...v0.40.1
 [v0.40.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.1...v0.40.0
 [v0.39.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.0...v0.39.1
 [v0.39.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.38.0...v0.39.0
