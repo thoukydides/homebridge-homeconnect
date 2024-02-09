@@ -77,17 +77,17 @@
         "@homebridge/plugin-ui-utils": "^1.0.1",
         "chalk": "^4.1.2",
         "node-persist": "^3.1.3",
-        "semver": "^7.5.4",
+        "semver": "^7.6.0",
         "ts-interface-checker": "^1.0.2",
-        "undici": "^6.5.0"
+        "undici": "^6.6.2"
     },
     "devDependencies": {
         "@tsconfig/node18": "^18.2.2",
-        "@types/node": "^18.19.10",
+        "@types/node": "^18.19.15",
         "@types/node-persist": "^3.1.8",
         "@types/semver": "^7.5.6",
-        "@typescript-eslint/eslint-plugin": "^6.19.1",
-        "@typescript-eslint/parser": "^6.19.1",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "@typescript-eslint/parser": "^6.21.0",
         "browserify": "^17.0.0",
         "copyfiles": "^2.4.1",
         "eslint": "^8.56.0",
