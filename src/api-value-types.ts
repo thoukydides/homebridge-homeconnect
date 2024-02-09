@@ -30,6 +30,7 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee'
+  | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CoffeePot' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.EspressoDoppio'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.EspressoMacchiato'
@@ -41,6 +42,14 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.XLCoffee'
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOffRinsing' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOnRinsing' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CalcNClean' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.Clean' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CleanBrewingUnitManually' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CleanOutletManually' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.Descale' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.FrostProtection' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.RemoveWaterFilter' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.RinseMilkSystem' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Americano'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.BlackEye'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.CafeAuLait'
