@@ -417,7 +417,8 @@ export type SpinSpeed =
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlOff';
 export type Stains = // (undocumented)
     'LaundryCare.Washer.EnumType.Stains.Off'
-  | 'LaundryCare.Washer.EnumType.Stains.On';
+  | 'LaundryCare.Washer.EnumType.Stains.On'
+  | 'LaundryCare.Washer.EnumType.Stains.Perspiration';
 export type VarioPerfect =
     'LaundryCare.Common.EnumType.VarioPerfect.Off'
   | 'LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect'
