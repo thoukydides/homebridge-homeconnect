@@ -363,13 +363,15 @@ export type ProcessPhaseCleaningRobot =
   | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Exploring'
   | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Localizing';
 export type ProcessPhaseLaundryCare = // (undocumented)
-  | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
+    'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.GuardingWrinkle'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Heating'
   | 'LaundryCare.Common.EnumType.ProcessPhase.IntermediateSpin'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.IronDryReached'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Prewash'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Rinsing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener'
   | 'LaundryCare.Common.EnumType.ProcessPhase.SpinningFinal'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Washing'
