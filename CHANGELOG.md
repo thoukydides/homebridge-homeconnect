@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.41.0] - 2024-02-15
+### Added
+* **Hood:** Added support for functional lights that implement discrete enumerated colour temperature instead of a numeric percentage. (#249)
+### Changed
+* **Dryer/Washer/WasherDryer:** Added undocumented program and options. (#247, #248)
+
 ## [v0.40.1] - 2024-02-09
 ### Changed
 * Disconnected appliances now indicate an error status to HomeKit, which results in a `No Response` status being shown in the Apple Home app.
@@ -589,7 +595,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.41.0...HEAD
+[v0.41.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.1...v0.41.0
 [v0.40.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.0...v0.40.1
 [v0.40.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.1...v0.40.0
 [v0.39.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.0...v0.39.1

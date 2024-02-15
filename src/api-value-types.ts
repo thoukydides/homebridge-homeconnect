@@ -622,6 +622,14 @@ export enum AssistantTrigger {
     Pull                    = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull',
     PushPull                = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.PushPull'
 }
+export enum ColorTemperature {
+    Individual              = 'Cooking.Hood.EnumType.ColorTemperature.custom',
+    Warm                    = 'Cooking.Hood.EnumType.ColorTemperature.warm', // 0%
+    WarnNeutral             = 'Cooking.Hood.EnumType.ColorTemperature.warmToNeutral',
+    Neutral                 = 'Cooking.Hood.EnumType.ColorTemperature.neutral',
+    ColdNeutral             = 'Cooking.Hood.EnumType.ColorTemperature.neutralToCold',
+    Cold                    = 'Cooking.Hood.EnumType.ColorTemperature.cold' // 100%
+}
 export enum LiquidVolumeUnit {
     FluidOunces             = 'BSH.Common.EnumType.LiquidVolumeUnit.FluidOunces',
     MilliLiter              = 'BSH.Common.EnumType.LiquidVolumeUnit.MilliLiter'
@@ -805,6 +813,7 @@ export interface SettingValues {
     'Cooking.Common.Setting.Lighting'?:                                     boolean;
     'Cooking.Common.Setting.LightingBrightness'?:                           number;
     'Cooking.Hood.Setting.ColorTemperaturePercent'?:                        number;
+    'Cooking.Hood.Setting.ColorTemperature'?:                               ColorTemperature;
     'Cooking.Oven.Setting.SabbathMode'?:                                    boolean;
     'LaundryCare.Washer.Setting.IDos1BaseLevel'?:                           number;
     'LaundryCare.Washer.Setting.IDos2BaseLevel'?:                           number;

@@ -4,8 +4,8 @@
 import { Characteristic, Service, WithUUID } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor, Optional, assertIsNumber } from './utils';
-import { AmbientLightColor } from './api-value-types';
+import { Constructor, Optional, assertIsDefined, assertIsNumber } from './utils';
+import { AmbientLightColor, ColorTemperature } from './api-value-types';
 import { SettingKV } from './api-value';
 import { SerialisedOperation } from './serialised';
 
@@ -19,30 +19,31 @@ export interface HSV {
 // Coalesced HomeKit light characteristic values
 export interface UpdateLightHCValue extends Partial<HSV>{
     on?:        boolean;
-    mirek?:     number;  //MIREK_COLD - MIREK_WARM
+    mirek?:     number;  // MIREK_COLD - MIREK_WARM
 }
 type UpdateLightHC = SerialisedOperation<UpdateLightHCValue, void>;
 
 // Setting keys used to control the light(s)
 const LIGHT_KEY = {
     'Functional Light': {
-        on:         'Cooking.Common.Setting.Lighting',
-        brightness: 'Cooking.Common.Setting.LightingBrightness',
-        colourtemp: 'Cooking.Hood.Setting.ColorTemperaturePercent'
+        on:             'Cooking.Common.Setting.Lighting',
+        brightness:     'Cooking.Common.Setting.LightingBrightness',
+        colourtempenum: 'Cooking.Hood.Setting.ColorTemperature',
+        colourtempperc: 'Cooking.Hood.Setting.ColorTemperaturePercent'
     },
     'Ambient Light': {
-        on:         'BSH.Common.Setting.AmbientLightEnabled',
-        brightness: 'BSH.Common.Setting.AmbientLightBrightness',
-        colour:     'BSH.Common.Setting.AmbientLightColor',
-        custom:     'BSH.Common.Setting.AmbientLightCustomColor'
+        on:             'BSH.Common.Setting.AmbientLightEnabled',
+        brightness:     'BSH.Common.Setting.AmbientLightBrightness',
+        colour:         'BSH.Common.Setting.AmbientLightColor',
+        custom:         'BSH.Common.Setting.AmbientLightCustomColor'
     },
     'Internal Light': {
-        on:         'Refrigeration.Common.Setting.Light.Internal.Power',
-        brightness: 'Refrigeration.Common.Setting.Light.Internal.Brightness'
+        on:             'Refrigeration.Common.Setting.Light.Internal.Power',
+        brightness:     'Refrigeration.Common.Setting.Light.Internal.Brightness'
     },
     'External Light': {
-        on:         'Refrigeration.Common.Setting.Light.External.Power',
-        brightness: 'Refrigeration.Common.Setting.Light.External.Brightness'
+        on:             'Refrigeration.Common.Setting.Light.External.Power',
+        brightness:     'Refrigeration.Common.Setting.Light.External.Brightness'
     }
 } as const;
 type LightType = keyof typeof LIGHT_KEY;
@@ -66,12 +67,18 @@ function hasSettings<Keys extends LightKey>(settings: LightSettings, ...keys: Ke
     return keys.every(key => settings[key]);
 }
 
-// BSH.Common.Setting.AmbientLightColor value to specify colour as RGB
-const CUSTOM_COLOR = AmbientLightColor.CustomColor;
-
 // HomeKit colour temperature range
 const MIREK_WARM = 400; //  2,500K =   0% (incandescent lamp)
 const MIREK_COLD =  50; // 20,000K = 100% (clear blue sky)
+
+// Enumerated colour temperatures to percentages
+const COLOUR_TEMP_PERCENTAGE: Partial<Record<ColorTemperature, number>> = {
+    [ColorTemperature.Warm]:          0,
+    [ColorTemperature.WarnNeutral]:  25,
+    [ColorTemperature.Neutral]:      50,
+    [ColorTemperature.ColdNeutral]:  75,
+    [ColorTemperature.Cold]:        100
+};
 
 // Add a light to an accessory
 export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, lightTypes: LightType[]) {
@@ -141,9 +148,26 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                 }
 
                 // Special handling for lights that support colour temperature
-                const keyColourtemp = keys.colourtemp;
-                if (keyColourtemp) {
-                    settings.colourtemp = await this.getCached(`${type} colourtemp`, () => this.device.getSetting(keyColourtemp));
+                const keyColourtempenum = keys.colourtempenum;
+                const keyColourtempperc = keys.colourtempperc;
+                if (keyColourtempenum) {
+                    settings.colourtempenum = await this.getCached(`${type} colourtempenum`,
+                                                                   () => this.device.getSetting(keyColourtempenum));
+                    if (settings.colourtempenum) {
+                        // Check whether the light supports custom colour temperatures
+                        const colourtempenum = settings.colourtempenum.value;
+                        const colourtempenums = settings.colourtempenum.constraints?.allowedvalues ?? [];
+                        if (colourtempenums.includes(ColorTemperature.Individual) && colourtempenum !== ColorTemperature.Individual) {
+                            if (!active) return;
+                            this.log.warn(`Temporarily setting ${type} to a custom colour temperature to read its settings`);
+                            await this.device.setSetting(keyColourtempenum, ColorTemperature.Individual);
+                            if (colourtempenum) initialSettings.unshift({ key: keyColourtempenum, value: colourtempenum });
+                        }
+                    }
+                }
+                if (keyColourtempperc) {
+                    settings.colourtempperc = await this.getCached(`${type} colourtemp`,
+                                                                   () => this.device.getSetting(keyColourtempperc));
                 }
 
                 // Special handling for lights that support colour
@@ -155,13 +179,13 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                         // Check whether the light supports custom colours
                         const colour = settings.colour.value;
                         const colours = settings.colour.constraints?.allowedvalues ?? [];
-                        if (colours.includes(CUSTOM_COLOR)) settings.custom = { key: keyCustom };
+                        if (colours.includes(AmbientLightColor.CustomColor)) settings.custom = { key: keyCustom };
 
                         // Check whether the light supports non-custom colours
-                        const nonCustomColour = colours.find(c => c !== CUSTOM_COLOR);
+                        const nonCustomColour = colours.find(c => c !== AmbientLightColor.CustomColor);
                         if (nonCustomColour) {
                             // Select a non-custom colour, if necessary, to read range
-                            if (colour === CUSTOM_COLOR) {
+                            if (colour === AmbientLightColor.CustomColor) {
                                 if (!active) return;
                                 this.log.warn(`Temporarily setting ${type} to a non-custom colour to read its settings`);
                                 await this.device.setSetting(keyColour, nonCustomColour);
@@ -201,7 +225,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                 this.addLightOn        (type, settings, service, updateHC);
             if (hasSettings(settings, 'brightness') || hasSettings(settings, 'colour', 'custom'))
                 this.addLightBrightness(type, settings, service, updateHC);
-            if (hasSettings(settings, 'colourtemp'))
+            if (hasSettings(settings, 'colourtempperc') || hasSettings(settings, 'colourtempenum'))
                 this.addLightColourTemp(type, settings, service, updateHC);
             if (hasSettings(settings, 'colour', 'custom'))
                 this.addLightColour    (type, settings, service, updateHC);
@@ -220,12 +244,12 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             if (value.on === false) return;
 
             // Set the colour temperature
-            if (hasSettings(settings, 'colourtemp') && value.mirek !== undefined) {
+            if ((hasSettings(settings, 'colourtempperc') || hasSettings(settings, 'colourtempenum')) && value.mirek !== undefined) {
                 await this.setLightColourTemp(type, settings, value.mirek);
             }
 
             // Either set the colour (including brightness) or just brightness
-            const isCustom = settings.colour && this.device.getItem(settings.colour.key) === CUSTOM_COLOR;
+            const isCustom = settings.colour && this.device.getItem(settings.colour.key) === AmbientLightColor.CustomColor;
             if (hasSettings(settings, 'colour', 'custom')
                 && (value.hue !== undefined || value.saturation !== undefined
                     || (value.brightness !== undefined && isCustom))) {
@@ -287,14 +311,21 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
         }
 
         // Add colour temperature control of a light
-        addLightColourTemp(type: string, settings: LightSettings<'colourtemp'>, service: Service, updateLightHC: UpdateLightHC): void {
-            // Convert from Home Connect's percentage to reciprocal megakelvin
-            this.device.on(settings.colourtemp.key, percent => {
-                percent = Math.round(percent);
+        addLightColourTemp(type: string, settings: LightSettings<'colourtempperc'> | LightSettings<'colourtempenum'>,
+                           service: Service, updateLightHC: UpdateLightHC): void {
+            const updateHK = this.makeSerialised(() => {
+                // Convert Home Connect colour temperature to a simple percentage
+                const colourtempenum = settings.colourtempenum && this.device.getItem(settings.colourtempenum.key);
+                const colourtempperc = settings.colourtempperc && this.device.getItem(settings.colourtempperc.key);
+                const percent = (colourtempenum && COLOUR_TEMP_PERCENTAGE[colourtempenum]) ?? Math.round(colourtempperc || 0);
+
+                // Convert from Home Connect's percentage to reciprocal megakelvin
                 const mirek = Math.round(MIREK_WARM + (percent / 100.0) * (MIREK_COLD - MIREK_WARM));
                 this.log.info(`Light ${type} ${mirek}MK^-1 (${percent}% cold)`);
                 service.updateCharacteristic(this.Characteristic.ColorTemperature, mirek);
             });
+            if (settings.colourtempenum) this.device.on(settings.colourtempenum.key, updateHK);
+            if (settings.colourtempperc) this.device.on(settings.colourtempperc.key, updateHK);
 
             // Convert from reciprocal megakelvin to Home Connect's percentage
             service.getCharacteristic(this.Characteristic.ColorTemperature)
@@ -302,11 +333,29 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
         }
 
         // Set the colour temperature of a light
-        async setLightColourTemp(type: string, settings: LightSettings<'colourtemp'>, mirek: number): Promise<void> {
+        async setLightColourTemp(type: string, settings: LightSettings<'colourtempperc'> | LightSettings<'colourtempenum'>,
+                                 mirek: number): Promise<void> {
             // Convert from reciprocal megakelvin to percent cold
             const percent = 100.0 * (mirek - MIREK_WARM) / (MIREK_COLD - MIREK_WARM);
-            this.log.info(`SET Light ${type} ${percent}% cold (${mirek}MK^-1)`);
-            await this.device.setSetting(settings.colourtemp.key, percent);
+            if (settings.colourtempperc) {
+                // Set a custom colour temperature
+                this.log.info(`SET Light ${type} ${percent}% cold (${mirek}MK^-1)`);
+                if (settings.colourtempenum) await this.device.setSetting(settings.colourtempenum.key, ColorTemperature.Individual);
+                await this.device.setSetting(settings.colourtempperc.key, percent);
+            } else if (settings.colourtempenum) {
+                // Map to the closest supported colour temperature
+                const values = settings.colourtempenum.constraints?.allowedvalues || [];
+                const best = values.reduce<[ColorTemperature, number] | null>((acc, value) => {
+                    if (COLOUR_TEMP_PERCENTAGE[value]) {
+                        const error = Math.abs(percent - COLOUR_TEMP_PERCENTAGE[value]!);
+                        if (!acc || error < acc[1]) return [value, error];
+                    }
+                    return acc;
+                }, null);
+                assertIsDefined(best);
+                this.log.info(`SET Light ${type} ${best[0]}% (${mirek}MK^-1)`);
+                await this.device.setSetting(settings.colourtempenum.key, best[0]);
+            }
         }
 
         // Add colour control of a light
@@ -345,7 +394,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             // Set the colour
             const rgb = this.toRGB(hue, saturation, value);
             this.log.info(`SET Light ${type} ${rgb} (hue=${hue}, saturation=${saturation}%, value=${value}%)`);
-            await this.device.setSetting(settings.colour.key, CUSTOM_COLOR);
+            await this.device.setSetting(settings.colour.key, AmbientLightColor.CustomColor);
             await this.device.setSetting(settings.custom.key, rgb);
         }
 
