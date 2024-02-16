@@ -200,6 +200,7 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.SportShoes' // (undocumented)
   | 'LaundryCare.Washer.Program.Super153045.Super15'
   | 'LaundryCare.Washer.Program.Super153045.Super1530'
+  | 'LaundryCare.Washer.Program.Super153045.Super30' // (undocumented)
   | 'LaundryCare.Washer.Program.Towels'
   | 'LaundryCare.Washer.Program.WashAndDry.60' // (undocumented)
   | 'LaundryCare.Washer.Program.WashAndDry.90' // (undocumented)
