@@ -365,6 +365,7 @@ export type ProcessPhaseCleaningRobot =
   | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Localizing';
 export type ProcessPhaseLaundryCare = // (undocumented)
     'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.CleaningHeatExchanger'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.GuardingWrinkle'
