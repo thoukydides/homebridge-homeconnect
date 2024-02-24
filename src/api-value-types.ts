@@ -379,10 +379,12 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.Washing'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.CupboardDryReached'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.Drying'
+  | 'LaundryCare.Dryer.EnumType.ProcessPhase.FinishedAntiCrease'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.IronDryReached'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.DetergentDispensing'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.FinalSpinning'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Rinsing'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.RinsingSpinning'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Washing';
 export type PyrolysisLevel = // (undocumented)
