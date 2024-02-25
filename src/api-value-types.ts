@@ -81,6 +81,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking'
+  | 'Cooking.Oven.Program.HeatingMode.AirFry' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.BottomHeating'
   | 'Cooking.Oven.Program.HeatingMode.Defrost'
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
@@ -107,6 +108,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.TopBottomHeatingEco'
   | 'Cooking.Oven.Program.HeatingMode.WarmingDrawer'
   | 'Cooking.Oven.Program.Microwave.180Watt' // (undocumented)
+  | 'Cooking.Oven.Program.Microwave.360Watt' // (undocumented)
   | 'Cooking.Oven.Program.Microwave.600Watt' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.DoughProving' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.Reheat' // (undocumented)
