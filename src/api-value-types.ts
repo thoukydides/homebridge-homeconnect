@@ -80,6 +80,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Cleaning.Ecolysis' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Automatic.Microwave.PommesFrites' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking'
   | 'Cooking.Oven.Program.HeatingMode.AirFry' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.BottomHeating'
@@ -139,6 +140,7 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.SteamFresh'
   | 'Dishcare.Dishwasher.Program.Super60'
   | 'LaundryCare.Dryer.Program.AntiShrink'
+  | 'LaundryCare.Dryer.Program.Bedlinens' // (undocumented)
   | 'LaundryCare.Dryer.Program.Blankets'
   | 'LaundryCare.Dryer.Program.BusinessShirts'
   | 'LaundryCare.Dryer.Program.ColdRefresh.1Piece' // (undocumented)
@@ -368,6 +370,7 @@ export type ProcessPhaseCleaningRobot =
 export type ProcessPhaseLaundryCare = // (undocumented)
     'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
   | 'LaundryCare.Common.EnumType.ProcessPhase.CleaningHeatExchanger'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingTextile'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.GuardingWrinkle'
