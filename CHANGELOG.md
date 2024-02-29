@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.41.1] - 2024-02-29
+### Changed
+* **Dryer/Oven/Washer/WasherDryer:** Added undocumented program and options. (#252, #253, #254, #255, #257)
+* Updated dependencies.
+
 ## [v0.41.0] - 2024-02-15
 ### Added
 * **Hood:** Added support for functional lights that implement discrete enumerated colour temperature instead of a numeric percentage. (#249)
@@ -595,7 +600,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.41.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.41.1...HEAD
+[v0.41.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.41.0...v0.41.1
 [v0.41.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.1...v0.41.0
 [v0.40.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.40.0...v0.40.1
 [v0.40.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.39.1...v0.40.0
