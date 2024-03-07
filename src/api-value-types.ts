@@ -137,6 +137,7 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.PreRinse'
   | 'Dishcare.Dishwasher.Program.Quick45'
   | 'Dishcare.Dishwasher.Program.Quick65'
+  | 'Dishcare.Dishwasher.Program.QuickD' // (undocumented)
   | 'Dishcare.Dishwasher.Program.SteamFresh'
   | 'Dishcare.Dishwasher.Program.Super60'
   | 'LaundryCare.Dryer.Program.AntiShrink'
@@ -146,6 +147,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.ColdRefresh.1Piece' // (undocumented)
   | 'LaundryCare.Dryer.Program.ColdRefresh.5Piece' // (undocumented)
   | 'LaundryCare.Dryer.Program.ColdRefresh.Business' // (undocumented)
+  | 'LaundryCare.Dryer.Program.ColdRefresh.ColdRefresh.ColdRefresh' // (undocumented)
   | 'LaundryCare.Dryer.Program.ConnectedDry' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton.CottonEco' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton'
@@ -153,8 +155,10 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.Dessous'
   | 'LaundryCare.Dryer.Program.DownFeathers'
   | 'LaundryCare.Dryer.Program.Hygiene'
+  | 'LaundryCare.Dryer.Program.InBasket.WoolBasket' // (undocumented)
   | 'LaundryCare.Dryer.Program.InBasket'
   | 'LaundryCare.Dryer.Program.Jeans'
+  | 'LaundryCare.Dryer.Program.MaintenanceCare1.MaintenanceCare1.QuickCare' // (undocumented)
   | 'LaundryCare.Dryer.Program.Mix'
   | 'LaundryCare.Dryer.Program.MyTime.MyDryingTime'
   | 'LaundryCare.Dryer.Program.Outdoor.Sportswear' // (undocumented)
@@ -202,6 +206,7 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.ShirtsBlouses'
   | 'LaundryCare.Washer.Program.SportFitness'
   | 'LaundryCare.Washer.Program.SportShoes' // (undocumented)
+  | 'LaundryCare.Washer.Program.Steaming.Steaming' // (undocumented)
   | 'LaundryCare.Washer.Program.Super153045.Super15'
   | 'LaundryCare.Washer.Program.Super153045.Super1530'
   | 'LaundryCare.Washer.Program.Super153045.Super30' // (undocumented)
@@ -403,6 +408,8 @@ export type ReferenceMapID =
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map3'
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map4'
   | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map5';
+export type Refresher = // (undocumented)
+    'LaundryCare.Dryer.EnumType.Refresher.Shirt1';
 export type RinsePlus = // (undocumented)
     'LaundryCare.Washer.EnumType.RinsePlus.Off'
   | 'LaundryCare.Washer.EnumType.RinsePlus.Plus1'
@@ -429,6 +436,7 @@ export type SpinSpeed =
 export type Stains = // (undocumented)
     'LaundryCare.Washer.EnumType.Stains.Off'
   | 'LaundryCare.Washer.EnumType.Stains.On'
+  | 'LaundryCare.Washer.EnumType.Stains.Blood'
   | 'LaundryCare.Washer.EnumType.Stains.Perspiration';
 export type VarioPerfect =
     'LaundryCare.Common.EnumType.VarioPerfect.Off'
@@ -739,6 +747,7 @@ export interface OptionValues {
     'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
     'LaundryCare.Dryer.Option.HalfLoad'?:                                   boolean; // (undocumented)
     'LaundryCare.Dryer.Option.ProcessPhase'?:                               ProcessPhaseLaundryCare; // (undocumented)
+    'LaundryCare.Dryer.Option.Refresher'?:                                  Refresher; // (undocumented)
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
     'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
     'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
