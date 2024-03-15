@@ -26,7 +26,7 @@ export type ProgramKey =
   | 'ConsumerProducts.CleaningRobot.Program.Basic.GoHome'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanAll'
   | 'ConsumerProducts.CleaningRobot.Program.Cleaning.CleanMap'
-  | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino'
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee'
@@ -82,7 +82,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.PommesFrites' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.PartCookedBreadRollsOrBaguette' // (undocumented)
-  | 'Cooking.Oven.Program.Dish.SubsequentCooking'
+  | 'Cooking.Oven.Program.Dish.SubsequentCooking' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.AirFry' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.BottomHeating'
   | 'Cooking.Oven.Program.HeatingMode.Defrost'
