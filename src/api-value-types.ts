@@ -81,6 +81,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.PommesFrites' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.PartCookedBreadRollsOrBaguette' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking'
   | 'Cooking.Oven.Program.HeatingMode.AirFry' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.BottomHeating'
@@ -111,8 +112,11 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Microwave.180Watt' // (undocumented)
   | 'Cooking.Oven.Program.Microwave.360Watt' // (undocumented)
   | 'Cooking.Oven.Program.Microwave.600Watt' // (undocumented)
+  | 'Cooking.Oven.Program.Microwave.90Watt' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.DoughProving' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.Reheat' // (undocumented)
+  | 'Cooking.Oven.Program.SubsequentMode.ContinueCooking' // (undocumented)
+  | 'Cooking.Oven.Program.SubsequentMode.LeaveToRest' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.Microwave' // (undocumented)
   | 'Dishcare.Dishwasher.Program.Auto1'
   | 'Dishcare.Dishwasher.Program.Auto2'
@@ -202,8 +206,10 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.PlushToy'
   | 'LaundryCare.Washer.Program.PowerSpeed59'
   | 'LaundryCare.Washer.Program.Rinse.RinseSpinDrain'
+  | 'LaundryCare.Washer.Program.Rinse' // (undocumented)
   | 'LaundryCare.Washer.Program.Sensitive'
   | 'LaundryCare.Washer.Program.ShirtsBlouses'
+  | 'LaundryCare.Washer.Program.Spin.SpinDrain' // (undocumented)
   | 'LaundryCare.Washer.Program.SportFitness'
   | 'LaundryCare.Washer.Program.SportShoes' // (undocumented)
   | 'LaundryCare.Washer.Program.Steaming.Steaming' // (undocumented)
