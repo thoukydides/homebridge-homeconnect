@@ -220,6 +220,7 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.WashAndDry.60' // (undocumented)
   | 'LaundryCare.Washer.Program.WashAndDry.90' // (undocumented)
   | 'LaundryCare.Washer.Program.WaterProof'
+  | 'LaundryCare.Washer.Program.WaterProofIDOS.WaterProofIDOS.WaterProofIDOS' // (undocumented)
   | 'LaundryCare.Washer.Program.Wool'
   | 'LaundryCare.WasherDryer.Program.Cotton.Eco4060'
   | 'LaundryCare.WasherDryer.Program.Cotton'
