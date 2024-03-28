@@ -147,6 +147,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.AntiShrink'
   | 'LaundryCare.Dryer.Program.Bedlinens' // (undocumented)
   | 'LaundryCare.Dryer.Program.Blankets'
+  | 'LaundryCare.Dryer.Program.BusinessShirts.EasyIron' // (undocumented)
   | 'LaundryCare.Dryer.Program.BusinessShirts'
   | 'LaundryCare.Dryer.Program.ColdRefresh.1Piece' // (undocumented)
   | 'LaundryCare.Dryer.Program.ColdRefresh.5Piece' // (undocumented)
