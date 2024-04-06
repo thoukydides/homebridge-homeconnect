@@ -173,6 +173,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.Super40'
   | 'LaundryCare.Dryer.Program.Synthetic'
   | 'LaundryCare.Dryer.Program.SyntheticRefresh'
+  | 'LaundryCare.Dryer.Program.TimeCold.AirFluff' // (undocumented)
   | 'LaundryCare.Dryer.Program.TimeCold'
   | 'LaundryCare.Dryer.Program.TimeColdFix.TimeCold20'
   | 'LaundryCare.Dryer.Program.TimeColdFix.TimeCold30'
