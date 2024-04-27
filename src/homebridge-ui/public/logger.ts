@@ -16,10 +16,11 @@ export class ConsoleLogger {
     constructor(readonly prefix: string = '') {}
 
     // Simple wrappers to log a message
-    error(message: string, ...params: unknown[]): void { this.log(LogLevel.ERROR, message, ...params); }
-    warn (message: string, ...params: unknown[]): void { this.log(LogLevel.WARN,  message, ...params); }
-    info (message: string, ...params: unknown[]): void { this.log(LogLevel.INFO,  message, ...params); }
-    debug(message: string, ...params: unknown[]): void { this.log(LogLevel.DEBUG, message, ...params); }
+    error  (message: string, ...params: unknown[]): void { this.log(LogLevel.ERROR,   message, ...params); }
+    warn   (message: string, ...params: unknown[]): void { this.log(LogLevel.WARN,    message, ...params); }
+    success(message: string, ...params: unknown[]): void { this.log(LogLevel.SUCCESS, message, ...params); }
+    info   (message: string, ...params: unknown[]): void { this.log(LogLevel.INFO,    message, ...params); }
+    debug  (message: string, ...params: unknown[]): void { this.log(LogLevel.DEBUG,   message, ...params); }
 
 
     // Log a message at the specified level
@@ -30,10 +31,11 @@ export class ConsoleLogger {
         // Log the message
         switch (level) {
         /* eslint-disable no-console */
-        case LogLevel.ERROR: console.error(message, ...params); break;
-        case LogLevel.WARN:  console.warn (message, ...params); break;
-        case LogLevel.INFO:  console.info (message, ...params); break;
-        case LogLevel.DEBUG: console.debug(message, ...params); break;
+        case LogLevel.ERROR:   console.error  (message, ...params); break;
+        case LogLevel.WARN:    console.warn   (message, ...params); break;
+        case LogLevel.SUCCESS: console.info   (message, ...params); break;
+        case LogLevel.INFO:    console.info   (message, ...params); break;
+        case LogLevel.DEBUG:   console.debug  (message, ...params); break;
         /* eslint-enable no-console */
         }
     }

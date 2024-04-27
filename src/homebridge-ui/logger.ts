@@ -38,10 +38,11 @@ export class ServerLogger {
     }
 
     // Simple wrappers to log a message
-    error(message: string, ...params: unknown[]): void { this.log(LogLevel.ERROR, message, ...params); }
-    warn (message: string, ...params: unknown[]): void { this.log(LogLevel.WARN,  message, ...params); }
-    info (message: string, ...params: unknown[]): void { this.log(LogLevel.INFO,  message, ...params); }
-    debug(message: string, ...params: unknown[]): void { this.log(LogLevel.DEBUG, message, ...params); }
+    error  (message: string, ...params: unknown[]): void { this.log(LogLevel.ERROR,   message, ...params); }
+    success(message: string, ...params: unknown[]): void { this.log(LogLevel.SUCCESS, message, ...params); }
+    warn   (message: string, ...params: unknown[]): void { this.log(LogLevel.WARN,    message, ...params); }
+    info   (message: string, ...params: unknown[]): void { this.log(LogLevel.INFO,    message, ...params); }
+    debug  (message: string, ...params: unknown[]): void { this.log(LogLevel.DEBUG,   message, ...params); }
 
     // Log a message at the specified level
     log(level: LogLevel, message: string, ...params: unknown[]): void {

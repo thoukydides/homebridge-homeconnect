@@ -30,10 +30,11 @@ export class PrefixLogger {
     ) {}
 
     // Wrappers around the standard Logger methods
-    info (message: string): void { this.log(LogLevel.INFO,  message); }
-    warn (message: string): void { this.log(LogLevel.WARN,  message); }
-    error(message: string): void { this.log(LogLevel.ERROR, message); }
-    debug(message: string): void { this.log(LogLevel.DEBUG, message); }
+    info(message: string):    void { this.log(LogLevel.INFO,    message); }
+    success(message: string): void { this.log(LogLevel.SUCCESS, message); }
+    warn(message: string):    void { this.log(LogLevel.WARN,    message); }
+    error(message: string):   void { this.log(LogLevel.ERROR,   message); }
+    debug(message: string):   void { this.log(LogLevel.DEBUG,   message); }
     log(level: LogLevel, message: string): void {
         // Allow debug messages to be logged as a different level
         if (level === LogLevel.DEBUG) level = this.debugLevel;
