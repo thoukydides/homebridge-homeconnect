@@ -82,6 +82,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.GefluegelteileAuftauen' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.PommesFrites' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.MeatProbe.GooseBreast' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.PartCookedBreadRollsOrBaguette' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.AirFry' // (undocumented)
