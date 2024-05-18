@@ -111,11 +111,13 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.TopBottomHeating'
   | 'Cooking.Oven.Program.HeatingMode.TopBottomHeatingEco'
   | 'Cooking.Oven.Program.HeatingMode.WarmingDrawer'
-  | 'Cooking.Oven.Program.Microwave.180Watt' // (undocumented)
-  | 'Cooking.Oven.Program.Microwave.360Watt' // (undocumented)
-  | 'Cooking.Oven.Program.Microwave.600Watt' // (undocumented)
-  | 'Cooking.Oven.Program.Microwave.90Watt' // (undocumented)
-  | 'Cooking.Oven.Program.Microwave.Max' // (undocumented)
+  | 'Cooking.Oven.Program.Microwave.1000Watt'
+  | 'Cooking.Oven.Program.Microwave.180Watt'
+  | 'Cooking.Oven.Program.Microwave.360Watt'
+  | 'Cooking.Oven.Program.Microwave.600Watt'
+  | 'Cooking.Oven.Program.Microwave.900Watt'
+  | 'Cooking.Oven.Program.Microwave.90Watt'
+  | 'Cooking.Oven.Program.Microwave.Max'
   | 'Cooking.Oven.Program.SteamModes.DoughProving' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.Reheat' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.ContinueCooking' // (undocumented)
