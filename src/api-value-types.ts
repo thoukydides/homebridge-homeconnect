@@ -710,6 +710,7 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                     AromaSelect; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
+    'ConsumerProducts.CoffeeMaker.Option.BeveragesRemaining'?:              number; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                       CoarsnessExtended; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                 CoffeeMilkRatio;
     'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength'?:                  CoffeeStrength; // (undocumented)
