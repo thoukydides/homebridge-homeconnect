@@ -131,6 +131,7 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.ExpressSparkle65'
   | 'Dishcare.Dishwasher.Program.Glas40'
   | 'Dishcare.Dishwasher.Program.GlassCare'
+  | 'Dishcare.Dishwasher.Program.GlassShine' // (undocumented)
   | 'Dishcare.Dishwasher.Program.Intensiv45'
   | 'Dishcare.Dishwasher.Program.Intensiv70'
   | 'Dishcare.Dishwasher.Program.IntensivPower'
