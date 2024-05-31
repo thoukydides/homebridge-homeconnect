@@ -49,6 +49,7 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.Descale' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.FrostProtection' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.RemoveWaterFilter' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ReplaceWaterFilter' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.RinseMilkSystem' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Americano'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.BlackEye'
@@ -230,6 +231,7 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.WaterProof'
   | 'LaundryCare.Washer.Program.WaterProofIDOS.WaterProofIDOS.WaterProofIDOS' // (undocumented)
   | 'LaundryCare.Washer.Program.Wool'
+  | 'LaundryCare.WasherDryer.Program.Cotton.Cotton.Cotton' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Cotton.Eco4060'
   | 'LaundryCare.WasherDryer.Program.Cotton'
   | 'LaundryCare.WasherDryer.Program.EasyCare'
@@ -412,6 +414,8 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Washer.EnumType.ProcessPhase.RinsingSpinning'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Washing';
+export type ProgramMode = // (undocumented)
+    'LaundryCare.WasherDryer.EnumType.ProgramMode.Washing';
 export type PyrolysisLevel = // (undocumented)
     'Cooking.Oven.EnumType.PyrolysisLevel.Level01'
   | 'Cooking.Oven.EnumType.PyrolysisLevel.Level02'
@@ -775,6 +779,7 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.IntensivePlus'?:                             boolean; // (undocumented)
     'LaundryCare.Washer.Option.LessIroning'?:                               boolean; // (undocumented)
     'LaundryCare.Washer.Option.MiniLoad'?:                                  boolean; // (undocumented)
+    'LaundryCare.Washer.Option.MultipleSoak'?:                              MultipleSoak; // (undocumented)
     'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
     'LaundryCare.Washer.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
@@ -787,6 +792,8 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.Stains'?:                                    Stains; // (undocumented)
     'LaundryCare.Washer.Option.Temperature'?:                               WasherTemperature;
     'LaundryCare.Washer.Option.WaterPlus'?:                                 boolean;
+    'LaundryCare.WasherDryer.Option.LowTemperatureHygiene'?:                boolean; // (undocumented)
+    'LaundryCare.WasherDryer.Option.ProgramMode'?:                          ProgramMode; // (undocumented)
 }
 
 // Statuses
