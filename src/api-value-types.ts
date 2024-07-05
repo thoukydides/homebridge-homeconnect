@@ -162,10 +162,12 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.ColdRefresh.ColdRefresh.ColdRefresh' // (undocumented)
   | 'LaundryCare.Dryer.Program.ConnectedDry' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton.CottonEco' // (undocumented)
+  | 'LaundryCare.Dryer.Program.Cotton.Eco4060' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton'
   | 'LaundryCare.Dryer.Program.Delicates'
   | 'LaundryCare.Dryer.Program.Dessous'
   | 'LaundryCare.Dryer.Program.DownFeathers'
+  | 'LaundryCare.Dryer.Program.EasyCare.EasyCare' // (undocumented)
   | 'LaundryCare.Dryer.Program.Hygiene'
   | 'LaundryCare.Dryer.Program.InBasket.WoolBasket' // (undocumented)
   | 'LaundryCare.Dryer.Program.InBasket'
