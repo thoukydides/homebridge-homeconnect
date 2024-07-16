@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.42.4] - 2024-07-16
+### Changed
+* **Dryer/WasherDryer:**  Added undocumented programs. (#286, #287)
+* Updated dependencies.
+
 ## [v0.42.3] - 2024-06-15
 ### Changed
 * **CoffeeMaker/Dishwasher/Oven/Washer/WasherDryer:**  Added undocumented programs and options. (#283, #284, #285)
@@ -634,7 +639,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.3...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.4...HEAD
+[v0.42.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.3...v0.42.4
 [v0.42.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.2...v0.42.3
 [v0.42.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.1...v0.42.2
 [v0.42.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.0...v0.42.1
