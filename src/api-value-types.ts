@@ -236,7 +236,11 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.Cotton.Cotton.Cotton' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Cotton.Eco4060'
   | 'LaundryCare.WasherDryer.Program.Cotton'
+  | 'LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.EasyCare'
+  | 'LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.LabelEU19.LabelEU19.Eco4060' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.Mix.HHMix.HHMix' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Mix'
   | 'LaundryCare.WasherDryer.Program.WashAndDry.60'
   | 'LaundryCare.WasherDryer.Program.WashAndDry.90';
