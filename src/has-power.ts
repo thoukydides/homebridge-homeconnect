@@ -44,7 +44,7 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             const setting = await this.getCached(
                 'power', () => this.device.getSetting('BSH.Common.Setting.PowerState'));
             const allValues = setting?.constraints?.allowedvalues ?? [];
-            let offValues = allValues.filter(value => value !== PowerState.On);
+            let offValues: PowerState[] = allValues.filter(value => value !== PowerState.On);
             if (!offValues.length) return this.log.info('Cannot be switched off');
 
             // Workaround appliances incorrectly reporting multiple off settings
