@@ -236,13 +236,23 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.Cotton.Cotton.Cotton' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Cotton.Eco4060'
   | 'LaundryCare.WasherDryer.Program.Cotton'
+  | 'LaundryCare.WasherDryer.Program.DarkWash.DarkWash.DarkWash' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.DelicatesSilk.DelicatesSilk.DelicatesSilk' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.DrumCleanDry.DrumCare.DrumCare' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.EasyCare'
   | 'LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.LabelEU19.LabelEU19.Eco4060' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Mix.HHMix.HHMix' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Mix'
+  | 'LaundryCare.WasherDryer.Program.MyTime.MyTime.MyTime' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.Rinse.Rinse.Rinse' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.Sensitive.Sensitive.Sensitive' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses.ShirtsBlouses' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.SportShoes.SportShoes.SportShoes' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.WashAndDry.60'
+  | 'LaundryCare.WasherDryer.Program.Wool.Wool.Wool' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.WashAndDry.90';
 
 // Program option enumerated types
@@ -421,7 +431,8 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Washing';
 export type ProgramMode = // (undocumented)
-    'LaundryCare.WasherDryer.EnumType.ProgramMode.Washing';
+    'LaundryCare.WasherDryer.EnumType.ProgramMode.Washing'
+  | 'LaundryCare.WasherDryer.EnumType.ProgramMode.WashingAndDrying';
 export type PyrolysisLevel = // (undocumented)
     'Cooking.Oven.EnumType.PyrolysisLevel.Level01'
   | 'Cooking.Oven.EnumType.PyrolysisLevel.Level02'
