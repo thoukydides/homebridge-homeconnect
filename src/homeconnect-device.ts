@@ -66,7 +66,7 @@ export class HomeConnectDevice extends EventEmitter {
     // Avoid multiple connection status updates in same poll cycle
     private setConnectedScheduled?: ReturnType<typeof setImmediate>;
 
-    // Treat extened event stream outage as an appliance disconnect
+    // Treat extended event stream outage as an appliance disconnect
     private stopScheduled?: ReturnType<typeof setTimeout>;
 
     // Pending actions to read appliance state when (re)connected
