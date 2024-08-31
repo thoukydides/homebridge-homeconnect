@@ -151,7 +151,7 @@ export class ConfigSchemaData {
     }
 
     // Read any previously saved data
-    async load(reload: boolean = false): Promise<void> {
+    async load(reload = false): Promise<void> {
         if (reload || !this.loadPromise)
             this.loadPromise = this.exclusive(() => this.tryGet());
         await this.loadPromise;

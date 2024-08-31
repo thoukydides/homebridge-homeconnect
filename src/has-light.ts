@@ -133,7 +133,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
 
         // Refresh details of a light
         async refreshLight(type: string, keys: LightKeyDefinition, settings: LightSettings,
-                           active: boolean = false): Promise<void> {
+                           active = false): Promise<void> {
             // Some settings may not be readable in certain states
             const initialSettings: SettingKV[] = [];
             try {
@@ -206,7 +206,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                 for (const setting of initialSettings) {
                     try {
                         await this.device.setSetting(setting.key, setting.value);
-                    } catch (err) { /* empty */ }
+                    } catch { /* empty */ }
                 }
             }
         }
@@ -347,7 +347,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                 const values = settings.colourtempenum.constraints?.allowedvalues || [];
                 const best = values.reduce<[ColorTemperature, number] | null>((acc, value) => {
                     if (COLOUR_TEMP_PERCENTAGE[value]) {
-                        const error = Math.abs(percent - COLOUR_TEMP_PERCENTAGE[value]!);
+                        const error = Math.abs(percent - COLOUR_TEMP_PERCENTAGE[value]);
                         if (!acc || error < acc[1]) return [value, error];
                     }
                     return acc;

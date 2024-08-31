@@ -102,7 +102,7 @@ function maskAccessToken(token: string): string {
             });
         }
         return maskToken('JSON_WEB_TOKEN', token);
-    } catch (err) {
+    } catch {
         return token;
     }
 }

@@ -13,7 +13,7 @@ const PLUGIN_PREFIX = window.homebridge.plugin.displayName ?? window.homebridge.
 export class ConsoleLogger {
 
     // Create a new console logger
-    constructor(readonly prefix: string = '') {}
+    constructor(readonly prefix = '') {}
 
     // Simple wrappers to log a message
     error  (message: string, ...params: unknown[]): void { this.log(LogLevel.ERROR,   message, ...params); }
@@ -30,13 +30,11 @@ export class ConsoleLogger {
 
         // Log the message
         switch (level) {
-        /* eslint-disable no-console */
         case LogLevel.ERROR:   console.error  (message, ...params); break;
         case LogLevel.WARN:    console.warn   (message, ...params); break;
         case LogLevel.SUCCESS: console.info   (message, ...params); break;
         case LogLevel.INFO:    console.info   (message, ...params); break;
         case LogLevel.DEBUG:   console.debug  (message, ...params); break;
-        /* eslint-enable no-console */
         }
     }
 

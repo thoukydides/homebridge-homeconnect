@@ -48,8 +48,8 @@ interface ConstraintsForType<Type> extends ConstraintsCommon {
     min?:           MapValueType<Type, number,  never, never, never>;
     max?:           MapValueType<Type, number,  never, never, never>;
     stepsize?:      MapValueType<Type, number,  never, never, never>;
-    allowedvalues?: MapValueType<Type, never,   never, never, Array<EnumType<Type>>>;
-    displayvalues?: MapValueType<Type, never,   never, never, Array<string>>;
+    allowedvalues?: MapValueType<Type, never,   never, never, EnumType<Type>[]>;
+    displayvalues?: MapValueType<Type, never,   never, never, string[]>;
 }
 type MapValueType<Type, IsNumber, IsBoolean, IsString, IsEnum> =
     Type extends number ? IsNumber
@@ -204,7 +204,7 @@ export class APICheckValues {
     }
 
     // Check a single program (selected/active)
-    program(haid: string, program: Program, type: string = 'Program'): ProgramKV {
+    program(haid: string, program: Program, type = 'Program'): ProgramKV {
         const context: APICheckValueContext = { haid, group: 'Program', type, json: program };
         this.isLiteral(checkers.ProgramKey, context, program.key);
         if (program.options) this.options(haid, program.options);

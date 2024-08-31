@@ -123,7 +123,7 @@ export class TemplateForm extends Form {
     }
 
     async getData(): Promise<PluginConfig>  { return {}; }
-    async putData(): Promise<void>          {}
+    async putData(): Promise<void>          { /* empty */ }
 }
 
 // Identifiers for special forms

@@ -33,7 +33,7 @@ export class ServiceNames {
     persist:        NodePersist.LocalStorage;
 
     // Service names set via HomeKit (which should not be overwritten)
-    customNames:    Record<string, string> = {};
+    customNames = new Map<string, string>();
     busyPromise?:   Promise<void>;
 
     // Construct a service naming service
@@ -69,7 +69,7 @@ export class ServiceNames {
 
         // Set the initial value (asynchronously)
         this.withCustomNames('read-only', () => {
-            if (currentName === this.customNames[suffix]) {
+            if (currentName === this.customNames.get(suffix)) {
                 // Name was set via HomeKit, so preserve it
                 this.log.debug(`Preserving ${description} name "${currentName}" set via HomeKit`);
             } else {
@@ -90,11 +90,11 @@ export class ServiceNames {
                     this.log.info(`SET ${description} name to "${name}" (was "${currentName}")`);
                     currentName = name;
                     if (name !== defaultName) {
-                        if (this.customNames[suffix] === undefined) this.log.info(`HomeKit override on ${suffix} service name`);
-                        this.customNames[suffix] = name;
+                        if (this.customNames.get(suffix) === undefined) this.log.info(`HomeKit override on ${suffix} service name`);
+                        this.customNames.set(suffix, name);
                     } else {
                         this.log.info(`Removing HomeKit override on ${suffix} service name`);
-                        delete this.customNames[suffix];
+                        this.customNames.delete(suffix);
                     }
                 }
             });
@@ -146,7 +146,7 @@ export class ServiceNames {
         return issues.length === 0;
     }
 
-    // Validate characters (Unicode code units) in a servce name
+    // Validate characters (Unicode code units) in a service name
     validateCharacters(regexp: RegExp, characters: (string | undefined)[], issue: string): string | undefined {
         const badCharacters = characters.filter(c => c !== undefined && !regexp.test(c));
         if (!badCharacters.length) return;

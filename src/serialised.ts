@@ -59,7 +59,7 @@ export class Serialised<Value extends SerialisedValue, Returns = void> {
         // Wait for any active operation to complete
         try {
             await this.activePromise;
-        } catch (err) { /* empty */ }
+        } catch { /* empty */ }
         await setImmediateP();
 
         // Start the pending operation and reset ready for the next

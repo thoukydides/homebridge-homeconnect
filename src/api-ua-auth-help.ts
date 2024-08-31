@@ -38,7 +38,7 @@ export abstract class AuthHelp {
     }
 
     // Retrieve the message as text
-    getText(colour: boolean = false): string[] {
+    getText(colour = false): string[] {
         // Help isn't always available
         if (!this.message) return [];
 

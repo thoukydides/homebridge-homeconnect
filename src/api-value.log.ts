@@ -76,7 +76,7 @@ export class APIKeyValuesLog {
 
     // Appliances
     private appliances: Record<string, HomeAppliance> = {};
-    private readonly applianceReports: Set<string> = new Set();
+    private readonly applianceReports = new Set<string>();
 
     // Known keys/values
     private readonly groups:    Record<string, APIGroup> = {};
@@ -84,8 +84,8 @@ export class APIKeyValuesLog {
     private readonly persistKey: string;
 
     // Reported keys/values
-    private readonly reported:  Set<string> = new Set();
-    private readonly pending:   Set<string> = new Set();
+    private readonly reported   = new Set<string>();
+    private readonly pending    = new Set<string>();
     private pendingScheduled?:  ReturnType<typeof setTimeout>;
 
     // Construct a key-value logger
@@ -411,7 +411,7 @@ export class APIKeyValuesLog {
     // Obtain a list of all values (that might be) of enum type
     getValuesOfEnumType(): APIValue[] {
         // Construct the set of (possible) enum values
-        const values: Set<APIValue> = new Set();
+        const values = new Set<APIValue>();
         for (const value of Object.values(this.keys).map(key => key.value)) {
             if (value && this.isEnumType(value) !== false
                 && Object.values(value.values).length)

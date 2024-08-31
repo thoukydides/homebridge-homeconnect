@@ -77,7 +77,7 @@ export function formatList(items: string[]): string {
 }
 
 // Format a counted noun (handling most regular cases automatically)
-export function plural(count: number, noun: string | [string, string], showCount: boolean = true): string {
+export function plural(count: number, noun: string | [string, string], showCount = true): string {
     const [singular, plural] = Array.isArray(noun) ? noun : [noun, ''];
     noun = count === 1 ? singular : plural;
     if (!noun) {

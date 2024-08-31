@@ -40,7 +40,7 @@ export abstract class MockAppliance {
     readonly            programs:   ProgramDefinitionKV[]   = [];
 
     // Other appliance state
-    connected:                      boolean                 = true;
+    connected                                               = true;
     program?:                       ProgramKV;
 
     // Event stream
@@ -340,13 +340,13 @@ export abstract class MockAppliance {
         try {
             const operationState = this.getStatusSpecific('BSH.Common.Status.OperationState').value;
             return states.map(state => OperationState[state]).includes(operationState);
-        } catch (err) {
+        } catch {
             return false;
         }
     }
 
     // Create an APIStatusCodeError with a specified key
-    static statusCodeError(statusCode: number, errorKey: string, itemKey: string = 'n/a'): APIStatusCodeError {
+    static statusCodeError(statusCode: number, errorKey: string, itemKey = 'n/a'): APIStatusCodeError {
         const request = { method: 'MOCK', path: itemKey } as unknown as Request;
         const response = { statusCode } as Response;
         const body: ErrorResponse = { error: { key: errorKey } };

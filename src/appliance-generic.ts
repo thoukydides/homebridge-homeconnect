@@ -46,7 +46,7 @@ export class ApplianceBase {
     // Persistent cache
     readonly cache:             PersistCache;
     readonly cachedOperation:   Record<string, string>           = {};
-    readonly cachedPromise:     Record<string, Promise<unknown>> = {};
+    readonly cachedPromise = new Map<string, Promise<unknown>>();
 
     // Asynchronous initialisation tasks
     readonly asyncInitTasks: { name: string; promise: Promise<void> }[] = [];
@@ -246,7 +246,7 @@ export class ApplianceBase {
     }
 
     // Check whether an optional feature should be enabled
-    hasOptionalFeature(service: string, name: string, group: string = '', enableByDefault: boolean = true): boolean {
+    hasOptionalFeature(service: string, name: string, group = '', enableByDefault = true): boolean {
         // Add to the list of optional features
         this.optionalFeatures.push({ service, name, group, enableByDefault });
 
@@ -292,16 +292,16 @@ export class ApplianceBase {
         }
 
         // Wait for any previous operation to complete
-        await this.cachedPromise[key];
+        await this.cachedPromise.get(key);
 
         // Perform the cached operation
         try {
             const promise = this.doCachedOperation(key, operation);
-            this.cachedPromise[key] = promise;
+            this.cachedPromise.set(key, promise);
             const value = await promise;
             return value;
         } finally {
-            delete this.cachedPromise[key];
+            this.cachedPromise.delete(key);
         }
     }
 

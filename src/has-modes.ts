@@ -10,7 +10,7 @@ import { Constructor } from './utils';
 import { SettingKey } from './api-value';
 
 // Add mode switches to an accessory
-export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase, prefix: string = 'mode') {
+export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase, prefix = 'mode') {
     return class HasModes extends Base {
 
         // Accessory services

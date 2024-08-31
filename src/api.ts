@@ -274,7 +274,7 @@ export class CloudAPI implements HomeConnectAPI {
     }
 
     // Get authorisation status updates
-    getAuthorisationStatus(immediate: boolean = false): Promise<AuthorisationStatus> {
+    getAuthorisationStatus(immediate = false): Promise<AuthorisationStatus> {
         return this.ua.getAuthorisationStatus(immediate);
     }
 

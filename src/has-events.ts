@@ -57,7 +57,6 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
             for (const event of this.events) {
                 this.log.info(`    ${descriptions.shift()}`);
                 this.eventService.push(this.addProgrammableSwitchService(event));
-                this.log.info;
             }
 
             // Add a label service if there are multiple events

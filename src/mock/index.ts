@@ -85,8 +85,8 @@ export class MockAPI implements HomeConnectAPI {
     }
 
     // Check whether a particular scope has been authorised
-    hasScope(scope: string): boolean {
-        return true || scope;
+    hasScope(_scope: string): boolean {
+        return true;
     }
 
     // Get authorisation status updates
@@ -95,7 +95,7 @@ export class MockAPI implements HomeConnectAPI {
     }
 
     // Trigger a retry of Device Flow authorisation
-    retryAuthorisation(): void {}
+    retryAuthorisation(): void { /* empty */ }
 
     // Get a list of paired home appliances
     async getAppliances(): Promise<HomeAppliance[]> {

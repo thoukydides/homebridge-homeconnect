@@ -21,7 +21,7 @@ import { Scope } from './api-auth-types';
 const EVENT_DISCONNECT_DELAY = 3 * MS;
 
 // Delay before retrying a failed read of appliance state when connected
-let readAllRetryDelay: number = 0; // (milliseconds)
+let readAllRetryDelay = 0; // (milliseconds)
 const CONNECTED_RETRY_MIN_DELAY =       5 * MS;
 const CONNECTED_RETRY_MAX_DELAY = 10 * 60 * MS;
 const CONNECTED_RETRY_FACTOR = 2;  // (double delay on each retry)
@@ -61,7 +61,7 @@ export class HomeConnectDevice extends EventEmitter {
     readonly items: { [Key in DeviceKey]?: Item<Key>; } = {};
 
     // Stop event stream when appliance is depaired
-    private stopEvents: boolean = false;
+    private stopEvents = false;
 
     // Avoid multiple connection status updates in same poll cycle
     private setConnectedScheduled?: ReturnType<typeof setImmediate>;
@@ -385,7 +385,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Pause or resume program
-    async pauseProgram(pause: boolean = true): Promise<void> {
+    async pauseProgram(pause = true): Promise<void> {
         const command = pause ? 'BSH.Common.Command.PauseProgram'
                               : 'BSH.Common.Command.ResumeProgram';
         try {
@@ -398,7 +398,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Open or partly open door
-    async openDoor(fully: boolean = true): Promise<void> {
+    async openDoor(fully = true): Promise<void> {
         const command = fully ? 'BSH.Common.Command.OpenDoor'
                               : 'BSH.Common.Command.PartlyOpenDoor';
         try {
@@ -422,7 +422,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Wait for the appliance to be connected
-    async waitConnected(immediate: boolean = false): Promise<void> {
+    async waitConnected(immediate = false): Promise<void> {
         let connected = immediate && this.getItem('connected');
         while (!connected) {
             connected = await this.onceWait('connected');
@@ -641,7 +641,7 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Enable polling of selected/active programs when connected
-    pollPrograms(enable: boolean = true): void {
+    pollPrograms(enable = true): void {
         this.readPrograms = enable;
     }
 

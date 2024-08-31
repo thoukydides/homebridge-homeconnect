@@ -6,8 +6,8 @@ export type Value = string | number | boolean;
 export type Constraints = ConstraintsString | ConstraintsNumber | ConstraintsBoolean;
 export interface ConstraintsString extends ConstraintsCommon {
     default?:                   string;
-    allowedvalues?:             Array<string>;
-    displayvalues?:             Array<string>;
+    allowedvalues?:             string[];
+    displayvalues?:             string[];
 }
 export interface ConstraintsNumber extends ConstraintsCommon {
     default?:                   number;

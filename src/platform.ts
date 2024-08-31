@@ -59,7 +59,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
     configAppliances: ConfigAppliances = {};
 
     // Mapping from UUID to accessories and their implementations
-    readonly accessories: Record<string, AccessoryLinkage> = {};
+    readonly accessories = new Map<string, AccessoryLinkage>();
 
     // Persistent storage in the Homebridge storage directory
     persist?: NodePersist.LocalStorage;
@@ -87,7 +87,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
 
     // Restore a cached accessory
     configureAccessory(accessory: PlatformAccessory): void {
-        this.accessories[accessory.UUID] = { accessory };
+        this.accessories.set(accessory.UUID, { accessory });
     }
 
     // Update list of Home Connect appliances after cache has been restored
@@ -241,7 +241,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
             }
 
             // Convert the Home Connect haId into a Homebridge UUID
-            let linkage = this.accessories[uuid];
+            let linkage = this.accessories.get(uuid);
             if (linkage) {
                 // A HomeKit accessory already exists for this appliance
                 if (linkage.implementation) continue;
@@ -250,7 +250,8 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
                 // New appliance, so create a matching HomeKit accessory
                 this.log.info(`Adding new accessory '${ha.name}'`);
                 const accessory = new this.hb.platformAccessory(ha.name, uuid);
-                this.accessories[uuid] = linkage = { accessory };
+                linkage = { accessory };
+                this.accessories.set(uuid, linkage);
                 newAccessories.push(accessory);
             }
 
@@ -273,7 +274,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
                 this.log.info(`Removing accessory '${accessory.displayName}'`);
                 implementation?.unregister();
                 oldAccessories.push(accessory);
-                delete this.accessories[uuid];
+                this.accessories.delete(uuid);
             }
         }
         this.hb.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, oldAccessories);

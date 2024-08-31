@@ -41,7 +41,7 @@ export class APIEventStream extends EventEmitter {
         super.on('error', err => logError(this.log, 'API event', err));
 
         // Start an event stream when the first listener registers
-        this.once('newListener', () => this.startEventStream());
+        this.once('newListener', () => void this.startEventStream());
     }
 
     // Emit events for a single appliance or all appliances

@@ -3,10 +3,12 @@
 
 import assert from 'assert';
 
-import { assertIsInstanceOf } from '../../utils';
+import { assertIsDefined, assertIsInstanceOf } from '../../utils';
 
 // A Document, DocumentFragment, or an Element
-export type QuerySelectorAll = { querySelectorAll(selectors: string): NodeListOf<Element> };
+export interface QuerySelectorAll {
+    querySelectorAll(selectors: string): NodeListOf<Element>
+}
 
 // Get an HTML element by its "id" attribute
 export function getElementById(elementId: string): HTMLElement {
@@ -47,7 +49,9 @@ export function elementWithAbsolutePaths<Type extends QuerySelectorAll>(fragment
     for (const attribute of ['href', 'src']) {
         const elements = fragment.querySelectorAll(`[${attribute}]`);
         for (const element of Array.from(elements)) {
-            element.setAttribute(attribute, new URL(element.getAttribute(attribute)!, location.href).href);
+            const path = element.getAttribute(attribute);
+            assertIsDefined(path);
+            element.setAttribute(attribute, new URL(path, location.href).href);
         }
     }
     return fragment;

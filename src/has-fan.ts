@@ -43,7 +43,7 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
 
         // Manual control fan speeds
         fanLevels: FanLevelPercent[] = [];
-        fanPercentStep: number = 0;
+        fanPercentStep = 0;
 
         // Mixin constructor
         constructor(...args: any[]) {

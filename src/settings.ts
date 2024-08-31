@@ -3,10 +3,10 @@
 
 import { ConfigPlugin } from './config-types';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const PACKAGE = require('../package.json');
+import PACKAGE from '../package.json';
 
 // Platform identifiers
+export const ENGINES: Record<string, string>    = PACKAGE.engines;
 export const PLUGIN_NAME    :string = PACKAGE.name;
 export const PLATFORM_NAME  :string = PACKAGE.displayName;
 export const PLUGIN_VERSION :string = PACKAGE.version;

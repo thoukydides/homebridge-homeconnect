@@ -332,12 +332,12 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     }
 
     // Trigger a retry of Device Flow authorisation
-    retryDeviceFlow(reason: string = 'User requested retry'): void {
+    retryDeviceFlow(reason = 'User requested retry'): void {
         this.triggerDeviceFlow?.(new AuthorisationRetry(reason));
     }
 
     // Update the authorisation status with an error
-    setAuthorisationStatusFailed(err: unknown, retryable: boolean = false, help?: AuthHelp): void {
+    setAuthorisationStatusFailed(err: unknown, retryable = false, help?: AuthHelp): void {
         // Ignore duplicates with the same error object and retry requests
         if (this.status.state === 'fail' && this.status.error === err) return;
         if (err instanceof AuthorisationRetry) return;
@@ -356,7 +356,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     }
 
     // Get authorisation status updates
-    async getAuthorisationStatus(immediate: boolean = false): Promise<AuthorisationStatus> {
+    async getAuthorisationStatus(immediate = false): Promise<AuthorisationStatus> {
         if (!immediate) await this.statusUpdate;
         return this.status;
     }

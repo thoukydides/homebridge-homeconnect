@@ -82,22 +82,25 @@
         "undici": "^6.19.8"
     },
     "devDependencies": {
+        "@eslint/eslintrc": "^3.1.0",
+        "@eslint/js": "^9.9.1",
         "@tsconfig/node18": "^18.2.4",
+        "@types/eslint__js": "^8.42.3",
         "@types/node": "^18.19.47",
         "@types/node-persist": "^3.1.8",
         "@types/semver": "^7.5.8",
-        "@typescript-eslint/eslint-plugin": "^7.18.0",
-        "@typescript-eslint/parser": "^7.18.0",
         "browserify": "^17.0.0",
         "copyfiles": "^2.4.1",
-        "eslint": "^8.57.0",
+        "eslint": "^9.9.1",
+        "globals": "^15.9.0",
         "homebridge": "^1.8.4",
         "homebridge-config-ui-x": "^4.57.1",
         "nodemon": "^3.1.4",
         "rimraf": "^6.0.1",
         "ts-interface-builder": "^0.3.3",
         "ts-node": "^10.9.2",
-        "typescript": "^5.5.4"
+        "typescript": "^5.5.4",
+        "typescript-eslint": "^8.3.0"
     },
     "scripts": {
         "lint": "npm run checkers && eslint src/ --max-warnings=0",
@@ -106,7 +109,7 @@
         "browserify-list": "browserify --list -d dist/homebridge-ui/public/client.js | sort",
         "checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts",
         "prebuild": "rimraf ./dist",
-        "build": "npm run checkers && tsc --project tsconfig.json && tsc --project tsconfig.ui.json",
+        "build": "npm run checkers && tsc --project tsconfig.json && tsc --project src/homebridge-ui/public/tsconfig.json",
         "postbuild": "npm run browserify && copyfiles -u 1 -e './**/*.ts' './src/homebridge-ui/public/**' ./dist",
         "postversion": "git push && git push --tags",
         "prepublishOnly": "npm run lint && npm run build"

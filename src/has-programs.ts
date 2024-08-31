@@ -42,7 +42,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         programs: (ProgramDefinitionKV<ProgramKey> & { selected?: boolean })[] = [];
 
         // Ignore program selection events when reading program details
-        autoSelectingPrograms: boolean = false;
+        autoSelectingPrograms = false;
 
         // Mixin constructor
         constructor(...args: any[]) {
@@ -98,7 +98,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Refresh details of all programs
-        async refreshPrograms(active: boolean = false): Promise<void> {
+        async refreshPrograms(active = false): Promise<void> {
             const warnPrograms = (programs: ProgramDefinitionKV[], description: string) => {
                 if (!programs.length) return;
                 this.log.warn(`${programs.length} of ${plural(this.programs.length, 'program')} ${description}:`);
@@ -236,13 +236,13 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 // Best-effort attempt to restore the originally selected program
                 if (initialSelectedProgram
                     && this.device.getItem('BSH.Common.Root.SelectedProgram') !== initialSelectedProgram) {
-                    try { await this.device.setSelectedProgram(initialSelectedProgram); } catch (err) { /* empty */ }
+                    try { await this.device.setSelectedProgram(initialSelectedProgram); } catch { /* empty */ }
                 }
 
                 // Best-effort attempt to restore the original power state
                 if (initialPowerState
                     && this.device.getItem('BSH.Common.Setting.PowerState') !== initialPowerState) {
-                    try { await this.device.setSetting('BSH.Common.Setting.PowerState', initialPowerState); } catch (err) { /* empty */ }
+                    try { await this.device.setSetting('BSH.Common.Setting.PowerState', initialPowerState); } catch { /* empty */ }
                 }
 
                 // Reenable monitoring of the selected program
@@ -513,10 +513,11 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     // Convert any absolute times to relative times in seconds
                     const fixedOptions: OptionValues = {};
                     const fixOption = <Key extends OptionKey>(key: Key) => {
+                        assertIsDefined(options);
                         if (this.isOptionRelative(key)) {
-                            fixedOptions[key] = this.timeToSeconds(options![key] ?? 0);
+                            fixedOptions[key] = this.timeToSeconds(options[key] ?? 0);
                         } else {
-                            fixedOptions[key] = options![key];
+                            fixedOptions[key] = options[key];
                         }
                     };
                     for (const key of Object.keys(options ?? {}) as OptionKey[]) fixOption(key);
@@ -558,7 +559,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Add the ability to pause and resume programs
-        addActiveProgramControl(supportsPause: boolean = false, supportsResume: boolean = false): void {
+        addActiveProgramControl(supportsPause = false, supportsResume = false): void {
             // Make the (Operation State) active On characteristic writable
             // (status update is performed by the normal Operation State handler)
             assertIsDefined(this.activeService);

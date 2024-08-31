@@ -60,7 +60,7 @@ export class Config {
         // Treat all unexpected properties as appliance configurations
         const keyofConfigPlugin = keyofChecker(configTI, configTI.ConfigPlugin);
         const select = (predicate: ([key, value]: [string, unknown]) => boolean) =>
-            Object.fromEntries(Object.entries(this.savedConfig!).filter(predicate));
+            Object.fromEntries(Object.entries(this.savedConfig ?? {}).filter(predicate));
         this.global     = select(([key]) =>  keyofConfigPlugin.includes(key)) as Partial<ConfigPlugin>;
         this.appliances = select(([key]) => !keyofConfigPlugin.includes(key)) as ConfigAppliances;
         this.log.debug('getConfig() global %O appliances %O', this.global, this.appliances);
@@ -77,7 +77,7 @@ export class Config {
     }
 
     // Update the homebridge-ui-x copy of the configuration
-    async putConfig(save: boolean = false): Promise<void> {
+    async putConfig(save = false): Promise<void> {
         // Construct the full configuration
         const config = { ...this.global, ...this.appliances };
         this.log.debug(`putConfig(${save})'}`, config);
@@ -95,7 +95,7 @@ export class Config {
     }
 
     // Compare two configuration objects
-    diffObject(to: object, from: object, keyPrefix: string = ''): ConfigDiff[] {
+    diffObject(to: object, from: object, keyPrefix = ''): ConfigDiff[] {
         const keys = [...Object.keys(to), ...Object.keys(from)]
             .filter((key, index, self) => index === self.indexOf(key));
         const diff: ConfigDiff[]  = [];
@@ -112,7 +112,7 @@ export class Config {
     }
 
     // Compare two configuration arrays
-    diffArray(to: unknown[], from: unknown[], keyPrefix: string = ''): ConfigDiff[] {
+    diffArray(to: unknown[], from: unknown[], keyPrefix = ''): ConfigDiff[] {
         const isSimple = (array: unknown[]) => array.length && typeof array[0] !== 'object';
         if (isSimple(to) || isSimple(from)) {
             if (to.length === from.length && to.every((value, index) => value === from[index])) return [];
@@ -130,7 +130,7 @@ export class Config {
         // Compare the configuration to the active plugin and saved versions
         const activeConfig = await this.activePromise;
         const activeDiff = this.diffObject(config, activeConfig);
-        const savedDiff = this.diffObject(config, this.savedConfig!);
+        const savedDiff = this.diffObject(config, this.savedConfig ?? {});
         if (activeDiff.length || savedDiff.length) {
             this.log.debug('checkIfModified(%O) active %O saved %O', config, activeDiff, savedDiff);
         }

@@ -12,7 +12,9 @@ import apiTI from './ti/api-types-ti';
 import authTI from './ti/api-auth-types-ti';
 
 // Options that can be passed to an error constructor
-type Options = { cause?: unknown };
+interface Options {
+    cause?: unknown
+}
 
 // Checkers for API error responses
 const apiCheckers = createCheckers(apiTI) as {

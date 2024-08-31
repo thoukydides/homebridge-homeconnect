@@ -13,7 +13,7 @@ export type DoorStatusKey<Key extends StatusKey = StatusKey> =
     Key extends Key ? (StatusValue<Key> extends (DoorState | DoorStateRefrigeration) ? Key : never) : never;
 
 // Add an appliance door to an accessory
-export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, hasLock: boolean = false) {
+export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, hasLock = false) {
     return class HasDoor extends Base {
 
         // Accessory services

@@ -924,7 +924,7 @@ export interface EventNotifyValues extends OptionValues, SettingValues {
     'BSH.Common.Root.SelectedProgram'?:                                     ProgramKey | null;
     'BSH.Common.Root.ActiveProgram'?:                                       ProgramKey | null;
 }
-export interface EventStatusValues extends StatusValues {}
+export type EventStatusValues = StatusValues
 export interface EventEventValues {
     // Program progress events
     'BSH.Common.Event.AlarmClockElapsed'?:                                  EventPresentState;

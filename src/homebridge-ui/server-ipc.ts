@@ -25,7 +25,7 @@ export type ServerResponseAsync<Path extends ServerPath> = Promise<ServerRespons
 
 // Events (from server to client)
 export interface ServerEvents {
-    ready:      void;
+    ready:      undefined;
     log:        ServerLogMessage[];
     status:     ClientIDStatus;
 }
