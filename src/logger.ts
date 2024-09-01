@@ -53,7 +53,7 @@ export class PrefixLogger {
     }
 
     // Attempt to filter sensitive data within the log message
-    static filterSensitive(message: string) {
+    static filterSensitive(message: string): string {
         // Exception for links related to authorisation
         if (message.includes('https://developer.home-connect.com/')) return message;
 
@@ -75,7 +75,7 @@ function maskRefreshToken(token: string): string {
     try {
         token = token.replace(/%3D/g, '=');
         const decoded = Buffer.from(token, 'base64').toString();
-        const json = JSON.parse(decoded);
+        const json: unknown = JSON.parse(decoded);
         if (checkers.SimulatorToken.test(json) && isUUID(json.token)) {
             return maskToken('SIMULATOR_TOKEN', token);
         } else if (checkers.RefreshToken.test(json) && isUUID(json.token)) {
@@ -91,8 +91,8 @@ function maskRefreshToken(token: string): string {
 function maskAccessToken(token: string): string {
     try {
         const parts = token.split('.').map(part => decodeBase64URL(part));
-        const header = JSON.parse(parts[0]);
-        const payload = JSON.parse(parts[1]);
+        const header:  unknown = JSON.parse(parts[0]);
+        const payload: unknown = JSON.parse(parts[1]);
         if (checkers.AccessTokenHeader.test(header)
          && checkers.AccessTokenPayload.test(payload)) {
             return maskToken('ACCESS_TOKEN', token, {

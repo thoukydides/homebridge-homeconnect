@@ -138,7 +138,7 @@ export class ServiceNames {
         const lastCharIssue  = this.validateCharacters(SERVICE_CHAR_END, [lastChar],  'invalid last character');
 
         // If there were any issues then issue a summary warning
-        const defined = <T>(items: (T | undefined)[]) => items.filter(item => item !== undefined) as T[];
+        const defined = <T>(items: (T | undefined)[]): T[] => items.filter(item => item !== undefined);
         issues.push(...defined([firstCharIssue, otherCharIssue, lastCharIssue]));
         if (issues.length) this.log.warn(`Invalid ${suffix} service name "${name}": ${formatList(issues)}`);
 

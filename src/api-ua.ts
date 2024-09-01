@@ -12,7 +12,7 @@ import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
 import { APIError, APIStatusCodeError, APIValidationError } from './api-errors';
-import { columns, formatMilliseconds, getValidationTree, MS } from './utils';
+import { assertIsString, columns, formatMilliseconds, getValidationTree, MS } from './utils';
 import { ConfigPlugin } from './config-types';
 
 export type Method     = Dispatcher.HttpMethod;
@@ -125,6 +125,7 @@ export class APIUserAgent {
         const contentLength = Number(response.headers['content-length']);
         if (contentLength)
             throw new APIError(request, response, `Unexpected non-empty response (${contentLength} bytes)`);
+        return Promise.resolve();
     }
 
     // Retrieve a JSON response and validate it against the expected type
@@ -140,7 +141,7 @@ export class APIUserAgent {
         }
 
         // Retrieve and parse the response as JSON
-        let json;
+        let json: unknown;
         try {
             const text = await response.body.text();
             this.logBody('Response', text);
@@ -164,7 +165,7 @@ export class APIUserAgent {
         }
 
         // Return the result
-        return json;
+        return json as Type;
     }
 
     // Retrieve a redirection URL from a response
@@ -205,6 +206,7 @@ export class APIUserAgent {
             // Parse chunks of the stream as events
             let sse: SSE = {};
             for await (const chunk of body) {
+                assertIsString(chunk);
                 this.logBody('Stream', chunk);
                 for (const line of chunk.split(/\r?\n/)) {
                     if (!line.length) {
@@ -218,7 +220,7 @@ export class APIUserAgent {
                         this.log.debug(`API event stream comment "${line}"`);
                     } else {
                         // Field, optionally with value
-                        const matches = line.match(/^(\w+): ?(.*)$/);
+                        const matches = /^(\w+): ?(.*)$/.exec(line);
                         const [name, value] = matches ? matches.slice(1, 3) : [line, ''];
                         sse[name] = name in sse ? `${sse[name]}\n${value}` : value;
                     }
@@ -233,7 +235,7 @@ export class APIUserAgent {
     async request(method: Method, path: string, options?: Partial<Request>):
     Promise<{ request: Request; response: Response }> {
         // Request counters
-        let requestCount: number;
+        let requestCount: number | undefined;
         let retryCount = 0;
 
         for (;;) {
@@ -263,13 +265,13 @@ export class APIUserAgent {
 
     // Construct a Request
     async prepareRequest(method: Method, path: string, options?: Partial<Request>): Promise<Request> {
-        return {
+        return Promise.resolve({
             idempotent: ['GET', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'TRACE'].includes(method),
             ...options,
             method,
             path,
             headers:    {...this.defaultHeaders, ...options?.headers}
-        };
+        });
     }
 
     // Decide whether a request can be retried following an error
@@ -365,7 +367,7 @@ export class APIUserAgent {
 
     // Log request or response headers
     logHeaders(name: string, headers: Headers): void {
-        if (!this.config.debug?.includes('Log API Headers')) return;
+        if (!this.config.debug.includes('Log API Headers')) return;
         const rows: string[][] = [];
         for (const key of Object.keys(headers).sort()) {
             const values = headers[key];
@@ -380,9 +382,9 @@ export class APIUserAgent {
 
     // Log request or response body
     logBody(name: string, body: unknown): void {
-        if (!this.config.debug?.includes('Log API Bodies')) return;
+        if (!this.config.debug.includes('Log API Bodies')) return;
         if (typeof body !== 'string') return;
-        if (body?.length) {
+        if (body.length) {
             this.log.debug(`${name} body:`);
             for (const line of body.split('\n')) this.log.debug(`    ${line}`);
         } else {
@@ -392,7 +394,7 @@ export class APIUserAgent {
 
     // Log checker validation errors
     logCheckerValidation(level: LogLevel, message: string, request: Request | undefined,
-                         errors: IErrorDetail[], json: object): void {
+                         errors: IErrorDetail[], json: unknown): void {
         this.log.log(level, `${message}:`);
         if (request) this.log.log(level, `${request.method} ${request.path}`);
         const validationLines = getValidationTree(errors);

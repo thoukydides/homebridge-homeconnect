@@ -2,14 +2,29 @@
 import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import { readdir, readFile } from 'node:fs/promises';
+import path from 'node:path';
+
+// Identify names of mixin functions (that do not require explicit return types)
+const srcDir = 'src';
+const srcFiles = await readdir(srcDir);
+const mixinNames = [];
+for (const srcFile of srcFiles) {
+    if (!/^(appliance|has)-\w+.ts$/.test(srcFile)) continue;
+    const text = await readFile(path.join(srcDir, srcFile), 'utf8');
+    const matches = [
+        ...text.matchAll(/function\s+(\w+)\s*<TBase/g),
+        ...text.matchAll(/const\s+(\w+)\s*=\s*<TBase/g),
+    ]
+    mixinNames.push(...matches.map(match => match[1]));
+}
 
 // ESLint options
 export default tseslint.config(
     // ESLint recommended rules
     eslint.configs.recommended,
     // typescript-eslint strict and stylistic rules
-    ...tseslint.configs.strict,
-    //...tseslint.configs.strictTypeChecked,
+    ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     {
         files: ['**/*.ts'],
@@ -23,8 +38,6 @@ export default tseslint.config(
             }
         },
         rules: {
-            //'@typescript-eslint/no-floating-promises':          ['error', {}],
-            //'@typescript-eslint/no-misused-promises':           ['error', {}],
             '@typescript-eslint/no-unused-vars':                ['error', { args: 'all', argsIgnorePattern: '^_', ignoreRestSiblings: true }],
             '@typescript-eslint/restrict-template-expressions': ['error', { allowBoolean: true, allowNullish: true, allowNumber: true}],
             'brace-style':                                      ['warn', '1tbs', { allowSingleLine: true }],
@@ -47,10 +60,13 @@ export default tseslint.config(
             'prefer-arrow-callback':                            ['warn'],
             'quotes':                                           ['warn', 'single', { avoidEscape: true }],
             'semi':                                             ['warn'],
-
+            // Special rules for this project
             '@typescript-eslint/no-explicit-any':               ['error', { ignoreRestArgs: true }],
-            '@typescript-eslint/no-misused-promises':               'off',
-            '@typescript-eslint/no-floating-promises':              'off',
+            '@typescript-eslint/explicit-function-return-type': ['error', { allowedNames: [...mixinNames] }],
+            '@typescript-eslint/no-unnecessary-type-parameters':['off'],
+            // Temporarily disable some rules until the code has been cleaned up
+            '@typescript-eslint/no-misused-promises':           'off',
+            '@typescript-eslint/no-floating-promises':          'off',
         }
     }, {
         files: ['**/*-types.ts'],

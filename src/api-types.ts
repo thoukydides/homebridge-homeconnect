@@ -159,6 +159,7 @@ export interface ProgramDefinition {
 }
 export type OptionDefinition = OptionDefinitionString | OptionDefinitionNumber | OptionDefinitionBoolean;
 export interface OptionDefinitionString extends OptionDefinitionCommon {
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     type:                       'String' | string;
     constraints?:               OptionConstraintsCommon & ConstraintsString;
 }

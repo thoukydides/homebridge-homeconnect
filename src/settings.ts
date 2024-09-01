@@ -22,7 +22,7 @@ export const DEFAULT_CONFIG: Partial<ConfigPlugin> = {
     language:                   { api: 'en-GB' },
     debug:                      []
 };
-export const DEFAULT_CLIENTID = (simulator?: boolean) =>
+export const DEFAULT_CLIENTID = (simulator?: boolean): string | undefined =>
     process.env[simulator ? 'HOMECONNECT_CLIENT_SIMULATOR' : 'HOMECONNECT_CLIENT_PHYSICAL'];
 
 // API scopes to request (additional Partner Agreement is required for 'FridgeFreezer-Images')

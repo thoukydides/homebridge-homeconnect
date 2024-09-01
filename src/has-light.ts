@@ -21,7 +21,7 @@ export interface UpdateLightHCValue extends Partial<HSV>{
     on?:        boolean;
     mirek?:     number;  // MIREK_COLD - MIREK_WARM
 }
-type UpdateLightHC = SerialisedOperation<UpdateLightHCValue, void>;
+type UpdateLightHC = SerialisedOperation<UpdateLightHCValue>;
 
 // Setting keys used to control the light(s)
 const LIGHT_KEY = {
@@ -89,7 +89,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Light', this.initHasLight());

@@ -91,7 +91,7 @@ export function plural(count: number, noun: string | [string, string], showCount
         ];
         const rule = rules.find(([ending]) => new RegExp(ending, 'i').test(singular));
         assertIsDefined(rule);
-        const matchCase = (s: string) => singular === singular.toUpperCase() ? s.toUpperCase() : s;
+        const matchCase = (s: string): string => singular === singular.toUpperCase() ? s.toUpperCase() : s;
         noun = singular.substring(0, singular.length - rule[2]).concat(matchCase(rule[1]));
     }
     return showCount ? `${count} ${noun}` : noun;

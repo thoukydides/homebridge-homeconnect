@@ -19,7 +19,7 @@ export function HasBattery<TBase extends Constructor<ApplianceBase>>(Base: TBase
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Add a battery service
             this.batteryService = this.makeService(this.Service.Battery, 'Battery');
@@ -35,7 +35,7 @@ export function HasBattery<TBase extends Constructor<ApplianceBase>>(Base: TBase
             });
 
             // Update the charging state
-            const updateCharger = this.makeSerialised(() => this.updateBatteryHK());
+            const updateCharger = this.makeSerialised(() => { this.updateBatteryHK(); });
             this.device.on('BSH.Common.Status.BatteryChargingState', updateCharger);
             this.device.on('BSH.Common.Status.ChargingConnection',   updateCharger);
         }

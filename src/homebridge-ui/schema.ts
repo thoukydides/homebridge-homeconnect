@@ -121,7 +121,7 @@ export class ConfigSchema extends ConfigSchemaData {
         const form: FormItem[] = [{
             key:            'name',
             notitle:        true,
-            description:    'This is used to prefx entries in the Homebridge log.'
+            description:    'This is used to prefix entries in the Homebridge log.'
         }];
         return { schema, form };
     }
@@ -273,7 +273,7 @@ export class ConfigSchema extends ConfigSchemaData {
 
         // Create the form items for the relevant service name configuration
         const namesForm: FormItem[] = [];
-        const addPrefixForm = (key: string, title: string, name: string, enabledByDefault: boolean) => {
+        const addPrefixForm = (key: string, title: string, name: string, enabledByDefault: boolean): void => {
             namesForm.push({
                 type:           'flex',
                 'flex-flow':    'column',
@@ -425,8 +425,8 @@ export class ConfigSchema extends ConfigSchemaData {
         const optionsSchema: JSONSchemaProperties = {};
         for (const program of appliance.programs) {
             for (const option of program.options ?? []) {
-                let optionSchema = optionsSchema[option.key];
-                if (!optionSchema) optionSchema = optionsSchema[option.key] = { type: option.type };
+                if (!(option.key in optionsSchema)) optionsSchema[option.key] = { type: option.type };
+                const optionSchema = optionsSchema[option.key];
 
                 // Apply restrictions to numeric types
                 if (optionSchema.type === 'integer' || optionSchema.type === 'number') {
@@ -473,7 +473,7 @@ export class ConfigSchema extends ConfigSchemaData {
                     const suffix = option.suffix ? ` ${option.suffix}` : '';
                     const mappings = [];
                     for (let value = option.minimum; value <= option.maximum; value += option.multipleOf) {
-                        mappings.push({ name: value + suffix, key: value });
+                        mappings.push({ name: `${value}${suffix}`, key: value });
                     }
                     option = { values: mappings } as SchemaProgramOption;
                 }
@@ -528,7 +528,7 @@ export class ConfigSchema extends ConfigSchemaData {
             programForm = [programForm[0], programForm[1].items[1]];
         }
 
-        // Create the top-leel schema for appliance programs
+        // Create the top-level schema for appliance programs
         const schema: JSONSchemaProperties = {
             // Choice of how to handle programs
             addprograms: {
@@ -659,7 +659,7 @@ export class ConfigSchema extends ConfigSchemaData {
     // Retrieve the configuration schema for a specified appliance
     async getSchemaAppliance(haid: string): Promise<FormSchema | undefined> {
         await this.load(true);
-        const appliance = this.appliances[haid];
+        const appliance = this.appliances.get(haid);
         if (!appliance) return;
 
         // Generate schema fragments for the appliance configuration

@@ -30,11 +30,11 @@ export class ClientClientID {
 
     // Create a new Home Connect client
     constructor(readonly log: Logger, readonly ipc: ClientIPC) {
-        this.ipc.onEvent('status', status => this.onClientStatus(status));
+        this.ipc.onEvent('status', status => { this.onClientStatus(status); });
     }
 
     // The Home Connect client configuration has changed
-    async setClient(config: Partial<ConfigPlugin>) {
+    async setClient(config: Partial<ConfigPlugin>): Promise<void> {
         const clientConfig = this.prepareClientConfig(config);
         if (clientConfig) {
             // Test the client configuration
@@ -66,14 +66,14 @@ export class ClientClientID {
     }
 
     // Handle events from the Home Connect client
-    onClientStatus(status: ClientIDStatus) {
+    onClientStatus(status: ClientIDStatus): void {
         // Ignore the status if no longer monitoring the client
         if (this.clientConfig?.clientid !== status.clientid) return;
 
         // Update the list of appliances
         this.onAppliances?.(status.appliances);
 
-        // Display an appropriate toast notfication
+        // Display an appropriate toast notification
         switch (status.authorisation?.state) {
         case 'success':
             this.showToast('success', 'Successfully authorised');
@@ -95,14 +95,14 @@ export class ClientClientID {
     }
 
     // Prompt the user to authorise the client
-    async showUserAuthorisation(authorisation: AuthorisationStatusUser) {
+    showUserAuthorisation(authorisation: AuthorisationStatusUser): void {
         // Set the link/code
         const link = getElementById('hc-client-user-link');
         link.setAttribute('href', authorisation.uri);
         setSlotText(document, { 'hc-client-user-code': authorisation.code });
 
         // Enable generation of a new authorisation code
-        getElementById('hc-client-user-retry').onclick = () => this.retryAuthorisation();
+        getElementById('hc-client-user-retry').onclick = (): void => { this.retryAuthorisation(); };
 
         // Make the authorisation link visible (before triggering transition)
         this.showPanel('hc-client-user');
@@ -118,21 +118,22 @@ export class ClientClientID {
     }
 
     // Display the result of a failed authorisation
-    showFail(authorisation: AuthorisationStatusFailed) {
+    showFail(authorisation: AuthorisationStatusFailed): void {
         // Display the error message
         getElementById('hc-client-fail-message').textContent = authorisation.message;
 
         // Indicate whether the authorisation can be retried
         getElementById('hc-client-fail-retryable').hidden = !authorisation.retryable;
         getElementById('hc-client-fail-retry')    .hidden = !authorisation.retryable;
-        getElementById('hc-client-fail-retry').onclick = () => this.retryAuthorisation();
+        getElementById('hc-client-fail-retry').onclick = (): void => { this.retryAuthorisation(); };
 
         // Add any help that has been provided
         if (authorisation.help) {
             // Set text blocks
-            const setText = (id: string, text: string[]) =>
+            const setText = (id: string, text: string[]): void => {
                 getElementById(id).replaceChildren(...text.map(paragraph =>
                     cloneTemplate('hc-client-fail-paragraph', { paragraph } )));
+            };
             setText('hc-client-fail-prescript',  authorisation.help.prescript);
             setText('hc-client-fail-postscript', authorisation.help.postscript);
 

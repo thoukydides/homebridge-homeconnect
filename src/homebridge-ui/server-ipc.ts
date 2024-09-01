@@ -47,7 +47,7 @@ export class ServerIPC {
 
     // Register a new request handler for a given route
     onRequest<Path extends ServerPath>(path: Path, fn: (data: ServerRequest<Path>) => ServerResponseAsync<Path>): void {
-        this.server.onRequest(path, async (data) => {
+        this.server.onRequest(path, async (data: ServerRequest<Path>) => {
             const prefix = `onRequest("${path}")`;
             try {
                 this.log.debug(`${prefix} request`, data);

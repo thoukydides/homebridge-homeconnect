@@ -57,7 +57,7 @@ export class ServerLogger extends ConsoleLogger {
         super(`${PLUGIN_PREFIX} server`);
 
         // Start receiving log events
-        ipc.onEvent('log', messages => this.logMessages(messages));
+        ipc.onEvent('log', messages => { this.logMessages(messages); });
         try { ipc.request('/log', minLevel); } catch { /* empty */ }
     }
 

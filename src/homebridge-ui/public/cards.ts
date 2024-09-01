@@ -42,7 +42,7 @@ export class Cards {
     }
 
     // Update the list of appliances
-    setAppliances(appliances: HomeAppliance[]) {
+    setAppliances(appliances: HomeAppliance[]): void {
         // Convert the appliances to card descriptions
         const applianceCards = appliances.map(appliance => ({
             id:     appliance.haId,
@@ -60,7 +60,7 @@ export class Cards {
     }
 
     // Update the list of cards and restore the selection, if still valid
-    updateCards() {
+    updateCards(): void {
         // Replace the existing cards with new ones
         const allCards = [...this.nonApplianceCards, ...this.applianceCards];
         this.parentElement.replaceChildren(...allCards.map(card => this.makeCard(card)));
@@ -82,12 +82,12 @@ export class Cards {
         const element = card.children[0];
         assertIsInstanceOf(element, HTMLElement);
         element.dataset.id = id;
-        element.onclick = () => this.selectCard(id);
+        element.onclick = (): void => { this.selectCard(id); };
         return card;
     }
 
     // Load the icon image for a card
-    async loadCardIcon(element: HTMLElement, url: string, id: string) {
+    async loadCardIcon(element: HTMLElement, url: string, id: string): Promise<void> {
         try {
             // Load the icon and add it to the card
             const response = await fetch(url);
@@ -107,16 +107,15 @@ export class Cards {
                 const oldId = def.getAttribute('id');
                 const newId = `${id}-${oldId}`;
                 def.setAttribute('id', newId);
-                element.querySelectorAll(`[fill='url(#${oldId})']`).forEach(ref =>
-                    ref.setAttribute('fill', `url(#${newId})`));
+                element.querySelectorAll(`[fill='url(#${oldId})']`).forEach(ref => { ref.setAttribute('fill', `url(#${newId})`); });
             });
         } catch (err) {
-            this.log.error(`loadCardIcon(${element.toString()}) =>`, err);
+            this.log.error(`loadCardIcon(${id}) =>`, err);
         }
     }
 
     // A card has been selected
-    selectCard(id?: string) {
+    selectCard(id?: string): void {
         // Select this card and deselect all others
         let selectedCard: HTMLElement | undefined;
         for (const card of Array.from(this.parentElement.children)) {

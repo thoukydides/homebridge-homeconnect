@@ -26,7 +26,7 @@ export class ServerLogger {
     }
 
     // Start sending log messages to the client
-    sendLogEvents(ipc: ServerIPC, level: LogLevel) {
+    sendLogEvents(ipc: ServerIPC, level: LogLevel): void {
         this.minLevel = level;
         this.ipcReady(ipc);
     }
@@ -47,7 +47,7 @@ export class ServerLogger {
     // Log a message at the specified level
     log(level: LogLevel, message: string, ...params: unknown[]): void {
         // Send queued log message as an event to the client
-        const send = async () => {
+        const send = async (): Promise<void> => {
             await setImmediateP();
             const ipc = await this.ipc;
             const messages = this.queue.filter(log => this.isEnabled(log.level));

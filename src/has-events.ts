@@ -33,7 +33,7 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Events', this.initHasEvents());

@@ -19,7 +19,7 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Add power Switch service to host the appliance's main characteristics
             this.powerService = this.makeService(this.Service.Switch, 'Power', 'power');
@@ -36,7 +36,7 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         // Asynchronous initialisation
         async initHasPower(): Promise<void> {
             // Update the status
-            const updateHK = this.makeSerialised(() => this.updatePowerHK());
+            const updateHK = this.makeSerialised(() => { this.updatePowerHK(); });
             this.device.on('BSH.Common.Setting.PowerState', updateHK);
             this.device.on('connected',                     updateHK);
 
@@ -45,7 +45,10 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
                 'power', () => this.device.getSetting('BSH.Common.Setting.PowerState'));
             const allValues = setting?.constraints?.allowedvalues ?? [];
             let offValues: PowerState[] = allValues.filter(value => value !== PowerState.On);
-            if (!offValues.length) return this.log.info('Cannot be switched off');
+            if (!offValues.length) {
+                this.log.info('Cannot be switched off');
+                return;
+            }
 
             // Workaround appliances incorrectly reporting multiple off settings
             if (1 < offValues.length) {

@@ -47,7 +47,7 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Add a fan (v2) service (instead of the usual HasActive service)
             this.activeService = this.makeService(this.Service.Fanv2, 'Fan');
@@ -63,11 +63,11 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
 
             // Read the fan program details
             const programs = await this.getCached('fan', () => this.device.getAvailablePrograms());
-            if (!programs) throw new Error('No fan programs are supported');
+            if (!programs.length) throw new Error('No fan programs are supported');
 
             // Check which programs are supported by the extractor fan
             // (DelayedShutOff (fan run-on) is not supported by this plugin)
-            const supportsProgram = (key: ProgramKey) => programs.some(program => program.key === key);
+            const supportsProgram = (key: ProgramKey): boolean => programs.some(program => program.key === key);
             const supportsManual = supportsProgram(FAN_PROGRAM_MANUAL);
             this.fanSupportsAuto = supportsProgram(FAN_PROGRAM_AUTO);
             if (!supportsManual) throw new Error('No manual fan program');
@@ -153,16 +153,16 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
                 .onSet(this.onSetNumber(value => updateHC({ percent: value })));
 
             // Update the status
-            const newLevel = <Key extends OptionKey>(key: Key, value: OptionValue<Key>) => {
+            const newLevel = <Key extends OptionKey>(key: Key, value: OptionValue<Key>): void => {
                 const percent = this.toFanSpeedPercent({ key, value });
                 if (!percent) return;
                 this.log.info(`Fan ${percent}%`);
                 service.updateCharacteristic(this.Characteristic.RotationSpeed, percent);
             };
             this.device.on('Cooking.Common.Option.Hood.VentingLevel',
-                           level => newLevel('Cooking.Common.Option.Hood.VentingLevel',   level));
+                           level => { newLevel('Cooking.Common.Option.Hood.VentingLevel',   level); });
             this.device.on('Cooking.Common.Option.Hood.IntensiveLevel',
-                           level => newLevel('Cooking.Common.Option.Hood.IntensiveLevel', level));
+                           level => { newLevel('Cooking.Common.Option.Hood.IntensiveLevel', level); });
             this.device.on('BSH.Common.Root.ActiveProgram', programKey => {
                 if (!programKey) return;
                 const manual = programKey === FAN_PROGRAM_MANUAL;
@@ -209,7 +209,7 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             } else {
                 const option = this.fromFanSpeedPercent(percent);
                 const snapPercent = this.toFanSpeedPercent(option);
-                this.log.info('SET fan manual ' + snapPercent + '%');
+                this.log.info(`SET fan manual ${snapPercent}%`);
                 if (this.device.isOperationState('Run')
                     && this.device.getItem('BSH.Common.Root.ActiveProgram') === FAN_PROGRAM_MANUAL) {
                     // Try changing the options for the current program

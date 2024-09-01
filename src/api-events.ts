@@ -38,7 +38,7 @@ export class APIEventStream extends EventEmitter {
         readonly ua:     APIAuthoriseUserAgent
     ) {
         super({ captureRejections: true });
-        super.on('error', err => logError(this.log, 'API event', err));
+        super.on('error', (err: unknown) => logError(this.log, 'API event', err));
 
         // Start an event stream when the first listener registers
         this.once('newListener', () => void this.startEventStream());
@@ -51,7 +51,7 @@ export class APIEventStream extends EventEmitter {
                           : '/api/homeappliances/events';
         for (;;) {
             const startTime = Date.now();
-            const elapsed = () => formatMilliseconds(Date.now() - startTime);
+            const elapsed = (): string => formatMilliseconds(Date.now() - startTime);
             try {
 
                 // Start the event stream

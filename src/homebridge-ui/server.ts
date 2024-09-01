@@ -14,7 +14,7 @@ import { LogLevel, PlatformConfig } from 'homebridge';
 import { ConfigPlugin } from '../config-types';
 import { ClientIDStatus, ServerClientID } from './server-clientid';
 
-// A Homebridge HomeConnect custon UI server
+// A Homebridge HomeConnect custom UI server
 export class HomeConnectServer extends HomebridgePluginUiServer {
 
     // Custom logger
@@ -76,7 +76,7 @@ export class HomeConnectServer extends HomebridgePluginUiServer {
     // Start sending log messages to the client
     async setLogLevel(level: LogLevel): Promise<string> {
         this.log.sendLogEvents(this.ipc, level);
-        return '';
+        return Promise.resolve('');
     }
 
     // Retrieve the active plugin configuration
@@ -109,4 +109,5 @@ export class HomeConnectServer extends HomebridgePluginUiServer {
     }
 }
 
-(() => new HomeConnectServer)();
+// Start an instance of the class
+new HomeConnectServer;

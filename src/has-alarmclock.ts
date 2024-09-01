@@ -15,7 +15,7 @@ export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerS
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Alarm Clock', this.initHasAlarmClock());
@@ -25,8 +25,10 @@ export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerS
         async initHasAlarmClock(): Promise<void> {
             // Check whether the appliance supports an alarm clock
             const allSettings = await this.getCached('settings', () => this.device.getSettings());
-            if (!allSettings.some(s => s.key === 'BSH.Common.Setting.AlarmClock'))
-                return this.log.info('Does not support an alarm clock');
+            if (!allSettings.some(s => s.key === 'BSH.Common.Setting.AlarmClock')) {
+                this.log.info('Does not support an alarm clock');
+                return;
+            }
 
             // Check the maximum supported alarm clock duration
             const setting = await this.getCached(
@@ -40,7 +42,7 @@ export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerS
             // Change the alarm clock value
             this.powerService.getCharacteristic(this.Characteristic.SetDuration)
                 .onSet(this.onSetNumber(async (value: number) => {
-                    this.log.info('SET Alarm clock ' + value + ' seconds');
+                    this.log.info(`SET Alarm clock ${value} seconds`);
                     await this.device.setSetting('BSH.Common.Setting.AlarmClock', value);
                 }));
 

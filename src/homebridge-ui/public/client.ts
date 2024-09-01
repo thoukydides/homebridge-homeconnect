@@ -30,11 +30,11 @@ class Client {
         this.ipc = new ClientIPC(this.log);
 
         // Wait for the server before continuing initialisation
-        this.ipc.onEvent('ready', () => this.serverReady());
+        this.ipc.onEvent('ready', () => { this.serverReady(); });
     }
 
     // The server is ready so finish initialising the client
-    async serverReady(): Promise<void> {
+    serverReady(): void {
         // Start receiving (important) log messages from the server
         this.serverLog = new ServerLogger(this.ipc, LogLevel.WARN);
 
@@ -47,12 +47,12 @@ class Client {
 
         // Create cards for the global settings and each available appliance
         cards.setNonAppliances([{ id: FormId.Global, icon: 'global', name: 'General Settings' }]);
-        client.onAppliances = appliances => cards.setAppliances(appliances ?? []);
-        cards.onSelect = (id?: string) => forms.showForm(id);
+        client.onAppliances = (appliances):  void => { cards.setAppliances(appliances ?? []); };
+        cards.onSelect      = (id?: string): void => { forms.showForm(id); };
 
         // Attempt to authorise a client when the configuration changes
-        config.onGlobal = config => client.setClient(config);
-        client.onFail   = ()     => forms.showForm(FormId.Global);
+        config.onGlobal = (config): void => { client.setClient(config); };
+        client.onFail   = ():       void => { forms.showForm(FormId.Global); };
     }
 }
 

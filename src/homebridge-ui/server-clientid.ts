@@ -34,7 +34,7 @@ export interface ClientIDAPI {
 export class ServerClientID {
 
     // Cache of all API clients that have been created
-    clients:    Record<string, ClientIDAPI> = {};
+    clients = new Map<string, ClientIDAPI>();
     selected?:  ClientIDAPI;
 
     constructor(
@@ -44,11 +44,11 @@ export class ServerClientID {
     ) {}
 
     // Set the API client
-    async setClientID(config: ConfigPlugin): Promise<ClientIDStatus> {
+    setClientID(config: ConfigPlugin): ClientIDStatus {
         // Select the appropriate configuration
         let api: Constructor<HomeConnectAPI>;
         let description: string;
-        if (config.debug?.includes('Mock Appliances')) {
+        if (config.debug.includes('Mock Appliances')) {
             api = MockAPI;
             config.clientid = '';
             config.simulator = true;
@@ -61,26 +61,27 @@ export class ServerClientID {
 
         // Select or create the client
         const key = `${config.clientid}-${config.simulator}`;
-        if (this.clients[key] === undefined) {
+        let client = this.clients.get(key);
+        if (client === undefined) {
             // Create a new client
             this.log.info(`Creating Home Connect API client for ${description}`);
-            this.clients[key] = {
+            client = {
                 api:    new api(this.log, config, this.persist),
                 status: {
                     clientid:   config.clientid,
                     simulator:  config.simulator ?? false
                 }
             };
+            this.clients.set(key, client);
 
             // Send authorisation status updates to the client
-            this.authorisationEvents(this.clients[key]);
+            this.authorisationEvents(client);
         } else {
             this.log.info(`Resurrecting Home Connect API client for ${description}`);
         }
 
         // Return the API client status
-        this.selected = this.clients[key];
-        return this.selected.status;
+        return client.status;
     }
 
     // Trigger a retry of Device Flow authorisation

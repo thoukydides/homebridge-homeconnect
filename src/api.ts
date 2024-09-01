@@ -264,7 +264,7 @@ export class CloudAPI implements HomeConnectAPI {
 
     // Get events for a single appliance or all appliances
     async* getEvents(haid?: string): AsyncGenerator<EventKV, void, void> {
-        const events: AsyncIterableIterator<[APIEvent]> = on(this.events, 'event');
+        const events = on(this.events, 'event') as AsyncIterableIterator<[APIEvent]>;
         for await (const [event] of events) {
             if (event.event !== 'KEEP-ALIVE'
                 && (haid === undefined || !('id' in event) || event.id === haid)) {

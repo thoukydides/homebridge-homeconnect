@@ -46,7 +46,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Programs', this.initHasPrograms());
@@ -73,7 +73,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             if (this.activeService && this.device.hasScope('Control')) {
                 // Read the list of supported commands
                 const commands = await this.getCached('commands', () => this.device.getCommands());
-                const supports = (key: CommandKey) => commands.some(command => command.key === key);
+                const supports = (key: CommandKey): boolean => commands.some(command => command.key === key);
                 const supportsPause  = supports('BSH.Common.Command.PauseProgram');
                 const supportsResume = supports('BSH.Common.Command.ResumeProgram');
                 if (supportsPause && supportsResume) this.log.info('Can pause and resume programs');
@@ -99,7 +99,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
 
         // Refresh details of all programs
         async refreshPrograms(active = false): Promise<void> {
-            const warnPrograms = (programs: ProgramDefinitionKV[], description: string) => {
+            const warnPrograms = (programs: ProgramDefinitionKV[], description: string): void => {
                 if (!programs.length) return;
                 this.log.warn(`${programs.length} of ${plural(this.programs.length, 'program')} ${description}:`);
                 const fields = programs.map(program => [program.name ?? '?', `(${program.key})`]);
@@ -182,7 +182,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
 
             // Detailed suggestions
             let stepCount = 0;
-            const logStep = (step: string, subSteps: string[] = []) => {
+            const logStep = (step: string, subSteps: string[] = []): void => {
                 this.log.info(`    ${++stepCount}.  ${step}`);
                 subSteps.forEach((sub, index) => { this.log.info(`      (${String.fromCharCode('a'.charCodeAt(0) + index)})  ${sub}`); });
             };
@@ -329,11 +329,17 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 if (this.autoSelectingPrograms) return;
 
                 // Check that there is actually a program selected
-                if (!programKey) { this.log.info('No program selected'); return; }
+                if (!programKey) {
+                    this.log.info('No program selected');
+                    return;
+                }
 
                 // Check that the program is actually supported
                 const supported = this.programs.some(program => program.key === programKey);
-                if (!supported) { this.log.warn(`Selected program ${programKey} is not supported by the Home Connect API`); return; }
+                if (!supported) {
+                    this.log.warn(`Selected program ${programKey} is not supported by the Home Connect API`);
+                    return;
+                }
 
                 // Read and save the options for this program
                 await setTimeoutP(READY_DELAY);
@@ -386,7 +392,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     // Finally check the program options
                     const checkedOptions: OptionValues = {};
 
-                    const checkOption = <Key extends OptionKey>([optionKey, value]: [string, string | number | boolean]) => {
+                    const checkOption = <Key extends OptionKey>([optionKey, value]: [string, string | number | boolean]): void => {
                         // Remove any option keys starting with underscore
                         if (optionKey.startsWith('_')) return;
 
@@ -488,7 +494,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             }
 
             // Make the services read-only when programs cannot be controlled
-            const allowWrite = (write: boolean) => {
+            const allowWrite = (write: boolean): void => {
                 const perms = [Perms.PAIRED_READ, Perms.NOTIFY];
                 if (write) perms.push(Perms.PAIRED_WRITE);
                 for (const service of this.programService) {
@@ -515,7 +521,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 .onSet(this.onSetBoolean(async value => {
                     // Convert any absolute times to relative times in seconds
                     const fixedOptions: OptionValues = {};
-                    const fixOption = <Key extends OptionKey>(key: Key) => {
+                    const fixOption = <Key extends OptionKey>(key: Key): void => {
                         assertIsDefined(options);
                         if (this.isOptionRelative(key)) {
                             fixedOptions[key] = this.timeToSeconds(options[key] ?? 0);
@@ -632,9 +638,10 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             } else if ('min' in constraints && 'max' in constraints) {
                 const { min, max, stepsize } = constraints;
                 const commentParts = [];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (type)     commentParts.push(type);
-                commentParts.push('[' + min, '..', max + ']');
-                if (stepsize) commentParts.push('step ' + stepsize);
+                commentParts.push(`[${min}..${max}]`);
+                if (stepsize) commentParts.push(`step ${stepsize}`);
                 if (unit)     commentParts.push(unit);
                 comment = commentParts.join(' ');
             } else if (type === 'Boolean') {
@@ -703,6 +710,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Select a name for a program or an option
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
         makeName(name: string | undefined, key: ProgramKey | Value): string {
             // Use any existing name unchanged
             if (name) return name;
@@ -714,7 +722,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // HomeKit restricts the characters allowed in names
-        simpleName(name: string | undefined, key: string) {
+        simpleName(name: string | undefined, key: string): string {
             return this.makeName(name, key)
                 .replace(/[^\p{L}\p{N}.' -]/ug, '')
                 .replace(/^[^\p{L}\p{N}]*/u, '')

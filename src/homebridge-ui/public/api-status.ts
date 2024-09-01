@@ -36,18 +36,22 @@ export class APIStatus {
     async pollStatus(): Promise<void> {
         // Attempt to fetch the status image
         const response = await fetch(STATUS_URL);
-        if (!response.ok) return this.log.warn('checkStatus fetch', response.statusText);
+        if (!response.ok) {
+            this.log.warn('checkStatus fetch', response.statusText);
+            return;
+        }
         const svg = await response.text();
 
         // Attempt to parse the status header
-        let status: ServerStatus;
+        let status;
         try {
-            status = JSON.parse(response.headers.get('X-Server-Status') ?? '');
+            status = JSON.parse(response.headers.get('X-Server-Status') ?? '') as ServerStatus;
             assertIsBoolean(status.up);
             assertIsNumber(status.since);
             assertIsNumber(status.updated);
         } catch (err) {
-            return this.log.warn('checkStatus X-Server-Status', err);
+            this.log.warn('checkStatus X-Server-Status', err);
+            return;
         }
 
         // Update the displayed status, if it has changed

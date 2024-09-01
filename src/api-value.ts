@@ -282,17 +282,17 @@ export class APICheckValues {
         if ('data' in event && event.data) {
             const type = `${event.event} Event.data`;
             const props = (valuesTI.EventMapValues as { props?: { name: string; ttype: TName}[] }).props;
-            const typeName = props?.find(prop => prop.name === event.event)?.ttype?.name;
+            const typeName = props?.find(prop => prop.name === event.event)?.ttype.name;
             if (!typeName) {
                 this.logValidation('Unrecognised event', type, event, [event.event]);
             } else {
-                const check = (type: string, data: EventData) => {
+                const check = (type: string, data: EventData): void => {
                     const context: APICheckValueContext = { haid, group: 'Event', subGroup: event.event, type, json: data };
                     this.isKey(valuesTI, valuesTI[typeName], context, data.key);
                     this.isValue(checkers[typeName], context, data.key, data.value);
                 };
                 if ('items' in event.data) {
-                    event.data.items.forEach((data, index) => check(`${type}.items[${index}]`, data));
+                    event.data.items.forEach((data, index) => { check(`${type}.items[${index}]`, data); });
                 } else {
                     check(type, event.data);
                 }
@@ -342,8 +342,9 @@ export class APICheckValues {
         if (constraints === undefined) return true;
 
         const isValueResults: boolean[] = [];
-        const isValue = (type: string, value: Value) =>
+        const isValue = (type: string, value: Value): void => {
             isValueResults.push(this.isValue(checker, { ...context, type }, key, value));
+        };
         const type = (context.type ?? context.group).concat('.constraints');
 
         // Check default value, if specified
@@ -353,8 +354,7 @@ export class APICheckValues {
 
         // Check allowed values, if specified
         if ('allowedvalues' in constraints) {
-            constraints.allowedvalues?.forEach((value, index) =>
-                isValue(`${type}.allowedvalues[${index}]`, value));
+            constraints.allowedvalues?.forEach((value, index) => { isValue(`${type}.allowedvalues[${index}]`, value); });
         }
 
         // Return whether all tests passed

@@ -4,7 +4,7 @@
 import { Perms, Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic';
-import { Constructor, assertIsDefined } from './utils';
+import { assertIsDefined, Constructor } from './utils';
 
 // Add operation state to an accessory
 export function HasActive<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
@@ -15,7 +15,7 @@ export function HasActive<TBase extends Constructor<ApplianceBase>>(Base: TBase)
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Check whether an active program switch should be supported
             if (!this.hasOptionalFeature('Switch', 'Active Program')) return;
@@ -34,7 +34,7 @@ export function HasActive<TBase extends Constructor<ApplianceBase>>(Base: TBase)
             this.activeService.getCharacteristic(this.Characteristic.StatusFault);
 
             // Update the status
-            const updateHK = this.makeSerialised(() => this.updateActiveHK());
+            const updateHK = this.makeSerialised(() => { this.updateActiveHK(); });
             this.device.on('BSH.Common.Status.OperationState', updateHK);
             this.device.on('connected',                        updateHK);
         }

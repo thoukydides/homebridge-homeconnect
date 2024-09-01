@@ -35,7 +35,7 @@ export interface SchemaProgramWithOptions extends SchemaProgram {
     options?:               SchemaProgramOption[];
 }
 
-// Definte an optional feature supported by an appliance
+// Define an optional feature supported by an appliance
 export interface SchemaOptionalFeature {
     group:                  string;
     name:                   string;
@@ -45,19 +45,25 @@ export interface SchemaOptionalFeature {
 
 // Details of appliances and their configuration options
 export interface SchemaAppliance extends HomeAppliance {
-    hasControl:             boolean;
+    hasControl?:            boolean;
     programs:               SchemaProgramWithOptions[];
     features:               SchemaOptionalFeature[];
 }
 
-// Appliance data required for the configuration schema generato
+// Format for the persistent data
+interface PersistData {
+    config?:                PlatformConfig;
+    appliances?:            Record<string, SchemaAppliance>;
+}
+
+// Appliance data required for the configuration schema generator
 export class ConfigSchemaData {
 
     // The configuration currently being used by the plugin
     config?:                PlatformConfig;
 
     // Details of known appliances, indexed by haId
-    appliances:             Record<string, SchemaAppliance> = {};
+    appliances = new Map<string, SchemaAppliance>();
 
     // Avoid overlapping persistent store operations
     loadPromise?:           Promise<void>;
@@ -71,56 +77,59 @@ export class ConfigSchemaData {
     ) {}
 
     // Update the active plugin configuration
-    setConfig(config: PlatformConfig): Promise<void> {
-        return this.applyUpdate(() => {
+    async setConfig(config: PlatformConfig): Promise<void> {
+        await this.applyUpdate(() => {
             this.config = config;
         });
     }
 
     // Update the list of accessories
-    setAppliances(newAppliances: HomeAppliance[]): Promise<void> {
-        return this.applyUpdate(() => {
-            const appliances: Record<string, SchemaAppliance> = {};
+    async setAppliances(newAppliances: HomeAppliance[]): Promise<void> {
+        await this.applyUpdate(() => {
+            const appliances = new Map<string, SchemaAppliance>();
             for (const ha of newAppliances) {
-                const appliance = { ...this.appliances[ha.haId], ...ha };
-                appliance.programs ??= [];
-                appliance.features ??= [];
-                appliances[ha.haId] = appliance;
+                const appliance = {
+                    programs:   [],
+                    features:   [],
+                    ...this.appliances.get(ha.haId),
+                    ...ha
+                };
+                appliances.set(ha.haId, appliance);
             }
             this.appliances = appliances;
         });
     }
 
     // Set whether the Control scope has been authorised for an appliance
-    setHasControl(haId: string, control: boolean): Promise<void> {
-        return this.applyUpdate(() => {
-            const appliance = this.appliances[haId];
+    async setHasControl(haId: string, control: boolean): Promise<void> {
+        await this.applyUpdate(() => {
+            const appliance = this.appliances.get(haId);
             if (appliance) appliance.hasControl = control;
         });
     }
 
     // Add the list of optional features for an appliance to the schema
-    setOptionalFeatures(haId: string, features: SchemaOptionalFeature[]): Promise<void> {
-        return this.applyUpdate(() => {
-            const appliance = this.appliances[haId];
+    async setOptionalFeatures(haId: string, features: SchemaOptionalFeature[]): Promise<void> {
+        await this.applyUpdate(() => {
+            const appliance = this.appliances.get(haId);
             if (appliance) appliance.features = features;
         });
     }
 
     // Add the list of programs for an appliance to the schema
-    setPrograms(haId: string, newPrograms: SchemaProgram[]): Promise<void> {
-        return this.applyUpdate(() => {
-            const appliance = this.appliances[haId];
+    async setPrograms(haId: string, newPrograms: SchemaProgram[]): Promise<void> {
+        await this.applyUpdate(() => {
+            const appliance = this.appliances.get(haId);
             if (!appliance) return;
-            const findProgram = (key: string) => appliance?.programs.find(p => p.key === key);
+            const findProgram = (key: string): SchemaProgramWithOptions | undefined => appliance.programs.find(p => p.key === key);
             appliance.programs = newPrograms.map(program => ({ ...findProgram(program.key), ...program }));
         });
     }
 
     // Add the options for an appliance program to the schema
-    setProgramOptions(haId: string, programKey: string, options: SchemaProgramOption[]): Promise<void> {
-        return this.applyUpdate(() => {
-            const appliance = this.appliances[haId];
+    async setProgramOptions(haId: string, programKey: string, options: SchemaProgramOption[]): Promise<void> {
+        await this.applyUpdate(() => {
+            const appliance = this.appliances.get(haId);
             const program = appliance?.programs.find(p => p.key === programKey);
             if (program) program.options = options;
         });
@@ -135,7 +144,7 @@ export class ConfigSchemaData {
         update();
 
         // Save the updated data
-        const save = async () => {
+        const save = async (): Promise<void> => {
             // Coalesce updates from the same event loop
             await setImmediateP();
 
@@ -163,7 +172,7 @@ export class ConfigSchemaData {
         while (this.busyPromise) await this.busyPromise;
 
         // Perform the requested operation
-        const busyOperation = async () => {
+        const busyOperation = async (): Promise<void> => {
             try {
                 await operation();
             } finally {
@@ -177,10 +186,10 @@ export class ConfigSchemaData {
     // Attempt to read previously saved data
     async tryGet(): Promise<void> {
         try {
-            const persist = await this.persist.getItem('config.schema.json');
+            const persist = await this.persist.getItem('config.schema.json') as PersistData | undefined;
             if (persist) {
                 this.config     = persist.config;
-                this.appliances = persist.appliances ?? {};
+                this.appliances = new Map(Object.entries(persist.appliances ?? {}));
             }
         } catch (err) {
             logError(this.log, 'Failed to load configuration schema data', err);
@@ -190,10 +199,11 @@ export class ConfigSchemaData {
     // Attempt to write new data
     async trySet(): Promise<void> {
         try {
-            await this.persist.setItem('config.schema.json', {
+            const persist: PersistData = {
                 config:     this.config,
-                appliances: this.appliances
-            });
+                appliances: Object.fromEntries(this.appliances)
+            };
+            await this.persist.setItem('config.schema.json', persist);
         } catch (err) {
             logError(this.log, 'Failed to save configuration schema data', err);
         }

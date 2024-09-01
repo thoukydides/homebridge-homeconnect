@@ -16,8 +16,11 @@ interface CacheItem {
     value:      unknown;
     preferred:  string;
     updated:    number;
-    version:    string;
+    version?:   string;
 }
+
+// The representation of the cache in persistent storage
+type PersistData =  Record<string, CacheItem>;
 
 // A simple persistent cache, with soft expiry
 export class PersistCache {
@@ -33,7 +36,7 @@ export class PersistCache {
     private pendingSave?:           Promise<void>;
 
     // Local copy of the cache
-    private cache: Record<string, CacheItem> = {};
+    private cache = new Map<string, CacheItem>();
 
     // Length of time before values in the cache expire
     private readonly ttl = 24 * 60 * 60 * MS; // (24 hours in milliseconds)
@@ -52,7 +55,7 @@ export class PersistCache {
     // Retrieve an item from the cache
     async get<Type>(key: string): Promise<Type | undefined> {
         await this.initialised;
-        const item = this.cache[key];
+        const item = this.cache.get(key);
         if (!item) return;
         return item.value as Type;
     }
@@ -60,7 +63,7 @@ export class PersistCache {
     // Retrieve an item, if it exists checking that is has not expired
     async getWithExpiry<Type>(key: string): Promise<{ value: Type; valid: boolean } | undefined> {
         await this.initialised;
-        const item = this.cache[key];
+        const item = this.cache.get(key);
         let description = `"${key}"`;
         const expired: string[] = [];
         if (!item) {
@@ -79,12 +82,12 @@ export class PersistCache {
     // Write an item to the cache
     async set(key: string, value: unknown): Promise<void> {
         await this.initialised;
-        this.cache[key] = {
+        this.cache.set(key, {
             value:      value,
             preferred:  this.preferred,
             updated:    Date.now(),
             version:    PLUGIN_VERSION
-        };
+        });
         this.log.debug(`"${key}" written to cache`);
         await this.save();
     }
@@ -92,9 +95,9 @@ export class PersistCache {
     // Load the cache
     async load(): Promise<void> {
         try {
-            const cache = await this.persist.getItem(this.cacheName);
+            const cache: unknown = await this.persist.getItem(this.cacheName) as PersistData | undefined;
             if (cache) {
-                this.cache = cache;
+                this.cache = new Map<string, CacheItem>(Object.entries(cache));
                 const entries = Object.keys(this.cache).length;
                 this.log.debug(`Cache loaded (${entries} entries)`);
             } else {
@@ -108,7 +111,7 @@ export class PersistCache {
     // Schedule saving the cache
     save(): Promise<void> {
         if (!this.pendingSave) {
-            const doSave = async () => {
+            const doSave = async (): Promise<void> => {
                 if (this.saving) await this.saving;
                 await setImmediateP();
                 this.saving = this.pendingSave;
@@ -125,7 +128,8 @@ export class PersistCache {
     async saveDeferred(): Promise<void> {
         try {
             await this.initialised;
-            await this.persist.setItem(this.cacheName, this.cache);
+            const cache: PersistData = Object.fromEntries(this.cache);
+            await this.persist.setItem(this.cacheName, cache);
             const entries = Object.keys(this.cache).length;
             this.log.debug(`Cache saved (${entries} entries)`);
         } catch (err) {

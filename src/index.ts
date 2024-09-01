@@ -7,4 +7,6 @@ import { PLATFORM_NAME } from './settings';
 import { HomeConnectPlatform } from './platform';
 
 // Register the platform with Homebridge
-export default (api: API) => api.registerPlatform(PLATFORM_NAME, HomeConnectPlatform);
+export default (api: API): void => {
+    api.registerPlatform(PLATFORM_NAME, HomeConnectPlatform);
+};

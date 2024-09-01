@@ -43,7 +43,7 @@ export abstract class Form {
     }
 
     // Hide the form (implicitly called if a different form is created)
-    destroyForm() {
+    destroyForm(): void {
         this.form?.end();
         this.form = undefined;
     }
@@ -113,16 +113,16 @@ export class TemplateForm extends Form {
 
     // Create a placeholder schema using the specified HTML element
     async getSchema(): Promise<PluginFormSchema> {
-        return {
+        return Promise.resolve({
             schema: {
                 type: 'object',
                 properties: {}
             },
             form:   this.elementAsForm
-        };
+        });
     }
 
-    async getData(): Promise<PluginConfig>  { return {}; }
+    async getData(): Promise<PluginConfig>  { return Promise.resolve({}); }
     async putData(): Promise<void>          { /* empty */ }
 }
 
@@ -133,11 +133,15 @@ export enum FormId {
     Unavailable = 'unavailable'
 }
 
+// Type guard to check whether a string is a special form identifier
+function isFormId(value: string): value is FormId {
+    return Object.values(FormId).includes(value as FormId);
+}
+
 // Manage the configuration forms
 export class Forms {
 
     // The form currently being displayed
-    currentFormId?: string;
     currentForm?:   Form;
 
     // Create a new form manager
@@ -170,17 +174,19 @@ export class Forms {
     async constructAndShowForm(formId: string): Promise<void> {
         const form = this.constructForm(formId);
         await form.createForm();
-        this.currentFormId = formId;
         this.currentForm = form;
     }
 
     // Create a specific form
     constructForm(formId: string): Form {
-        switch (formId) {
-        case FormId.Placeholder: return new TemplateForm (this.log, 'hc-form-placeholder');
-        case FormId.Unavailable: return new TemplateForm (this.log, 'hc-form-unavailable');
-        case FormId.Global:      return new GlobalForm   (this.log, this.ipc, this.config);
-        default:                 return new ApplianceForm(this.log, this.ipc, this.config, formId);
+        if (isFormId(formId)) {
+            switch (formId) {
+            case FormId.Placeholder: return new TemplateForm (this.log, 'hc-form-placeholder');
+            case FormId.Unavailable: return new TemplateForm (this.log, 'hc-form-unavailable');
+            case FormId.Global:      return new GlobalForm   (this.log, this.ipc, this.config);
+            }
+        } else {
+            return new ApplianceForm(this.log, this.ipc, this.config, formId);
         }
     }
 }

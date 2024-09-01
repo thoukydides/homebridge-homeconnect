@@ -72,7 +72,7 @@ export abstract class MockAppliance {
 
     // Get all programs
     getPrograms(): ProgramsKV {
-        const getProgramPartial = (op: () => Partial<ProgramKV>) => {
+        const getProgramPartial = (op: () => Partial<ProgramKV>): Partial<ProgramKV> => {
             try { return op(); } catch { return {}; }
         };
 
@@ -236,7 +236,7 @@ export abstract class MockAppliance {
 
     // Set a specific status
     setStatus<Key extends StatusKey>(key: Key, value: StatusValue<Key>): void {
-        this.log.debug(`Mock status ${key} <= ${value}`);
+        this.log.debug(`Mock status ${key} <= ${String(value)}`);
         const status = this.getStatusSpecific(key);
         status.value = value;
         this.emitStatusEvent(key, value);
@@ -256,7 +256,7 @@ export abstract class MockAppliance {
 
     // Set a specific setting
     setSetting<Key extends SettingKey>(key: Key, value: SettingValue<Key>): void {
-        this.log.debug(`Mock setting ${key} <= ${value}`);
+        this.log.debug(`Mock setting ${key} <= ${String(value)}`);
         const setting = this.getSetting(key);
         setting.value = value;
         this.emitNotifyEvent(key, value);
@@ -284,24 +284,24 @@ export abstract class MockAppliance {
     // Emit a NOTIFY event
     emitNotifyEvent<Key extends OptionKey | SettingKey | EventKey<'NOTIFY'>>
     (key: Key, value: OptionValue<Key> | SettingValue<Key> | EventValue<Key>): void {
-        return this.emitDataEvent('NOTIFY', key, value as EventValue<Key>);
+        this.emitDataEvent('NOTIFY', key, value as EventValue<Key>);
     }
 
     // Emit a STATUS event
     emitStatusEvent<Key extends StatusKey>(key: Key, value: StatusValue<Key>): void {
-        return this.emitDataEvent('STATUS', key, value as EventValue<Key>);
+        this.emitDataEvent('STATUS', key, value as EventValue<Key>);
     }
 
     // Emit an EVENT event
-    emitEventEvent<Key extends EventKey<'EVENT'>>(key: Key, value: EventValue<Key>) {
-        return this.emitDataEvent('EVENT', key, value);
+    emitEventEvent<Key extends EventKey<'EVENT'>>(key: Key, value: EventValue<Key>): void {
+        this.emitDataEvent('EVENT', key, value);
     }
 
     // Emit a NOTIFY/STATUS/EVENT event
     emitDataEvent<Event extends EventApplianceDataEvent, Key extends EventKey<Event> = EventKey<Event>>
     (event: Event, key: Key, value: EventValue<Key, Event>): void {
         // Emit the event after collecting all pending data
-        const emitEvent = async () => {
+        const emitEvent = async (): Promise<void> => {
             await setImmediateP();
             const eventWithData: EventApplianceDataKV<Event> = {
                 event,

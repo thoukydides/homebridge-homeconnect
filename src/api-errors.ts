@@ -74,7 +74,7 @@ export class APIStatusCodeError extends APIError {
     }
 
     // Construct an error message from a response
-    static getMessage(response: Response, text: string) {
+    static getMessage(response: Response, text: string): string {
         const statusCode = response.statusCode;
         const statusCodeName = STATUS_CODES[statusCode];
         const description = APIStatusCodeError.getBodyDescription(text)
@@ -110,7 +110,7 @@ export class APIStatusCodeError extends APIError {
     // Attempt to parse the response body
     static parseBody(text: string): { key?: string; description?: string } {
         try {
-            const json = JSON.parse(text);
+            const json: unknown = JSON.parse(text);
             if (apiCheckers.ErrorResponse.test(json)) {
                 return {
                     key:         json.error.key,
@@ -144,7 +144,7 @@ export class APIValidationError extends APIError {
     }
 
     // Construct an error message from a checker validation error
-    static getMessage(errors: IErrorDetail[]) {
+    static getMessage(errors: IErrorDetail[]): string {
         const description = `${errors[0].path} ${errors[0].message}`;
         return `Structure validation failed (${description})`;
     }
@@ -166,7 +166,7 @@ export class APIEventStreamError extends APIError {
     }
 
     // Construct an error message from a checker validation error
-    static getMessage(description: string, sse: Record<string, string>) {
+    static getMessage(description: string, sse: Record<string, string>): string {
         const fields = Object.entries(sse).map(([name, value]: [string, string]) => [`${name}:`, value]);
         return [`Unable to parse ${description}:`, ...columns(fields)].join('\n');
     }

@@ -12,7 +12,7 @@ export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerSe
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Child Lock', this.initHasChildLock());
@@ -22,8 +22,10 @@ export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerSe
         async initHasChildLock(): Promise<void> {
             // Check whether the appliance supports a child lock
             const allSettings = await this.getCached('settings', () => this.device.getSettings());
-            if (!allSettings.some(s => s.key === 'BSH.Common.Setting.ChildLock'))
-                return this.log.info('Does not support a child lock');
+            if (!allSettings.some(s => s.key === 'BSH.Common.Setting.ChildLock')) {
+                this.log.info('Does not support a child lock');
+                return;
+            }
 
             // Add the lock physical controls characteristic
             const { CONTROL_LOCK_DISABLED, CONTROL_LOCK_ENABLED } = this.Characteristic.LockPhysicalControls;

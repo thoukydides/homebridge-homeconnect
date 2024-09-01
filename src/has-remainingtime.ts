@@ -20,7 +20,7 @@ export function HasRemainingTime<TBase extends Constructor<ApplianceBase & { act
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Remaining duration only supported if active program switch enabled
             if (!this.activeService) return;
@@ -31,7 +31,7 @@ export function HasRemainingTime<TBase extends Constructor<ApplianceBase & { act
                 .setProps({ maxValue: MAX_REMAINING_DURATION });
 
             // Update the status
-            const updateHK = this.makeSerialised<RemainingTimeState>(value => this.updateRemainingTimeHK(value), 'idle');
+            const updateHK = this.makeSerialised<RemainingTimeState>(value => { this.updateRemainingTimeHK(value); }, 'idle');
             this.device.on('BSH.Common.Option.StartInRelative',      () => updateHK());
             this.device.on('BSH.Common.Option.RemainingProgramTime', () => updateHK());
             this.device.on('BSH.Common.Event.ProgramFinished',       () => updateHK('idle'));

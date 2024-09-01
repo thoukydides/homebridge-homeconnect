@@ -24,7 +24,7 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Door', this.initHasDoor());
@@ -41,7 +41,7 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
                 // Check whether the appliance supports door control commands
                 if (this.device.hasScope('Control')) {
                     const commands = await this.getCached('commands', () => this.device.getCommands());
-                    const supports = (key: CommandKey) => commands.some(command => command.key === key);
+                    const supports = (key: CommandKey): boolean => commands.some(command => command.key === key);
                     const supportsOpen   = supports('BSH.Common.Command.OpenDoor');
                     const supportsPartly = supports('BSH.Common.Command.PartlyOpenDoor');
                     if (supportsOpen || supportsPartly) {

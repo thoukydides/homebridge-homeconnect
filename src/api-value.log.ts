@@ -8,7 +8,7 @@ import { LocalStorage } from 'node-persist';
 import assert from 'node:assert';
 import semver from 'semver';
 
-import { MS, columns, formatList, plural } from './utils';
+import { MS, assertIsDefined, columns, formatList, plural } from './utils';
 import { HomeAppliance, OptionDefinition, Setting, Status, Value } from './api-types';
 import { PLUGIN_VERSION } from './settings';
 import { logError } from './log-error';
@@ -23,12 +23,12 @@ const NEW_ISSUE_URL = 'https://github.com/thoukydides/homebridge-homeconnect/iss
 const REPORT_COMMENT = '(unrecognised)';
 
 // Mapping from Home Connect API (non-enum) types to Typescript equivalents
-const TYPE_MAP: Record<string, string> = {
-    String:     'string',
-    Double:     'number',
-    Int:        'number',
-    Boolean:    'boolean'
-};
+const TYPE_MAP = new Map<string, string>([
+    ['String',  'string'],
+    ['Double',  'number'],
+    ['Int',     'number'],
+    ['Boolean', 'boolean']
+]);
 
 // Detail of an API key
 export type APIKeyValueDefinition = OptionDefinition | Setting | Status;
@@ -75,7 +75,7 @@ interface APIKeyValuePersist {
 export class APIKeyValuesLog {
 
     // Appliances
-    private appliances: Record<string, HomeAppliance> = {};
+    private appliances = new Map<string, HomeAppliance>();
     private readonly applianceReports = new Set<string>();
 
     // Known keys/values
@@ -100,11 +100,11 @@ export class APIKeyValuesLog {
     // Update the dictionary of appliance descriptions
     setAppliances(appliances: HomeAppliance[]): void {
         for (const appliance of appliances)
-            this.appliances[appliance.haId] = appliance;
+            this.appliances.set(appliance.haId, appliance);
     }
 
     // Add details of an key and its allowed values
-    addDetail(detail: APIKeyValueDefinition) {
+    addDetail(detail: APIKeyValueDefinition): void {
         // Only interested in the type name, if provided
         // (addValues() will be called for any value, default, or allowedvalues)
         if (!('type' in detail) || detail.type === undefined) return;
@@ -116,7 +116,7 @@ export class APIKeyValuesLog {
     }
 
     // Add a key that has been seen
-    addKey(haid: string, group: string, subGroup: string | undefined, key: string, report: boolean) {
+    addKey(haid: string, group: string, subGroup: string | undefined, key: string, report: boolean): void {
         // Generate a simple PascalCase group name
         if (subGroup) group += subGroup.charAt(0).toUpperCase() + subGroup.slice(1).toLowerCase();
 
@@ -130,11 +130,10 @@ export class APIKeyValuesLog {
             this.applianceReports.add(haid);
             this.scheduleSummary(group, key);
         }
-
     }
 
     // Add a value that has been seen (also used for ProgramKey values)
-    addValue(haid: string, key: string, value: Value | null, report: boolean) {
+    addValue(haid: string, key: string, value: Value | null, report: boolean): void {
         // Exclude null values
         if (value === null) return;
 
@@ -153,7 +152,7 @@ export class APIKeyValuesLog {
     }
 
     // Schedule a summary report for an unsupported key/value
-    scheduleSummary(key: string, value: string) {
+    scheduleSummary(key: string, value: string): void {
         // Check whether this has been reported already
         const id = `${key}.${value}`;
         if (this.reported.has(id)) return;
@@ -304,10 +303,10 @@ export class APIKeyValuesLog {
     }
 
     // Construct a Typescript type for a value
-    makeType(value?: APIValue) {
+    makeType(value?: APIValue): string {
         // Use the type specified by the API, if provided
         if (value?.type) {
-            return TYPE_MAP[value.type] ?? this.makeEnumName(value.type);
+            return TYPE_MAP.get(value.type) ?? this.makeEnumName(value.type);
         }
 
         // If it appears to be a string type then try to base it on the values
@@ -327,7 +326,7 @@ export class APIKeyValuesLog {
 
     // Test whether a value is of enum type
     isEnumType(value: APIValue): boolean | undefined {
-        if (value.type) return TYPE_MAP[value.type] === undefined;
+        if (value.type) return !TYPE_MAP.has(value.type);
         if (/\b(boolean|number)\b/.test(this.getTypeof(value))) return false;
         return undefined;
     }
@@ -396,10 +395,12 @@ export class APIKeyValuesLog {
 
     // Convert a list of appliance haids into a description
     makeApplianceDescription(haids: string[], style: 'short' | 'long' = 'long'): string {
-        if (haids.every(haid => this.appliances[haid])) {
+        if (haids.every(haid => this.appliances.has(haid))) {
             // All appliances are known, so use their types
             return formatList(haids.map(haid => {
-                const { brand, type, enumber } = this.appliances[haid];
+                const appliance = this.appliances.get(haid);
+                assertIsDefined(appliance);
+                const { brand, type, enumber } = appliance;
                 return style === 'short' ? enumber : `${brand} ${type} ${enumber}`;
             }));
         } else {
@@ -419,7 +420,7 @@ export class APIKeyValuesLog {
         }
 
         // Return the values, sorted by their type name
-        const sortBy = (value: APIValue) => this.makeType(value);
+        const sortBy = (value: APIValue): string => this.makeType(value);
         return Array.from(values).sort((a, b) => sortBy(a).localeCompare(sortBy(b)));
     }
 

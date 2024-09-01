@@ -38,7 +38,7 @@ type MethodReturn<Key extends MethodKey = MethodKey> = ReturnType<MockAppliance[
 export class MockAPI implements HomeConnectAPI {
 
     // The mock appliances
-    appliances: Record<string, MockAppliance> = {};
+    appliances = new Map<string, MockAppliance>();
 
     // Create a new API object
     constructor(
@@ -58,20 +58,20 @@ export class MockAPI implements HomeConnectAPI {
     }
 
     // Instantiate a mock appliance
-    addMock(constructor: new (...args: ConstructorParameters<typeof MockAppliance>) => MockAppliance) {
+    addMock(constructor: new (...args: ConstructorParameters<typeof MockAppliance>) => MockAppliance): void {
         const mockAppliance = new constructor(this.log);
-        this.appliances[mockAppliance.haid] = mockAppliance;
+        this.appliances.set(mockAppliance.haid, mockAppliance);
     }
 
     // Delay requests and events
-    async delay() {
+    async delay(): Promise<void> {
         await setTimeoutP(MOCK_MIN_DELAY + Math.random() * (MOCK_MAX_DELAY - MOCK_MIN_DELAY));
     }
 
     // Wrap an API request
     async request<Method extends MethodKey>(method: Method, haid: string, ...args: MethodParams<Method>): Promise<MethodReturn<Method>> {
         await this.delay();
-        const mockAppliance = this.appliances[haid];
+        const mockAppliance = this.appliances.get(haid);
         if (!mockAppliance) throw MockAppliance.statusCodeError(404, `Unknown appliance "${haid}"`);
         const fn = mockAppliance[method] as (...args: MethodParams<Method>) => MethodReturn<Method>;
         try {
@@ -91,7 +91,7 @@ export class MockAPI implements HomeConnectAPI {
 
     // Get authorisation status updates
     async getAuthorisationStatus(): Promise<AuthorisationStatus> {
-        return { state: 'success' };
+        return Promise.resolve({ state: 'success' });
     }
 
     // Trigger a retry of Device Flow authorisation
@@ -99,7 +99,7 @@ export class MockAPI implements HomeConnectAPI {
 
     // Get a list of paired home appliances
     async getAppliances(): Promise<HomeAppliance[]> {
-        return Object.values(this.appliances).map(appliance => appliance.getAppliance());
+        return Promise.resolve([...this.appliances.values()].map(appliance => appliance.getAppliance()));
     }
 
     // Forward most methods to the appropriate mock appliance
@@ -133,19 +133,19 @@ export class MockAPI implements HomeConnectAPI {
     // Get events for a single appliance or all appliances
     async* getEvents(haid?: string): AsyncGenerator<EventKV, void, void> {
         // Select the appliances
-        const appliances = haid ? [this.appliances[haid]] : Object.values(this.appliances);
+        const appliances = haid ? [this.appliances.get(haid)] : this.appliances.values();
 
         // Receive the event streams from all of the selected appliances
         let eventPromise: Promise<EventKV>;
         let eventResolve: (event: EventKV) => void;
-        const receiveEvents = async (events: AsyncGenerator<EventKV, void, void>) => {
+        const receiveEvents = async (events: AsyncGenerator<EventKV, void, void>): Promise<void> => {
             for await (const event of events) {
                 await this.delay();
                 eventResolve(event);
             }
         };
         for (const mockAppliance of appliances) {
-            receiveEvents(mockAppliance.getEvents());
+            if (mockAppliance) receiveEvents(mockAppliance.getEvents());
         }
 
         // Merge the event streams

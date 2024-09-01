@@ -25,7 +25,7 @@ type ServiceConstructor = typeof Service & {
 };
 
 // A typed accessory onSet() handler
-export type OnSetHandler<Type> = (value: Type) => Promise<unknown> | unknown;
+export type OnSetHandler<Type> = (value: Type) => unknown;
 
 // Initialisation timeout
 const INITIALISATION_WARN_FIRST    =     10 * MS; // (10 seconds)
@@ -73,7 +73,7 @@ export class ApplianceBase {
         // Configuration for this appliance
         assertIsDefined(this.platform.schema);
         this.schema = this.platform.schema;
-        this.config = platform.configAppliances[device.ha.haId] || {};
+        this.config = device.ha.haId in platform.configAppliances ? platform.configAppliances[device.ha.haId] : {};
 
         // Initialise the cache for this appliance
         assertIsDefined(platform.persist);
@@ -138,7 +138,7 @@ export class ApplianceBase {
         });
 
         // Wait for asynchronous initialisation to complete
-        const initMonitor = async () => {
+        const initMonitor = async (): Promise<void> => {
             await Promise.race([setTimeoutP(INITIALISATION_WARN_FIRST)]);
             if (pendingNames.length) {
                 this.log.warn('Appliance initialisation is taking longer than expected;'
@@ -243,6 +243,7 @@ export class ApplianceBase {
         this.log.info('Identify: ' + this.device.ha.haId);
         const itemDescriptions = Object.values(this.device.items).map(item => this.device.describe(item));
         for (const item of itemDescriptions.sort()) this.log.info(item);
+        return Promise.resolve();
     }
 
     // Check whether an optional feature should be enabled
@@ -265,7 +266,7 @@ export class ApplianceBase {
             const matched = this.optionalFeatures.filter(predicate);
             if (matched.length) {
                 this.log.info(`${plural(matched.length, 'optional feature')} ${description}:`);
-                const sortBy = (feature: SchemaOptionalFeature) => `${feature.group} - ${feature.name}`;
+                const sortBy = (feature: SchemaOptionalFeature): string => `${feature.group} - ${feature.name}`;
                 const fields = matched.sort((a, b) => sortBy(a).localeCompare(sortBy(b)))
                     .map(feature => [feature.name, feature.group, `(${feature.service} service)`]);
                 for (const line of columns(fields)) this.log.info(`    ${line}`);
@@ -376,6 +377,9 @@ export class ApplianceBase {
         }
     }
 }
+
+//export type ApplianceConstructorArgs = [Logger, HomeConnectPlatform, HomeConnectDevice, PlatformAccessory];
+export type ApplianceConstructorArgs = ConstructorParameters<typeof ApplianceBase>;
 
 // All Homebridge appliances have power state
 export const ApplianceGeneric = HasPower(ApplianceBase);

@@ -93,30 +93,24 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
     // Update list of Home Connect appliances after cache has been restored
     async finishedLaunching(): Promise<void> {
         try {
-            const restored = Object.keys(this.accessories).length;
+            const restored = this.accessories.size;
             if (restored) this.log.info(`Restored ${restored} cached accessories`);
 
-            // Only initialise the plugin if it has been configured
-            if (this.platformConfig) {
-                // Check that the dependencies and configuration
-                checkDependencyVersions(this.log, this.hb);
-                [this.configPlugin, this.configAppliances] = this.checkConfig();
+            // Check that the dependencies and configuration
+            checkDependencyVersions(this.log, this.hb);
+            [this.configPlugin, this.configAppliances] = this.checkConfig();
 
-                // Prepare other resources required by this plugin
-                this.persist = await this.preparePersistentStorage();
-                this.schema = new ConfigSchemaData(this.log, this.persist);
-                this.schema.setConfig(this.platformConfig);
+            // Prepare other resources required by this plugin
+            this.persist = await this.preparePersistentStorage();
+            this.schema = new ConfigSchemaData(this.log, this.persist);
+            this.schema.setConfig(this.platformConfig);
 
-                // Connect to the Home Connect cloud
-                const api = this.configPlugin.debug.includes('Mock Appliances') ? MockAPI : CloudAPI;
-                this.homeconnect = new api(this.log, this.configPlugin, this.persist);
+            // Connect to the Home Connect cloud
+            const api = this.configPlugin.debug.includes('Mock Appliances') ? MockAPI : CloudAPI;
+            this.homeconnect = new api(this.log, this.configPlugin, this.persist);
 
-                // Start polling the list of Home Connect appliances
-                this.updateAppliances();
-            } else {
-                if (restored) this.log.info('Plugin configuration missing; removing all cached accessories');
-                await this.addRemoveAccessories([]);
-            }
+            // Start polling the list of Home Connect appliances
+            this.updateAppliances();
         } catch (err) {
             logError(this.log, 'Plugin initialisation', err);
         }
@@ -126,7 +120,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
     checkConfig(): [ConfigPlugin, ConfigAppliances] {
         // Split the configuration into plugin and appliance properties
         const keyofConfigPlugin = keyofChecker(configTI, configTI.ConfigPlugin);
-        const select = (predicate: ([key, value]: [string, unknown]) => boolean) =>
+        const select = (predicate: ([key, value]: [string, unknown]) => boolean): Record<string, unknown> =>
             Object.fromEntries(Object.entries(this.platformConfig).filter(predicate));
         const configPluginPre  = select(([key]) =>  keyofConfigPlugin.includes(key));
         const configAppliances = select(([key]) => !keyofConfigPlugin.includes(key));
@@ -206,14 +200,14 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         await this.schema?.setAppliances(appliances);
 
         // Remove any appliances that have been disabled in the configuration
-        const enabledAppliances = appliances.filter(ha => this.configAppliances[ha.haId]?.enabled ?? true);
+        const enabledAppliances = appliances.filter(ha => this.configAppliances[ha.haId].enabled ?? true);
 
         // Map the appliance haId identifiers to accessory UUIDs
-        const uuidMap = Object.fromEntries(enabledAppliances.map(ha => [this.makeUUID(ha.haId), ha]));
+        const uuidMap = new Map(enabledAppliances.map(ha => [this.makeUUID(ha.haId), ha]));
 
         // Add a Homebridge accessory for each new appliance
         const newAccessories: PlatformAccessory[] = [];
-        for (const [uuid, ha] of Object.entries(uuidMap)) {
+        uuidMap.forEach((ha, uuid) => {
             // Select a constructor for this appliance
             const applianceConstructor = {
                 // Cooking appliances
@@ -237,14 +231,14 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
             }[ha.type];
             if (!applianceConstructor) {
                 this.log.warn(`Appliance type '${ha.type}' not currently supported`);
-                continue;
+                return;
             }
 
             // Convert the Home Connect haId into a Homebridge UUID
             let linkage = this.accessories.get(uuid);
             if (linkage) {
                 // A HomeKit accessory already exists for this appliance
-                if (linkage.implementation) continue;
+                if (linkage.implementation) return;
                 this.log.debug(`Connecting accessory '${ha.name}'`);
             } else {
                 // New appliance, so create a matching HomeKit accessory
@@ -264,19 +258,19 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
             } catch (err) {
                 logError(this.log, 'initialising accessory', err);
             }
-        }
+        });
         this.hb.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, newAccessories);
 
         // Delete accessories for which there is no matching appliance
         const oldAccessories: PlatformAccessory[] = [];
-        for (const [uuid, { accessory, implementation }] of Object.entries(this.accessories)) {
-            if (!uuidMap[uuid]) {
+        this.accessories.forEach(({ accessory, implementation }, uuid) => {
+            if (!uuidMap.has(uuid)) {
                 this.log.info(`Removing accessory '${accessory.displayName}'`);
                 implementation?.unregister();
                 oldAccessories.push(accessory);
                 this.accessories.delete(uuid);
             }
-        }
+        });
         this.hb.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, oldAccessories);
 
         // Log a summary

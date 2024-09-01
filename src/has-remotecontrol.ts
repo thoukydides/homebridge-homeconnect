@@ -5,7 +5,7 @@ import { Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic';
 import { Constructor, formatList } from './utils';
-import { StatusKey } from './api-value';
+import { StatusKey, StatusValue } from './api-value';
 
 // Add local and remote control state to an accessory
 export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { powerService: Service }>>(Base: TBase) {
@@ -13,14 +13,14 @@ export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { pow
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Use ProgramMode characteristic to indicate local and remote control
             this.powerService.addOptionalCharacteristic(this.Characteristic.ProgramMode);
             this.powerService.getCharacteristic(this.Characteristic.ProgramMode);
 
             // Update the status
-            const updateHK = this.makeSerialised(() => this.updateRemoteControlHK());
+            const updateHK = this.makeSerialised(() => { this.updateRemoteControlHK(); });
             this.device.on('BSH.Common.Status.RemoteControlActive',       updateHK);
             this.device.on('BSH.Common.Status.RemoteControlStartAllowed', updateHK);
             this.device.on('BSH.Common.Status.LocalControlActive',        updateHK);
@@ -30,7 +30,8 @@ export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { pow
         updateRemoteControlHK(): void {
             // Read the most recent state and generate a description
             const detailBits: string[] = [];
-            const read = (key: StatusKey, values: Record<string, string>, prefix?: string) => {
+            const read = <Key extends StatusKey>(key: Key, values: Record<string, string>, prefix?: string):
+            StatusValue<Key> | undefined => {
                 const state = this.device.getItem(key);
                 let detail = values[`${state}`];
                 if (detail) {

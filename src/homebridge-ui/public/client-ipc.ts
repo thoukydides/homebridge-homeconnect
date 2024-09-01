@@ -15,9 +15,9 @@ export class ClientIPC {
     async request<Path extends ServerPath>(path: Path, data: ServerRequest<Path>): Promise<ServerResponse<Path>> {
         try {
             this.log.debug(`request("${path}", %O)`, data);
-            const result = await window.homebridge.request(path, data);
+            const result: unknown = await window.homebridge.request(path, data);
             this.log.debug(`request("${path}", %O) =>`, data, result);
-            return result;
+            return result as ServerResponse<Path>;
         } catch (err) {
             this.log.error(`request("${path}", %O) =>`, data, err);
             throw err;

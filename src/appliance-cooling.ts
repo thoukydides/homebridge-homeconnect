@@ -17,7 +17,7 @@ function HasCoolingModes<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Add events for all types of cooling appliance
 
@@ -42,7 +42,7 @@ function HasCoolingDoors<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Add doors for all types of FridgeFreezer/Refrigerator appliance
 

@@ -10,7 +10,7 @@ import { Constructor } from './utils';
 import { SettingKey } from './api-value';
 
 // Add mode switches to an accessory
-export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase, prefix = 'mode') {
+export function HasModes<TBase extends Constructor<ApplianceBase>>(Base: TBase, prefix = 'mode') {
     return class HasModes extends Base {
 
         // Accessory services
@@ -21,7 +21,7 @@ export function HasModes <TBase extends Constructor<ApplianceBase>>(Base: TBase,
 
         // Mixin constructor
         constructor(...args: any[]) {
-            super(...args);
+            super(...args as ConstructorParameters<TBase>);
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Modes', this.initHasModes());

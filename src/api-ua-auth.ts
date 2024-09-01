@@ -139,7 +139,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         for (;;) {
             // Wait until the token is due to expire, unless a failure occurs
             const refreshNow = new Promise<void>(resolve => {
-                this.triggerTokenRefresh = () => {
+                this.triggerTokenRefresh = (): void => {
                     this.log.warn('Triggering early token refresh');
                     this.triggerTokenRefresh = undefined;
                     resolve();
@@ -219,8 +219,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     async getSavedToken(): Promise<AbsoluteToken> {
         // Attempt to retrieve the appropriate token
         const savedTokens = await this.loadTokens();
-        const token = savedTokens[this.config.clientid];
-        if (!token) throw Error('No saved authorisation for this client');
+        const token = savedTokens.get(this.config.clientid);
+        if (token === undefined) throw Error('No saved authorisation for this client');
 
         // Notify any interested parties that authorisation is not required
         return token;
@@ -237,7 +237,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     }
 
     // Apply and save a new access token
-    async saveToken(newToken: AccessTokenResponse | DeviceAccessTokenResponse | AccessTokenRefreshResponse) {
+    async saveToken(newToken: AccessTokenResponse | DeviceAccessTokenResponse | AccessTokenRefreshResponse): Promise<void> {
         this.log.debug(`Refresh token ${newToken.refresh_token}`);
         this.log.debug(`Access token  ${newToken.access_token}`
                    + ` (expires in ${formatSeconds(newToken.expires_in)})`);
@@ -251,7 +251,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         };
 
         // Read any previously saved tokens
-        let savedTokens: PersistAbsoluteTokens = {};
+        let savedTokens = new Map<string, AbsoluteToken>();
         try {
             savedTokens = await this.loadTokens();
         } catch (err) {
@@ -260,19 +260,20 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         }
 
         // Replace (or add) the token for the current client
-        savedTokens[this.config.clientid] = this.token;
-        await this.persist.setItem('token', savedTokens);
+        savedTokens.set(this.config.clientid, this.token);
+        const persistSavedTokens: PersistAbsoluteTokens = Object.fromEntries(savedTokens);
+        await this.persist.setItem('token', persistSavedTokens);
         this.log.debug('Authorisation token saved');
     }
 
     // Retrieve saved tokens
-    async loadTokens(): Promise<PersistAbsoluteTokens> {
-        const savedTokens = await this.persist.getItem('token');
+    async loadTokens(): Promise<Map<string, AbsoluteToken>> {
+        const savedTokens: unknown = await this.persist.getItem('token');
         if (!savedTokens) throw Error('No saved authorisation data found');
         if (!checkersT.PersistAbsoluteTokens.test(savedTokens)) {
             throw Error('Incompatible saved authorisation data');
         }
-        return savedTokens;
+        return new Map(Object.entries(savedTokens));
     }
 
     // Authorisation Code Grant Flow for simulator only
@@ -302,7 +303,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
 
         // Display the verification URI in the log file
         let displayPrompts = true;
-        const logPrompt = async () => {
+        const logPrompt = async (): Promise<void> => {
             while (displayPrompts) {
                 const expiry = expires ? ` within ${formatMilliseconds(expires - Date.now())}` : '';
                 this.log.info(greenBright(`Please authorise access to your appliances${expiry}`
@@ -325,6 +326,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
             this.pollDeviceCode = response.device_code;
             const token = await Promise.race([this.deviceAccessTokenRequest(response.device_code),
                                               ...this.triggerAuthorisationRetry]);
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
             if (token instanceof AuthorisationRetry) throw token;
             return token;
         } finally {

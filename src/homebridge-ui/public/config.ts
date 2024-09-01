@@ -59,7 +59,7 @@ export class Config {
 
         // Treat all unexpected properties as appliance configurations
         const keyofConfigPlugin = keyofChecker(configTI, configTI.ConfigPlugin);
-        const select = (predicate: ([key, value]: [string, unknown]) => boolean) =>
+        const select = (predicate: ([key, value]: [string, unknown]) => boolean): Record<string, unknown> =>
             Object.fromEntries(Object.entries(this.savedConfig ?? {}).filter(predicate));
         this.global     = select(([key]) =>  keyofConfigPlugin.includes(key)) as Partial<ConfigPlugin>;
         this.appliances = select(([key]) => !keyofConfigPlugin.includes(key)) as ConfigAppliances;
@@ -103,7 +103,7 @@ export class Config {
             const valueTo   = to  [key as never];
             const valueFrom = from[key as never];
             const keyName = `${keyPrefix}.${key}`;
-            const isObject = (value: unknown) => value !== undefined && typeof value === 'object';
+            const isObject = (value: unknown): boolean => value !== undefined && typeof value === 'object';
             if (Array.isArray(valueTo) && Array.isArray(valueFrom)) diff.push(...this.diffArray (valueTo, valueFrom, keyName));
             else if (isObject(valueTo) && isObject(valueFrom))      diff.push(...this.diffObject(valueTo, valueFrom, keyName));
             else if (valueTo !== valueFrom) diff.push({ key: keyName, from: valueFrom, to: valueTo });
@@ -113,7 +113,7 @@ export class Config {
 
     // Compare two configuration arrays
     diffArray(to: unknown[], from: unknown[], keyPrefix = ''): ConfigDiff[] {
-        const isSimple = (array: unknown[]) => array.length && typeof array[0] !== 'object';
+        const isSimple = (array: unknown[]): boolean => array.length !== 0 && typeof array[0] !== 'object';
         if (isSimple(to) || isSimple(from)) {
             if (to.length === from.length && to.every((value, index) => value === from[index])) return [];
             else return [{ key: keyPrefix, from, to }];
@@ -147,7 +147,7 @@ export class Config {
         getElementById('hc-modified-unsaved').hidden = !isUnsaved;
 
         // Display the diff
-        const formatValue = (value: unknown) => JSON.stringify(value, null, 4);
+        const formatValue = (value: unknown): string => JSON.stringify(value, null, 4);
         getElementById('hc-modified-diff').replaceChildren(...changes.map(change =>
             cloneTemplate('hc-modified-diff-delta', {
                 key:    change.key,
@@ -175,7 +175,7 @@ export class Config {
     // Get the current configuration for a specific appliance
     async getAppliance(haid: string): Promise<ApplianceConfig> {
         await this.readyPromise;
-        return this.appliances[haid] || {};
+        return haid in this.appliances ? this.appliances[haid] : {};
     }
 
     // Set updated global configuration

@@ -6,7 +6,7 @@ import { Logger } from 'homebridge';
 import { Chalk, green, greenBright } from 'chalk';
 
 import { APIStatusCodeError } from './api-errors';
-import { columns } from './utils';
+import { assertIsDefined, columns } from './utils';
 
 // Components of help message
 export interface AuthHelpMessage {
@@ -30,7 +30,7 @@ const COLOUR_HI = greenBright;
 export abstract class AuthHelp {
 
     // The structured help message
-    message!: AuthHelpMessage;
+    message?: AuthHelpMessage;
 
     // Retrieve the structured help message
     getStructured(): AuthHelpMessage | undefined {
@@ -44,11 +44,12 @@ export abstract class AuthHelp {
 
         // Add text with optional formatting
         const text: string[] = [];
-        const addLines = (lines: string[], chalk: Chalk = COLOUR_LO) =>
-            text.push(...lines.map(line => colour && chalk ? chalk(line) : line));
-        const addLink = (description: string, uri: string, chalk: Chalk = COLOUR_LO) => {
+        const addLines = (lines: string[], chalk: Chalk = COLOUR_LO): void => {
+            text.push(...lines.map(line => colour ? chalk(line) : line));
+        };
+        const addLink = (description: string, uri: string, chalk: Chalk = COLOUR_LO): void => {
             let lines = [`${description}:`, `    ${uri}`];
-            if (colour && chalk) lines = [chalk(lines[0]), chalk.bold(lines[1])];
+            if (colour) lines = [chalk(lines[0]), chalk.bold(lines[1])];
             text.push(...lines);
         };
 
@@ -105,6 +106,7 @@ export class AuthHelpDeviceFlow extends AuthHelp {
 
     // Decode the error message to provide suitable advice
     decodeError(err: APIStatusCodeError, clientid: string): ClientAction {
+        assertIsDefined(this.message);
         const { prescript } = this.message;
         switch (err.key) {
 
@@ -135,6 +137,7 @@ export class AuthHelpDeviceFlow extends AuthHelp {
 
     // Decode an 'unauthorized_client' error message
     decodeUnauthorizedClient(err: APIStatusCodeError, clientid: string): ClientAction {
+        assertIsDefined(this.message);
         const { prescript } = this.message;
         switch (err.description) {
 
@@ -180,10 +183,12 @@ export class AuthHelpDeviceFlow extends AuthHelp {
         const uri = action === 'create' ? 'https://developer.home-connect.com/applications/add'
                                         : `https://developer.home-connect.com/applications/${clientid}/edit`;
 
+        assertIsDefined(this.message);
         this.message.client = { action, settings, uri };
     }
 
     clientChangeGuide(action: ClientAction): void {
+        assertIsDefined(this.message);
         const { postscript } = this.message;
         if (action === 'create' || action === 'modify') {
             postscript.push('Accurately copy the Client ID value (64 hexadecimal characters) from the Home Connect Developer Program'
