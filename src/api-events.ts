@@ -93,7 +93,7 @@ export class APIEventStream extends EventEmitter {
             try {
                 event.data = JSON.parse(sse.data);
             } catch (cause) {
-                throw new APIEventStreamError(request, response, `Failed to parse JSON event data (${cause})`, sse, { cause });
+                throw new APIEventStreamError(request, response, `Failed to parse JSON event data (${String(cause)})`, sse, { cause });
             }
 
             // Workaround for Home Connect API bug

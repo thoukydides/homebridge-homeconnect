@@ -19,6 +19,11 @@ const SERVICE_CHAR_END      = /\p{L}|\p{Nd}/u;          // (alphabetic or numeri
 const SERVICE_CHAR_ANY      = /\p{L}|\p{Nd}|[- '&,.]/u; // (alphanumeric or punctuation)
 const SERVICE_CHAR_EMOJI    = /\p{Extended_Pictographic}/u;
 
+// Format for the persistent data
+interface PersistData {
+    customNames: Record<string, string>;
+}
+
 // HomeKit service naming for an accessory
 export class ServiceNames {
 
@@ -64,8 +69,8 @@ export class ServiceNames {
         characteristic.setProps({ perms: [Perms.NOTIFY, Perms.PAIRED_READ, Perms.PAIRED_WRITE] });
 
         // Current and default names
+        assertIsString(characteristic.value);
         let currentName = characteristic.value;
-        assertIsString(currentName);
 
         // Set the initial value (asynchronously)
         this.withCustomNames('read-only', () => {
@@ -107,7 +112,7 @@ export class ServiceNames {
 
         // Check whether the appliance name should be used as a prefix
         const prefixConfig = this.appliance.config.names?.prefix;
-        const applyPrefix = /^program /.test(subtype ?? '') ? (prefixConfig?.programs ?? false)
+        const applyPrefix = subtype?.startsWith('program ') ? (prefixConfig?.programs ?? false)
                                                             : (prefixConfig?.other    ?? true);
         // Construct the service name
         const accessoryName = this.appliance.accessory.displayName;
@@ -166,8 +171,8 @@ export class ServiceNames {
     // Restore any previous custom names
     async loadCustomNames(): Promise<void> {
         try {
-            const persist = await this.persist.getItem('custom service names');
-            if (persist) this.customNames = persist.customNames ?? {};
+            const persist = await this.persist.getItem('custom service names') as PersistData | undefined;
+            if (persist) this.customNames = new Map(Object.entries(persist.customNames));
         } catch (err) {
             logError(this.log, 'Load custom names', err);
         } finally {
@@ -178,7 +183,8 @@ export class ServiceNames {
     // Save changes to the custom names
     async saveCustomNames(): Promise<void> {
         try {
-            await this.persist.setItem('custom service names', { customNames: this.customNames });
+            const persist: PersistData = { customNames: Object.fromEntries(this.customNames) };
+            await this.persist.setItem('custom service names', persist);
         } catch (err) {
             logError(this.log, 'Save custom names', err);
         } finally {

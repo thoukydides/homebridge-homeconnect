@@ -367,7 +367,7 @@ export class APICheckValues {
         const kv = { [key]: value };
         const validation = checker.validate(kv);
         const isCorrect = validation === null; // Key exists and value correct type
-        this.logValues.addValue(context.haid, key, value, context.keyFailed || !isCorrect);
+        this.logValues.addValue(context.haid, key, value, context.keyFailed === true || !isCorrect);
         if (context.keyFailed || isCorrect) return true;
 
         // Log details of the mismatched value type

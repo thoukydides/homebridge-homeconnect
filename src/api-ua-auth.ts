@@ -174,7 +174,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
                 this.saveToken(token);
             }
         } catch (err) {
-            this.log.info(`Unable to use saved API authorisation (${err})`);
+            const message = err instanceof Error ? err.message : String(err);
+            this.log.info(`Unable to use saved API authorisation (${message})`);
             this.triggerAuthorisationRetry.push(this.watchToken(savedToken));
 
             // Attempt new authorisation
@@ -254,7 +255,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         try {
             savedTokens = await this.loadTokens();
         } catch (err) {
-            this.log.debug(`Failed to load saved authorisation tokens: ${err}`);
+            const message = err instanceof Error ? err.message : String(err);
+            this.log.debug(`Failed to load saved authorisation tokens: ${message}`);
         }
 
         // Replace (or add) the token for the current client
@@ -343,7 +345,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         if (err instanceof AuthorisationRetry) return;
 
         // Log the error
-        const status: AuthorisationStatusFailed = { state: 'fail', error: err, message: `${err}`, retryable };
+        const message = err instanceof Error ? err.message : String(err);
+        const status: AuthorisationStatusFailed = { state: 'fail', error: err, message, retryable };
         if (help) status.help = help.getStructured();
         this.setAuthorisationStatus(status);
     }

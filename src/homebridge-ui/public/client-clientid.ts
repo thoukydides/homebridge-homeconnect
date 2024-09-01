@@ -43,7 +43,8 @@ export class ClientClientID {
                 const status = await this.ipc.request('/clientid', clientConfig);
                 this.onClientStatus(status);
             } catch (err) {
-                this.showToast('error', `Unable to attempt authorisation ${err}`);
+                const message = err instanceof Error ? err.message : String(err);
+                this.showToast('error', `Unable to attempt authorisation ${message}`);
             }
         } else {
             // Ignore the client configuration until it is valid
@@ -169,7 +170,8 @@ export class ClientClientID {
             await this.ipc.request('/clientid/retry', null);
             this.showToast('info', 'Requesting new authorisation code');
         } catch (err) {
-            this.showToast('error', `Unable to retry authorisation: ${err}`);
+            const message = err instanceof Error ? err.message : String(err);
+            this.showToast('error', `Unable to retry authorisation: ${message}`);
         }
     }
 

@@ -133,15 +133,15 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
 
         // Apply default values
         const configPlugin = deepMerge(DEFAULT_CONFIG, configPluginPre);
-        const defaultClientid = DEFAULT_CLIENTID(configPlugin['simulator']);
-        if (!configPlugin['clientid'] && defaultClientid) configPlugin['clientid'] = defaultClientid;
-        if (!configPlugin['clientid'] && configPlugin.debug?.includes('Mock Appliances')) configPlugin['clientid'] = '';
+        const defaultClientid = DEFAULT_CLIENTID(configPlugin.simulator);
+        if (!configPlugin.clientid && defaultClientid) configPlugin.clientid = defaultClientid;
+        if (!configPlugin.clientid && configPlugin.debug?.includes('Mock Appliances')) configPlugin.clientid = '';
 
         // Ensure that all required fields are provided and are of suitable types
         checkers.ConfigPlugin.setReportedPath('<PLATFORM_CONFIG>');
         checkers.ConfigAppliances.setReportedPath('<PLATFORM_CONFIG>');
-        const strictValidation = [...checkers.ConfigPlugin.strictValidate(configPlugin) || [],
-                                  ...checkers.ConfigAppliances.strictValidate(configAppliances) || []];
+        const strictValidation = [...checkers.ConfigPlugin.strictValidate(configPlugin) ?? [],
+                                  ...checkers.ConfigAppliances.strictValidate(configAppliances) ?? []];
         if (!checkers.ConfigPlugin.test(configPlugin)
             || !checkers.ConfigAppliances.test(configAppliances)) {
             this.log.error('Plugin unable to start due to configuration errors:');

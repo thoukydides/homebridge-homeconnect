@@ -529,7 +529,7 @@ export class HomeConnectDevice extends EventEmitter {
 
     // Abort refreshing appliance information when it disconnects
     onDisconnected(): void {
-        if (this.readAllActions && this.readAllActions.length) {
+        if (this.readAllActions?.length) {
             this.log.debug(`Appliance disconnected; abandoning ${this.readAllActions.length} pending reads`);
         }
         delete this.readAllActions;
@@ -539,7 +539,7 @@ export class HomeConnectDevice extends EventEmitter {
     async readAll(): Promise<void> {
         try {
             // Attempt all pending reads
-            while (this.readAllActions && this.readAllActions.length) {
+            while (this.readAllActions?.length) {
                 // Careful to avoid losing action if error or array replaced
                 const actions = this.readAllActions;
                 await actions[0]();
@@ -572,7 +572,8 @@ export class HomeConnectDevice extends EventEmitter {
                 this.readAllScheduled =
                     setTimeout(() => this.readAll(), readAllRetryDelay);
             } else {
-                this.log.debug(`Ignoring appliance state read due to disconnection: ${err}`);
+                const message = err instanceof Error ? err.message : String(err);
+                this.log.debug(`Ignoring appliance state read due to disconnection: ${message}`);
                 delete this.readAllScheduled;
             }
         }

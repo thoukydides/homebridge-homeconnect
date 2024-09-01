@@ -111,7 +111,7 @@ export class Cards {
                     ref.setAttribute('fill', `url(#${newId})`));
             });
         } catch (err) {
-            this.log.error(`loadCardIcon(${element}) =>`, err);
+            this.log.error(`loadCardIcon(${element.toString()}) =>`, err);
         }
     }
 

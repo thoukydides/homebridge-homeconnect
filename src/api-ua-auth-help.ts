@@ -143,7 +143,7 @@ export class AuthHelpDeviceFlow extends AuthHelp {
                 prescript.push('The Client ID should be 64 hexadecimal characters,'
                              + ` but the value specified for "clientid" is ${clientid.length} characters long.`);
                 return 'set';
-            } else if (!clientid.match(/^[0-9A-F]+$/i)) {
+            } else if (!/^[0-9A-F]+$/i.test(clientid)) {
                 prescript.push('The Client ID should be 64 hexadecimal characters,'
                              + ' but the value specified for "clientid" includes non-hexadecimal characters.');
                 return 'set';

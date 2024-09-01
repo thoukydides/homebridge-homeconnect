@@ -85,7 +85,8 @@ export class Serialised<Value extends SerialisedValue, Returns = void> {
             this.logVerbose(`${logPrefix} successful`);
             return result;
         } catch (err) {
-            this.logVerbose(`${logPrefix} failed: ${err}`);
+            const message = err instanceof Error ? err.message : String(err);
+            this.logVerbose(`${logPrefix} failed: ${message}`);
             throw err;
         }
     }
@@ -100,6 +101,7 @@ export class Serialised<Value extends SerialisedValue, Returns = void> {
             this.pendingValue = newValue;
         } else if (value !== undefined) {
             // Other types just use the latest value
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             description = `${value} (was ${this.pendingValue})`;
             this.pendingValue = value;
         } else {

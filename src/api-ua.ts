@@ -134,8 +134,10 @@ export class APIUserAgent {
             throw new APIError(request, response, 'Unexpected empty response (status code 204 No Content)');
         const contentType = response.headers['content-type'];
         if (typeof contentType !== 'string'
-            || !['application/json', 'application/vnd.bsh.sdk.v1+json'].includes(contentType.replace(/;.*$/, '')))
-            throw new APIError(request, response, `Unexpected response content-type (${contentType})`);
+            || !['application/json', 'application/vnd.bsh.sdk.v1+json'].includes(contentType.replace(/;.*$/, ''))) {
+            const contentTypeValue = JSON.stringify(contentType);
+            throw new APIError(request, response, `Unexpected response content-type (${contentTypeValue})`);
+        }
 
         // Retrieve and parse the response as JSON
         let json;
@@ -144,7 +146,7 @@ export class APIUserAgent {
             this.logBody('Response', text);
             json = JSON.parse(text);
         } catch (cause) {
-            throw new APIError(request, response, `Failed to parse JSON response (${cause})`, { cause });
+            throw new APIError(request, response, `Failed to parse JSON response (${String(cause)})`, { cause });
         }
 
         // Check that the response has the expected fields
@@ -180,7 +182,8 @@ export class APIUserAgent {
             if (typeof location !== 'string') throw new Error('Missing "location" header in redirect');
             return new URL(location);
         } catch (cause) {
-            throw new APIError(request, response, `Failed to parse redirect location "${response.headers.location}"`, { cause });
+            const locationValue = JSON.stringify(response.headers.location);
+            throw new APIError(request, response, `Failed to parse redirect location ${locationValue}`, { cause });
         }
     }
 
@@ -195,7 +198,8 @@ export class APIUserAgent {
                 this.log.warn('EVENT STREAM END');
             });
             body.on('error', err => {
-                this.log.warn(`EVENT STREAM ERROR: ${err}`);
+                const message = err instanceof Error ? err.message : String(err);
+                this.log.warn(`EVENT STREAM ERROR: ${message}`);
             });
 
             // Parse chunks of the stream as events
@@ -330,7 +334,8 @@ export class APIUserAgent {
                 // Log the response
                 this.logHeaders(`${logPrefix} Response`, response.headers);
             } catch (cause) {
-                status = `ERROR: ${cause}`;
+                const message = cause instanceof Error ? cause.message : String(cause);
+                status = `ERROR: ${message}`;
                 throw new APIError(request, undefined, status, { cause });
             }
 

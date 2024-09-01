@@ -288,7 +288,7 @@ export class ApplianceBase {
         if (previousOperation && previousOperation.toString() !== operation.toString()) {
             this.log.error(`Mismatched "${key}" cache operations:`);
             this.log.error(`    ${previousOperation}`);
-            this.log.error(`!== ${operation}`);
+            this.log.error(`!== ${String(operation)}`);
         }
 
         // Wait for any previous operation to complete
@@ -323,7 +323,8 @@ export class ApplianceBase {
         } catch (err) {
             if (cacheItem) {
                 // Operation failed, so use the (expired) cache entry
-                this.log.warn(`Using expired cache result: ${err}`);
+                const message = err instanceof Error ? err.message : String(err);
+                this.log.warn(`Using expired cache result: ${message}`);
                 return cacheItem.value;
             } else {
                 logError(this.log, `Cached operation '${key}'`, err);
@@ -355,7 +356,7 @@ export class ApplianceBase {
                 assertIsType(value);
                 await handler(value);
             } catch (err) {
-                logError(this.log, `onSet(${value})`, err);
+                logError(this.log, `onSet(${JSON.stringify(value)})`, err);
                 throw new this.platform.hb.hap.HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
             }
         };

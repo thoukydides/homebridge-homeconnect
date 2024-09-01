@@ -85,7 +85,7 @@ export class CloudAPI implements HomeConnectAPI {
         if (this.ua.scopes.includes(scope)) return true;
 
         // Check for row or column scopes that include the requested scope
-        const parsedScope = scope.match(/^([^-]+)-([^-]+)$/);
+        const parsedScope = /^([^-]+)-([^-]+)$/.exec(scope);
         if (parsedScope) {
             const [, row, column] = parsedScope;
             if (this.ua.scopes.includes(row))    return true;

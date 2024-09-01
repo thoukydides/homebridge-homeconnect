@@ -58,7 +58,8 @@ export class ServerIPC {
                 // All errors should be reported as RequestError to the client
                 if (err instanceof RequestError) throw err;
                 logError(this.log, prefix, err);
-                throw new RequestError(`Unexpected ${path} error: ${err}`, { status: 500 });
+                const message = err instanceof Error ? err.message : String(err);
+                throw new RequestError(`Unexpected ${path} error: ${message}`, { status: 500 });
             }
         });
     }

@@ -39,7 +39,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         readonly programService: Service[] = [];
 
         // Details of all programs supported by the appliance
-        programs: (ProgramDefinitionKV<ProgramKey> & { selected?: boolean })[] = [];
+        programs: (ProgramDefinitionKV & { selected?: boolean })[] = [];
 
         // Ignore program selection events when reading program details
         autoSelectingPrograms = false;
@@ -88,7 +88,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Restore and populate a cache of the programs supported by the appliance
         async initPrograms(): Promise<void> {
             // Retrieve any previously cached program details
-            this.programs = await this.cache.get<ProgramDefinitionKV<ProgramKey>[]>('Program details') ?? [];
+            this.programs = await this.cache.get<ProgramDefinitionKV[]>('Program details') ?? [];
             const count = Object.keys(this.programs).length;
             if (count) this.log.debug(`Restored details of ${count} programs`);
 
@@ -184,7 +184,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             let stepCount = 0;
             const logStep = (step: string, subSteps: string[] = []) => {
                 this.log.info(`    ${++stepCount}.  ${step}`);
-                subSteps.forEach((sub, index) => this.log.info(`      (${String.fromCharCode('a'.charCodeAt(0) + index)})  ${sub}`));
+                subSteps.forEach((sub, index) => { this.log.info(`      (${String.fromCharCode('a'.charCodeAt(0) + index)})  ${sub}`); });
             };
             this.log.info('However, if these programs should be usable then these steps may help resolve the issue:');
             const preconditions = [];
@@ -196,7 +196,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             }
             if (this.device.hasScope('Control') && localControl !== undefined) {
                 preconditions.push('Leave the appliance idle for a few minutes (so that it can be controlled remotely)'
-                                   + `${localControl ? '; it is currently being controlled locally' : ''}`);
+                                   + (localControl ? '; it is currently being controlled locally' : ''));
             }
             logStep('Ensure that the appliance is in a suitable state to allow selection of all programs:', preconditions);
             logStep('Manually select (but do not start) each program on the appliance,'
@@ -329,11 +329,11 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 if (this.autoSelectingPrograms) return;
 
                 // Check that there is actually a program selected
-                if (!programKey) return this.log.info('No program selected');
+                if (!programKey) { this.log.info('No program selected'); return; }
 
                 // Check that the program is actually supported
                 const supported = this.programs.some(program => program.key === programKey);
-                if (!supported) return this.log.warn(`Selected program ${programKey} is not supported by the Home Connect API`);
+                if (!supported) { this.log.warn(`Selected program ${programKey} is not supported by the Home Connect API`); return; }
 
                 // Read and save the options for this program
                 await setTimeoutP(READY_DELAY);
@@ -373,8 +373,8 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 try {
                     // Check that a name and program key have both been provided
                     const { name, key, selectonly, options } = program;
-                    if (!name?.length) throw new Error("No 'name' field provided for program");
-                    if (!key?.length)  throw new Error("No 'key' field provided for program");
+                    if (!name.length) throw new Error("No 'name' field provided for program");
+                    if (!key.length)  throw new Error("No 'key' field provided for program");
 
                     // Check that the name is unique
                     if (names.includes(name)) throw new Error(`Program name '${name}' is not unique`);
@@ -385,6 +385,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
 
                     // Finally check the program options
                     const checkedOptions: OptionValues = {};
+
                     const checkOption = <Key extends OptionKey>([optionKey, value]: [string, string | number | boolean]) => {
                         // Remove any option keys starting with underscore
                         if (optionKey.startsWith('_')) return;
@@ -397,7 +398,8 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     for (const option of Object.entries(options ?? {})) checkOption(option);
                     checkedConfig.push({ name, key, selectonly, options: checkedOptions });
                 } catch (err) {
-                    this.log.error(`Invalid program configuration ignored: ${err}\n`
+                    const message = err instanceof Error ? err.message : String(err);
+                    this.log.error(`Invalid program configuration ignored: ${message}\n`
                                    + JSON.stringify(program, null, 4));
                 }
             }
@@ -434,12 +436,13 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 try {
                     value = this.timeToSeconds(value);
                 } catch (err) {
-                    throw new Error(`Unable to parse '${value}' as a time ${description}: ${err}`);
+                    const message = err instanceof Error ? err.message : String(err);
+                    throw new Error(`Unable to parse '${value}' as a time ${description}: ${message}`);
                 }
             }
 
             // Check whether the type is essentially correct
-            const constraints = option?.constraints ?? {};
+            const constraints = option.constraints ?? {};
             const allowedValues: string[] = constraints.allowedvalues ?? [];
             switch (option.type) {
             case 'Boolean':
@@ -623,7 +626,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                         : (type === 'Boolean'       ? false : null))));
 
             // Construct a comment describing the allowed values
-            let comment = null;
+            let comment;
             if (allowedvalues) {
                 comment = allowedvalues;
             } else if ('min' in constraints && 'max' in constraints) {
@@ -639,7 +642,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             }
 
             // Alternative absolute format for relative times
-            if (this.isOptionRelative(option.key)) {
+            if (this.isOptionRelative(option.key) && typeof comment === 'string') {
                 comment += ' OR Time HH:MM';
             }
 
@@ -651,7 +654,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Update the configuration schema with the latest program list
-        setSchemaPrograms(allPrograms: ProgramDefinitionKV<ProgramKey>[]): void {
+        setSchemaPrograms(allPrograms: ProgramDefinitionKV[]): void {
             this.schema.setPrograms(this.device.ha.haId, allPrograms.map(program => ({
                 name:   this.makeName(program.name, program.key),
                 key:    program.key
@@ -667,15 +670,12 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Convert program options into the configuration schema format
         makeSchemaOption<Key extends OptionKey>(option: OptionDefinitionKV<Key>): SchemaProgramOption {
             // Common mappings from Home Connect to JSON schema
-            const typeMap: Record<string, SchemaProgramOption['type']> = {
-                Double:     'number',
-                Int:        'integer',
-                Boolean:    'boolean'
-            };
+            const typeMap = new Map<string, SchemaProgramOption['type']>
+            ([['Double', 'number'], ['Int', 'integer'], ['Boolean', 'boolean']]);
             const schema: SchemaProgramOption= {
                 key:    option.key,
                 name:   this.makeName(option.name, option.key),
-                type:   typeMap[option.type] ?? 'string'
+                type:   typeMap.get(option.type) ?? 'string'
             };
             const constraints = option.constraints ?? {};
             if ('default' in constraints)              schema.default    = constraints.default;
@@ -695,7 +695,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             // Allow an absolute time to be specified for relative times
             if (this.isOptionRelative(option.key)) {
                 schema.type = 'string';
-                schema.suffix += ' (or HH:MM absolute time)';
+                schema.suffix = (schema.suffix ?? '') + ' (or HH:MM absolute time)';
             }
 
             // Return the mapped option
@@ -734,7 +734,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             if (/^\d+$/.test(value)) return parseInt(value, 10);
 
             // Otherwise attempt to parse the value as a time
-            const parsed = value.match(/^(\d\d):(\d\d)$/);
+            const parsed = /^(\d\d):(\d\d)$/.exec(value);
             if (!parsed) throw new Error(`Time '${value}' is not in 'HH:MM' format`);
             const [hours, minutes] = parsed.slice(1, 3).map(d => parseInt(d, 10));
 

@@ -94,7 +94,7 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
                     this.log.info(`Event ${name} off (ignored)`);
                     break;
                 default:
-                    this.log.warn(`Unsupported event status '${eventStatus}'`);
+                    this.log.warn(`Unsupported event status '${JSON.stringify(eventStatus)}'`);
                     break;
                 }
             });

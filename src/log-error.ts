@@ -14,7 +14,7 @@ export function logError<Type>(log: Logger, when: string, err: Type): Type {
         lastLoggedError = err;
 
         // Log the error message itself
-        log.error(`[${when}] ${err}`);
+        log.error(`[${when}] ${String(err)}`);
 
         // Log the request details for API errors
         if (err instanceof APIError) {
@@ -26,7 +26,7 @@ export function logError<Type>(log: Logger, when: string, err: Type): Type {
         let prefix = ' '.repeat(when.length + 3);
         while ((cause instanceof APIError) && cause.errCause) {
             cause = cause.errCause;
-            log.error(`${prefix}└─ ${cause}`);
+            log.error(`${prefix}└─ ${String(cause)}`);
             prefix += '   ';
         }
 

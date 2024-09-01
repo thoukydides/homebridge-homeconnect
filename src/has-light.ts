@@ -317,7 +317,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                 // Convert Home Connect colour temperature to a simple percentage
                 const colourtempenum = settings.colourtempenum && this.device.getItem(settings.colourtempenum.key);
                 const colourtempperc = settings.colourtempperc && this.device.getItem(settings.colourtempperc.key);
-                const percent = (colourtempenum && COLOUR_TEMP_PERCENTAGE[colourtempenum]) ?? Math.round(colourtempperc || 0);
+                const percent = (colourtempenum && COLOUR_TEMP_PERCENTAGE[colourtempenum]) ?? Math.round(colourtempperc ?? 0);
 
                 // Convert from Home Connect's percentage to reciprocal megakelvin
                 const mirek = Math.round(MIREK_WARM + (percent / 100.0) * (MIREK_COLD - MIREK_WARM));
@@ -344,7 +344,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                 await this.device.setSetting(settings.colourtempperc.key, percent);
             } else if (settings.colourtempenum) {
                 // Map to the closest supported colour temperature
-                const values = settings.colourtempenum.constraints?.allowedvalues || [];
+                const values = settings.colourtempenum.constraints?.allowedvalues ?? [];
                 const best = values.reduce<[ColorTemperature, number] | null>((acc, value) => {
                     if (COLOUR_TEMP_PERCENTAGE[value]) {
                         const error = Math.abs(percent - COLOUR_TEMP_PERCENTAGE[value]);

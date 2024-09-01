@@ -314,7 +314,7 @@ export class APIKeyValuesLog {
         const literalsType = this.getTypeof(value);
         if (literalsType === 'string') {
             const literals = Object.keys(value?.values ?? {});
-            if (literals.every(literal => /\.Program\./.test(literal))) return 'ProgramKey';
+            if (literals.every(literal => literal.includes('.Program.'))) return 'ProgramKey';
             const isString = literals.some(literal => /[ :]/.test(literal));
             const types = literals.map(literal => this.makeEnumName(literal.replace(/\.[^.]*$/, '')));
             const isEnum = types.every(type => type === types[0]);
@@ -433,7 +433,7 @@ export class APIKeyValuesLog {
     async readPersist(): Promise<void> {
         try {
             const persist = await this.persist.getItem(this.persistKey) as APIKeyValuePersist | undefined;
-            if (persist && persist.version && semver.satisfies(PLUGIN_VERSION, `^${persist.version}`)) {
+            if (persist?.version && semver.satisfies(PLUGIN_VERSION, `^${persist.version}`)) {
                 const haid = 'Restored from previous session';
                 for (const { group, key } of persist.keys)   this.addKey(haid, group, undefined, key, false);
                 for (const { key, value } of persist.values) this.addValue(haid, key, value, false);
