@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [v0.42.4] - 2024-07-16
+## [v1.0.0] - 202-09-01
+### Changed
+* Changed to ESM project to support Homebridge 2.0 (and bodged around breaking change to maintain 1.x compatibility).
+* **WasherDryer:**  Added undocumented programs and options. (#291)
+* Updated dependencies.
+* Lots of internal changes for stricter eslint checking.
+
+## [v0.42.4] - 202-07-16
 ### Changed
 * **Dryer/WasherDryer:**  Added undocumented programs. (#286, #287)
 * Updated dependencies.
@@ -639,7 +646,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.0...HEAD
+[v1.0.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.4...v1.0.0
 [v0.42.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.3...v0.42.4
 [v0.42.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.2...v0.42.3
 [v0.42.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.1...v0.42.2
