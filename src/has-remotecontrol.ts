@@ -49,12 +49,16 @@ export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { pow
             const detail = `(${formatList(detailBits)})`;
 
             // Map the state to the most appropriate Program Mode characteristic
-            const { NO_PROGRAM_SCHEDULED, PROGRAM_SCHEDULED, PROGRAM_SCHEDULED_MANUAL_MODE_ } = this.Characteristic.ProgramMode;
+            const { NO_PROGRAM_SCHEDULED, PROGRAM_SCHEDULED } = this.Characteristic.ProgramMode;
+            const PROGRAM_SCHEDULED_MANUAL_MODE =
+                ('PROGRAM_SCHEDULED_MANUAL_MODE_' in this.Characteristic.ProgramMode
+                ? this.Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE_
+                : this.Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE) as number;
             let programMode;
             if (localControl) {
                 // Local control takes priority (reverts after a few seconds)
                 this.log.info(`Manual mode ${detail}`);
-                programMode = PROGRAM_SCHEDULED_MANUAL_MODE_;
+                programMode = PROGRAM_SCHEDULED_MANUAL_MODE;
             } else if (remoteControl === false || remoteStart === false) {
                 this.log.info(`Remote operation NOT enabled ${detail}`);
                 programMode = NO_PROGRAM_SCHEDULED;
