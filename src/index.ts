@@ -3,8 +3,8 @@
 
 import { API } from 'homebridge';
 
-import { PLATFORM_NAME } from './settings';
-import { HomeConnectPlatform } from './platform';
+import { PLATFORM_NAME } from './settings.js';
+import { HomeConnectPlatform } from './platform.js';
 
 // Register the platform with Homebridge
 export default (api: API): void => {

@@ -2,17 +2,17 @@
 // Copyright © 2023 Alexander Thoukydides
 
 import { HomebridgePluginUiServer, RequestError } from '@homebridge/plugin-ui-utils';
+import { LogLevel, PlatformConfig } from 'homebridge';
 
 import NodePersist from 'node-persist';
 import { join } from 'path';
 
-import { PLUGIN_NAME } from '../settings';
-import { ConfigSchema, FormSchema } from './schema';
-import { ServerIPC } from './server-ipc';
-import { ServerLogger } from './logger';
-import { LogLevel, PlatformConfig } from 'homebridge';
-import { ConfigPlugin } from '../config-types';
-import { ClientIDStatus, ServerClientID } from './server-clientid';
+import { PLUGIN_NAME } from '../settings.js';
+import { ConfigSchema, FormSchema } from './schema.js';
+import { ServerIPC } from './server-ipc.js';
+import { ServerLogger } from './logger.js';
+import { ConfigPlugin } from '../config-types.js';
+import { ClientIDStatus, ServerClientID } from './server-clientid.js';
 
 // A Homebridge HomeConnect custom UI server
 export class HomeConnectServer extends HomebridgePluginUiServer {

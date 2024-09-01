@@ -6,23 +6,23 @@ import { Logger } from 'homebridge';
 import { LocalStorage } from 'node-persist';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
-import { ConfigPlugin } from '../config-types';
-import { HomeAppliance } from '../api-types';
+import { ConfigPlugin } from '../config-types.js';
+import { HomeAppliance } from '../api-types.js';
 import { CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
          ProgramDefinitionKV, ProgramKV, ProgramsKV, SettingKey,  SettingKV,
-         SettingValue, StatusKey, StatusKV, OptionValue } from '../api-value';
-import { ProgramKey } from '../api-value-types';
-import { HomeConnectAPI } from '../api';
-import { MockAppliance } from './mock-appliance';
-import { MockDishwasher } from './mock-dishwasher';
-import { MockHob } from './mock-hob';
-import { MockHood } from './mock-hood';
-import { MockOven } from './mock-oven';
-import { MockFridgeFreezer } from './mock-fridgefreezer';
-import { MockCoffeeMaker } from './mock-coffeemaker';
-import { MockDryer } from './mock-dryer';
-import { MockWasher } from './mock-washer';
-import { AuthorisationStatus } from '../api-ua-auth';
+         SettingValue, StatusKey, StatusKV, OptionValue } from '../api-value.js';
+import { ProgramKey } from '../api-value-types.js';
+import { HomeConnectAPI } from '../api.js';
+import { MockAppliance } from './mock-appliance.js';
+import { MockDishwasher } from './mock-dishwasher.js';
+import { MockHob } from './mock-hob.js';
+import { MockHood } from './mock-hood.js';
+import { MockOven } from './mock-oven.js';
+import { MockFridgeFreezer } from './mock-fridgefreezer.js';
+import { MockCoffeeMaker } from './mock-coffeemaker.js';
+import { MockDryer } from './mock-dryer.js';
+import { MockWasher } from './mock-washer.js';
+import { AuthorisationStatus } from '../api-ua-auth.js';
 
 // Random delay before completing API requests
 const MOCK_MIN_DELAY =  1; // (milliseconds)

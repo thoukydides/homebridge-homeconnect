@@ -3,10 +3,10 @@
 
 import { Logger } from 'homebridge';
 
-import { Chalk, green, greenBright } from 'chalk';
+import chalk from 'chalk';
 
-import { APIStatusCodeError } from './api-errors';
-import { assertIsDefined, columns } from './utils';
+import { APIStatusCodeError } from './api-errors.js';
+import { assertIsDefined, columns } from './utils.js';
 
 // Components of help message
 export interface AuthHelpMessage {
@@ -23,8 +23,8 @@ export interface AuthHelpMessage {
 export type ClientAction = 'create' | 'modify' | 'set' | undefined;
 
 // Colours for the help message
-const COLOUR_LO = green.dim;
-const COLOUR_HI = greenBright;
+const COLOUR_LO = chalk.green.dim;
+const COLOUR_HI = chalk.greenBright;
 
 // Generate helpful information for authorisation errors
 export abstract class AuthHelp {
@@ -38,18 +38,18 @@ export abstract class AuthHelp {
     }
 
     // Retrieve the message as text
-    getText(colour = false): string[] {
+    getText(useColour = false): string[] {
         // Help isn't always available
         if (!this.message) return [];
 
         // Add text with optional formatting
         const text: string[] = [];
-        const addLines = (lines: string[], chalk: Chalk = COLOUR_LO): void => {
-            text.push(...lines.map(line => colour ? chalk(line) : line));
+        const addLines = (lines: string[], colour: chalk.Chalk = COLOUR_LO): void => {
+            text.push(...lines.map(line => useColour ? colour(line) : line));
         };
-        const addLink = (description: string, uri: string, chalk: Chalk = COLOUR_LO): void => {
+        const addLink = (description: string, uri: string, colour: chalk.Chalk = COLOUR_LO): void => {
             let lines = [`${description}:`, `    ${uri}`];
-            if (colour) lines = [chalk(lines[0]), chalk.bold(lines[1])];
+            if (useColour) lines = [colour(lines[0]), colour.bold(lines[1])];
             text.push(...lines);
         };
 

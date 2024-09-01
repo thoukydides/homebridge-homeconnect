@@ -4,12 +4,12 @@
 import { STATUS_CODES } from 'http';
 import { createCheckers, CheckerT, IErrorDetail } from 'ts-interface-checker';
 
-import { ErrorResponse } from './api-types';
-import { AuthorisationError } from './api-auth-types';
-import { Request, Response } from './api-ua';
-import { columns } from './utils';
-import apiTI from './ti/api-types-ti';
-import authTI from './ti/api-auth-types-ti';
+import { ErrorResponse } from './api-types.js';
+import { AuthorisationError } from './api-auth-types.js';
+import { Request, Response } from './api-ua.js';
+import { columns } from './utils.js';
+import apiTI from './ti/api-types-ti.js';
+import authTI from './ti/api-auth-types-ti.js';
 
 // Options that can be passed to an error constructor
 interface Options {

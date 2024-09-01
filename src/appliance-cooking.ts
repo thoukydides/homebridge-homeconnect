@@ -3,19 +3,19 @@
 
 /* eslint indent: ["warn", 4, { "CallExpression": {"arguments": 0} }] */
 
-import { ApplianceGeneric } from './appliance-generic';
-import { HasAlarmClock } from './has-alarmclock';
-import { HasChildLock } from './has-childlock';
-import { HasDoor, HasLockableDoor } from './has-door';
-import { HasEvents } from './has-events';
-import { HasModes } from './has-modes';
-import { HasFan } from './has-fan';
-import { HasHoodLight } from './has-light';
-import { HasActive } from './has-active';
-import { HasPrograms } from './has-programs';
-import { HasRemainingTime } from './has-remainingtime';
-import { HasRemoteControl } from './has-remotecontrol';
-import { PowerState } from './api-value-types';
+import { ApplianceGeneric } from './appliance-generic.js';
+import { HasAlarmClock } from './has-alarmclock.js';
+import { HasChildLock } from './has-childlock.js';
+import { HasDoor, HasLockableDoor } from './has-door.js';
+import { HasEvents } from './has-events.js';
+import { HasModes } from './has-modes.js';
+import { HasFan } from './has-fan.js';
+import { HasHoodLight } from './has-light.js';
+import { HasActive } from './has-active.js';
+import { HasPrograms } from './has-programs.js';
+import { HasRemainingTime } from './has-remainingtime.js';
+import { HasRemoteControl } from './has-remotecontrol.js';
+import { PowerState } from './api-value-types.js';
 
 // A Homebridge accessory for a Home Connect coffee maker
 export class ApplianceCoffeeMaker extends

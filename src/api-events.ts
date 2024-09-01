@@ -6,13 +6,13 @@ import { Logger, LogLevel } from 'homebridge';
 import { EventEmitter } from 'events';
 import { CheckerT, createCheckers } from 'ts-interface-checker';
 
-import { Event } from './api-types';
-import { APIAuthoriseUserAgent } from './api-ua-auth';
-import { formatMilliseconds } from './utils';
-import { logError } from './log-error';
-import { APIEventStreamError, APIValidationError } from './api-errors';
-import { Request, Response, SSE } from './api-ua';
-import apiTI from './ti/api-types-ti';
+import { Event } from './api-types.js';
+import { APIAuthoriseUserAgent } from './api-ua-auth.js';
+import { formatMilliseconds } from './utils.js';
+import { logError } from './log-error.js';
+import { APIEventStreamError, APIValidationError } from './api-errors.js';
+import { Request, Response, SSE } from './api-ua.js';
+import apiTI from './ti/api-types-ti.js';
 
 // Checkers for API responses
 const checkers = createCheckers(apiTI) as {

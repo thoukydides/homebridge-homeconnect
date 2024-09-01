@@ -3,16 +3,16 @@
 
 /* eslint indent: ["warn", 4, { "CallExpression": {"arguments": 0} }] */
 
-import { ApplianceGeneric } from './appliance-generic';
-import { HasChildLock } from './has-childlock';
-import { HasDoor, HasLockableDoor } from './has-door';
-import { HasEvents } from './has-events';
-import { HasActive } from './has-active';
-import { HasBattery } from './has-battery';
-import { HasCleaningLight } from './has-light';
-import { HasPrograms } from './has-programs';
-import { HasRemainingTime } from './has-remainingtime';
-import { HasRemoteControl } from './has-remotecontrol';
+import { ApplianceGeneric } from './appliance-generic.js';
+import { HasChildLock } from './has-childlock.js';
+import { HasDoor, HasLockableDoor } from './has-door.js';
+import { HasEvents } from './has-events.js';
+import { HasActive } from './has-active.js';
+import { HasBattery } from './has-battery.js';
+import { HasCleaningLight } from './has-light.js';
+import { HasPrograms } from './has-programs.js';
+import { HasRemainingTime } from './has-remainingtime.js';
+import { HasRemoteControl } from './has-remotecontrol.js';
 
 // A Homebridge accessory for a Home Connect cleaning robot (Roxxter)
 export class ApplianceCleaningRobot extends

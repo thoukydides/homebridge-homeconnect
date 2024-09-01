@@ -1,9 +1,9 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { CommandKV, ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value';
-import { DoorState, OperationState, PowerState } from '../api-value-types';
-import { MockAppliance } from './mock-appliance';
+import { CommandKV, ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value.js';
+import { DoorState, OperationState, PowerState } from '../api-value-types.js';
+import { MockAppliance } from './mock-appliance.js';
 
 // A mock Dishwasher (based on a physical Siemens iQ700 appliance)
 // https://www.siemens-home.bsh-group.com/uk/productlist/SN678D06TG

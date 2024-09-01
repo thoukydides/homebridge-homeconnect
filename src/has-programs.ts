@@ -5,15 +5,15 @@ import { Perms, Service } from 'homebridge';
 
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor, MS, assertIsDefined, columns, formatList, plural } from './utils';
-import { logError } from './log-error';
-import { OptionValues, PowerState, ProgramKey } from './api-value-types';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor, MS, assertIsDefined, columns, formatList, plural } from './utils.js';
+import { logError } from './log-error.js';
+import { OptionValues, PowerState, ProgramKey } from './api-value-types.js';
 import { CommandKey, OptionDefinitionKV, OptionKey, OptionValue,
-         ProgramDefinitionKV } from './api-value';
-import { Value } from './api-types';
-import { ApplianceProgramConfig, ConfigAppliances } from './config-types';
-import { SchemaProgramOption } from './homebridge-ui/schema-data';
+         ProgramDefinitionKV } from './api-value.js';
+import { Value } from './api-types.js';
+import { ApplianceProgramConfig, ConfigAppliances } from './config-types.js';
+import { SchemaProgramOption } from './homebridge-ui/schema-data.js';
 
 // A program configuration that has passed sanity checks
 export interface CheckedProgramConfig extends Omit<ApplianceProgramConfig, 'options'> {

@@ -11,7 +11,7 @@ export interface ConfigPlugin {
     clientsecret?:          string;
     simulator?:             boolean;
     language:               { api: string };
-    debug:                  DebugFeatures[];
+    debug?:                 DebugFeatures[];
 }
 
 // Debugging features

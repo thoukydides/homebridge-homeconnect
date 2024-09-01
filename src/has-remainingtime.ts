@@ -3,8 +3,8 @@
 
 import { Service } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor, assertIsDefined, formatSeconds } from './utils';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor, assertIsDefined, formatSeconds } from './utils.js';
 
 // Maximum remaining program duration (Home Connect documentation specifies 38340 seconds)
 const MAX_DELAY_DURATION     = 86340; // (seconds)

@@ -1,9 +1,9 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
-import { ConfigPlugin } from './config-types';
+import { ConfigPlugin } from './config-types.js';
 
-import PACKAGE from '../package.json';
+import PACKAGE from '../package.json' assert { type: 'json' };
 
 // Platform identifiers
 export const ENGINES: Record<string, string>    = PACKAGE.engines;

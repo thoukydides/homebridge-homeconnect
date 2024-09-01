@@ -3,7 +3,7 @@
 
 import { Logger } from 'homebridge';
 
-import { APIError } from './api-errors';
+import { APIError } from './api-errors.js';
 
 // Log an error
 let lastLoggedError: unknown;

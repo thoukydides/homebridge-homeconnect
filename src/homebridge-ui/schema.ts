@@ -6,13 +6,13 @@ import { PlatformConfig } from 'homebridge';
 
 import assert from 'assert';
 
-import { HOMEBRIDGE_LANGUAGES } from '../api-languages';
-import { keyofChecker, plural } from '../utils';
-import { DEFAULT_CONFIG, PLATFORM_NAME } from '../settings';
+import { HOMEBRIDGE_LANGUAGES } from '../api-languages.js';
+import { keyofChecker, plural } from '../utils.js';
+import { DEFAULT_CONFIG, PLATFORM_NAME } from '../settings.js';
 import { ConfigSchemaData, SchemaAppliance, SchemaOptionalFeature,
          SchemaProgramOption, SchemaProgramOptionType,
-         SchemaProgramOptionValue } from './schema-data';
-import configTI from '../ti/config-types-ti';
+         SchemaProgramOptionValue } from './schema-data.js';
+import configTI from '../ti/config-types-ti.js';
 
 // Maximum number of enum values for numeric types with multipleOf constraint
 const MAX_ENUM_STEPS = 18;

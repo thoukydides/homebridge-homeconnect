@@ -3,9 +3,9 @@
 
 import { HAPStatus, Perms, Service } from 'homebridge';
 
-import { PowerState } from './api-value-types';
-import { ApplianceBase } from './appliance-generic';
-import { Constructor } from './utils';
+import { PowerState } from './api-value-types.js';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor } from './utils.js';
 
 // Add a power switch to an accessory
 export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) {

@@ -3,8 +3,8 @@
 
 import { Perms, Service } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { assertIsDefined, Constructor } from './utils';
+import { ApplianceBase } from './appliance-generic.js';
+import { assertIsDefined, Constructor } from './utils.js';
 
 // Add operation state to an accessory
 export function HasActive<TBase extends Constructor<ApplianceBase>>(Base: TBase) {

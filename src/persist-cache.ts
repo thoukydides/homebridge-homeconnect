@@ -7,9 +7,9 @@ import { LocalStorage } from 'node-persist';
 import { setImmediate as setImmediateP } from 'timers/promises';
 import semver from 'semver';
 
-import { MS, formatList, formatMilliseconds } from './utils';
-import { logError } from './log-error';
-import { PLUGIN_VERSION } from './settings';
+import { MS, formatList, formatMilliseconds } from './utils.js';
+import { logError } from './log-error.js';
+import { PLUGIN_VERSION } from './settings.js';
 
 // An individual cache entry
 interface CacheItem {

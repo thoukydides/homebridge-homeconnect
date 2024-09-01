@@ -3,11 +3,11 @@
 
 import { Characteristic, Service, WithUUID } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor, Optional, assertIsDefined, assertIsNumber } from './utils';
-import { AmbientLightColor, ColorTemperature } from './api-value-types';
-import { SettingKV } from './api-value';
-import { SerialisedOperation } from './serialised';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor, Optional, assertIsDefined, assertIsNumber } from './utils.js';
+import { AmbientLightColor, ColorTemperature } from './api-value-types.js';
+import { SettingKV } from './api-value.js';
+import { SerialisedOperation } from './serialised.js';
 
 // HomeKit HSV representation of a colour
 export interface HSV {

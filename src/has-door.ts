@@ -3,10 +3,10 @@
 
 import { Perms, Service } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor, assertIsNumber } from './utils';
-import { DoorState, DoorStateRefrigeration } from './api-value-types';
-import { CommandKey, StatusKey, StatusValue } from './api-value';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor, assertIsNumber } from './utils.js';
+import { DoorState, DoorStateRefrigeration } from './api-value-types.js';
+import { CommandKey, StatusKey, StatusValue } from './api-value.js';
 
 // Status keys used for doors
 export type DoorStatusKey<Key extends StatusKey = StatusKey> =

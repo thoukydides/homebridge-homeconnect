@@ -5,9 +5,9 @@ import { Service } from 'homebridge';
 
 import { setImmediate as setImmediateP } from 'timers/promises';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor } from './utils';
-import { SettingKey } from './api-value';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor } from './utils.js';
+import { SettingKey } from './api-value.js';
 
 // Add mode switches to an accessory
 export function HasModes<TBase extends Constructor<ApplianceBase>>(Base: TBase, prefix = 'mode') {

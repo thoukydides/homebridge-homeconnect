@@ -7,18 +7,18 @@ import { on } from 'events';
 import { LocalStorage } from 'node-persist';
 import { createCheckers } from 'ts-interface-checker';
 
-import { ConfigPlugin } from './config-types';
+import { ConfigPlugin } from './config-types.js';
 import { CommandsWrapper, ExecuteCommandWrapper, ProgramDefinitionWrapper,
          HomeAppliance, HomeApplianceWrapper, HomeAppliancesWrapper,
          OptionWrapper, OptionsWrapper, ProgramsWrapper, ProgramWrapper,
-         SettingWrapper, SettingsWrapper, StatusWrapper, StatusesWrapper } from './api-types';
-import { APIAuthoriseUserAgent, AuthorisationStatus } from './api-ua-auth';
-import { APIEvent, APIEventStream } from './api-events';
+         SettingWrapper, SettingsWrapper, StatusWrapper, StatusesWrapper } from './api-types.js';
+import { APIAuthoriseUserAgent, AuthorisationStatus } from './api-ua-auth.js';
+import { APIEvent, APIEventStream } from './api-events.js';
 import { APICheckValues, CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
          ProgramDefinitionKV, ProgramKV, ProgramsKV, SettingKey,  SettingKV,
-         SettingValue, StatusKey, StatusKV, OptionValue } from './api-value';
-import { ProgramKey } from './api-value-types';
-import apiTI from './ti/api-types-ti';
+         SettingValue, StatusKey, StatusKV, OptionValue } from './api-value.js';
+import { ProgramKey } from './api-value-types.js';
+import apiTI from './ti/api-types-ti.js';
 
 // Checkers for API responses
 const checkers = createCheckers(apiTI);

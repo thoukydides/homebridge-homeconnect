@@ -4,24 +4,24 @@
 import { Logger, LogLevel } from 'homebridge';
 
 import { LocalStorage } from 'node-persist';
-import { bold, greenBright } from 'chalk';
 import { CheckerT, createCheckers } from 'ts-interface-checker';
 import { setTimeout as setTimeoutP } from 'timers/promises';
+import chalk from 'chalk';
 
 import { AbsoluteToken, PersistAbsoluteTokens, AuthorisationError,
          AccessTokenRefreshRequest, AccessTokenRefreshResponse,
          AccessTokenRequest, AccessTokenResponse,
          AuthorisationRequest, AuthorisationResponse,
          DeviceAccessTokenRequest, DeviceAccessTokenResponse,
-         DeviceAuthorisationRequest, DeviceAuthorisationResponse } from './api-auth-types';
-import { APIUserAgent, Method, Request } from './api-ua';
-import { assertIsDefined, Copy, formatMilliseconds, formatSeconds, MS } from './utils';
-import { logError } from './log-error';
-import { APIAuthorisationError, APIError, APIStatusCodeError } from './api-errors';
-import { ConfigPlugin } from './config-types';
-import { API_SCOPES } from './settings';
-import { AuthHelp, AuthHelpDeviceFlow, AuthHelpMessage } from './api-ua-auth-help';
-import authTI from './ti/api-auth-types-ti';
+         DeviceAuthorisationRequest, DeviceAuthorisationResponse } from './api-auth-types.js';
+import { APIUserAgent, Method, Request } from './api-ua.js';
+import { assertIsDefined, Copy, formatMilliseconds, formatSeconds, MS } from './utils.js';
+import { logError } from './log-error.js';
+import { APIAuthorisationError, APIError, APIStatusCodeError } from './api-errors.js';
+import { ConfigPlugin } from './config-types.js';
+import { API_SCOPES } from './settings.js';
+import { AuthHelp, AuthHelpDeviceFlow, AuthHelpMessage } from './api-ua-auth-help.js';
+import authTI from './ti/api-auth-types-ti.js';
 
 // Authorisation status update
 export interface AuthorisationStatusSuccess {
@@ -51,6 +51,10 @@ const checkersT = checkers as {
     AbsoluteToken:          CheckerT<AbsoluteToken>;
     PersistAbsoluteTokens:  CheckerT<PersistAbsoluteTokens>;
 };
+
+// Colours for the verification message
+const COLOUR_HI = chalk.greenBright;
+const COLOUR_LINK = chalk.bold;
 
 // An authorisation abort and retry trigger
 export class AuthorisationRetry {
@@ -306,12 +310,12 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         const logPrompt = async (): Promise<void> => {
             while (displayPrompts) {
                 const expiry = expires ? ` within ${formatMilliseconds(expires - Date.now())}` : '';
-                this.log.info(greenBright(`Please authorise access to your appliances${expiry}`
+                this.log.info(COLOUR_HI(`Please authorise access to your appliances${expiry}`
                                           + ' using the associated Home Connect or SingleKey ID'
                                           + ' email address by visiting:'));
                 this.log.info(response.verification_uri_complete
-                    ? greenBright(`    ${bold(response.verification_uri_complete)}`)
-                    : greenBright(`    ${bold(response.verification_uri)} and enter code ${bold(response.user_code)}`));
+                    ? COLOUR_HI(`    ${COLOUR_LINK(response.verification_uri_complete)}`)
+                    : COLOUR_HI(`    ${COLOUR_LINK(response.verification_uri)} and enter code ${COLOUR_LINK(response.user_code)}`));
                 await setTimeoutP(this.deviceFlowLogInterval);
             }
         };

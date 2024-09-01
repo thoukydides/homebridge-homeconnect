@@ -7,16 +7,16 @@ import { EventEmitter } from 'events';
 import { once } from 'node:events';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
-import { APIStatusCodeError } from './api-errors';
-import { assertIsDefined, MS } from './utils';
-import { logError } from './log-error';
-import { HomeConnectAPI } from './api';
-import { HomeAppliance } from './api-types';
-import { OperationState, OptionValues, PowerState, ProgramKey } from './api-value-types';
+import { APIStatusCodeError } from './api-errors.js';
+import { assertIsDefined, MS } from './utils.js';
+import { logError } from './log-error.js';
+import { HomeConnectAPI } from './api.js';
+import { HomeAppliance } from './api-types.js';
+import { OperationState, OptionValues, PowerState, ProgramKey } from './api-value-types.js';
 import { CommandKV, EventKey, EventKV, EventValue, KVKey, KVValue, OptionKey,
          OptionKV, OptionValue, ProgramDefinitionKV, ProgramKV, ProgramListKV,
-         SettingKey, SettingKV, SettingValue, StatusKey, StatusKV, StatusValue } from './api-value';
-import { Scope } from './api-auth-types';
+         SettingKey, SettingKV, SettingValue, StatusKey, StatusKV, StatusValue } from './api-value.js';
+import { Scope } from './api-auth-types.js';
 
 // Minimum event stream interruption before treated as appliance disconnected
 const EVENT_DISCONNECT_DELAY = 3 * MS;

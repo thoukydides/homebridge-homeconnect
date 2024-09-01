@@ -3,8 +3,8 @@
 
 import { Service } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor } from './utils';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor } from './utils.js';
 
 // Add a child lock to an accessory
 export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerService: Service }>>(Base: TBase) {

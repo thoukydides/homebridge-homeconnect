@@ -1,9 +1,9 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { CommandKV, SettingKV, StatusKV } from '../api-value';
-import { DoorState, OperationState, PowerState, TemperatureUnit } from '../api-value-types';
-import { MockAppliance } from './mock-appliance';
+import { CommandKV, SettingKV, StatusKV } from '../api-value.js';
+import { DoorState, OperationState, PowerState, TemperatureUnit } from '../api-value-types.js';
+import { MockAppliance } from './mock-appliance.js';
 
 // A mock Hob (based on a physical Siemens iQ700 appliance)
 // https://www.siemens-home.bsh-group.com/uk/productlist/EX677LYV1E

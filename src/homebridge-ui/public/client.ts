@@ -1,16 +1,16 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2024 Alexander Thoukydides
 
-import '@homebridge/plugin-ui-utils/dist/ui.interface';
+import '@homebridge/plugin-ui-utils/dist/ui.interface.js';
 import { LogLevel, Logger } from 'homebridge';
 
-import { ClientLogger, ServerLogger } from './logger';
-import { Config } from './config';
-import { Cards } from './cards';
-import { ClientClientID } from './client-clientid';
-import { FormId, Forms } from './forms';
-import { ClientIPC } from './client-ipc';
-import { APIStatus } from './api-status';
+import { ClientLogger, ServerLogger } from './logger.js';
+import { Config } from './config.js';
+import { Cards } from './cards.js';
+import { ClientClientID } from './client-clientid.js';
+import { FormId, Forms } from './forms.js';
+import { ClientIPC } from './client-ipc.js';
+import { APIStatus } from './api-status.js';
 
 // A Homebridge HomeConnect custom UI client
 class Client {

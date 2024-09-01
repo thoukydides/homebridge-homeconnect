@@ -3,9 +3,9 @@
 
 import { Service } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor, formatList } from './utils';
-import { StatusKey, StatusValue } from './api-value';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor, formatList } from './utils.js';
+import { StatusKey, StatusValue } from './api-value.js';
 
 // Add local and remote control state to an accessory
 export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { powerService: Service }>>(Base: TBase) {

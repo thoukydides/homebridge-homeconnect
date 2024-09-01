@@ -1,9 +1,9 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value';
-import { DoorState, OperationState, PowerState } from '../api-value-types';
-import { MockAppliance } from './mock-appliance';
+import { ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value.js';
+import { DoorState, OperationState, PowerState } from '../api-value-types.js';
+import { MockAppliance } from './mock-appliance.js';
 
 // A mock Dryer (based on a simulated appliance)
 // https://developer.home-connect.com/simulator/dryer

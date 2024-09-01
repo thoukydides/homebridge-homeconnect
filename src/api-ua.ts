@@ -3,17 +3,16 @@
 
 import { Logger, LogLevel } from 'homebridge';
 
-import { STATUS_CODES } from 'http';
+import { STATUS_CODES, IncomingHttpHeaders } from 'http';
 import { Client, Dispatcher } from 'undici';
-import { IncomingHttpHeaders } from 'undici/types/header';
 import { Checker, IErrorDetail } from 'ts-interface-checker';
 import querystring, { ParsedUrlQueryInput } from 'node:querystring';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
-import { PLUGIN_NAME, PLUGIN_VERSION } from './settings';
-import { APIError, APIStatusCodeError, APIValidationError } from './api-errors';
-import { assertIsString, columns, formatMilliseconds, getValidationTree, MS } from './utils';
-import { ConfigPlugin } from './config-types';
+import { PLUGIN_NAME, PLUGIN_VERSION } from './settings.js';
+import { APIError, APIStatusCodeError, APIValidationError } from './api-errors.js';
+import { assertIsString, columns, formatMilliseconds, getValidationTree, MS } from './utils.js';
+import { ConfigPlugin } from './config-types.js';
 
 export type Method     = Dispatcher.HttpMethod;
 export type Headers    = IncomingHttpHeaders;
@@ -367,7 +366,7 @@ export class APIUserAgent {
 
     // Log request or response headers
     logHeaders(name: string, headers: Headers): void {
-        if (!this.config.debug.includes('Log API Headers')) return;
+        if (!this.config.debug?.includes('Log API Headers')) return;
         const rows: string[][] = [];
         for (const key of Object.keys(headers).sort()) {
             const values = headers[key];
@@ -382,7 +381,7 @@ export class APIUserAgent {
 
     // Log request or response body
     logBody(name: string, body: unknown): void {
-        if (!this.config.debug.includes('Log API Bodies')) return;
+        if (!this.config.debug?.includes('Log API Bodies')) return;
         if (typeof body !== 'string') return;
         if (body.length) {
             this.log.debug(`${name} body:`);

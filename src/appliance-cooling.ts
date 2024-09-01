@@ -3,13 +3,13 @@
 
 /* eslint indent: ["warn", 4, { "CallExpression": {"arguments": 0} }] */
 
-import { ApplianceBase, ApplianceGeneric } from './appliance-generic';
-import { HasChildLock } from './has-childlock';
-import { HasDoor } from './has-door';
-import { HasEvents } from './has-events';
-import { HasModes } from './has-modes';
-import { HasRefrigerationLight } from './has-light';
-import { Constructor } from './utils';
+import { ApplianceBase, ApplianceGeneric } from './appliance-generic.js';
+import { HasChildLock } from './has-childlock.js';
+import { HasDoor } from './has-door.js';
+import { HasEvents } from './has-events.js';
+import { HasModes } from './has-modes.js';
+import { HasRefrigerationLight } from './has-light.js';
+import { Constructor } from './utils.js';
 
 // Add cooling appliance mode settings to an accessory
 function HasCoolingModes<TBase extends Constructor<ApplianceBase>>(Base: TBase) {

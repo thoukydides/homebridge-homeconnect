@@ -1,9 +1,9 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { CommandKV, ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value';
-import { AmbientLightColor, OperationState, PowerState } from '../api-value-types';
-import { MockAppliance } from './mock-appliance';
+import { CommandKV, ProgramDefinitionKV, SettingKV, StatusKV } from '../api-value.js';
+import { AmbientLightColor, OperationState, PowerState } from '../api-value-types.js';
+import { MockAppliance } from './mock-appliance.js';
 
 // A mock Hood (based on a Siemens LC98KLV60/03 and a Bosch DWF97RW65/01)
 // https://github.com/thoukydides/homebridge-homeconnect/issues/84#issuecomment-1095300237

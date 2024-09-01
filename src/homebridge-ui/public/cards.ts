@@ -3,9 +3,9 @@
 
 import { Logger } from 'homebridge';
 
-import { HomeAppliance } from '../../api-types';
-import { assertIsDefined, assertIsInstanceOf } from '../../utils';
-import { cloneTemplate, getElementById, getSlot } from './utils-dom';
+import { HomeAppliance } from '../../api-types.js';
+import { assertIsDefined, assertIsInstanceOf } from '../../utils.js';
+import { cloneTemplate, getElementById, getSlot } from './utils-dom.js';
 
 
 // Description for a card

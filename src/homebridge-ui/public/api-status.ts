@@ -2,8 +2,8 @@
 // Copyright © 2024 Alexander Thoukydides
 
 import { Logger } from 'homebridge';
-import { MS, assertIsBoolean, assertIsNumber } from '../../utils';
-import { getElementById } from './utils-dom';
+import { MS, assertIsBoolean, assertIsNumber } from '../../utils.js';
+import { getElementById } from './utils-dom.js';
 
 // URL for the server status image
 const STATUS_URL = 'https://homeconnect.thouky.co.uk/api/images/plugin-status.svg';

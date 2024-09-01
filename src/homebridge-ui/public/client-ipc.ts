@@ -3,7 +3,7 @@
 
 import { Logger } from 'homebridge';
 
-import { ServerEvent, ServerEventData, ServerPath, ServerRequest, ServerResponse } from '../server-ipc';
+import { ServerEvent, ServerEventData, ServerPath, ServerRequest, ServerResponse } from '../server-ipc.js';
 
 // Client-side IPC implementation
 export class ClientIPC {

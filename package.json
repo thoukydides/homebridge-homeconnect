@@ -68,6 +68,7 @@
     "bugs": {
         "url": "https://github.com/thoukydides/homebridge-homeconnect/issues"
     },
+    "type": "module",
     "main": "dist/index.js",
     "engines": {
         "node": ">=22.0.0 || ^20.12.2 || ^18.20.2",
@@ -92,6 +93,7 @@
         "browserify": "^17.0.0",
         "copyfiles": "^2.4.1",
         "eslint": "^9.9.1",
+        "esmify": "^2.1.1",
         "globals": "^15.9.0",
         "homebridge": "^1.8.4",
         "homebridge-config-ui-x": "^4.57.1",
@@ -105,7 +107,7 @@
     "scripts": {
         "lint": "npm run checkers && eslint src/ --max-warnings=0",
         "watch": "npm run build && nodemon",
-        "browserify": "browserify -d dist/homebridge-ui/public/client.js -o dist/homebridge-ui/public/bundle.js",
+        "browserify": "browserify -d -p esmify dist/homebridge-ui/public/client.js -o dist/homebridge-ui/public/bundle.js",
         "browserify-list": "browserify --list -d dist/homebridge-ui/public/client.js | sort",
         "checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts",
         "prebuild": "rimraf ./dist",

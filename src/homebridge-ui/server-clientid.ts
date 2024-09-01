@@ -1,20 +1,20 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import '@homebridge/plugin-ui-utils/dist/ui.interface';
+import '@homebridge/plugin-ui-utils/dist/ui.interface.js';
 import { Logger } from 'homebridge';
 
 import { LocalStorage } from 'node-persist';
 
-import { CloudAPI, HomeConnectAPI } from '../api';
-import { HomeAppliance } from '../api-types';
-import { ConfigPlugin } from '../config-types';
-import { MockAPI } from '../mock';
-import { Constructor, assertIsDefined } from '../utils';
-import { logError } from '../log-error';
-import { AuthorisationStatus } from '../api-ua-auth';
-import { APIStatusCodeError } from '../api-errors';
-import { ServerIPC } from './server-ipc';
+import { CloudAPI, HomeConnectAPI } from '../api.js';
+import { HomeAppliance } from '../api-types.js';
+import { ConfigPlugin } from '../config-types.js';
+import { MockAPI } from '../mock/index.js';
+import { Constructor, assertIsDefined } from '../utils.js';
+import { logError } from '../log-error.js';
+import { AuthorisationStatus } from '../api-ua-auth.js';
+import { APIStatusCodeError } from '../api-errors.js';
+import { ServerIPC } from './server-ipc.js';
 
 // API status
 export interface ClientIDStatus {
@@ -48,7 +48,7 @@ export class ServerClientID {
         // Select the appropriate configuration
         let api: Constructor<HomeConnectAPI>;
         let description: string;
-        if (config.debug.includes('Mock Appliances')) {
+        if (config.debug?.includes('Mock Appliances')) {
             api = MockAPI;
             config.clientid = '';
             config.simulator = true;

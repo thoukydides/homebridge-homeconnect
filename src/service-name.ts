@@ -6,9 +6,9 @@ import { Logger, Perms, Service } from 'homebridge';
 import assert from 'node:assert';
 import NodePersist from 'node-persist';
 
-import { assertIsDefined, assertIsString, formatList, plural } from './utils';
-import { ApplianceBase } from './appliance-generic';
-import { logError } from './log-error';
+import { assertIsDefined, assertIsString, formatList, plural } from './utils.js';
+import { ApplianceBase } from './appliance-generic.js';
+import { logError } from './log-error.js';
 
 // Service name length in Unicode characters (code points, not octets or code units)
 const SERVICE_LENGTH_MIN = 1;

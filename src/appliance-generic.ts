@@ -6,17 +6,17 @@ import { CharacteristicSetHandler, CharacteristicValue, HAPStatus,
 
 import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers/promises';
 
-import { HasPower } from './has-power';
-import { PersistCache } from './persist-cache';
+import { HasPower } from './has-power.js';
+import { PersistCache } from './persist-cache.js';
 import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, assertIsString,
-         columns, formatList, formatMilliseconds, plural} from './utils';
-import { logError } from './log-error';
-import { ApplianceConfig } from './config-types';
-import { HomeConnectDevice } from './homeconnect-device';
-import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } from './serialised';
-import { HomeConnectPlatform } from './platform';
-import { ConfigSchemaData, SchemaOptionalFeature } from './homebridge-ui/schema-data';
-import { ServiceNames } from './service-name';
+         columns, formatList, formatMilliseconds, plural} from './utils.js';
+import { logError } from './log-error.js';
+import { ApplianceConfig } from './config-types.js';
+import { HomeConnectDevice } from './homeconnect-device.js';
+import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } from './serialised.js';
+import { HomeConnectPlatform } from './platform.js';
+import { ConfigSchemaData, SchemaOptionalFeature } from './homebridge-ui/schema-data.js';
+import { ServiceNames } from './service-name.js';
 
 // A HAP Service constructor
 type ServiceConstructor = typeof Service & {

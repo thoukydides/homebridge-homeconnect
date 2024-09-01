@@ -3,7 +3,7 @@
 
 import assert from 'assert';
 
-import { assertIsDefined, assertIsInstanceOf } from '../../utils';
+import { assertIsDefined, assertIsInstanceOf } from '../../utils.js';
 
 // A Document, DocumentFragment, or an Element
 export interface QuerySelectorAll {

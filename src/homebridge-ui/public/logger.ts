@@ -3,8 +3,8 @@
 
 import { LogLevel } from 'homebridge';
 
-import { ClientIPC } from './client-ipc';
-import { ServerLogMessage } from '../server-ipc';
+import { ClientIPC } from './client-ipc.js';
+import { ServerLogMessage } from '../server-ipc.js';
 
 // Prefix for client and server log messages
 const PLUGIN_PREFIX = window.homebridge.plugin.displayName ?? window.homebridge.plugin.name;

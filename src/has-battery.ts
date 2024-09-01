@@ -3,9 +3,9 @@
 
 import { Service } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor } from './utils';
-import { BatteryChargingState, ChargingConnection } from './api-value-types';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor } from './utils.js';
+import { BatteryChargingState, ChargingConnection } from './api-value-types.js';
 
 // Battery level to treat as low battery
 const LOW_BATTERY = 15; // (percent)

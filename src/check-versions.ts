@@ -7,7 +7,7 @@ import semver from 'semver';
 
 import { ENGINES, PLUGIN_NAME, PLUGIN_VERSION,
          REQUIRED_HOMEBRIDGE_API,
-         REQUIRED_HOMEBRIDGE_HAP} from './settings';
+         REQUIRED_HOMEBRIDGE_HAP} from './settings.js';
 
 // Log critical package and API versions
 export function checkDependencyVersions(log: Logger, hb: API): void {

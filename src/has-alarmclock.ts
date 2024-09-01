@@ -3,8 +3,8 @@
 
 import { Service } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor, formatSeconds } from './utils';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor, formatSeconds } from './utils.js';
 
 // Default maximum alarm clock duration (if unable to read from Home Connect API)
 const MAX_ALARM_DURATION = 38340; // (seconds)

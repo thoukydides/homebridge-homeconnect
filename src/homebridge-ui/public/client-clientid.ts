@@ -1,16 +1,16 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import { IHomebridgeUiToastHelper } from '@homebridge/plugin-ui-utils/dist/ui.interface';
+import { IHomebridgeUiToastHelper } from '@homebridge/plugin-ui-utils/dist/ui.interface.js';
 import { Logger } from 'homebridge';
 
-import { ClientIPC } from './client-ipc';
-import { ClientIDStatus } from '../server-clientid';
-import { ConfigPlugin } from '../../config-types';
-import { MS } from '../../utils';
-import { AuthorisationStatusFailed, AuthorisationStatusUser } from '../../api-ua-auth';
-import { cloneTemplate, getElementById, setSlotText } from './utils-dom';
-import { HomeAppliance } from '../../api-types';
+import { ClientIPC } from './client-ipc.js';
+import { ClientIDStatus } from '../server-clientid.js';
+import { ConfigPlugin } from '../../config-types.js';
+import { MS } from '../../utils.js';
+import { AuthorisationStatusFailed, AuthorisationStatusUser } from '../../api-ua-auth.js';
+import { cloneTemplate, getElementById, setSlotText } from './utils-dom.js';
+import { HomeAppliance } from '../../api-types.js';
 
 // Minimum time between duplicate toast notifications
 const TOAST_DEDUP_TIME = 5 * MS;

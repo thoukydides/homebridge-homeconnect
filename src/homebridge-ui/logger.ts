@@ -5,7 +5,7 @@ import { LogLevel } from 'homebridge';
 
 import { setImmediate as setImmediateP } from 'timers/promises';
 
-import { ServerIPC, ServerLogMessage } from './server-ipc';
+import { ServerIPC, ServerLogMessage } from './server-ipc.js';
 
 // A logger that sends messages to the client as events
 export class ServerLogger {

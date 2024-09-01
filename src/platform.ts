@@ -9,27 +9,27 @@ import { join } from 'path';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 import { CheckerT, createCheckers, IErrorDetail } from 'ts-interface-checker';
 
-import { CloudAPI, HomeConnectAPI } from './api';
-import { HomeConnectDevice } from './homeconnect-device';
-import { ApplianceBase } from './appliance-generic';
+import { CloudAPI, HomeConnectAPI } from './api.js';
+import { HomeConnectDevice } from './homeconnect-device.js';
+import { ApplianceBase } from './appliance-generic.js';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
-         ApplianceWasher, ApplianceWasherDryer } from './appliance-cleaning';
+         ApplianceWasher, ApplianceWasherDryer } from './appliance-cleaning.js';
 import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
-         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance-cooking';
+         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance-cooking.js';
 import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
-         ApplianceWineCooler } from './appliance-cooling';
-import { ConfigSchemaData } from './homebridge-ui/schema-data';
-import { PLUGIN_NAME, PLATFORM_NAME, DEFAULT_CONFIG, DEFAULT_CLIENTID } from './settings';
-import { PrefixLogger } from './logger';
+         ApplianceWineCooler } from './appliance-cooling.js';
+import { ConfigSchemaData } from './homebridge-ui/schema-data.js';
+import { PLUGIN_NAME, PLATFORM_NAME, DEFAULT_CONFIG, DEFAULT_CLIENTID } from './settings.js';
+import { PrefixLogger } from './logger.js';
 import { assertIsDefined, deepMerge, formatList, getValidationTree,
-         keyofChecker, MS, plural } from './utils';
-import { logError } from './log-error';
-import { ConfigAppliances, ConfigPlugin } from './config-types';
-import { checkDependencyVersions } from './check-versions';
-import { HOMEBRIDGE_LANGUAGES } from './api-languages';
-import { HomeAppliance } from './api-types';
-import { MockAPI } from './mock';
-import configTI from './ti/config-types-ti';
+         keyofChecker, MS, plural } from './utils.js';
+import { logError } from './log-error.js';
+import { ConfigAppliances, ConfigPlugin } from './config-types.js';
+import { checkDependencyVersions } from './check-versions.js';
+import { HOMEBRIDGE_LANGUAGES } from './api-languages.js';
+import { HomeAppliance } from './api-types.js';
+import { MockAPI } from './mock/index.js';
+import configTI from './ti/config-types-ti.js';
 
 // Checkers for config.json configuration
 const checkers = createCheckers(configTI) as {
@@ -106,7 +106,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
             this.schema.setConfig(this.platformConfig);
 
             // Connect to the Home Connect cloud
-            const api = this.configPlugin.debug.includes('Mock Appliances') ? MockAPI : CloudAPI;
+            const api = this.configPlugin.debug?.includes('Mock Appliances') ? MockAPI : CloudAPI;
             this.homeconnect = new api(this.log, this.configPlugin, this.persist);
 
             // Start polling the list of Home Connect appliances
@@ -159,7 +159,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         }
 
         // Use the validated configuration
-        if (configPlugin.debug.includes('Log Debug as Info')) this.log.logDebugAsInfo();
+        if (configPlugin.debug?.includes('Log Debug as Info')) this.log.logDebugAsInfo();
         return [configPlugin, configAppliances];
     }
 

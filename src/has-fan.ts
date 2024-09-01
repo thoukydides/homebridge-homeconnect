@@ -3,10 +3,10 @@
 
 import { Characteristic, Service, WithUUID } from 'homebridge';
 
-import { ApplianceBase } from './appliance-generic';
-import { Constructor, assertIsDefined, assertIsNumber } from './utils';
-import { OptionDefinitionKV, OptionKey, OptionValue } from './api-value';
-import { ProgramKey } from './api-value-types';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor, assertIsDefined, assertIsNumber } from './utils.js';
+import { OptionDefinitionKV, OptionKey, OptionValue } from './api-value.js';
+import { ProgramKey } from './api-value-types.js';
 
 // Extractor fan programs
 const FAN_PROGRAM_MANUAL: ProgramKey = 'Cooking.Common.Program.Hood.Venting';

@@ -6,8 +6,8 @@ import { Logger, PlatformConfig } from 'homebridge';
 import { setImmediate as setImmediateP } from 'timers/promises';
 import NodePersist from 'node-persist';
 
-import { HomeAppliance } from '../api-types';
-import { logError } from '../log-error';
+import { HomeAppliance } from '../api-types.js';
+import { logError } from '../log-error.js';
 
 // Appliance programs and their options
 export interface SchemaProgram {

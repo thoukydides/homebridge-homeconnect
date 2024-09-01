@@ -5,11 +5,11 @@ import { Service } from 'homebridge';
 
 import { setImmediate as setImmediateP } from 'timers/promises';
 
-import { DoorState, EventPresentState } from './api-value-types';
-import { ApplianceBase } from './appliance-generic';
-import { Constructor } from './utils';
-import { EventKey } from './api-value';
-import { columns } from './utils';
+import { DoorState, EventPresentState } from './api-value-types.js';
+import { ApplianceBase } from './appliance-generic.js';
+import { Constructor } from './utils.js';
+import { EventKey } from './api-value.js';
+import { columns } from './utils.js';
 
 // All possible EVENTs
 type Event = EventKey<'EVENT'>;

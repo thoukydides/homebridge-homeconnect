@@ -4,10 +4,10 @@
 import { LogLevel, Logger, PlatformConfig } from 'homebridge';
 import { HomebridgePluginUiServer, RequestError } from '@homebridge/plugin-ui-utils';
 
-import { FormSchema } from './schema';
-import { ConfigPlugin } from '../config-types';
-import { ClientIDStatus } from './server-clientid';
-import { logError } from '../log-error';
+import { FormSchema } from './schema.js';
+import { ConfigPlugin } from '../config-types.js';
+import { ClientIDStatus } from './server-clientid.js';
+import { logError } from '../log-error.js';
 
 // Client to server requests and their responses
 export interface ServerRequests {

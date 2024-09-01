@@ -3,15 +3,15 @@
 
 import { Logger } from 'homebridge';
 
-import { green, greenBright } from 'chalk';
 import { LocalStorage } from 'node-persist';
 import assert from 'node:assert';
 import semver from 'semver';
+import chalk from 'chalk';
 
-import { MS, assertIsDefined, columns, formatList, plural } from './utils';
-import { HomeAppliance, OptionDefinition, Setting, Status, Value } from './api-types';
-import { PLUGIN_VERSION } from './settings';
-import { logError } from './log-error';
+import { MS, assertIsDefined, columns, formatList, plural } from './utils.js';
+import { HomeAppliance, OptionDefinition, Setting, Status, Value } from './api-types.js';
+import { PLUGIN_VERSION } from './settings.js';
+import { logError } from './log-error.js';
 
 // Delay before summary log (longer than 1 minute rate-limit interval)
 const SUMMARY_DELAY = 2 * 60 * MS;
@@ -21,6 +21,10 @@ const NEW_ISSUE_URL = 'https://github.com/thoukydides/homebridge-homeconnect/iss
 
 // Comment to tag unrecognised/mismatched values
 const REPORT_COMMENT = '(unrecognised)';
+
+// Colours for the report message
+const COLOUR_LO = chalk.green.dim;
+const COLOUR_HI = chalk.greenBright;
 
 // Mapping from Home Connect API (non-enum) types to Typescript equivalents
 const TYPE_MAP = new Map<string, string>([
@@ -232,17 +236,17 @@ export class APIKeyValuesLog {
                                            this.makeApplianceDescription(appliances, 'long'));
 
         // Output the header text
-        this.log.warn(greenBright('Home Connect API returned keys/values that are unrecognised by this plugin'));
-        this.log.warn(greenBright('Please report these by creating a new GitHub issue using this link:'));
-        this.log.warn(greenBright.bold(`    ${issueUrl}`));
-        this.log.warn(greenBright('Most of the issue fields will be filled-in appropriately.'));
-        this.log.warn(greenBright('Just paste the following into the "Log File" field and submit the issue:'));
+        this.log.warn(COLOUR_HI('Home Connect API returned keys/values that are unrecognised by this plugin'));
+        this.log.warn(COLOUR_HI('Please report these by creating a new GitHub issue using this link:'));
+        this.log.warn(COLOUR_HI.bold(`    ${issueUrl}`));
+        this.log.warn(COLOUR_HI('Most of the issue fields will be filled-in appropriately.'));
+        this.log.warn(COLOUR_HI('Just paste the following into the "Log File" field and submit the issue:'));
 
         // Output the unrecognised keys/values with delimiter lines
         const maxLength = Math.max(...lines.map(line => line.length));
-        this.log.warn(greenBright('='.repeat(maxLength)));
-        for (const line of lines) this.log.warn(green.dim(line));
-        this.log.warn(greenBright('='.repeat(maxLength)));
+        this.log.warn(COLOUR_HI('='.repeat(maxLength)));
+        for (const line of lines) this.log.warn(COLOUR_LO(line));
+        this.log.warn(COLOUR_HI('='.repeat(maxLength)));
     }
 
     // Construct an interface for a group of keys

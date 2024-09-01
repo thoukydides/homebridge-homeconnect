@@ -8,17 +8,17 @@ import assert from 'node:assert';
 import { LocalStorage } from 'node-persist';
 
 import { CommandValues, EventMapValues, OptionValues, ProgramKey, SettingValues,
-         StatusValues } from './api-value-types';
+         StatusValues } from './api-value-types.js';
 import { Command, Constraints, ConstraintsCommon, EventApplianceConnection,
          EventApplianceData, EventData, HomeAppliance, Option, OptionConstraintsCommon,
          OptionDefinition, OptionDefinitionCommon, Program, ProgramDefinition,
          ProgramList, Programs, Setting, SettingCommon, Status, StatusCommon,
-         Value } from './api-types';
-import { APIEvent, EventStart, EventStop } from './api-events';
-import { MS, getValidationTree, keyofChecker } from './utils';
-import { APIKeyValuesLog } from './api-value.log';
-import { ConfigPlugin } from './config-types';
-import valuesTI from './ti/api-value-types-ti';
+         Value } from './api-types.js';
+import { APIEvent, EventStart, EventStop } from './api-events.js';
+import { MS, getValidationTree, keyofChecker } from './utils.js';
+import { APIKeyValuesLog } from './api-value.log.js';
+import { ConfigPlugin } from './config-types.js';
+import valuesTI from './ti/api-value-types-ti.js';
 
 // Checkers for API responses
 const checkers = createCheckers(valuesTI);

@@ -5,9 +5,9 @@ import { Logger, LogLevel } from 'homebridge';
 
 import { createCheckers, CheckerT } from 'ts-interface-checker';
 
-import { AccessTokenHeader, AccessTokenPayload, RefreshToken, SimulatorToken } from './token-types';
-import { formatList, MS } from './utils';
-import tokensTI from './ti/token-types-ti';
+import { AccessTokenHeader, AccessTokenPayload, RefreshToken, SimulatorToken } from './token-types.js';
+import { formatList, MS } from './utils.js';
+import tokensTI from './ti/token-types-ti.js';
 
 // Checkers for token types
 const checkers = createCheckers(tokensTI) as {

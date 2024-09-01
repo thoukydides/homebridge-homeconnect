@@ -2,12 +2,12 @@
 // Copyright © 2023 Alexander Thoukydides
 
 import { Logger } from 'homebridge';
-import { IHomebridgeUiFormHelper, PluginConfig, PluginFormSchema } from '@homebridge/plugin-ui-utils/dist/ui.interface';
+import { IHomebridgeUiFormHelper, PluginConfig, PluginFormSchema } from '@homebridge/plugin-ui-utils/dist/ui.interface.js';
 
-import { ClientIPC } from './client-ipc';
-import { Config } from './config';
-import { ConfigPlugin } from '../../config-types';
-import { elementWithAbsolutePaths, cloneTemplate, getHTML } from './utils-dom';
+import { ClientIPC } from './client-ipc.js';
+import { Config } from './config.js';
+import { ConfigPlugin } from '../../config-types.js';
+import { elementWithAbsolutePaths, cloneTemplate, getHTML } from './utils-dom.js';
 
 // A configuration form handler
 export abstract class Form {

@@ -1,15 +1,15 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023 Alexander Thoukydides
 
-import '@homebridge/plugin-ui-utils/dist/ui.interface';
-import { PluginConfig } from '@homebridge/plugin-ui-utils/dist/ui.interface';
+import '@homebridge/plugin-ui-utils/dist/ui.interface.js';
+import { PluginConfig } from '@homebridge/plugin-ui-utils/dist/ui.interface.js';
 import { Logger, PlatformConfig } from 'homebridge';
 
-import { ApplianceConfig, ConfigAppliances, ConfigPlugin } from '../../config-types';
-import { keyofChecker } from '../../utils';
-import { ClientIPC } from './client-ipc';
-import { cloneTemplate, getElementById } from './utils-dom';
-import configTI from '../../ti/config-types-ti';
+import { ApplianceConfig, ConfigAppliances, ConfigPlugin } from '../../config-types.js';
+import { keyofChecker } from '../../utils.js';
+import { ClientIPC } from './client-ipc.js';
+import { cloneTemplate, getElementById } from './utils-dom.js';
+import configTI from '../../ti/config-types-ti.js';
 
 // A delta between two configurations
 export interface ConfigDiff {
