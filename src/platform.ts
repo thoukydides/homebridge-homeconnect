@@ -200,7 +200,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         await this.schema?.setAppliances(appliances);
 
         // Remove any appliances that have been disabled in the configuration
-        const enabledAppliances = appliances.filter(ha => this.configAppliances[ha.haId].enabled ?? true);
+        const enabledAppliances = appliances.filter(ha => this.configAppliances[ha.haId]?.enabled ?? true);
 
         // Map the appliance haId identifiers to accessory UUIDs
         const uuidMap = new Map(enabledAppliances.map(ha => [this.makeUUID(ha.haId), ha]));

@@ -421,26 +421,24 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
         // Convert a colour from RGB to hue/saturation
         fromRGB(rgbHex: string): HSV {
             // Convert from hex to individual RGB components
-            const rgb = [
-                parseInt(rgbHex.substring(1, 3), 16),
-                parseInt(rgbHex.substring(3, 5), 16),
-                parseInt(rgbHex.substring(5, 7), 16)
-            ];
+            const r = parseInt(rgbHex.substring(1, 3), 16);
+            const g = parseInt(rgbHex.substring(3, 5), 16);
+            const b = parseInt(rgbHex.substring(5, 7), 16);
 
             // Perform the conversion
-            const minRgb = Math.min(...rgb);
-            const maxRgb = Math.max(...rgb);
+            const minRgb = Math.min(r, g, b);
+            const maxRgb = Math.max(r, g, b);
             const chroma = maxRgb - minRgb;
             let sector;
             if (chroma === 0) {
                 sector = 0; // (dummy value for white, i.e. R=G=B=V)
-            } else if (maxRgb === rgb[0]) { // 0-60° or 300-360°
-                sector = (rgb[1] - rgb[2]) / chroma;
+            } else if (maxRgb === r) { // 0-60° or 300-360°
+                sector = (b - g) / chroma;
                 if (sector < 0) sector += 6;
-            } else if (maxRgb === rgb[1]) { // 60-180°
-                sector = (rgb[2] - rgb[0]) / chroma + 2;
-            } else { // (maxRgb === rgb[2])    180-300°
-                sector = (rgb[0] - rgb[1]) / chroma + 4;
+            } else if (maxRgb === g) { // 60-180°
+                sector = (g - r) / chroma + 2;
+            } else { // (maxRgb === b)    180-300°
+                sector = (r - b) / chroma + 4;
             }
 
             // Scale and return the hue, saturation, and value

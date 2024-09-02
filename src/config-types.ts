@@ -19,7 +19,7 @@ export type DebugFeatures = 'Log API Headers' | 'Log API Bodies' | 'Log Debug as
 
 // Appliance configurations indexed by haId
 export interface ConfigAppliances {
-    [haId: string]:         ApplianceConfig;
+    [haId: string]:         ApplianceConfig | undefined;
 }
 
 // Configuration for a single appliance

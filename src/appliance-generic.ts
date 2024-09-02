@@ -45,7 +45,7 @@ export class ApplianceBase {
 
     // Persistent cache
     readonly cache:             PersistCache;
-    readonly cachedOperation:   Record<string, string>           = {};
+    readonly cachedOperation:   Record<string, string> = {};
     readonly cachedPromise = new Map<string, Promise<unknown>>();
 
     // Asynchronous initialisation tasks
@@ -73,7 +73,7 @@ export class ApplianceBase {
         // Configuration for this appliance
         assertIsDefined(this.platform.schema);
         this.schema = this.platform.schema;
-        this.config = device.ha.haId in platform.configAppliances ? platform.configAppliances[device.ha.haId] : {};
+        this.config = platform.configAppliances[device.ha.haId] ?? {};
 
         // Initialise the cache for this appliance
         assertIsDefined(platform.persist);

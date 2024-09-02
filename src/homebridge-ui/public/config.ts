@@ -175,7 +175,7 @@ export class Config {
     // Get the current configuration for a specific appliance
     async getAppliance(haid: string): Promise<ApplianceConfig> {
         await this.readyPromise;
-        return haid in this.appliances ? this.appliances[haid] : {};
+        return this.appliances[haid] ?? {};
     }
 
     // Set updated global configuration
