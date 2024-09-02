@@ -60,7 +60,7 @@ export default tseslint.config(
             'prefer-arrow-callback':                            ['warn'],
             'quotes':                                           ['warn', 'single', { avoidEscape: true }],
             'semi':                                             ['warn'],
-            // Special rules for this project,
+            // Special rules for this project
             '@typescript-eslint/no-require-imports':            ['error', { allow: ['/package\\.json$'] }],
             '@typescript-eslint/no-explicit-any':               ['error', { ignoreRestArgs: true }],
             '@typescript-eslint/explicit-function-return-type': ['error', { allowedNames: [...mixinNames] }],
