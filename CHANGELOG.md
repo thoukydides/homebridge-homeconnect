@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.0.1] - 202-09-02
+### Fixed
+* Correctly handle configurations that do not specify settings for all appliances. (#294)
+
 ## [v1.0.0] - 202-09-01
 ### Changed
 * Changed to ESM project to support Homebridge 2.0 (and bodged around breaking change to maintain 1.x compatibility).
@@ -646,7 +650,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.1...HEAD
+[v1.0.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.0...v1.0.1
 [v1.0.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.4...v1.0.0
 [v0.42.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.3...v0.42.4
 [v0.42.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.2...v0.42.3
