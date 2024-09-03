@@ -54,7 +54,7 @@ export abstract class MockAppliance {
     }
 
     // Derived identifiers for this appliance
-    get vib():  string { return this.enumber.split('/')[0]; }
+    get vib():  string { return this.enumber.split('/')[0] ?? ''; }
     get haid(): string { return `${this.brand.toUpperCase()}-${this.vib}-0123456789AB`; }
 
     // Get details of the mock appliance

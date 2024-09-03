@@ -4,6 +4,7 @@
         "target": "es2022",
         "lib": [ "ES2022", "DOM" ],
         "strict": true,
+		"noUncheckedIndexedAccess": true,
         "strictNullChecks": true
     },
     "include": [ "*" ],

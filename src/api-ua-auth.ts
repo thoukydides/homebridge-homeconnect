@@ -4,11 +4,10 @@
 import { Logger, LogLevel } from 'homebridge';
 
 import { LocalStorage } from 'node-persist';
-import { CheckerT, createCheckers } from 'ts-interface-checker';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 import chalk from 'chalk';
 
-import { AbsoluteToken, PersistAbsoluteTokens, AuthorisationError,
+import { AbsoluteToken, PersistAbsoluteTokens,
          AccessTokenRefreshRequest, AccessTokenRefreshResponse,
          AccessTokenRequest, AccessTokenResponse,
          AuthorisationRequest, AuthorisationResponse,
@@ -21,7 +20,7 @@ import { APIAuthorisationError, APIError, APIStatusCodeError } from './api-error
 import { ConfigPlugin } from './config-types.js';
 import { API_SCOPES } from './settings.js';
 import { AuthHelp, AuthHelpDeviceFlow, AuthHelpMessage } from './api-ua-auth-help.js';
-import authTI from './ti/api-auth-types-ti.js';
+import { checkers } from './ti/api-auth-types.js';
 
 // Authorisation status update
 export interface AuthorisationStatusSuccess {
@@ -42,15 +41,6 @@ export interface AuthorisationStatusFailed {
 }
 export type AuthorisationStatus =
     AuthorisationStatusSuccess | AuthorisationStatusUser | AuthorisationStatusFailed;
-
-// Checkers for API responses
-const checkers = createCheckers(authTI);
-const checkersT = checkers as {
-    AuthorisationResponse:  CheckerT<AuthorisationResponse>;
-    AuthorisationError:     CheckerT<AuthorisationError>;
-    AbsoluteToken:          CheckerT<AbsoluteToken>;
-    PersistAbsoluteTokens:  CheckerT<PersistAbsoluteTokens>;
-};
 
 // Colours for the verification message
 const COLOUR_HI = chalk.greenBright;
@@ -274,7 +264,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     async loadTokens(): Promise<Map<string, AbsoluteToken>> {
         const savedTokens: unknown = await this.persist.getItem('token');
         if (!savedTokens) throw Error('No saved authorisation data found');
-        if (!checkersT.PersistAbsoluteTokens.test(savedTokens)) {
+        if (!checkers.PersistAbsoluteTokens.test(savedTokens)) {
             throw Error('Incompatible saved authorisation data');
         }
         return new Map(Object.entries(savedTokens));
@@ -411,13 +401,13 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
             path:       url.pathname + url.search,
             headers:    {}
         };
-        if (checkersT.AuthorisationError.test(response)) {
+        if (checkers.AuthorisationError.test(response)) {
             throw new APIAuthorisationError(request, undefined,
                                             `Home Connect API Redirect Error: ${response.error_description} [${response.error}]`);
         }
 
         // Check that the query parameters have the expected values
-        const checker = checkersT.AuthorisationResponse;
+        const checker = checkers.AuthorisationResponse;
         checker.setReportedPath('redirect_uri');
         if (!checker.test(response)) {
             const validation = checker.validate(response) ?? [];

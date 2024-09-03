@@ -7,7 +7,7 @@ import { createCheckers, CheckerT, IErrorDetail } from 'ts-interface-checker';
 import { ErrorResponse } from './api-types.js';
 import { AuthorisationError } from './api-auth-types.js';
 import { Request, Response } from './api-ua.js';
-import { columns } from './utils.js';
+import { assertIsDefined, columns } from './utils.js';
 import apiTI from './ti/api-types-ti.js';
 import authTI from './ti/api-auth-types-ti.js';
 
@@ -145,6 +145,7 @@ export class APIValidationError extends APIError {
 
     // Construct an error message from a checker validation error
     static getMessage(errors: IErrorDetail[]): string {
+        assertIsDefined(errors[0]);
         const description = `${errors[0].path} ${errors[0].message}`;
         return `Structure validation failed (${description})`;
     }

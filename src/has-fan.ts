@@ -225,7 +225,9 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
         fromFanSpeedPercent(percent: number): FanLevelPercent {
             if (!percent) throw new Error('Attempted to convert 0% to fan program');
             const index = Math.ceil(percent * this.fanLevels.length / 100) - 1;
-            return this.fanLevels[index];
+            const level = this.fanLevels[index];
+            assertIsDefined(level);
+            return level;
         }
 
         // Convert from a program option to a rotation speed percentage

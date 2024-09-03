@@ -32,7 +32,7 @@ export interface AuthorisationRequest {
     code_challenge?:            string;
     code_challenge_method?:     'plain' | 'S256';
 }
-type AuthorisationState = string | number;
+export type AuthorisationState = string | number;
 
 // Authorisation Response
 // (URL query parameters passed to redirect_uri)

@@ -7,7 +7,7 @@ import { API, DynamicPlatformPlugin, Logger, LogLevel, PlatformAccessory,
 import NodePersist from 'node-persist';
 import { join } from 'path';
 import { setTimeout as setTimeoutP } from 'timers/promises';
-import { CheckerT, createCheckers, IErrorDetail } from 'ts-interface-checker';
+import { IErrorDetail } from 'ts-interface-checker';
 
 import { CloudAPI, HomeConnectAPI } from './api.js';
 import { HomeConnectDevice } from './homeconnect-device.js';
@@ -29,13 +29,7 @@ import { checkDependencyVersions } from './check-versions.js';
 import { HOMEBRIDGE_LANGUAGES } from './api-languages.js';
 import { HomeAppliance } from './api-types.js';
 import { MockAPI } from './mock/index.js';
-import configTI from './ti/config-types-ti.js';
-
-// Checkers for config.json configuration
-const checkers = createCheckers(configTI) as {
-    ConfigPlugin:       CheckerT<ConfigPlugin>;
-    ConfigAppliances:   CheckerT<ConfigAppliances>;
-};
+import { typeSuite, checkers } from './ti/config-types.js';
 
 // Interval between updating the list of appliances
 // (only 1000 API calls allowed per day, so only check once an hour)
@@ -49,7 +43,7 @@ interface AccessoryLinkage {
 
 // A Homebridge HomeConnect platform
 export class HomeConnectPlatform implements DynamicPlatformPlugin {
-    readonly makeUUID;
+    readonly makeUUID: (data: string) => string;
 
     // Custom logger
     readonly log: PrefixLogger;
@@ -119,7 +113,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
     // Check the user's configuration
     checkConfig(): [ConfigPlugin, ConfigAppliances] {
         // Split the configuration into plugin and appliance properties
-        const keyofConfigPlugin = keyofChecker(configTI, configTI.ConfigPlugin);
+        const keyofConfigPlugin = keyofChecker(typeSuite, typeSuite.ConfigPlugin);
         const select = (predicate: ([key, value]: [string, unknown]) => boolean): Record<string, unknown> =>
             Object.fromEntries(Object.entries(this.platformConfig).filter(predicate));
         const configPluginPre  = select(([key]) =>  keyofConfigPlugin.includes(key));

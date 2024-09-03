@@ -9,7 +9,8 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "resolveJsonModule": true,
-        "strict": true
+        "strict": true,
+		"noUncheckedIndexedAccess": true
     },
     "include": [
         "./src/"

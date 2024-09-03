@@ -23,7 +23,7 @@ export interface ConstraintsCommon {
 }
 
 // Access rights for settings and status
-type Access = 'read' | 'readWrite';
+export type Access = 'read' | 'readWrite';
 
 // Commands
 export interface ExecuteCommandWrapper {
@@ -75,8 +75,8 @@ export interface EventData {
     unit?:                      string;
     haId?:                      string;
 }
-type EventLevel = 'critical' | 'alert' | 'warning' | 'hint' | 'info';
-type EventHandling = 'none' | 'acknowledge' | 'decision';
+export type EventLevel = 'critical' | 'alert' | 'warning' | 'hint' | 'info';
+export type EventHandling = 'none' | 'acknowledge' | 'decision';
 
 // Home appliances
 export interface HomeAppliancesWrapper {
@@ -132,7 +132,7 @@ export interface ProgramConstraints {
     execution?:                 ProgramExecution;
     access?:                    Access;
 }
-type ProgramExecution = 'none' | 'selectonly' | 'startonly' | 'selectandstart';
+export type ProgramExecution = 'none' | 'selectonly' | 'startonly' | 'selectandstart';
 
 // Program (selected/active)
 export interface ProgramWrapper {

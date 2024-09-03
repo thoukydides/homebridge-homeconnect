@@ -2,7 +2,7 @@
 // Copyright © 2023 Alexander Thoukydides
 
 import assert from 'assert';
-import { IErrorDetail, ITypeSuite, TType } from 'ts-interface-checker';
+import { CheckerT, ICheckerSuite, IErrorDetail, ITypeSuite, TType } from 'ts-interface-checker';
 
 // Milliseconds in a second
 export const MS = 1000;
@@ -42,22 +42,21 @@ export function formatMilliseconds(ms: number, maxParts = 2): string {
     if (ms < 1) return 'n/a';
 
     // Split the duration into components
-    const duration: Record<string, number> = {
-        day:            Math.floor(ms / (24 * 60 * 60 * MS)),
-        hour:           Math.floor(ms /      (60 * 60 * MS)) % 24,
-        minute:         Math.floor(ms /           (60 * MS)) % 60,
-        second:         Math.floor(ms /                 MS ) % 60,
-        millisecond:    Math.floor(ms                      ) % MS
-    };
+    const duration: [string, number][] = [
+        ['day',         Math.floor(ms / (24 * 60 * 60 * MS))     ],
+        ['hour',        Math.floor(ms /      (60 * 60 * MS)) % 24],
+        ['minute',      Math.floor(ms /           (60 * MS)) % 60],
+        ['second',      Math.floor(ms /                 MS ) % 60],
+        ['millisecond', Math.floor(ms                      ) % MS]
+    ];
 
     // Remove any leading zero components
-    const keys = Object.keys(duration);
-    while (keys.length && duration[keys[0]] === 0) keys.shift();
+    while (duration[0]?.[1] === 0) duration.shift();
 
     // Combine the required number of remaining components
-    return keys.slice(0, maxParts)
-        .filter(key => duration[key] !== 0)
-        .map(key => plural(duration[key], key))
+    return duration.slice(0, maxParts)
+        .filter(([_key, value]) => value !== 0)
+        .map(([key, value]) => plural(value, key))
         .join(' ');
 }
 
@@ -70,7 +69,7 @@ export function formatSeconds(seconds: number, maxParts = 2): string {
 export function formatList(items: string[]): string {
     switch (items.length) {
     case 0:     return 'n/a';
-    case 1:     return items[0];
+    case 1:     return items[0] ?? '';
     case 2:     return `${items[0]} and ${items[1]}`;
     default:    return [...items.slice(0, -1), `and ${items[items.length - 1]}`].join(', ');
     }
@@ -109,7 +108,7 @@ export function columns(rows: string[][], separator = '  '): string[] {
     width.splice(-1, 1, 0);
 
     // Format the rows
-    return rows.map(row => row.map((value, index) => value.padEnd(width[index])).join(separator));
+    return rows.map(row => row.map((value, index) => value.padEnd(width[index] ?? 0)).join(separator));
 }
 
 // Recursive object assignment, skipping undefined values
@@ -125,6 +124,14 @@ export function deepMerge<Type extends object>(...objects: [Type, ...Partial<Typ
         });
         return acc;
     }, {}) as Type;
+}
+
+// Helpers for checker type safety
+export type AtTType<Keys extends string | symbol> = ITypeSuite & {
+    [Key in Keys]:  TType;
+}
+export type AsCheckerT<Keys extends string | symbol> = ICheckerSuite & {
+    [Key in Keys]: CheckerT<Key>;
 }
 
 // Convert checker validation error into lines of text
@@ -158,8 +165,11 @@ export function keyofChecker(typeSuite: ITypeSuite, type: TType): string[] {
         props.push(...checker.propSet);
     }
     if (Array.isArray(checker.bases)) {
-        for (const base of checker.bases)
-            props.push(...keyofChecker(typeSuite, typeSuite[base]));
+        for (const base of checker.bases) {
+            const baseType = typeSuite[base];
+            assertIsDefined(baseType);
+            props.push(...keyofChecker(typeSuite, baseType));
+        }
     }
 
     // TUnion or TIntersection
@@ -178,7 +188,9 @@ export function keyofChecker(typeSuite: ITypeSuite, type: TType): string[] {
         props.push(checker.value);
     } else if (typeof checker.name === 'string') {
         // TName
-        props.push(...keyofChecker(typeSuite, typeSuite[checker.name]));
+        const nameType = typeSuite[checker.name];
+        assertIsDefined(nameType);
+        props.push(...keyofChecker(typeSuite, nameType));
     }
 
     return props;

@@ -44,8 +44,9 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             const setting = await this.getCached(
                 'power', () => this.device.getSetting('BSH.Common.Setting.PowerState'));
             const allValues = setting?.constraints?.allowedvalues ?? [];
-            let offValues: PowerState[] = allValues.filter(value => value !== PowerState.On);
-            if (!offValues.length) {
+            const offValues: PowerState[] = allValues.filter(value => value !== PowerState.On);
+            let powerStateOff = offValues[0];
+            if (powerStateOff === undefined) {
                 this.log.info('Cannot be switched off');
                 return;
             }
@@ -54,10 +55,9 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             if (1 < offValues.length) {
                 if (this.defaultOffValue && offValues.includes(this.defaultOffValue)) {
                     this.log.debug(`Appliance reported multiple power off settings; using default (${this.defaultOffValue})`);
-                    offValues = [this.defaultOffValue];
+                    powerStateOff = this.defaultOffValue;
                 } else {
-                    this.log.debug(`Appliance reported multiple power off settings; using the first (${offValues[0]})`);
-                    offValues.length = 1;
+                    this.log.debug(`Appliance reported multiple power off settings; using the first (${powerStateOff})`);
                 }
             }
 
@@ -67,7 +67,7 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
                 .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
                 .onSet(this.onSetBoolean(async value => {
                     this.log.info(`SET ${value ? 'On' : 'Off'}`);
-                    await this.device.setSetting('BSH.Common.Setting.PowerState', value ? PowerState.On : offValues[0]);
+                    await this.device.setSetting('BSH.Common.Setting.PowerState', value ? PowerState.On : powerStateOff);
                 }));
         }
 

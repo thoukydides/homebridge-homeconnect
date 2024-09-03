@@ -3,7 +3,7 @@
 
 import { Logger } from 'homebridge';
 
-import { createCheckers, Checker, ITypeSuite, TType, TName } from 'ts-interface-checker';
+import { Checker, ITypeSuite, TType, TName } from 'ts-interface-checker';
 import assert from 'node:assert';
 import { LocalStorage } from 'node-persist';
 
@@ -15,13 +15,10 @@ import { Command, Constraints, ConstraintsCommon, EventApplianceConnection,
          ProgramList, Programs, Setting, SettingCommon, Status, StatusCommon,
          Value } from './api-types.js';
 import { APIEvent, EventStart, EventStop } from './api-events.js';
-import { MS, getValidationTree, keyofChecker } from './utils.js';
+import { MS, assertIsDefined, getValidationTree, keyofChecker } from './utils.js';
 import { APIKeyValuesLog } from './api-value.log.js';
 import { ConfigPlugin } from './config-types.js';
-import valuesTI from './ti/api-value-types-ti.js';
-
-// Checkers for API responses
-const checkers = createCheckers(valuesTI);
+import { typeSuite, checkers } from './ti/api-value-types.js';
 
 // Known keys
 export type KVKey<Values> = keyof Values;
@@ -219,7 +216,7 @@ export class APICheckValues {
     // Check a single program option
     option<Key extends OptionKey>(haid: string, option: Option): OptionKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Option', json: option };
-        this.isKey(valuesTI, valuesTI.OptionValues, context, option.key);
+        this.isKey(typeSuite, typeSuite.OptionValues, context, option.key);
         this.isValue(checkers.OptionValues, context, option.key, option.value);
         return option as OptionKV<Key>;
     }
@@ -233,7 +230,7 @@ export class APICheckValues {
     optionDefinition<Key extends OptionKey>(haid: string, option: OptionDefinition): OptionDefinitionKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Option', type: 'OptionDefinition', json: option };
         this.logValues.addDetail(option);
-        this.isKey(valuesTI, valuesTI.OptionValues, context, option.key);
+        this.isKey(typeSuite, typeSuite.OptionValues, context, option.key);
         this.isConstraints(checkers.OptionValues, context, option.key, option.constraints);
         return option as OptionDefinitionKV<Key>;
     }
@@ -247,7 +244,7 @@ export class APICheckValues {
     status<Key extends StatusKey>(haid: string, status: Status): StatusKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Status', json: status };
         this.logValues.addDetail(status);
-        this.isKey(valuesTI, valuesTI.StatusValues, context, status.key);
+        this.isKey(typeSuite, typeSuite.StatusValues, context, status.key);
         this.isValue(checkers.StatusValues, context, status.key, status.value);
         this.isConstraints(checkers.StatusValues, context, status.key, status.constraints);
         return status as StatusKV<Key>;
@@ -262,7 +259,7 @@ export class APICheckValues {
     setting<Key extends SettingKey>(haid: string, setting: Setting): SettingKV<Key> {
         const context: APICheckValueContext = { haid, group: 'Setting', json: setting };
         this.logValues.addDetail(setting);
-        this.isKey(valuesTI, valuesTI.SettingValues, context, setting.key);
+        this.isKey(typeSuite, typeSuite.SettingValues, context, setting.key);
         this.isValue(checkers.SettingValues, context, setting.key, setting.value);
         this.isConstraints(checkers.SettingValues, context, setting.key, setting.constraints);
         return setting as SettingKV<Key>;
@@ -272,7 +269,7 @@ export class APICheckValues {
     commands(haid: string, commands: Command[]): CommandKV[] {
         commands.forEach(command => {
             const context: APICheckValueContext = { haid, group: 'Command', json: command };
-            this.isKey(valuesTI, valuesTI.CommandValues, context, command.key);
+            this.isKey(typeSuite, typeSuite.CommandValues, context, command.key);
         });
         return commands as CommandKV[];
     }
@@ -281,14 +278,16 @@ export class APICheckValues {
     event(haid: string, event: APIEvent): EventKV {
         if ('data' in event && event.data) {
             const type = `${event.event} Event.data`;
-            const props = (valuesTI.EventMapValues as { props?: { name: string; ttype: TName}[] }).props;
+            const props = (typeSuite.EventMapValues as { props?: { name: string; ttype: TName}[] }).props;
             const typeName = props?.find(prop => prop.name === event.event)?.ttype.name;
             if (!typeName) {
                 this.logValidation('Unrecognised event', type, event, [event.event]);
             } else {
                 const check = (type: string, data: EventData): void => {
                     const context: APICheckValueContext = { haid, group: 'Event', subGroup: event.event, type, json: data };
-                    this.isKey(valuesTI, valuesTI[typeName], context, data.key);
+                    assertIsDefined(typeSuite[typeName]);
+                    assertIsDefined(checkers[typeName]);
+                    this.isKey(typeSuite, typeSuite[typeName], context, data.key);
                     this.isValue(checkers[typeName], context, data.key, data.value);
                 };
                 if ('items' in event.data) {
@@ -311,7 +310,8 @@ export class APICheckValues {
         // Log the unrecognised literal, avoiding frequent reports of the same value
         const now = Date.now();
         const type = context.type ?? context.group;
-        if (!(literal in this.nextKeyReport) || this.nextKeyReport[literal] < now) {
+        const nextKeyReport = this.nextKeyReport[literal];
+        if (nextKeyReport === undefined || nextKeyReport < now) {
             this.logValidation(`Unrecognised ${type} literal`, type, context.json, [literal]);
         }
         this.nextKeyReport[literal] = now + REPORT_INTERVAL;
@@ -329,7 +329,8 @@ export class APICheckValues {
         // Log the unrecognised key, avoiding frequent reports of the same key
         const now = Date.now();
         const type = context.type ?? context.group;
-        if (!(key in this.nextKeyReport) || this.nextKeyReport[key] < now) {
+        const nextKeyReport = this.nextKeyReport[key];
+        if (nextKeyReport === undefined || nextKeyReport < now) {
             this.logValidation(`Unrecognised ${type}`, type, context.json, [key]);
         }
         this.nextKeyReport[key] = now + REPORT_INTERVAL;

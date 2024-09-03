@@ -367,7 +367,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         addConfiguredPrograms(config: ApplianceProgramConfig[]): void {
             // Treat a single invalid entry as being an empty array
             // (workaround for homebridge-config-ui-x / angular6-json-schema-form)
-            if (config.length === 1 && !config[0].name && !config[0].key) {
+            if (config.length === 1 && !config[0]?.name && !config[0]?.key) {
                 this.log.warn('Treating Invalid programs array as empty (presumably written by homebridge-config-ui-x');
                 config = [];
             }

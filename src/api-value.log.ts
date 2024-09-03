@@ -224,6 +224,7 @@ export class APIKeyValuesLog {
         // Construct interfaces for groups with unrecognised keys
         lines.push('');
         for (const groupName of Object.keys(this.groups).sort()) {
+            assertIsDefined(this.groups[groupName]);
             if (Object.values(this.groups[groupName].keys).some(key => key.report)) {
                 lines.push(...this.makeGroupInterface(groupName), '');
             }
@@ -253,7 +254,9 @@ export class APIKeyValuesLog {
     makeGroupInterface(groupName: string): string[] {
         // Generate the properties for this group
         const group = this.groups[groupName];
+        assertIsDefined(group);
         const properties: string[][] = Object.keys(group.keys).sort().map(keyName => {
+            assertIsDefined(group.keys[keyName]);
             const { key, value, report } = group.keys[keyName];
             let line = `${this.makeType(value)};`;
             if (report) line += ` // ${REPORT_COMMENT}`;
@@ -276,7 +279,7 @@ export class APIKeyValuesLog {
         const lines = literals.map((literal, index) => {
             let line = (index === 0 ? '    ' : '  | ') + `'${literal}'`;
             if (index === literals.length - 1) line += ';';
-            if (value.values[literal].report)  line += ` // ${REPORT_COMMENT}`;
+            if (value.values[literal]?.report) line += ` // ${REPORT_COMMENT}`;
             return line;
         });
 
@@ -294,7 +297,7 @@ export class APIKeyValuesLog {
         const values: string[][] = literals.map((literal, index) => {
             let line = `= '${literal}'`;
             if (index !== literals.length - 1) line += ',';
-            if (value.values[literal].report)  line += ` // ${REPORT_COMMENT}`;
+            if (value.values[literal]?.report) line += ` // ${REPORT_COMMENT}`;
             return [literal.replace(/^.*\./, ''), line];
         });
 
@@ -320,6 +323,7 @@ export class APIKeyValuesLog {
             if (literals.every(literal => literal.includes('.Program.'))) return 'ProgramKey';
             const isString = literals.some(literal => /[ :]/.test(literal));
             const types = literals.map(literal => this.makeEnumName(literal.replace(/\.[^.]*$/, '')));
+            assertIsDefined(types[0]);
             const isEnum = types.every(type => type === types[0]);
             if (!isString && isEnum) return types[0];
         }

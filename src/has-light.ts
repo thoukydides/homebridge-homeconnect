@@ -102,9 +102,10 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
                 await this.addLightIfSupported(type, LIGHT_KEY[type]);
 
             // If multiple lights are supported then link their services
-            if (1 < this.lightService.length) {
+            const firstLightService = this.lightService[0];
+            if (firstLightService !== undefined) {
                 for (const service of this.lightService.slice(1))
-                    service.addLinkedService(this.lightService[0]);
+                    service.addLinkedService(firstLightService);
             }
         }
 
@@ -404,7 +405,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             const chroma = maxRgb * saturation / 100;
             const minRgb = maxRgb - chroma;
             const deltaRgb = chroma * ((hue / 60) % 1);
-            let rgb;
+            let rgb: [number, number, number];
             if (hue < 60)        rgb = [maxRgb, minRgb + deltaRgb, minRgb];
             else if (hue < 120)  rgb = [maxRgb - deltaRgb, maxRgb, minRgb];
             else if (hue < 180)  rgb = [minRgb, maxRgb, minRgb + deltaRgb];
@@ -413,7 +414,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             else /* (h < 360) */ rgb = [maxRgb, minRgb, maxRgb - deltaRgb];
 
             // Convert the RGB value to hex
-            const [r, g, b] = rgb.map(v => Math.round(v));
+            const [r, g, b] = rgb.map(v => Math.round(v)) as [number, number, number];
             const numeric = 0x1000000 + r * 0x10000 + g * 0x100 + b;
             return '#' + Number(numeric).toString(16).substring(1);
         }

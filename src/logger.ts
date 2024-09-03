@@ -6,7 +6,7 @@ import { Logger, LogLevel } from 'homebridge';
 import { createCheckers, CheckerT } from 'ts-interface-checker';
 
 import { AccessTokenHeader, AccessTokenPayload, RefreshToken, SimulatorToken } from './token-types.js';
-import { formatList, MS } from './utils.js';
+import { assertIsDefined, formatList, MS } from './utils.js';
 import tokensTI from './ti/token-types-ti.js';
 
 // Checkers for token types
@@ -91,6 +91,8 @@ function maskRefreshToken(token: string): string {
 function maskAccessToken(token: string): string {
     try {
         const parts = token.split('.').map(part => decodeBase64URL(part));
+        assertIsDefined(parts[0]);
+        assertIsDefined(parts[1]);
         const header:  unknown = JSON.parse(parts[0]);
         const payload: unknown = JSON.parse(parts[1]);
         if (checkers.AccessTokenHeader.test(header)

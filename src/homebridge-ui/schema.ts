@@ -7,12 +7,12 @@ import { PlatformConfig } from 'homebridge';
 import assert from 'assert';
 
 import { HOMEBRIDGE_LANGUAGES } from '../api-languages.js';
-import { keyofChecker, plural } from '../utils.js';
+import { assertIsDefined, keyofChecker, plural } from '../utils.js';
 import { DEFAULT_CONFIG, PLATFORM_NAME } from '../settings.js';
 import { ConfigSchemaData, SchemaAppliance, SchemaOptionalFeature,
          SchemaProgramOption, SchemaProgramOptionType,
          SchemaProgramOptionValue } from './schema-data.js';
-import configTI from '../ti/config-types-ti.js';
+import { typeSuite } from '../ti/config-types.js';
 
 // Maximum number of enum values for numeric types with multipleOf constraint
 const MAX_ENUM_STEPS = 18;
@@ -235,7 +235,7 @@ export class ConfigSchema extends ConfigSchemaData {
                 uniqueItems:    true,
                 items: {
                     type:           'string',
-                    enum:           keyofChecker(configTI, configTI.DebugFeatures)
+                    enum:           keyofChecker(typeSuite, typeSuite.DebugFeatures)
                 }
             }
         };
@@ -297,8 +297,9 @@ export class ConfigSchema extends ConfigSchemaData {
                 }]
             });
         };
-        if (appliance.programs.length) {
-            const program = appliance.programs[0].name;
+        const firstProgram = appliance.programs[0];
+        if (firstProgram !== undefined) {
+            const program = firstProgram.name;
             addPrefixForm('programs',   'Prefix Program Names',                 program,    false);
             addPrefixForm('other',      'Prefix Other Service Names',           'Power',    true);
         } else {
@@ -333,12 +334,13 @@ export class ConfigSchema extends ConfigSchemaData {
                 required:   false
             };
             groups[feature.group] ??= [];
-            groups[feature.group].push(feature);
+            groups[feature.group]?.push(feature);
         }
 
         // Arrange the optional features into groups
         const groupForm: FormItem[] = [];
         for (const groupKey of Object.keys(groups).sort()) {
+            assertIsDefined(groups[groupKey]);
             const features = groups[groupKey].sort((a, b) => a.name.localeCompare(b.name));
             const featuresForm: FormItem[] = [];
             let lastService: string | undefined;
@@ -361,7 +363,7 @@ export class ConfigSchema extends ConfigSchemaData {
             groupForm.push({
                 type:           'flex',
                 'flex-flow':    'column',
-                title:          `Optional ${appliance.type} ${features[0].group || 'Features'}`,
+                title:          `Optional ${appliance.type} ${(features[0]?.group ?? '') || 'Features'}`,
                 items:          featuresForm
             });
         }
@@ -425,8 +427,9 @@ export class ConfigSchema extends ConfigSchemaData {
         const optionsSchema: JSONSchemaProperties = {};
         for (const program of appliance.programs) {
             for (const option of program.options ?? []) {
-                if (!(option.key in optionsSchema)) optionsSchema[option.key] = { type: option.type };
+                optionsSchema[option.key] ??= { type: option.type };
                 const optionSchema = optionsSchema[option.key];
+                assertIsDefined(optionSchema);
 
                 // Apply restrictions to numeric types
                 if (optionSchema.type === 'integer' || optionSchema.type === 'number') {
@@ -524,7 +527,9 @@ export class ConfigSchema extends ConfigSchemaData {
 
         // Hide most of the options if Control scope has not been authorised
         if (appliance.hasControl === false) {
-            assert(programForm[1].type === 'flex');
+            assertIsDefined(programForm[0]);
+            assert(programForm[1]?.type === 'flex');
+            assertIsDefined(programForm[1].items[1]);
             programForm = [programForm[0], programForm[1].items[1]];
         }
 
@@ -567,7 +572,7 @@ export class ConfigSchema extends ConfigSchemaData {
                                 const:  program.key
                             })),
                             required:   true,
-                            default:    appliance.programs[0].key
+                            default:    appliance.programs[0]?.key
                         },
                         selectonly: {
                             type:       'boolean',

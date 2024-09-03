@@ -9,7 +9,7 @@ import { ApplianceConfig, ConfigAppliances, ConfigPlugin } from '../../config-ty
 import { keyofChecker } from '../../utils.js';
 import { ClientIPC } from './client-ipc.js';
 import { cloneTemplate, getElementById } from './utils-dom.js';
-import configTI from '../../ti/config-types-ti.js';
+import { typeSuite } from '../../ti/config-types.js';
 
 // A delta between two configurations
 export interface ConfigDiff {
@@ -44,7 +44,7 @@ export class Config {
     async getConfig(): Promise<void> {
         // Retrieve the current plugin configuration (if any)
         const configArray = await window.homebridge.getPluginConfig();
-        if (configArray.length === 0) {
+        if (configArray[0] === undefined) {
             this.log.warn('No plugin configuration found; creating a new one');
             this.savedConfig = { platform: window.homebridge.plugin.displayName };
         } else {
@@ -58,7 +58,7 @@ export class Config {
         }
 
         // Treat all unexpected properties as appliance configurations
-        const keyofConfigPlugin = keyofChecker(configTI, configTI.ConfigPlugin);
+        const keyofConfigPlugin = keyofChecker(typeSuite, typeSuite.ConfigPlugin);
         const select = (predicate: ([key, value]: [string, unknown]) => boolean): Record<string, unknown> =>
             Object.fromEntries(Object.entries(this.savedConfig ?? {}).filter(predicate));
         this.global     = select(([key]) =>  keyofConfigPlugin.includes(key)) as Partial<ConfigPlugin>;

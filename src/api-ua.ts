@@ -11,7 +11,7 @@ import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { PLUGIN_NAME, PLUGIN_VERSION } from './settings.js';
 import { APIError, APIStatusCodeError, APIValidationError } from './api-errors.js';
-import { assertIsString, columns, formatMilliseconds, getValidationTree, MS } from './utils.js';
+import { assertIsDefined, assertIsString, columns, formatMilliseconds, getValidationTree, MS } from './utils.js';
 import { ConfigPlugin } from './config-types.js';
 
 export type Method     = Dispatcher.HttpMethod;
@@ -221,6 +221,8 @@ export class APIUserAgent {
                         // Field, optionally with value
                         const matches = /^(\w+): ?(.*)$/.exec(line);
                         const [name, value] = matches ? matches.slice(1, 3) : [line, ''];
+                        assertIsDefined(name);
+                        assertIsDefined(value);
                         sse[name] = name in sse ? `${sse[name]}\n${value}` : value;
                     }
                 }

@@ -5,7 +5,6 @@ import { Logger } from 'homebridge';
 
 import { on } from 'events';
 import { LocalStorage } from 'node-persist';
-import { createCheckers } from 'ts-interface-checker';
 
 import { ConfigPlugin } from './config-types.js';
 import { CommandsWrapper, ExecuteCommandWrapper, ProgramDefinitionWrapper,
@@ -18,10 +17,8 @@ import { APICheckValues, CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
          ProgramDefinitionKV, ProgramKV, ProgramsKV, SettingKey,  SettingKV,
          SettingValue, StatusKey, StatusKV, OptionValue } from './api-value.js';
 import { ProgramKey } from './api-value-types.js';
-import apiTI from './ti/api-types-ti.js';
-
-// Checkers for API responses
-const checkers = createCheckers(apiTI);
+import { checkers } from './ti/api-types.js';
+import { assertIsDefined } from './utils.js';
 
 // Home Connect API methods
 export interface HomeConnectAPI {
@@ -88,6 +85,8 @@ export class CloudAPI implements HomeConnectAPI {
         const parsedScope = /^([^-]+)-([^-]+)$/.exec(scope);
         if (parsedScope) {
             const [, row, column] = parsedScope;
+            assertIsDefined(row);
+            assertIsDefined(column);
             if (this.ua.scopes.includes(row))    return true;
             if (this.ua.scopes.includes(column)) return true;
         }
