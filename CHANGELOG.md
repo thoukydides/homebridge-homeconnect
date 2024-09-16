@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.0.3] - 2024-09-16
+### Changed
+* **Washer:**  Added undocumented program option. (#297)
+* Updated dependencies.
+
 ## [v1.0.2] - 2024-09-04
 ### Changed
 * Updated dependencies.
@@ -655,7 +660,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.3...HEAD
+[v1.0.3]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.2...v1.0.3
 [v1.0.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.1...v1.0.2
 [v1.0.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.0...v1.0.1
 [v1.0.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v0.42.4...v1.0.0
