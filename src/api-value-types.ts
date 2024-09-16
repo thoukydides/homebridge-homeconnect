@@ -808,6 +808,7 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.SpinSpeed'?:                                 SpinSpeed;
     'LaundryCare.Washer.Option.Stains'?:                                    Stains; // (undocumented)
     'LaundryCare.Washer.Option.Temperature'?:                               WasherTemperature;
+    'LaundryCare.Washer.Option.WaterAndRinsePlus1'?:                        boolean; // (undocumented)
     'LaundryCare.Washer.Option.WaterPlus'?:                                 boolean;
     'LaundryCare.WasherDryer.Option.LowTemperatureHygiene'?:                boolean; // (undocumented)
     'LaundryCare.WasherDryer.Option.ProgramMode'?:                          ProgramMode; // (undocumented)
