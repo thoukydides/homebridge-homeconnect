@@ -50,10 +50,9 @@ export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { pow
 
             // Map the state to the most appropriate Program Mode characteristic
             const { NO_PROGRAM_SCHEDULED, PROGRAM_SCHEDULED } = this.Characteristic.ProgramMode;
-            const PROGRAM_SCHEDULED_MANUAL_MODE =
-                ('PROGRAM_SCHEDULED_MANUAL_MODE_' in this.Characteristic.ProgramMode
-                ? this.Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE_
-                : this.Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE) as number;
+            // this.Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE_ in Homebridge 1.x
+            // this.Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE  in Homebridge 2.x
+            const PROGRAM_SCHEDULED_MANUAL_MODE = 2;
             let programMode;
             if (localControl) {
                 // Local control takes priority (reverts after a few seconds)
