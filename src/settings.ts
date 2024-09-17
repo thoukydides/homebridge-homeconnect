@@ -3,7 +3,7 @@
 
 import { ConfigPlugin } from './config-types.js';
 
-import PACKAGE from '../package.json' assert { type: 'json' };
+import PACKAGE from '../package.json' with { type: 'json' };
 
 // Platform identifiers
 export const ENGINES: Record<string, string>    = PACKAGE.engines;
