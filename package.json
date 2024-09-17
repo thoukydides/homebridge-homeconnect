@@ -114,7 +114,8 @@
         "build": "npm run checkers && tsc --project tsconfig.json && tsc --project src/homebridge-ui/public/tsconfig.json",
         "postbuild": "npm run browserify && copyfiles -u 1 -e './**/*.ts' './src/homebridge-ui/public/**' ./dist",
         "postversion": "git push && git push --tags",
-        "prepublishOnly": "npm run lint && npm run build"
+        "prepublishOnly": "npm run lint && npm run build",
+        "test": "tsx bin/test-startup.ts"
     },
     "optionalDependencies": {
         "fsevents": "^2.3.2"

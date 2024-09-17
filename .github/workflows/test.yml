@@ -1,0 +1,38 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        homebridge-version: ['^1.8.0', '^2.0.0-beta.0']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }} 
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Use homebridge ${{ matrix.homebridge-version }}
+        run: npm install homebridge@${{ matrix.homebridge-version }}
+
+      - name: Copy homebridge configuration
+        run: cp -R ./.devcontainer/.homebridge ~/
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Run the tests
+        run: npm run test
+        env:
+          HOMECONNECT_CLIENT_PHYSICAL:  ${{ secrets.HOMECONNECT_CLIENT_PHYSICAL }}
+          HOMECONNECT_CLIENT_SIMULATOR: ${{ secrets.HOMECONNECT_CLIENT_SIMULATOR }}
