@@ -10,6 +10,7 @@ const SPAWN_COMMAND = 'homebridge';
 const SPAWN_ARGS = '-D -I -P .. --strict-plugin-resolution'.split(' ');
 
 // Log messages indicating success
+// eslint-disable-next-line max-len
 const SUCCESS_OUTPUT_REGEX = /\[HomeConnect\] (Please authorise access to your appliances(.*) using the associated Home Connect or SingleKey ID email address by visiting:|Starting events stream for all appliances)/;
 
 // Length of time to wait for the message
