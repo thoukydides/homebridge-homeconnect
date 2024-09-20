@@ -10,11 +10,12 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"dbaeumer.vscode-eslint",
-				"streetsidesoftware.code-spell-checker",
+				"amazonwebservices.amazon-q-vscode",
 				"bierner.markdown-preview-github-styles",
-				"amazonwebservices.aws-toolkit-vscode",
-				"Tyriar.sort-lines"
+				"dbaeumer.vscode-eslint",
+				"github.vscode-github-actions",
+				"streetsidesoftware.code-spell-checker",
+				"tyriar.sort-lines"
 			]
 		}
 	},
