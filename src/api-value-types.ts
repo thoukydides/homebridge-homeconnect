@@ -388,7 +388,8 @@ export type IntensiveStage =
 export type LearningDishwasherCleaningLevel = // (undocumented)
     'Dishcare.Dishwasher.EnumType.LearningDishwasher.CleaningLevel.Level0';
 export type LearningDishwasherDryingLevel = // (undocumented)
-    'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level0';
+    'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level0'
+  | 'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level1';
 export type LearningDishwasherDurationLevel = // (undocumented)
     'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level0';
 export type MeatProbeTemperatureV2 = // (unrecognised)
