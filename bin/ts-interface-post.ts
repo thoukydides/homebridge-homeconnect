@@ -1,4 +1,4 @@
-// Homebridge plugin for AEG RX 9 / Electrolux Pure i9 robot vacuum
+// Homebridge plugin for Home Connect home appliances
 // Copyright © 2024 Alexander Thoukydides
 
 import path from 'node:path';
