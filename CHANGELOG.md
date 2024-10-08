@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.0.5] - 2024-10-08
+### Changed
+* **Dishwasher:** Added undocumented program options. (#301)
+* Restored Node 20.9.0 compatibility (for use on Synology NAS). (#300, #304)
+* Updated dependencies.
+
 ## [v1.0.4] - 2024-09-17
 ### Fixed
 * Node 22 compatibility (minimum of Node 18.20.0 now required). (#298)
@@ -666,7 +672,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.5...HEAD
+[v1.0.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.4...v1.0.5
 [v1.0.4]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.3...v1.0.4
 [v1.0.3]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.2...v1.0.3
 [v1.0.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.1...v1.0.2
