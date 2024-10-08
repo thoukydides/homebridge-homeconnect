@@ -1,15 +1,28 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2023 Alexander Thoukydides
 
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
 import { ConfigPlugin } from './config-types.js';
 
-import PACKAGE from '../package.json' with { type: 'json' };
+// Read the package.json file
+interface PackageJson {
+    engines:        Record<string, string>;
+    name:           string;
+    displayName:    string;
+    version:        string;
+}
+const PACKAGE_JSON = join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json');
+console.warn(`Loading package.json from ${PACKAGE_JSON}`);
+const PACKAGE = JSON.parse(readFileSync(PACKAGE_JSON, 'utf-8')) as PackageJson;
 
 // Platform identifiers
-export const ENGINES: Record<string, string>    = PACKAGE.engines;
-export const PLUGIN_NAME    :string = PACKAGE.name;
-export const PLATFORM_NAME  :string = PACKAGE.displayName;
-export const PLUGIN_VERSION :string = PACKAGE.version;
+export const ENGINES        = PACKAGE.engines;
+export const PLUGIN_NAME    = PACKAGE.name;
+export const PLATFORM_NAME  = PACKAGE.displayName;
+export const PLUGIN_VERSION = PACKAGE.version;
 
 // Required Homebridge API version
 export const REQUIRED_HOMEBRIDGE_API = '^2.7';
