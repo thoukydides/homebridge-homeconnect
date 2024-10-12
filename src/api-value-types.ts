@@ -426,6 +426,8 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.FinishedAntiCrease'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.IronDryReached'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.DetergentDispensing'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.Emptying'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.ExtraRinsingFoam'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.FinalSpinning'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Rinsing'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.RinsingSpinning'
