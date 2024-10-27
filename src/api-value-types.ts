@@ -70,6 +70,14 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Verlaengerter'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.VerlaengerterBraun'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.WienerMelange'
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee1' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee2' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee3' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee4' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee5' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee6' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee7' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee8' // (undocumented)
   | 'Cooking.Common.Program.Hood.Automatic'
   | 'Cooking.Common.Program.Hood.DelayedShutOff'
   | 'Cooking.Common.Program.Hood.Venting'
