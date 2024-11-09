@@ -476,6 +476,7 @@ export type SpinSpeed =
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1400'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1500' // (undocumented)
   | 'LaundryCare.Washer.EnumType.SpinSpeed.RPM1600'
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.RinseHold' // (undocumented)
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlHigh'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlLow'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlMedium'
