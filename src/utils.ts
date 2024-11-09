@@ -127,9 +127,7 @@ export function deepMerge<Type extends object>(...objects: [Type, ...Partial<Typ
 }
 
 // Helpers for checker type safety
-export type AtTType<Keys extends string | symbol> = ITypeSuite & {
-    [Key in Keys]:  TType;
-}
+export type AtTType<Keys extends string | symbol> = ITypeSuite & Record<Keys, TType>;
 export type AsCheckerT<Keys extends string | symbol> = ICheckerSuite & {
     [Key in Keys]: CheckerT<Key>;
 }
