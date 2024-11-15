@@ -10,6 +10,7 @@ export interface ConfigPlugin {
     clientid:               string;
     clientsecret?:          string;
     simulator?:             boolean;
+    china?:                 boolean;
     language:               { api: string };
     debug?:                 DebugFeatures[];
 }

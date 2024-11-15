@@ -57,7 +57,7 @@ export class APIUserAgent {
         readonly language:  string
     ) {
         this.url = this.config.simulator ? 'https://simulator.home-connect.com'
-                                         : 'https://api.home-connect.com';
+                 : this.config.china     ? 'https://api.home-connect.cn' : 'https://api.home-connect.com';
         this.defaultHeaders = {
             'user-agent':       `${PLUGIN_NAME}/${PLUGIN_VERSION}`,
             'accept-language':  this.language

@@ -176,7 +176,8 @@ export class AuthHelpDeviceFlow extends AuthHelp {
             'Success Redirect':                 'Leave blank',
             'One Time Token':                   'Not ticked',
             'Status':                           'Enabled',
-            'Client Secret Always Required':    'No'
+            'Client Secret Always Required':    'No',
+            'Sync to China':                    'Enabled if located in China, otherwise Disabled'
         };
         if (action === 'create') settings['OAuth Flow'] = 'Set to "Device Flow"';
 

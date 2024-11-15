@@ -20,6 +20,7 @@ import { ServerIPC } from './server-ipc.js';
 export interface ClientIDStatus {
     clientid:       string;
     simulator:      boolean;
+    china:          boolean;
     appliances?:    HomeAppliance[];
     authorisation?: AuthorisationStatus;
 }
@@ -52,15 +53,18 @@ export class ServerClientID {
             api = MockAPI;
             config.clientid = '';
             config.simulator = true;
+            config.china = false;
             description = 'mock appliances';
         } else {
             api = CloudAPI;
             config.simulator ??= false;
-            description = `${config.simulator ? 'simulated' : 'physical'} appliances with clientid ${config.clientid}`;
+            config.china ??= false;
+            description = `${config.simulator ? 'simulated' : 'physical'} appliances`
+                        + `${config.china ? ' in China' : ''} with clientid ${config.clientid}`;
         }
 
         // Select or create the client
-        const key = `${config.clientid}-${config.simulator}`;
+        const key = `${config.clientid}-${config.simulator}-${config.china}`;
         let client = this.clients.get(key);
         if (client === undefined) {
             // Create a new client
@@ -69,7 +73,8 @@ export class ServerClientID {
                 api:    new api(this.log, config, this.persist),
                 status: {
                     clientid:   config.clientid,
-                    simulator:  config.simulator ?? false
+                    simulator:  config.simulator ?? false,
+                    china:      config.china     ?? false
                 }
             };
             this.clients.set(key, client);

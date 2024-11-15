@@ -36,6 +36,7 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/homebrid
    * *Home Connect User Account for Testing* is the same as the **SingleKey ID email address**
    * *Redirect URI* is **left blank**
    * *Enable One Time Token Mode* is **not ticked**
+   * *Sync to China* is **ticked** if you are located within China, otherwise leave it **not ticked**
 1. If the application is subsequently edited then additionally ensure that:
    * *Forces the usage of PKCE* is **not ticked**
    * *Status* is **Enabled**
@@ -47,6 +48,7 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/homebrid
 
 1. On the [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) Plugins page search for and install the **HomeConnect** plugin.
 1. Open the **HomeConnect** plugin settings and set the *Client ID* to the value obtained from the [Home Connect Developer Program](https://developer.home-connect.com/applications) for the created *Device Flow* application.
+1. If you are located within China then set the *Server Location* to **China**, otherwise leave it as **Worldwide**.
 1. Click on the *AUTHORISE* button to open a new Home Connect browser window. Login to your Home Connect account and approve access.
 1. Save the plugin settings and restart Homebridge.
  

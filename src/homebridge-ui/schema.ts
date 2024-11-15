@@ -166,6 +166,11 @@ export class ConfigSchema extends ConfigSchemaData {
                 default:    false,
                 required:   true
             },
+            china: {
+                type:       'boolean',
+                default:    false,
+                required:   true
+            },
             language: {
                 type:       'object',
                 properties: {
@@ -189,6 +194,7 @@ export class ConfigSchema extends ConfigSchemaData {
                           + '<li><i>Home Connect User Account for Testing</i> is the same as the <b>SingleKey ID email address</b></li>'
                           + '<li><i>Redirect URI</i> is <b>left blank</b></li>'
                           + '<li><i>Enable One Time Token Mode</i> is <b>not ticked</b></li>'
+                          + '<li><i>Sync to China</i> is <b>ticked</b> if you are located within China</li>'
                           + '</ul>'
                           + 'If the application is subsequently edited then additionally ensure that:'
                           + '<ul>'
@@ -215,6 +221,18 @@ export class ConfigSchema extends ConfigSchemaData {
             placeholder:    'e.g. 0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
             condition: {
                 functionBody: 'return model.simulator'
+            }
+        }, {
+            key:            'china',
+            title:          'Server Location',
+            description:    'Separate Home Connect API servers are operated within China.',
+            type:           'select',
+            titleMap: {
+                false:      'Worldwide (excluding China)',
+                true:       'China'
+            },
+            condition: {
+                functionBody: 'return !model.simulator'
             }
         }, {
             key:            'language.api',
