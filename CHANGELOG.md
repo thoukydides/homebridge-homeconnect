@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.1.0] - 2024-11-15
+### Added
+* Added support for Home Connect API servers located in China. (#311)
+
 ## [v1.0.7] - 2024-11-09
 ### Changed
 * **CoffeeMaker/Washer:** Added undocumented program options. (#305, #307, #309)
@@ -677,7 +681,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.7...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.1.0...HEAD
+[v1.1.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.7...v1.1.0
 [v1.0.7]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.5...v1.0.7
 [v1.0.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.4...v1.0.5
 [v1.0.4]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.3...v1.0.4
