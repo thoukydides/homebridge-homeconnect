@@ -417,6 +417,7 @@ export type ProcessPhaseCleaningRobot =
 export type ProcessPhaseLaundryCare = // (undocumented)
     'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
   | 'LaundryCare.Common.EnumType.ProcessPhase.CleaningHeatExchanger'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.CupboardDryReached'
   | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingTextile'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
@@ -433,12 +434,16 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.FinishedAntiCrease'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.IronDryReached'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.AutomaticDirtDetection'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.AutomaticTextileDetection'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.DetergentDispensing'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Emptying'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.ExtraRinsingFoam'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.FinalSpinning'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.LoadAdjustActive'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Rinsing'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.RinsingSpinning'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.RinsingWithAquaSensor'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Washing';
 export type ProgramMode = // (undocumented)
