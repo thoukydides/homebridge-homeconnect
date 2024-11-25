@@ -785,6 +785,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.LearningDishwasher.DurationLevel'?:         LearningDishwasherDurationLevel; // (undocumented)
     'Dishcare.Dishwasher.Option.SanitationUC'?:                             boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
+    'Dishcare.Dishwasher.Option.StorageFunction'?:                          boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.Turbo'?:                                    boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.VarioSpeed'?:                               boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
