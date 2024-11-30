@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable max-len */
 import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
@@ -14,8 +15,8 @@ for (const srcFile of srcFiles) {
     const text = await readFile(path.join(srcDir, srcFile), 'utf8');
     const matches = [
         ...text.matchAll(/function\s+(\w+)\s*<TBase/g),
-        ...text.matchAll(/const\s+(\w+)\s*=\s*<TBase/g),
-    ]
+        ...text.matchAll(/const\s+(\w+)\s*=\s*<TBase/g)
+    ];
     mixinNames.push(...matches.map(match => match[1]));
 }
 
@@ -27,14 +28,13 @@ export default tseslint.config(
     ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     {
-        files: ['**/*.ts'],
+        files: ['**/*.ts', 'eslint.config.mjs'],
         languageOptions: {
             globals:        globals.node,
             ecmaVersion:    'latest',
             sourceType:     'module',
             parserOptions: {
-                projectService:         { allowDefaultProject: ['*.mjs', '*.ts'] },
-                allowDefaultProject:    true
+                projectService:         true
             }
         },
         rules: {

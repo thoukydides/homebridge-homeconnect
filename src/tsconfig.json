@@ -1,0 +1,17 @@
+{
+    "extends": "@tsconfig/node18/tsconfig.json",
+    "compilerOptions": {
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "outDir": "../dist",
+        "resolveJsonModule": true,
+        "strict": true,
+		"noUncheckedIndexedAccess": true
+    },
+    "exclude": [
+        "./homebridge-ui/public/"
+    ]
+}

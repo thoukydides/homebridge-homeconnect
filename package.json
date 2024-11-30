@@ -83,8 +83,12 @@
         "undici": "^6.20.1"
     },
     "devDependencies": {
+        "@actions/core": "^1.11.1",
+        "@actions/github": "^6.0.0",
         "@eslint/eslintrc": "^3.1.0",
         "@eslint/js": "^9.14.0",
+        "@octokit/core": "^6.1.2",
+        "@octokit/plugin-rest-endpoint-methods": "^13.2.6",
         "@tsconfig/node18": "^18.2.4",
         "@types/eslint__js": "^8.42.3",
         "@types/node": "^18.19.64",
@@ -105,17 +109,17 @@
         "typescript-eslint": "^8.13.0"
     },
     "scripts": {
-        "lint": "npm run checkers && eslint src/ --max-warnings=0",
-        "watch": "npm run build && nodemon",
-        "browserify": "browserify -d -p esmify dist/homebridge-ui/public/client.js -o dist/homebridge-ui/public/bundle.js",
-        "browserify-list": "browserify --list -d dist/homebridge-ui/public/client.js | sort",
-        "checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts && tsx bin/ts-interface-post.ts ./src/ti",
-        "prebuild": "rimraf ./dist",
-        "build": "npm run checkers && tsc --project tsconfig.json && tsc --project src/homebridge-ui/public/tsconfig.json",
-        "postbuild": "npm run browserify && copyfiles -u 1 -e './**/*.ts' './src/homebridge-ui/public/**' ./dist",
+        "build-checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts && tsx bin/ts-interface-post.ts ./src/ti",
+        "build-static": "copyfiles -u 1 -e './**/*.ts' './src/homebridge-ui/public/**' ./dist",
+        "build-tsc": "tsc -p ./src -p ./src/homebridge-ui/public/",
+        "build-ui": "browserify -d -p esmify dist/homebridge-ui/public/client.js -o dist/homebridge-ui/public/bundle.js",
+        "build": "npm run build-checkers && npm run build-tsc && npm run build-ui && npm run build-static",
+        "clean": "rimraf ./dist",
+        "lint": "eslint eslint.config.mjs 'bin/**/*.ts' 'src/**/*.ts' --max-warnings=0",
+        "watch": "nodemon",
+        "test": "tsx bin/test-startup.ts",
         "postversion": "git push && git push --tags",
-        "prepublishOnly": "npm run lint && npm run build",
-        "test": "tsx bin/test-startup.ts"
+        "prepublishOnly": "npm run lint && npm run build"
     },
     "optionalDependencies": {
         "fsevents": "^2.3.2"

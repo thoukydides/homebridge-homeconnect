@@ -54,6 +54,7 @@
         "haids",
         "helpvalue",
         "homeappliances",
+        "homebridge",
         "homeconnect",
         "IDAPI",
         "imagekey",
@@ -103,5 +104,8 @@
     "cSpell.ignorePaths": [
         "**/api-value-types.ts"
     ],
+    "files.exclude": {
+        "node_modules/": true
+    },
     "typescript.tsdk": "node_modules/typescript/lib"
 }

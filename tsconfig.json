@@ -1,21 +1,11 @@
 {
-    "extends": "@tsconfig/node18/tsconfig.json",
+	"extends": "@tsconfig/node18/tsconfig.json",
     "compilerOptions": {
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "declaration": true,
-        "declarationMap": true,
-        "sourceMap": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "resolveJsonModule": true,
-        "strict": true,
-		"noUncheckedIndexedAccess": true
+        "allowJs": true,
+        "checkJs": true,
+        "noEmit": true
     },
     "include": [
-        "./src/"
-    ],
-    "exclude": [
-        "./src/homebridge-ui/public/"
+        "eslint.config.mjs",
     ]
 }
