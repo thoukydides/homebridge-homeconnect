@@ -119,7 +119,7 @@
         "watch": "nodemon",
         "test": "tsx bin/test-startup.ts",
         "postversion": "git push && git push --tags",
-        "prepublishOnly": "npm run lint && npm run build"
+        "prepublishOnly": "npm run build && npm run lint"
     },
     "optionalDependencies": {
         "fsevents": "^2.3.2"
