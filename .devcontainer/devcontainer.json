@@ -22,7 +22,7 @@
 
 	// Finish setup after creating the container
 	"postCreateCommand": {
-		"install": "npm install",
+		"install": "npm ci",
 		"homebridge": "cp -R ./.devcontainer/.homebridge ~/"
 	},
 

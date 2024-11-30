@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Use homebridge ${{ matrix.homebridge-version }}
         run: npm install homebridge@${{ matrix.homebridge-version }}
