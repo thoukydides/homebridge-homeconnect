@@ -102,5 +102,6 @@
     ],
     "cSpell.ignorePaths": [
         "**/api-value-types.ts"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }
