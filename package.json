@@ -111,7 +111,7 @@
     "scripts": {
         "build-checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts && tsx bin/ts-interface-post.ts ./src/ti",
         "build-static": "copyfiles -u 1 -e './**/*.ts' './src/homebridge-ui/public/**' ./dist",
-        "build-tsc": "tsc -p ./src -p ./src/homebridge-ui/public/",
+        "build-tsc": "tsc -p ./src && tsc -p ./src/homebridge-ui/public/",
         "build-ui": "browserify -d -p esmify dist/homebridge-ui/public/client.js -o dist/homebridge-ui/public/bundle.js",
         "build": "npm run build-checkers && npm run build-tsc && npm run build-ui && npm run build-static",
         "clean": "rimraf ./dist",
