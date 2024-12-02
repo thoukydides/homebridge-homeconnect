@@ -1,4 +1,4 @@
-name: 🚫 Do NOT raise issues using this template
+name: 🚫 Do NOT raise general issues using this template
 description: "This is only for reports generated using links displayed in the plugin log file."
 title: HomeConnect API unexpected values or mismatched types
 labels: ["api keys/values"]
@@ -8,7 +8,7 @@ body:
     id: version
     attributes:
       label: Plugin Version
-      description: "Please state the version number of this plugin that warned about the keys/values. If this is not the most recent release then please try updating to the latest version before filing the report."
+      description: "Version number of this plugin that warned about the keys/values. This should be filled automatically. If this is not the most recent release, please update to the latest version before filing the report."
     validations:
       required: true
   
@@ -16,7 +16,7 @@ body:
     id: appliance
     attributes:
       label: Home Connect Appliance(s)
-      description: "Please provide the manufacturer, type, and model number of the associated appliance(s). These details can be found in the Apple Home app or the Homebridge log file."
+      description: "Manufacturer, type, and model number of the associated appliance(s). This should be filled automatically."
       placeholder: "e.g. Siemens Oven HB678GBS6B/50"
     validations:
       required: true
@@ -25,8 +25,10 @@ body:
     id: log
     attributes:
       label: Log File
-      description: "Please copy/paste all relevant log entries. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its `-D` command line option). Be sure to remove any sensitive information (passwords, tokens, etc)."
-      placeholder: "Paste logging output..."
+      description: "Copy/paste all log entries relevant to the reported issue, starting and ending with the horizontal rule markers. Ensure logs are complete and legible. Do NOT use a screenshot. Replace sensitive information like access tokens with `REDACTED`."
+      placeholder: |
+        Paste logging output here, starting and ending with:
+        =============================================================================================
       render: shell
     validations:
       required: true
@@ -35,7 +37,16 @@ body:
     id: additional
     attributes:
       label: Additional Information
-      description: "Please provide any additional information that might assist with understanding the reported keys/values. This could include links to product web pages, user manuals, screenshots, or anything else you think might be relevant."
-      placeholder: "Any additional information that might be relevant..."
+      description: "Provide any additional information that might assist with understanding the reported keys/values. This could include links to product web pages, user manuals, screenshots, or anything else relevant."
+      placeholder: "Any other relevant information..."
     validations:
       required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        **Important Notes:**
+        - Do NOT use this issue template for general issues.
+        - Ensure all required fields are filled.
+        - Remove sensitive information (e.g., access tokens) from logs.
+        - If you are not using the most recent plugin version, update before submitting.

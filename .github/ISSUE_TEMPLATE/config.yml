@@ -1,20 +1,23 @@
 blank_issues_enabled: false
 contact_links:
+  - name: 📘 Documentation
+    url: https://github.com/thoukydides/homebridge-homeconnect/wiki
+    about: "Please refer to the project Wiki before opening an issue. Many common problems and questions are addressed there."
   - name: 💬 Discussions
     url: https://github.com/thoukydides/homebridge-homeconnect/discussions
-    about: If you are seeking support or have a question then please start a discussion instead of raising an issue.
+    about: "If you are seeking support or have questions then please start a discussion here instead of raising an issue."
   - name: 🚦 Home Connect Server Status (unofficial)
     url: https://homeconnect.thouky.co.uk
-    about: Check the unofficial Home Connect server status before reporting issues relating to problems communicating with the servers or controlling appliances.
+    about: "Check the unofficial Home Connect server status if you are experiencing communication issues or connectivity problems with appliances."
   - name: ⛔ Authorisation error messages
     url: https://api-docs.home-connect.com/authorization?#authorization-errors
-    about: Refer to the Home Connect Developer documentation for descriptions of errors that may occur during authorisation.
+    about: "Refer to the Home Connect Developer documentation for descriptions of errors that may occur during authorisation."
   - name: ⛔ Other error messages
     url: https://api-docs.home-connect.com/general?#api-errors
-    about: Refer to the Home Connect Developer documentation for descriptions of errors that may occur during normal operation.
+    about: "Refer to the Home Connect Developer documentation for descriptions of errors that may occur during normal operation."
   - name: 📧 Contact the Home Connect Developer team
     url: https://developer.home-connect.com/support/contact
-    about: Contact the Home Connect Developer team if you are having problems with authorisation, or if you want support for additional appliance programs or options.
+    about: "Contact the Home Connect Developer team if you are having problems with authorisation, or if you want support for additional appliance programs or options."
   - name: 📧 Contact HOOBS support
     url: https://support.hoobs.org/ticket
-    about: This is not a HOOBS plugin. Contact the HOOBS support team with any issues that cannot be reproduced with a vanilla (non-HOOBS) Homebridge installation.
+    about: "This is not a HOOBS plugin. Contact the HOOBS support team with any issues that cannot be reproduced with a vanilla (non-HOOBS) Homebridge installation."

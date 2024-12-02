@@ -7,7 +7,7 @@ body:
     id: description
     attributes:
       label: Description of Issue
-      description: "Please provide a clear and concise description of the bug."
+      description: "Provide a clear and concise description of the bug."
       placeholder: "Describe the bug..."
     validations:
       required: true
@@ -16,8 +16,8 @@ body:
     id: expected
     attributes:
       label: Expected Behaviour
-      description: "Please provide a clear and consise description of what you expected to happen."
-      placeholder: "What did you expect to happen..."
+      description: "What did you expect to happen?"
+      placeholder: "Describe the expected outcome..."
     validations:
       required: true
     
@@ -25,8 +25,11 @@ body:
     id: reproduce
     attributes:
       label: Steps to Reproduce
-      description: "Please provide a description of how to reproduce the issue."
-      placeholder: "What steps are required to reproduce the bug..."
+      description: "Provide a step-by-step description of how to reproduce the issue."
+      placeholder: |
+        Steps to reproduce:
+        1. ...
+        2. ...
     validations:
       required: true
   
@@ -34,7 +37,7 @@ body:
     id: version
     attributes:
       label: Plugin Version
-      description: "Please state the version number of this plugin that exhibits the bug. If this is not the most recent release then please try updating to the latest version before reporting the issue."
+      description: "State the plugin version exhibiting the bug. If not using the latest version, please update before reporting."
     validations:
       required: true
       
@@ -42,11 +45,15 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: "Describe the software environment being used to run this plugin. Please include the Operating System type and version (output of `lsb_release -d` on Linux), Node.js version (output of `node -v`), and Homebridge version (output of `npm -g ls homebridge`)."
-      value: |
-        - OS:
-        - Node:
-        - Homebridge:
+      description: |
+        Describe the software environment being used to run this plugin. Include:
+        - Operating System type and version (output of `lsb_release -d` on Linux)
+        - Node.js version (output of `node -v`)
+        - Homebridge version (output of `npm -g ls homebridge`)
+      placeholder: |
+        - OS: e.g. Ubuntu 24.04.1 LTS or macOS Ventura 13.5
+        - Node: e.g. v18.20.4
+        - Homebridge: e.g. 1.8.5
     validations:
       required: true
   
@@ -54,7 +61,7 @@ body:
     id: appliance
     attributes:
       label: Home Connect Appliance(s)
-      description: "If this issue relates to a specific appliance then please provide the manufacturer, type, and model number. These details can be found in the Apple Home app or the Homebridge log file."
+      description: "Provide the appliance manufacturer, type, and model number (if applicable). These details can be found in the Apple Home app or the Homebridge log file."
       placeholder: "e.g. Siemens Oven HB678GBS6B/50"
     validations:
       required: false
@@ -63,7 +70,7 @@ body:
     id: homekitapp
     attributes:
       label: HomeKit App(s)
-      description: "If this issue relates to a specific HomeKit app then please provide details."
+      description: "Provide details about the HomeKit app involved (if applicable)."
       placeholder: "e.g. Apple Home, Elgato Eve, Home+ 4, Hesperus, etc."
     validations:
       required: false
@@ -72,13 +79,13 @@ body:
     id: diagnostics
     attributes:
       label: Diagnostic Checks
-      description: "Indicate the steps that have you have taken to rule-out problems with the Home Connect servers or appliance(s)."
+      description: "Indicate steps you have taken to rule out other causes."
       options:
-        - label: "Home Connect app is able to control the appliance with Wi-Fi disabled."
-        - label: "Home Connect app shows three green lines in the Network section of the appliance Settings."
-        - label: "Unofficial [Home Connect Server Status](https://homeconnect.thouky.co.uk) shows servers up and no recent errors."
-        - label: "Searched for [previously reported issues](https://github.com/thoukydides/homebridge-homeconnect/issues?q=is%3Aissue) and no similar ones found."
-        - label: "Checked the [Home Connect API errors](https://api-docs.home-connect.com/general?#api-errors) and [authorisation errors](https://api-docs.home-connect.com/authorization?#authorization-errors) documentation."
+        - label: "Home Connect app can control the appliance with Wi-Fi disabled."
+        - label: "Home Connect app appliance Settings, Network section, shows three green lines."
+        - label: "[Home Connect Server Status (unofficial)](https://homeconnect.thouky.co.uk) shows servers up and no recent errors."
+        - label: "Searched for [previously reported issues](https://github.com/thoukydides/homebridge-homeconnect/issues?q=is%3Aissue) and found none."
+        - label: "Checked [Home Connect API errors](https://api-docs.home-connect.com/general?#api-errors) and [authorisation errors](https://api-docs.home-connect.com/authorization?#authorization-errors) documentation."
     validations:
       required: false
       
@@ -86,8 +93,8 @@ body:
     id: log
     attributes:
       label: Log File
-      description: "Please copy/paste relevant log entries. Attach longer logs as a text file. Do NOT use a screenshot. These logs should be captured with Homebridge in debug mode (enabled using its `-D` command line option). Be sure to remove any sensitive information (passwords, tokens, etc)."
-      placeholder: "Paste logging output..."
+      description: "Provide relevant logs, captured with Homebridge in debug mode (`-D`). Attach longer logs as a text file. Ensure logs are complete and legible. Do NOT use a screenshot. Replace sensitive information like access tokens with `REDACTED`."
+      placeholder: "Paste logs captured using: homebridge -D > debug.log"
       render: shell
     validations:
       required: true
@@ -96,17 +103,26 @@ body:
     id: config
     attributes:
       label: Configuration
-      description: "Please provide, if applicable, the content of your `config.json` file. Be sure to remove any sensitive information (Client ID, passwords, tokens, etc)."
+      description: "Provide your `config.json` (if relevant). Replace sensitive information (Client ID, passwords, tokens, etc) with `REDACTED`. This is optional but highly recommended."
       placeholder: "Paste configuration..."
       render: json
     validations:
-      required: true
+      required: false
    
   - type: textarea
     id: additional
     attributes:
       label: Additional Information
-      description: "Please provide any additional information that might assist with resolving your bug report. This could include screenshots, configuration files, or anything else you think might be relevant."
-      placeholder: "Any additional information that might be relevant..."
+      description: "Provide any additional information that might assist with resolving your bug report. This could include links to product web pages, user manuals, screenshots, or anything else relevant."
+      placeholder: "Any other relevant information..."
     validations:
       required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        **Important Notes:**
+        - Ensure all required fields are filled.
+        - Debug logs (`-D` mode) are crucial for resolving most issues.
+        - Remove sensitive information (e.g., passwords or tokens) from logs.
+        - If you are not using the most recent plugin version, update before submitting.
