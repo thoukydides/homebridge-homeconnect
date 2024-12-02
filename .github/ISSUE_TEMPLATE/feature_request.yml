@@ -44,10 +44,10 @@ body:
     validations:
       required: false
 
-- type: markdown
-  attributes:
-    value: |
-      **Important Notes:**
-      - Feature requests must align with HomeKit's intended functionality and Home Connect API capabilities.
-      - Features outside the scope of HomeKit or Home Connect API are unlikely to be implemented.
-      - Detailed, actionable suggestions, are more likely to be considered.
+  - type: markdown
+    attributes:
+      value: |
+        **Important Notes:**
+        - Feature requests must align with HomeKit's intended functionality and Home Connect API capabilities.
+        - Features outside the scope of HomeKit or Home Connect API are unlikely to be implemented.
+        - Detailed, actionable suggestions, are more likely to be considered.
