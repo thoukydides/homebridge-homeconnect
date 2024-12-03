@@ -1,8 +1,9 @@
-src
+/bin
+/eslint.config.mjs
+/nodemon.json
+/RELEASE_HEAD.md
+/src
+/tsconfig.json
 .*
-nodemon.json
-tsconfig.json
-RELEASE_HEAD.md
-/*.js
 *~
 [#]*[#]
