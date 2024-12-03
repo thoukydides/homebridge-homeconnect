@@ -1,0 +1,47 @@
+name: Auto-Close Pull Requests
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  auto-close:
+    if: github.actor != 'dependabot[bot]'
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - name: Close pull request
+      uses: actions/github-script@v7
+      with:
+        script: |
+          await github.pulls.update({
+            owner:          context.repo.owner,
+            repo:           context.repo.repo,
+            pull_number:    context.issue.number,
+            state:          'closed'
+          });
+
+          await github.issues.createComment({
+            owner:          context.repo.owner,
+            repo:           context.repo.repo,
+            issue_number:   context.issue.number,
+            body:
+          `## Pull Request Closed
+
+          Thank you @${context.actor} for your interest in this project. However, this is a personal project maintained solely by me to satisfy my own requirements.
+
+          As stated in [\`CONTRIBUTING.md\`](https://github.com/thoukydides/.github/blob/master/CONTRIBUTING.md):
+          - This project does **NOT** accept pull requests
+          - Any PRs submitted will be closed without discussion
+          
+          If you have discovered an issue or have an idea for how to improve this project, please open a new issue using the appropriate issue template.
+          
+          While I appreciate the effort, I prefer to implement my own fixes and enhancements. Feel free to fork the project if you wish to make your own modifications.
+          
+          Cheers! 🖖`
+          });

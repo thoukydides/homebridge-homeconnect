@@ -1,4 +1,4 @@
-name: Close Stale Issues and PRs
+name: Close Stale Issues
 
 on:
   schedule:
@@ -10,19 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-      pull-requests: write
 
     steps:
     - uses: actions/stale@v7
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'This issue is stale because it has been open for 30 days without activity. This issue will be closed in 5 days unless the stale label is removed or a comment added.'
-        close-issue-message: 'This issue was closed because it has been stalled for 7 days with no activity.'
+        stale-issue-message: '⏰ This issue is stale because it has been open for 30 days without activity. This issue will be closed in 7 days unless the `stale` label is removed or a comment added.'
+        close-issue-message: '💤 This issue was closed because it has been stalled for 7 days with no activity.'
         stale-issue-label: 'stale'
         days-before-issue-stale: 30
         days-before-issue-close: 7
-        close-pr-message: 'This project does not accept PRs.'
-        stale-pr-label: 'wontfix'
-        exempt-pr-labels: 'dependencies'
-        days-before-pr-stale: 0
-        days-before-pr-close: 0

@@ -9,7 +9,11 @@ jobs:
   validate-api-keys:
     if: (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'api keys/values')) ||
         (github.event_name == 'workflow_dispatch')
+
     runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
 
     steps:
       - uses: actions/checkout@v4
