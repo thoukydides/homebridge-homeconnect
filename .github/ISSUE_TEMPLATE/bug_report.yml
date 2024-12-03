@@ -2,7 +2,25 @@ name: 🐞 Bug report
 description: "Report a bug or something that is otherwise not working as expected."
 labels: ["bug"]
 
-body:
+body:      
+  - type: checkboxes
+    id: diagnostics
+    attributes:
+      label: Diagnostic Checklist
+      description: "Use the checklist below to verify you have ruled-out other potential causes. It can save time if you have already tried basic troubleshooting."
+      options:
+        - label: "Home Connect app can control the appliance with Wi-Fi disabled."
+        - label: "Home Connect app appliance Settings, Network section, shows three green lines."
+        - label: "Searched for [previously reported issues](https://github.com/thoukydides/homebridge-homeconnect/issues?q=is%3Aissue) and found none."
+        - label: "Checked Home Connect API documentation for [errors](https://api-docs.home-connect.com/general?#api-errors) and [authorisation errors](https://api-docs.home-connect.com/authorization?#authorization-errors)."
+        - label: "[Home Connect Server Status (unofficial)](https://homeconnect.thouky.co.uk) shows servers up and no recent errors."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: "[![Home Connect Server Status](https://homeconnect.thouky.co.uk/api/images/readme-status.svg)](https://homeconnect.thouky.co.uk)"
+
   - type: textarea
     id: description
     attributes:
@@ -75,35 +93,49 @@ body:
     validations:
       required: false
       
-  - type: checkboxes
-    id: diagnostics
-    attributes:
-      label: Diagnostic Checks
-      description: "Indicate steps you have taken to rule out other causes."
-      options:
-        - label: "Home Connect app can control the appliance with Wi-Fi disabled."
-        - label: "Home Connect app appliance Settings, Network section, shows three green lines."
-        - label: "[Home Connect Server Status (unofficial)](https://homeconnect.thouky.co.uk) shows servers up and no recent errors."
-        - label: "Searched for [previously reported issues](https://github.com/thoukydides/homebridge-homeconnect/issues?q=is%3Aissue) and found none."
-        - label: "Checked [Home Connect API errors](https://api-docs.home-connect.com/general?#api-errors) and [authorisation errors](https://api-docs.home-connect.com/authorization?#authorization-errors) documentation."
-    validations:
-      required: false
-      
   - type: textarea
     id: log
     attributes:
       label: Log File
-      description: "Provide relevant logs, captured with Homebridge in debug mode (`-D`). Attach longer logs as a text file. Ensure logs are complete and legible. Do NOT use a screenshot. Replace sensitive information like access tokens with `REDACTED`."
-      placeholder: "Paste logs captured using: homebridge -D > debug.log"
+      description: |
+        Provide relevant Homebridge logs, either pasted below or attached as a text file. Do NOT use a screenshot. Replace sensitive information (access tokens, etc) with `REDACTED`. Logs are most useful when they are complete; include the full output around the error message and do not omit any lines.
+
+        Enable and capture appropriate extra debug:
+        
+        - **For Homebridge Debug Logging** (enable for most issues):
+          - Launch Homebridge using `homebridge -D` to start in debug mode.
+            - In Homebridge UI: *Settings* > *UI Advanced Settings* > *Log Settings* > *Enable/disable debug level logging*.
+          - Or, in your `config.json`, add `"debug": ["Log Debug as Info"]` to log debug information as part of regular output.
+            - In Homebridge UI: *Plugins* > *HomeConnect Plugin Config* > *General Settings* > *Debug Options* > *Log Debug as Info*.
+          
+        - **For Home Connect API Logging**:
+          - In your `config.json`, add `"debug": ["Log API Bodies"]` to capture the raw API request and response bodies.
+            - In Homebridge UI: *Plugins* > *HomeConnect Plugin Config* > *General Settings* > *Debug Options* > *Log API Bodies*.
+          
+        - **For HomeKit Accessory Protocol (HAP) Logging**:
+          - Launch Homebridge using `DEBUG=* homebridge -D` to enable HAP-specific logging.
+        
+        The additional debug information in the logs will provide more context for resolving your issue.
+      placeholder: |
+        Paste the logs...
+
+        With general debug:
+          homebridge -D > debug.log
+
+        With Home Connect API logging:
+          { "platforms": [{ "platform": "HomeConnect", "debug": ["Log API Bodies"] }] }
+
+        With HAP (HomeKit) logging:
+          DEBUG=* homebridge -D > debug.log
       render: shell
     validations:
       required: true
-   
+
   - type: textarea
     id: config
     attributes:
       label: Configuration
-      description: "Provide your `config.json` (if relevant). Replace sensitive information (Client ID, passwords, tokens, etc) with `REDACTED`. This is optional but highly recommended."
+      description: "Provide your `config.json` (if relevant). This is optional but highly recommended. Replace sensitive information (Client ID, passwords, tokens, etc) with `REDACTED`."
       placeholder: "Paste configuration..."
       render: json
     validations:
@@ -113,7 +145,7 @@ body:
     id: additional
     attributes:
       label: Additional Information
-      description: "Provide any additional information that might assist with resolving your bug report. This could include links to product web pages, user manuals, screenshots, or anything else relevant."
+      description: "Provide any additional information that might assist with resolving your bug report. This could include links to product web pages, user manuals, screenshots, videos, or anything else relevant."
       placeholder: "Any other relevant information..."
     validations:
       required: false
@@ -123,6 +155,6 @@ body:
       value: |
         **Important Notes:**
         - Ensure all required fields are filled.
-        - Debug logs (`-D` mode) are crucial for resolving most issues.
-        - Remove sensitive information (e.g., passwords or tokens) from logs.
+        - Debug logs (captured using `homebridge -D`) are crucial for resolving most issues.
+        - Ensure sensitive information like tokens or passwords are `REDACTED` before sharing.
         - If you are not using the most recent plugin version, update before submitting.
