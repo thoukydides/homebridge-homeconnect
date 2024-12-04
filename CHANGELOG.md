@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.2.0] - 2024-12-04
+### Added
+* Added redaction of `haId` values in logs. (Client ID, and Access/Refresh Tokens were already redacted.) The `Log Appliance IDs` debug option leaves the full `haId` values visible.
+### Changed
+* Updated `README.md`.
+* Updated dependencies to latest versions.
+
 ## [v1.1.2] - 2024-11-30
 ### Changed
 * **Dishwasher/Dryer/Oven/Washer/WasherDryer:** Added undocumented programs and options. (#312, #313, #314)
