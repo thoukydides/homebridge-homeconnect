@@ -6,6 +6,20 @@ import { Logger, LogLevel } from 'homebridge';
 import { assertIsDefined, formatList, MS } from './utils.js';
 import { checkers } from './ti/token-types.js';
 
+// Mapping of haId values to their names
+const applianceIds = new Map<string, string>();
+let revealApplianceIds = false;
+const HAID_PATTERN = '\\w+-\\w+-[0-9A-F]{12}|\\d{18}';
+const HAID_REGEX = new RegExp(`^${HAID_PATTERN}$`);
+
+// Regular expressions for different types of sensitive data
+const filters: [(value: string) => string, RegExp][] = [
+    [maskClientId,      /\b[0-9A-F]{64}\b/g],
+    [maskRefreshToken,  /\b[\w+/]{64,}(={1,2}|(%3D){1,2}|\b)/g],
+    [maskAccessToken,   /\b[\w-]+\.[\w-]+\.[\w-]+\b/g],
+    [maskApplianceId,   new RegExp(`\\b${HAID_PATTERN}\\b`, 'g')]
+];
+
 // A logger with filtering and support for an additional prefix
 export class PrefixLogger {
 
@@ -41,16 +55,28 @@ export class PrefixLogger {
         this.debugLevel = LogLevel.INFO;
     }
 
+    // Do not redact haId values in log messages (global setting)
+    static logApplianceIds(): void {
+        revealApplianceIds = true;
+    }
+
     // Attempt to filter sensitive data within the log message
     static filterSensitive(message: string): string {
         // Exception for links related to authorisation
         if (message.includes('https://developer.home-connect.com/')) return message;
 
         // Otherwise replace anything that should probably be protected
-        return message
-            .replace(/\b[0-9A-F]{64}\b/g,                       maskClientId)
-            .replace(/\b[\w+/]{64,}(={1,2}|(%3D){1,2}|\b)/g,    maskRefreshToken)
-            .replace(/\b[\w-]+\.[\w-]+\.[\w-]+\b/g,             maskAccessToken);
+        return filters.reduce((message, [filter, regex]) =>
+            message.replace(regex, filter), message);
+    }
+
+    // Add an haId to filter
+    static addApplianceId(haId: string, name: string): void {
+        if (!applianceIds.has(haId) && !HAID_REGEX.test(haId)) {
+            // haId was not matched by the standard regexp, so add its own
+            filters.push([maskApplianceId, new RegExp(`\\b${haId}\\b`, 'g')]);
+        }
+        applianceIds.set(haId, name);
     }
 }
 
@@ -96,6 +122,17 @@ function maskAccessToken(token: string): string {
     } catch {
         return token;
     }
+}
+
+// Mask a Home Connect appliance ID
+function maskApplianceId(haId: string): string {
+    if (revealApplianceIds) return haId;
+    const name = applianceIds.get(haId);
+    if (name) return `<HA_ID ${name}>`;
+
+    // Fallback if the haId is not already known
+    const match = /-([^-]+)-/.exec(haId);
+    return `<HA_ID ${match?.[1] ?? haId.substring(0, -12)}...>`;
 }
 
 // Mask a token, leaving just the first and final few characters

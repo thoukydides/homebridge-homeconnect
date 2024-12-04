@@ -19,6 +19,7 @@ import { APICheckValues, CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
 import { ProgramKey } from './api-value-types.js';
 import { checkers } from './ti/api-types.js';
 import { assertIsDefined } from './utils.js';
+import { PrefixLogger } from './logger.js';
 
 // Home Connect API methods
 export interface HomeConnectAPI {
@@ -99,6 +100,9 @@ export class CloudAPI implements HomeConnectAPI {
     async getAppliances(): Promise<HomeAppliance[]> {
         const response = await this.ua.get<HomeAppliancesWrapper>(
             checkers.HomeAppliancesWrapper, '/api/homeappliances');
+        for (const { haId, vib, name } of response.data.homeappliances) {
+            PrefixLogger.addApplianceId(haId, `${vib} "${name}"`);
+        }
         return this.checkValues.appliances(response.data.homeappliances);
     }
 

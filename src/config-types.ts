@@ -16,7 +16,7 @@ export interface ConfigPlugin {
 }
 
 // Debugging features
-export type DebugFeatures = 'Log API Headers' | 'Log API Bodies' | 'Log Debug as Info' | 'Mock Appliances';
+export type DebugFeatures = 'Log API Headers' | 'Log API Bodies' | 'Log Appliance IDs' | 'Log Debug as Info' | 'Mock Appliances';
 
 // Appliance configurations indexed by haId
 export interface ConfigAppliances {
