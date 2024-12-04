@@ -3,19 +3,8 @@
 
 import { Logger, LogLevel } from 'homebridge';
 
-import { createCheckers, CheckerT } from 'ts-interface-checker';
-
-import { AccessTokenHeader, AccessTokenPayload, RefreshToken, SimulatorToken } from './token-types.js';
 import { assertIsDefined, formatList, MS } from './utils.js';
-import tokensTI from './ti/token-types-ti.js';
-
-// Checkers for token types
-const checkers = createCheckers(tokensTI) as {
-    RefreshToken:       CheckerT<RefreshToken>;
-    SimulatorToken:     CheckerT<SimulatorToken>;
-    AccessTokenHeader:  CheckerT<AccessTokenHeader>;
-    AccessTokenPayload: CheckerT<AccessTokenPayload>;
-};
+import { checkers } from './ti/token-types.js';
 
 // A logger with filtering and support for an additional prefix
 export class PrefixLogger {
@@ -30,11 +19,11 @@ export class PrefixLogger {
     ) {}
 
     // Wrappers around the standard Logger methods
-    info(message: string):    void { this.log(LogLevel.INFO,    message); }
+    info   (message: string): void { this.log(LogLevel.INFO,    message); }
     success(message: string): void { this.log(LogLevel.SUCCESS, message); }
-    warn(message: string):    void { this.log(LogLevel.WARN,    message); }
-    error(message: string):   void { this.log(LogLevel.ERROR,   message); }
-    debug(message: string):   void { this.log(LogLevel.DEBUG,   message); }
+    warn   (message: string): void { this.log(LogLevel.WARN,    message); }
+    error  (message: string): void { this.log(LogLevel.ERROR,   message); }
+    debug  (message: string): void { this.log(LogLevel.DEBUG,   message); }
     log(level: LogLevel, message: string): void {
         // Allow debug messages to be logged as a different level
         if (level === LogLevel.DEBUG) level = this.debugLevel;

@@ -2,27 +2,17 @@
 // Copyright © 2023 Alexander Thoukydides
 
 import { STATUS_CODES } from 'http';
-import { createCheckers, CheckerT, IErrorDetail } from 'ts-interface-checker';
+import { IErrorDetail } from 'ts-interface-checker';
 
-import { ErrorResponse } from './api-types.js';
-import { AuthorisationError } from './api-auth-types.js';
 import { Request, Response } from './api-ua.js';
 import { assertIsDefined, columns } from './utils.js';
-import apiTI from './ti/api-types-ti.js';
-import authTI from './ti/api-auth-types-ti.js';
+import { checkers as apiCheckers } from './ti/api-types.js';
+import { checkers as authCheckers } from './ti/api-auth-types.js';
 
 // Options that can be passed to an error constructor
 interface Options {
     cause?: unknown
 }
-
-// Checkers for API error responses
-const apiCheckers = createCheckers(apiTI) as {
-    ErrorResponse:      CheckerT<ErrorResponse>;
-};
-const authCheckers = createCheckers(authTI) as {
-    AuthorisationError: CheckerT<AuthorisationError>;
-};
 
 // Base for reporting all Home Connect API errors
 export class APIError extends Error {
