@@ -192,7 +192,7 @@ export class APIUserAgent {
         try {
             // Read the stream as strings
             const body = response.body;
-            body.setEncoding('utf-8');
+            body.setEncoding('utf8');
 
             body.on('end', () => {
                 this.log.warn('EVENT STREAM END');
@@ -204,7 +204,11 @@ export class APIUserAgent {
 
             // Parse chunks of the stream as events
             let sse: SSE = {};
-            for await (const chunk of body) {
+            const decoder = new TextDecoder('utf-8');
+            for await (let chunk of body) {
+                if (chunk instanceof Buffer) {
+                    chunk = decoder.decode(chunk, { stream: true });
+                }
                 assertIsString(chunk);
                 this.logBody('Stream', chunk);
                 for (const line of chunk.split(/\r?\n/)) {
