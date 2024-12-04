@@ -59,7 +59,7 @@ export class PrefixLogger {
 
         // Otherwise replace anything that should probably be protected
         return message
-            .replace(/\b[0-9-A-F]{64}\b/g,                      maskClientId)
+            .replace(/\b[0-9A-F]{64}\b/g,                       maskClientId)
             .replace(/\b[\w+/]{64,}(={1,2}|(%3D){1,2}|\b)/g,    maskRefreshToken)
             .replace(/\b[\w-]+\.[\w-]+\.[\w-]+\b/g,             maskAccessToken);
     }
