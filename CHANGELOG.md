@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.2.1] - 2024-12-04
+### Fixed
+* Workaround change to undici's handling of streaming responses. (#316)
+
 ## [v1.2.0] - 2024-12-04
 ### Added
 * Added redaction of `haId` values in logs. (Client ID, and Access/Refresh Tokens were already redacted.) The `Log Appliance IDs` debug option leaves the full `haId` values visible.
@@ -693,7 +697,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.1...HEAD
+[v1.2.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.0...v1.2.1
 [v1.2.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.1.2...v1.2.0
 [v1.1.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.1.0...v1.1.2
 [v1.1.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.0.7...v1.1.0
