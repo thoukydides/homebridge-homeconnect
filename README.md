@@ -55,7 +55,9 @@ Home Connect home appliances plugin for [Homebridge](https://github.com/homebrid
 1. Save the plugin settings and restart Homebridge.
 
 <details>
-<summary><h4>Alternative method using command line</h4></summary>
+<summary>Alternative method using command line</summary>
+
+#### Installation using Command Line
 
 1. Install this plugin using: `npm install -g homebridge-homeconnect`
 1. Edit `config.json` and add the HomeConnect platform (see example below).
@@ -84,25 +86,29 @@ This plugin supports most capabilities of the [Home Connect API](https://develop
 Apple's Home app does not support all of the features of this plugin. Some [third-party HomeKit apps](https://github.com/thoukydides/homebridge-homeconnect/wiki/HomeKit-Apps) are recommended due to their extra functionality.
 
 <details>
-<summary><h3>Cooking Appliances</h3></summary>
+<summary>Cooking Appliances</summary>
 
   * **CoffeeMaker:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-coffeemaker.svg">
     * Switch on/off, start/stop programs with preset options, and turn cup warmer on/off.
     * Control child lock.
     * Monitor door, program time remaining, remote control, and general operation status.
     * Automation triggers for bean container empty, water tank empty, drip tray full, milk requires cooling, and for when cleaning/descaling is needed.
 
   * **CookProcessor:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-cookprocessor.svg">
     * Switch on/off.
     * Monitor program time remaining and general operation status.
     * Automation triggers for finished and aborted.
 
   * **Hob:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-hob.svg">
     * Control alarm clock and child lock.
     * Monitor power, remote control, and general operation status.
     * Automation triggers for finished, alarm clock finished, and preheat finished.
 
   * **Hood:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-hood.svg">
     * Switch on/off.
     * Switch fan on/off, set fan speed/intensive levels, and select manual/auto mode.
     * Switch functional light on/off, change brightness, and select colour temperature.
@@ -111,6 +117,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation triggers for finished, grease filter nearly saturated, and grease filter saturated.
 
   * **Oven:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-oven.svg">
     * Switch on/off and start/stop programs with preset options.
     * Open or partly open the door.
     * Set sabbath mode.
@@ -119,20 +126,23 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation triggers for finished, aborted, alarm clock finished, fast preheat finished, and regular preheat finished.
 
   * **WarmingDrawer:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-warmingdrawer.svg">
     * Switch on/off and start/stop programs with preset options.
     * Control child lock.
     * Monitor remote control and general operation status.
 
 </details>
 <details>
-<summary><h3>Cleaning Appliances</h3></summary>
+<summary>Cleaning Appliances</summary>
 
   * **CleaningRobot:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-cleaningrobot.svg">
     * Switch on/off and start/stop programs with preset options.
     * Monitor battery level, battery charging, dock, and general operation status.
     * Automation triggers for finished, aborted, dust box full, stuck, and lost.
 
   * **Dishwasher:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-dishwasher.svg">
     * Switch on/off and start/stop programs with preset options.
     * Switch ambient light on/off, change brightness, and select colour.
     * Control child lock.
@@ -140,18 +150,21 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation triggers for finished, aborted, salt supply low, and rinse aid supply low.
 
   * **Dryer:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-dryer.svg">
     * Start/stop programs with preset options.
     * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, and drying finished.
 
   * **Washer:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-washer.svg">
     * Start/stop programs with preset options.
     * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
     * Automation triggers for finished, aborted, i-Dos 1 fill level low, and i-Dos 2 fill level low.
 
   * **WasherDryer:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-washerdryer.svg">
     * Start/stop programs with preset options.
     * Control child lock.
     * Monitor power, door, program time remaining, remote control, and general operation status.
@@ -159,9 +172,12 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 
 </details>
 <details>
-<summary><h3>Cooling Appliances</h3></summary>
+<summary>Cooling Appliances</summary>
 
   * **Freezer / FridgeFreezer / Refrigerator:**
+    <img align="right" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-refrigerator.svg">
+    <img align="right" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-fridgefreezer.svg">
+    <img align="right" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-freezer.svg">
     * Set freezer/refrigerator super, eco, sabbath, refrigerator vacation, refrigerator fresh, and ice dispenser modes.
     * Switch interior/exterior light on/off and change brightness.
     * Open the door.
@@ -170,6 +186,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Automation triggers for freezer/refrigerator door and freezer temperature alarms.
 
   * **WineCooler:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-winecooler.svg">
     * Set sabbath mode.
     * Control child lock.
     * Monitor power and door.
@@ -186,9 +203,7 @@ If you have discovered an issue or have an idea for how to improve this project,
 
 ### Pull Requests
 
-This project does **NOT** accept pull requests. Any PRs submitted will be closed without discussion.
-
-For more details refer to the [`CONTRIBUTING.md`](https://github.com/thoukydides/.github/blob/master/CONTRIBUTING.md) file.
+This project does **NOT** accept pull requests. Any PRs submitted will be closed without discussion. For more details refer to the [`CONTRIBUTING.md`](https://github.com/thoukydides/.github/blob/master/CONTRIBUTING.md) file.
 
 ## ISC License (ISC)
 
