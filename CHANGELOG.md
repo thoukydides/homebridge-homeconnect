@@ -3,8 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [v1.2.2] - 2024-12-05
 ### Changed
 * **CoffeeMaker:** Added undocumented program options. (#317)
+* Warn if `Identify` triggered without enabling `Log Appliance IDs` debug option.
 
 ## [v1.2.1] - 2024-12-04
 ### Fixed
@@ -699,7 +702,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2024 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.2...HEAD
+[v1.2.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.1...v1.2.2
 [v1.2.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.0...v1.2.1
 [v1.2.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.1.2...v1.2.0
 [v1.1.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.1.0...v1.1.2
