@@ -312,12 +312,17 @@ export type CoffeeMilkRatio =
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.80Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.85Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.90Percent';
+export type CoffeeShots = // (undocumented)
+    'ConsumerProducts.CoffeeMaker.EnumType.Shots.Double'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.Shots.Undefined';
 export type CoffeeStrength = // (undocumented)
     'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength1'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength2'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength3'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength4'
-  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength5';
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength5'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength6'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength7';
 export type CoffeeTemperature =
     'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.88C'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.90C'
@@ -759,6 +764,7 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                        FlowRate;
     'ConsumerProducts.CoffeeMaker.Option.HotWaterTemperature'?:             HotWaterTemperature;
     'ConsumerProducts.CoffeeMaker.Option.MultipleBeverages'?:               boolean;
+    'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                      CoffeeShots; // (undocumented)
     'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveStage;
     'Cooking.Common.Option.Hood.VentingLevel'?:                             FanStage;
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;

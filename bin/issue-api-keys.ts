@@ -78,7 +78,7 @@ if (issue_number === undefined) {
         core.info(`🔴 ${summary.length} key/value updates required:`);
         for (const line of summary.sort()) core.info(line);
     } else {
-        core.info('🟢 No updates required');
+        core.notice('🟢 No updates required');
     }
 } else {
     // Check a single issue and add a comment
@@ -95,9 +95,9 @@ async function getCurrentVersion(): Promise<string> {
 
 // Review a single issue
 async function reviewIssue(issue: Issue, addComment = false): Promise<string[] | undefined> {
-    const { number: issue_number, title, state, body } = issue;
+    const { number: issue_number, html_url, title, state, body } = issue;
     core.info(`Issue #${issue_number}: ${title} [${state}]`);
-    core.info(issue.html_url);
+    core.info(html_url);
 
     // Parse the issue into its component fields
     const issueFields = parseIssueBody(body ?? '');
@@ -107,7 +107,7 @@ async function reviewIssue(issue: Issue, addComment = false): Promise<string[] |
     const issueTypes = parseTypes(`#${issue_number}`, issueFields.get('Log File') ?? '');
     const countTypes = (types: APITypes): number => types.interfaces.size + types.literals.size;
     if (!countTypes(issueTypes)) {
-        core.warning(`Issue #${issue_number}: No API keys/values in log file`);
+        core.warning(`⚠️ No API keys/values in log file: ${html_url}`);
         if (addComment) {
             const body = '⚠️ This does **not** appear to be an API key/value report. The supplied log file does not list any types.';
             await octokit.rest.issues.createComment({ ...repo, issue_number, body });
@@ -124,7 +124,7 @@ async function reviewIssue(issue: Issue, addComment = false): Promise<string[] |
     const discrepancies = checkDiscrepancies(sourceTypes, issueTypes);
     let summary: string[] | undefined;
     if (countTypes(discrepancies)) {
-        core.notice(`Issue #${issue_number}: Updates required to API key/value types`);
+        core.notice(`🔴 Updates required to API key/value types: ${html_url}`);
         comment += '🔴 The following key/value updates appear to be required:\n';
         summary = [];
         if (discrepancies.interfaces.size) {
