@@ -56,9 +56,8 @@ export class PrefixLogger {
     }
 
     // Do not redact haId values in log messages (global setting)
-    static logApplianceIds(): void {
-        revealApplianceIds = true;
-    }
+    static set logApplianceIds(log: boolean) { revealApplianceIds = log; }
+    static get logApplianceIds(): boolean { return revealApplianceIds; }
 
     // Attempt to filter sensitive data within the log message
     static filterSensitive(message: string): string {

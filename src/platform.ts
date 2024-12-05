@@ -154,7 +154,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
 
         // Use the validated configuration
         if (configPlugin.debug?.includes('Log Debug as Info')) this.log.logDebugAsInfo();
-        if (configPlugin.debug?.includes('Log Appliance IDs')) PrefixLogger.logApplianceIds();
+        PrefixLogger.logApplianceIds = configPlugin.debug?.includes('Log Appliance IDs') ?? false;
         return [configPlugin, configAppliances];
     }
 

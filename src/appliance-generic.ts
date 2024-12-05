@@ -17,6 +17,7 @@ import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } f
 import { HomeConnectPlatform } from './platform.js';
 import { ConfigSchemaData, SchemaOptionalFeature } from './homebridge-ui/schema-data.js';
 import { ServiceNames } from './service-name.js';
+import { PrefixLogger } from './logger.js';
 
 // A HAP Service constructor
 type ServiceConstructor = typeof Service & {
@@ -240,6 +241,9 @@ export class ApplianceBase {
     // Identify this appliance
     async identify(): Promise<void> {
         // Log the current status of this appliance
+        if (!PrefixLogger.logApplianceIds) {
+            this.log.warn('haId values are being redacted; set the "Log Appliance IDs" debug feature to reveal their full values');
+        }
         this.log.info('Identify: ' + this.device.ha.haId);
         const itemDescriptions = Object.values(this.device.items).map(item => this.device.describe(item));
         for (const item of itemDescriptions.sort()) this.log.info(item);
