@@ -113,7 +113,7 @@ body:
             - In Homebridge UI: *Plugins* > *HomeConnect Plugin Config* > *General Settings* > *Debug Options* > *Log API Bodies*.
           
         - **For HomeKit Accessory Protocol (HAP) Logging**:
-          - Launch Homebridge using `DEBUG=* homebridge -D` to enable HAP-specific logging.
+          - Launch Homebridge using `DEBUG=HAP-NodeJS:* homebridge -D` to enable HAP-specific logging.
         
         The additional debug information in the logs will provide more context for resolving your issue.
       placeholder: |
@@ -126,7 +126,7 @@ body:
           { "platforms": [{ "platform": "HomeConnect", "debug": ["Log API Bodies"] }] }
 
         With HAP (HomeKit) logging:
-          DEBUG=* homebridge -D > debug.log
+          DEBUG=HAP-NodeJS:* homebridge -D > debug.log
       render: shell
     validations:
       required: true
