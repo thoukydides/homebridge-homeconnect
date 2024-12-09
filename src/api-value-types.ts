@@ -435,6 +435,7 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.Rinsing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener'
   | 'LaundryCare.Common.EnumType.ProcessPhase.SpinningFinal'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Washing'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.CupboardDryReached'
   | 'LaundryCare.Dryer.EnumType.ProcessPhase.Drying'
