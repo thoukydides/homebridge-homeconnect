@@ -288,6 +288,7 @@ export type BeanAmount =
 export type BeanContainerSelection =
     'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right'
   | 'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left';
+export type BeverageSize = never; // (undocumented)
 export type CleaningMode =
     'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Silent'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Standard'
@@ -295,7 +296,8 @@ export type CleaningMode =
 export type CoarsnessExtended = // (undocumented)
     'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness1'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness2'
-  | 'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness3';
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness3'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness4';
 export type CoffeeMilkRatio =
     'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.10Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.20Percent'
@@ -756,6 +758,7 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                     AromaSelect; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
+    'ConsumerProducts.CoffeeMaker.Option.BeverageSize'?:	                  BeverageSize; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeveragesRemaining'?:              number; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                       CoarsnessExtended; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                 CoffeeMilkRatio;
