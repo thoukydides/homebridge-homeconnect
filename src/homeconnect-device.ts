@@ -111,7 +111,7 @@ export class HomeConnectDevice extends EventEmitter {
     describe<Key extends DeviceKey>(item: Item<Key>): string {
         let description: string = item.key;
         if ('value' in item) {
-            description += `=${item.value}`;
+            description += `=${JSON.stringify(item.value)}`;
         }
         if (item.unit && item.unit !== 'enum') {
             description += ` ${item.unit}`;
