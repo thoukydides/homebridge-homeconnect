@@ -289,6 +289,8 @@ export type BeanContainerSelection =
     'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right'
   | 'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left';
 export type BeverageSize = never; // (undocumented)
+export type CavitySelector = // (undocumented)
+    'Cooking.Oven.EnumType.CavitySelector.Main';
 export type CleaningMode =
     'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Silent'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Standard'
@@ -771,6 +773,7 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                      CoffeeShots; // (undocumented)
     'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveStage;
     'Cooking.Common.Option.Hood.VentingLevel'?:                             FanStage;
+    'Cooking.Oven.Option.CavitySelector'?:                                  CavitySelector; // (undocumented)
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
     'Cooking.Oven.Option.MeatProbeTemperatureV2'?:                          MeatProbeTemperatureV2; // (undocumented)
     'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
