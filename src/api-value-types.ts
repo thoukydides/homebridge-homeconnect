@@ -267,7 +267,8 @@ export type ProgramKey =
 // Program option enumerated types
 export type AromaSelect = // (undocumented)
     'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.balanced'
-  | 'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.distinctive';
+  | 'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.distinctive'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.fine';
 export type BeanAmount =
     'ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryMild'
   | 'ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Mild'
