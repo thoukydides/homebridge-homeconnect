@@ -763,11 +763,16 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
     'ConsumerProducts.CoffeeMaker.Option.BeverageSize'?:	                  BeverageSize; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeveragesRemaining'?:              number; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.Coarsness.Recommendation'?:	      CoarsnessExtended; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                       CoarsnessExtended; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                 CoffeeMilkRatio;
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength.Recommendation'?:	  CoffeeStrength; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength'?:                  CoffeeStrength; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature.Recommendation'?:CoffeeTemperature; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature'?:               CoffeeTemperature;
+    'ConsumerProducts.CoffeeMaker.Option.FillQuantity.Recommendation'?:	    number; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.FillQuantity'?:                    number;
+    'ConsumerProducts.CoffeeMaker.Option.FlowRate.Recommendation'?:	        FlowRate; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                        FlowRate;
     'ConsumerProducts.CoffeeMaker.Option.HotWaterTemperature'?:             HotWaterTemperature;
     'ConsumerProducts.CoffeeMaker.Option.MultipleBeverages'?:               boolean;
