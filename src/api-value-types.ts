@@ -149,6 +149,7 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.LearningDishwasher' // (undocumented)
   | 'Dishcare.Dishwasher.Program.MachineCare'
   | 'Dishcare.Dishwasher.Program.MagicDaily'
+  | 'Dishcare.Dishwasher.Program.MaxEfficient' // (undocumented)
   | 'Dishcare.Dishwasher.Program.MaximumCleaning'
   | 'Dishcare.Dishwasher.Program.MixedLoad'
   | 'Dishcare.Dishwasher.Program.NightWash'
