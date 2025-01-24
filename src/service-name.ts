@@ -125,7 +125,7 @@ export class ServiceNames {
     validateServiceName(suffix: string, name: string): boolean {
         // Check the length in characters (Unicode code units)
         const issues: string[] = [];
-        const characters = [...name];
+        const characters = name.split('');
         const length = characters.length;
         if (length < SERVICE_LENGTH_MIN) issues.push(`too short (${length} < ${SERVICE_LENGTH_MIN})`);
         if (SERVICE_LENGTH_MAX < length) issues.push(`too long (${length} > ${SERVICE_LENGTH_MAX})`);
