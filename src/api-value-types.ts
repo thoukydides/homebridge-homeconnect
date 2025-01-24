@@ -45,6 +45,7 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CalcNClean' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.Clean' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CleanBrewingUnitManually' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CleanBrewingUnitManuallyDetailed' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CleanOutletManually' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.Descale' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.FrostProtection' // (undocumented)
@@ -56,6 +57,8 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.CafeAuLait'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.CafeConLeche'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.CafeCortado'
+  | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.ColdBrew' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.ColdBrewMacchiato' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Cortado'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.DeadEye'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Doppio'
@@ -67,6 +70,7 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.KleinerBrauner'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.KoffieVerkeerd'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.RedEye'
+  | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.SlowBrew' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Verlaengerter'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.VerlaengerterBraun'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.WienerMelange'
