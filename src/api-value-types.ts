@@ -92,10 +92,13 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Cleaning.Drying' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Ecolysis' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Automatic.Conv.Steam.BonelessPorkNeckJoint' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.GefluegelteileAuftauen' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.PommesFrites' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.MeatProbe.GooseBreast' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.MeatProbe.BonelessPorkNeckJoint' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.MeatProbe.TurkeyBreast' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.PartCookedBreadRollsOrBaguette' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.2DHotAir' // (undocumented)
@@ -105,6 +108,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
   | 'Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial'
   | 'Cooking.Oven.Program.HeatingMode.GrillLargeArea' // (undocumented)
+  | 'Cooking.Oven.Program.HeatingMode.GrillSmallArea' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.HotAir'
   | 'Cooking.Oven.Program.HeatingMode.HotAir100Steam'
   | 'Cooking.Oven.Program.HeatingMode.HotAir30Steam'
@@ -135,6 +139,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.SteamModes.DoughProving' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.Reheat' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.ContinueCooking' // (undocumented)
+  | 'Cooking.Oven.Program.SubsequentMode.KeepWarm' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.LeaveToRest' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.Microwave' // (undocumented)
   | 'Dishcare.Dishwasher.Program.Auto1'
@@ -416,8 +421,10 @@ export type LearningDishwasherDryingLevel = // (undocumented)
   | 'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level1';
 export type LearningDishwasherDurationLevel = // (undocumented)
     'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level0';
-export type MeatProbeTemperatureV2 = // (unrecognised)
+export type MeatProbeTemperatureV2 = // (undocumented)
     'Cooking.Oven.EnumType.MeatProbeTemperatureV2.Off';
+export type MicrowavePower = // (undocumented)
+    'Cooking.Oven.EnumType.MicrowavePower.Off';
 export type MultipleSoak = // (undocumented)
   | 'LaundryCare.Washer.EnumType.MultipleSoak.Off'
   | 'LaundryCare.Washer.EnumType.MultipleSoak.On';
@@ -755,6 +762,7 @@ export interface OptionValues {
     'BSH.Common.Option.FinishInRelative'?:                                  number;
     'BSH.Common.Option.ProgramName'?:                                       string; // (undocumented)
     'BSH.Common.Option.ProgramProgress'?:                                   number;
+    'BSH.Common.Option.RemainingProgramTime.AutoCounting'?:                 boolean; // (undocumented)
     'BSH.Common.Option.RemainingProgramTime'?:                              number;
     'BSH.Common.Option.RemainingProgramTimeEstimationState'?:               EstimationState; // (undocumented)
     'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   boolean;
@@ -784,12 +792,15 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                      CoffeeShots; // (undocumented)
     'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveStage;
     'Cooking.Common.Option.Hood.VentingLevel'?:                             FanStage;
+    'Cooking.Oven.Option.AirExchange'?:                                     boolean; // (undocumented)
     'Cooking.Oven.Option.CavitySelector'?:                                  CavitySelector; // (undocumented)
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
     'Cooking.Oven.Option.MeatProbeTemperatureV2'?:                          MeatProbeTemperatureV2; // (undocumented)
+    'Cooking.Oven.Option.MicrowavePower'?:                                  MicrowavePower; // (undocumented)
     'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
     'Cooking.Oven.Option.SetpointTemperature'?:                             number;
     'Cooking.Oven.Option.SteamAssistLevel'?:                                AddedSteam; // (undocumented)
+    'Cooking.Oven.Option.SteamBoost'?:                                      boolean; // (undocumented)
     'Cooking.Oven.Option.WarmingLevel'?:                                    WarmingLevel;
     'Dishcare.Dishwasher.Option.BrillianceDry'?:                            boolean;
     'Dishcare.Dishwasher.Option.DelicateBasket'?:                           boolean; // (undocumented)
@@ -830,6 +841,7 @@ export interface OptionValues {
     'LaundryCare.Dryer.Option.ProcessPhase'?:                               ProcessPhaseLaundryCare; // (undocumented)
     'LaundryCare.Dryer.Option.Refresher'?:                                  Refresher; // (undocumented)
     'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
+    'LaundryCare.Washer.Option.EISA'?:                                      boolean; // (undocumented)
     'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
     'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
     'LaundryCare.Washer.Option.IDos1DosingLevel'?:                          IDosingLevel; // (undocumented)
