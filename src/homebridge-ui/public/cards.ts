@@ -74,7 +74,7 @@ export class Cards {
     // Create a new card
     makeCard({ id, icon, name, detail }: CardDescription): DocumentFragment {
         // Create a new card from the template
-        if (detail === undefined) detail = ' '; // (non-breaking space)
+        detail ??= ' '; // (non-breaking space)
         const card = cloneTemplate('hc-appliance-card', { name, detail });
         this.loadCardIcon(getSlot(card, 'icon'), `./images/icon-${icon}.svg`, id);
 
