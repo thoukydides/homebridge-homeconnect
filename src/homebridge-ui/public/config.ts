@@ -97,7 +97,7 @@ export class Config {
     // Compare two configuration objects
     diffObject(to: object, from: object, keyPrefix = ''): ConfigDiff[] {
         const keys = [...Object.keys(to), ...Object.keys(from)]
-            .filter((key, index, self) => index === self.indexOf(key));
+            .filter((key, index, self) => index === self.indexOf(key) && key !== '_bridge');
         const diff: ConfigDiff[]  = [];
         for (const key of keys) {
             const valueTo   = to  [key as never];
