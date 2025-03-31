@@ -1,7 +1,7 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "target": "es2022",
+        "target": "es2020",
         "lib": [ "ES2022", "DOM" ],
         "strict": true,
 		"noUncheckedIndexedAccess": true,
