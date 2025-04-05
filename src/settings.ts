@@ -15,7 +15,6 @@ interface PackageJson {
     version:        string;
 }
 const PACKAGE_JSON = join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json');
-console.warn(`Loading package.json from ${PACKAGE_JSON}`);
 const PACKAGE = JSON.parse(readFileSync(PACKAGE_JSON, 'utf-8')) as PackageJson;
 
 // Platform identifiers
