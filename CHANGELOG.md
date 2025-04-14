@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.2.9] - 2025-04-14
+### Changed
+* **Dryer:** Added undocumented program. (#337)
+* Updated dependencies to latest versions.
+
 ## [v1.2.8] - 2025-03-31
 ### Changed
 * Suppress incorrect warnings about unsaved changes to `_bridge` configuration (when a Homebridge child-bridge is used).
@@ -731,7 +736,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.8...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.9...HEAD
+[v1.2.9]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.8...v1.2.9
 [v1.2.8]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.7...v1.2.8
 [v1.2.7]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.6...v1.2.7
 [v1.2.6]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.5...v1.2.6
