@@ -192,6 +192,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.InBasket'
   | 'LaundryCare.Dryer.Program.Jeans'
   | 'LaundryCare.Dryer.Program.MaintenanceCare1.MaintenanceCare1.QuickCare' // (undocumented)
+  | 'LaundryCare.Dryer.Program.MaintenanceCare2.MaintenanceCare2.DepthCare' // (undocumented)
   | 'LaundryCare.Dryer.Program.Mix'
   | 'LaundryCare.Dryer.Program.MyTime.MyDryingTime'
   | 'LaundryCare.Dryer.Program.Outdoor.Sportswear' // (undocumented)
