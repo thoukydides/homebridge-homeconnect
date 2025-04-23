@@ -118,6 +118,7 @@
         "lint": "eslint eslint.config.mjs 'bin/**/*.ts' 'src/**/*.ts' --max-warnings=0",
         "watch": "nodemon",
         "test": "tsx bin/test-startup.ts",
+        "issue-api-keys": "GITHUB_REPOSITORY=thoukydides/homebridge-homeconnect tsx bin/issue-api-keys.ts",
         "postversion": "git push && git push --tags",
         "prepublishOnly": "npm run build && npm run lint"
     },

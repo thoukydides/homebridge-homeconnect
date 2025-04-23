@@ -416,12 +416,15 @@ export type IntensiveStage =
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1'
   | 'Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2';
 export type LearningDishwasherCleaningLevel = // (undocumented)
-    'Dishcare.Dishwasher.EnumType.LearningDishwasher.CleaningLevel.Level0';
+    'Dishcare.Dishwasher.EnumType.LearningDishwasher.CleaningLevel.Level0'
+  | 'Dishcare.Dishwasher.EnumType.LearningDishwasher.CleaningLevel.Level1';
 export type LearningDishwasherDryingLevel = // (undocumented)
     'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level0'
   | 'Dishcare.Dishwasher.EnumType.LearningDishwasher.DryingLevel.Level1';
 export type LearningDishwasherDurationLevel = // (undocumented)
-    'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level0';
+    'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level0'
+  | 'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level1'
+  | 'Dishcare.Dishwasher.EnumType.LearningDishwasher.DurationLevel.Level2';
 export type MeatProbeTemperatureV2 = // (undocumented)
     'Cooking.Oven.EnumType.MeatProbeTemperatureV2.Off';
 export type MicrowavePower = // (undocumented)
@@ -791,6 +794,7 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.HotWaterTemperature'?:             HotWaterTemperature;
     'ConsumerProducts.CoffeeMaker.Option.MultipleBeverages'?:               boolean;
     'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                      CoffeeShots; // (undocumented)
+    'Cooking.Common.Option.Hood.Boost'?:                                    boolean; // (undocumented)
     'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveStage;
     'Cooking.Common.Option.Hood.VentingLevel'?:                             FanStage;
     'Cooking.Oven.Option.AirExchange'?:                                     boolean; // (undocumented)
