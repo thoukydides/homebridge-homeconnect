@@ -800,6 +800,7 @@ export interface OptionValues {
     'Cooking.Oven.Option.AirExchange'?:                                     boolean; // (undocumented)
     'Cooking.Oven.Option.CavitySelector'?:                                  CavitySelector; // (undocumented)
     'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
+    'Cooking.Oven.Option.HeatupProgress'?:                                  number; // (undocumented)
     'Cooking.Oven.Option.MeatProbeTemperatureV2'?:                          MeatProbeTemperatureV2; // (undocumented)
     'Cooking.Oven.Option.MicrowavePower'?:                                  MicrowavePower; // (undocumented)
     'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
