@@ -40,11 +40,14 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             this.device.on('BSH.Common.Setting.PowerState', updateHK);
             this.device.on('connected',                     updateHK);
 
-            // Check whether the appliance supports off or standby
+            // Identify the power on and off states supported by the appliance
             const setting = await this.getCached(
                 'power', () => this.device.getSetting('BSH.Common.Setting.PowerState'));
             const allValues = setting?.constraints?.allowedvalues ?? [];
             const offValues: PowerState[] = allValues.filter(value => value !== PowerState.On);
+            const powerStateOn = allValues.find(value => value === PowerState.On);
+
+            // Check whether the appliance supports off or standby
             let powerStateOff = offValues[0];
             if (powerStateOff === undefined) {
                 this.log.info('Cannot be switched off');
@@ -62,12 +65,16 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             }
 
             // Make the power state characteristic writable
+            if (powerStateOn === undefined) this.log.info('Cannot be switched on');
             this.log.info(`Can be ${this.defaultOffValue === PowerState.Standby ? 'placed in standby' : 'switched off'}`);
             this.powerService.getCharacteristic(this.Characteristic.On)
                 .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
                 .onSet(this.onSetBoolean(async value => {
-                    this.log.info(`SET ${value ? 'On' : 'Off'}`);
-                    await this.device.setSetting('BSH.Common.Setting.PowerState', value ? PowerState.On : powerStateOff);
+                    const powerState = value ? powerStateOn : powerStateOff;
+                    if (powerState !== undefined) {
+                        this.log.info(`SET ${value ? 'On' : 'Off'}`);
+                        await this.device.setSetting('BSH.Common.Setting.PowerState', powerState);
+                    }
                 }));
         }
 

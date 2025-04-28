@@ -41,6 +41,9 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Details of all programs supported by the appliance
         programs: (ProgramDefinitionKV & { selected?: boolean })[] = [];
 
+        // Does the appliance support switching the power on
+        supportsPowerOn = true;
+
         // Ignore program selection events when reading program details
         autoSelectingPrograms = false;
 
@@ -91,6 +94,12 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             this.programs = await this.cache.get<ProgramDefinitionKV[]>('Program details') ?? [];
             const count = Object.keys(this.programs).length;
             if (count) this.log.debug(`Restored details of ${count} programs`);
+
+            // Check whether the appliance supports turning power on
+            const setting = await this.getCached(
+                'power', () => this.device.getSetting('BSH.Common.Setting.PowerState'));
+            const allValues = setting?.constraints?.allowedvalues ?? [];
+            this.supportsPowerOn = allValues.includes(PowerState.On);
 
             // Attempt to update the list of programs
             await this.device.waitConnected(true);
@@ -269,7 +278,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         async selectAndGetAvailableProgram<Key extends ProgramKey>(programKey: Key): Promise<ProgramDefinitionKV<Key>> {
             // Switch the appliance on, if necessary
             const powerState = this.device.getItem('BSH.Common.Setting.PowerState');
-            if (powerState && powerState !== PowerState.On) {
+            if (this.supportsPowerOn && powerState && powerState !== PowerState.On) {
                 this.log.warn('Switching appliance on to read program options');
                 await this.device.setSetting('BSH.Common.Setting.PowerState', PowerState.On);
                 await setTimeoutP(READY_DELAY);
@@ -301,8 +310,10 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Ensure that the required program is selected and ready
         requireProgramReady(programKey: ProgramKey): void {
             // The appliance needs to be ready to read the program details reliably
-            if (!this.device.isOperationState('Ready'))
+            if (this.supportsPowerOn && !this.device.isOperationState('Ready'))
                 throw new Error('Appliance is not ready (switched on without an active program)');
+            if (!this.device.isOperationState('Inactive', 'Ready'))
+                throw new Error('Appliance is not inactive or ready (without an active program)');
 
             // The program must be currently selected
             if (this.device.getItem('BSH.Common.Root.SelectedProgram') !== programKey)
@@ -368,7 +379,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             // Treat a single invalid entry as being an empty array
             // (workaround for homebridge-config-ui-x / angular6-json-schema-form)
             if (config.length === 1 && !config[0]?.name && !config[0]?.key) {
-                this.log.warn('Treating Invalid programs array as empty (presumably written by homebridge-config-ui-x');
+                this.log.warn('Treating Invalid programs array as empty (presumably written by homebridge-config-ui-x)');
                 config = [];
             }
 
