@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.3.0] - 2025-04-28
+### Added
+* **Oven:** Support appliances that cannot be switched on without starting a program. (#340)
+### Changed
+* **Dishwasher/Hood/Oven:** Added undocumented program options. (#338, #339)
+* Updated dependencies to latest versions.
+
 ## [v1.2.9] - 2025-04-14
 ### Changed
 * **Dryer:** Added undocumented program. (#337)
@@ -736,7 +743,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.9...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.3.0...HEAD
+[v1.3.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.9...v1.3.0
 [v1.2.9]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.8...v1.2.9
 [v1.2.8]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.7...v1.2.8
 [v1.2.7]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.6...v1.2.7
