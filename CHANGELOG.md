@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.4.0] - 2025-04-30
+### Added
+* **Hood:** Added a `Switch` service to control boost function. (#338)
+### Changed
+* Dropped Node.js 18 support.
+* Updated dependencies to latest versions.
+
 ## [v1.3.0] - 2025-04-28
 ### Added
 * **Oven:** Support appliances that cannot be switched on without starting a program. (#340)
@@ -743,7 +750,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.3.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.4.0...HEAD
+[v1.4.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.3.0...v1.4.0
 [v1.3.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.9...v1.3.0
 [v1.2.9]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.8...v1.2.9
 [v1.2.8]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.7...v1.2.8
