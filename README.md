@@ -110,7 +110,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
   * **Hood:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-hood.svg">
     * Switch on/off.
-    * Switch fan on/off, set fan speed/intensive levels, and select manual/auto mode.
+    * Switch fan on/off, set fan speed/intensive levels, select boost mode, and select manual/auto mode.
     * Switch functional light on/off, change brightness, and select colour temperature.
     * Switch ambient light on/off, change brightness, and select colour.
     * Monitor remote control and general operation status.

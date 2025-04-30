@@ -4,9 +4,9 @@
 import { Characteristic, Service, WithUUID } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor, assertIsDefined, assertIsNumber } from './utils.js';
+import { Constructor, assertIsBoolean, assertIsDefined, assertIsNumber } from './utils.js';
 import { OptionDefinitionKV, OptionKey, OptionValue } from './api-value.js';
-import { ProgramKey } from './api-value-types.js';
+import { OptionValues, ProgramKey } from './api-value-types.js';
 
 // Extractor fan programs
 const FAN_PROGRAM_MANUAL: ProgramKey = 'Cooking.Common.Program.Hood.Venting';
@@ -29,6 +29,7 @@ export interface UpdateFanHCValue {
     active?:    number;
     auto?:      number;
     percent?:   number;
+    boost?:     boolean;
 }
 
 // Add an extractor fan to an accessory
@@ -37,6 +38,7 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
 
         // Accessory services
         readonly activeService: Service;
+        boostService?: Service;
 
         // Does the extractor fan support automatic speed control
         fanSupportsAuto?: boolean;
@@ -75,10 +77,10 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             // Read the options supported by the manual fan program
             const manualProgram = await this.getCached(
                 'fan manual program', () => this.device.getAvailableProgram(FAN_PROGRAM_MANUAL));
+            const manualOptions = manualProgram.options ?? [];
 
             // Determine the supported fan speeds
             const getOption = <Key extends OptionKey>(key: Key, excludeOff: OptionValue<Key>): FanLevel<Key>[] => {
-                const manualOptions = manualProgram.options ?? [];
                 const option = manualOptions.find(o => o.key === key) as OptionDefinitionKV<Key> | undefined;
                 const values = option?.constraints?.allowedvalues ?? [];
                 return values.filter(value => value !== excludeOff).map(value => ({ key, value }));
@@ -124,19 +126,27 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
                 this.log.info(`    ${level.percent}% (${level.value})` + (level.siri ? ` = Siri '${level.siri}'` : ''));
             }
 
+            // Control the fan
+            const updateHC = this.makeSerialisedObject<UpdateFanHCValue>(value => this.updateFanHC(value));
+
             // Add the fan service
-            this.addFan();
+            this.addFan(updateHC);
+
+            // If the fan has a boost mode then create a switch to control it
+            const hasBoostOption = manualOptions.some(o => o.key === 'Cooking.Common.Option.Hood.Boost');
+            if (hasBoostOption && this.hasOptionalFeature('Switch', 'Boost')) {
+                this.log.info('Fan supports boost mode');
+                this.boostService = this.addFanBoost(updateHC);
+                this.boostService.addLinkedService(this.activeService);
+            }
         }
 
         // Add a fan
-        addFan(): void {
+        addFan(updateHC: (value?: UpdateFanHCValue) => Promise<void>): void {
             const service = this.activeService;
             const { INACTIVE: OFF, ACTIVE } = this.Characteristic.Active;
             const { INACTIVE, BLOWING_AIR } = this.Characteristic.CurrentFanState;
             const { MANUAL, AUTO }          = this.Characteristic.TargetFanState;
-
-            // Control the fan
-            const updateHC = this.makeSerialisedObject<UpdateFanHCValue>(value => this.updateFanHC(value));
 
             // Add the fan state characteristics
             service.getCharacteristic(this.Characteristic.Active)
@@ -177,9 +187,26 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             });
         }
 
+        // Add a boost switch
+        addFanBoost(updateHC: (value?: UpdateFanHCValue) => Promise<void>): Service {
+            // Add a switch service for the boost option
+            const service = this.makeService(this.Service.Switch, 'Boost', 'boost');
+
+            // Add the boost characteristic
+            service.getCharacteristic(this.Characteristic.On)
+                .onSet(this.onSetBoolean(value => updateHC({ boost: value })));
+
+            // Update the status
+            this.device.on('Cooking.Common.Option.Hood.Boost', boost => {
+                this.log.info(`Boost ${boost ? 'on' : 'off'}`);
+                service.updateCharacteristic(this.Characteristic.On, boost);
+            });
+            return service;
+        }
+
         // Deferred update of Home Connect state from HomeKit characteristics
-        updateFanHC({ active, auto, percent }: UpdateFanHCValue): Promise<void> {
-            // Read missing values
+        updateFanHC({ active, auto, percent, boost }: UpdateFanHCValue): Promise<void> {
+            // Read missing Fan service values
             const read = (characteristic: WithUUID<new () => Characteristic>): number => {
                 const value = this.activeService.getCharacteristic(characteristic).value;
                 assertIsNumber(value);
@@ -189,15 +216,24 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             auto    ??= read(this.Characteristic.TargetFanState);
             percent ??= read(this.Characteristic.RotationSpeed);
 
+            // Read missing boost Switch service value
+            const readBoost = (): boolean | undefined => {
+                if (!this.boostService) return;
+                const value = this.boostService.getCharacteristic(this.Characteristic.On).value;
+                assertIsBoolean(value);
+                return value;
+            };
+            boost ??= readBoost();
+
             // Configure the fan
             const { INACTIVE: OFF, ACTIVE } = this.Characteristic.Active;
             const { AUTO }                  = this.Characteristic.TargetFanState;
             if (auto !== AUTO && percent === 0) active = OFF;
-            return this.setFan(active === ACTIVE, auto === AUTO, percent);
+            return this.setFan(active === ACTIVE, auto === AUTO, percent, boost);
         }
 
         // Configure the fan for a particular mode and speed
-        async setFan(active: boolean, auto: boolean, percent: number): Promise<void> {
+        async setFan(active: boolean, auto: boolean, percent: number, boost?: boolean): Promise<void> {
             if (!active) {
                 // Turn the fan off
                 this.log.info('SET fan off');
@@ -209,14 +245,19 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             } else {
                 const option = this.fromFanSpeedPercent(percent);
                 const snapPercent = this.toFanSpeedPercent(option);
-                this.log.info(`SET fan manual ${snapPercent}%`);
+                this.log.info(`SET fan manual ${snapPercent}%${boost === true ? ' with boost' : ''}`);
                 if (this.device.isOperationState('Run')
                     && this.device.getItem('BSH.Common.Root.ActiveProgram') === FAN_PROGRAM_MANUAL) {
                     // Try changing the options for the current program
                     await this.device.setActiveProgramOption(option.key, option.value);
+                    if (boost !== undefined) {
+                        await this.device.setActiveProgramOption('Cooking.Common.Option.Hood.Boost', boost);
+                    }
                 } else {
                     // Start the manual program at the requested speed
-                    await this.device.startProgram(FAN_PROGRAM_MANUAL, { [option.key]: option.value });
+                    const options: OptionValues = { [option.key]: option.value };
+                    if (boost !== undefined) options['Cooking.Common.Option.Hood.Boost'] = boost;
+                    await this.device.startProgram(FAN_PROGRAM_MANUAL, options);
                 }
             }
         }
