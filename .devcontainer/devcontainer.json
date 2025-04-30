@@ -3,8 +3,8 @@
 
 // Configuration for GitHub Codespaces
 {
-	"name": "Homebridge Home Connect (Node 18)",
-	"image": "mcr.microsoft.com/devcontainers/javascript-node:18",
+	"name": "Homebridge Home Connect (Node 20)",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:20",
 
 	// VS Code extensions to install automatically
 	"customizations": {

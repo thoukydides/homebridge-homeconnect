@@ -71,8 +71,8 @@
     "type": "module",
     "main": "dist/index.js",
     "engines": {
-        "node": "^22.0.0 || ^20.9.0 || ^18.20.0",
-        "homebridge": "^1.8.0|| ^2.0.0-beta.0"
+        "node": "^22.15.0 || ^20.19.1",
+        "homebridge": "^1.8.0 || ^2.0.0-beta.0"
     },
     "dependencies": {
         "@homebridge/plugin-ui-utils": "^1.0.3",
@@ -89,9 +89,9 @@
         "@eslint/js": "^9.25.1",
         "@octokit/core": "^6.1.5",
         "@octokit/plugin-rest-endpoint-methods": "^14.0.0",
-        "@tsconfig/node18": "^18.2.4",
+        "@tsconfig/node20": "^20.1.5",
         "@types/eslint__js": "^8.42.3",
-        "@types/node": "^18.19.87",
+        "@types/node": "^20.17.32",
         "@types/node-persist": "^3.1.8",
         "@types/semver": "^7.7.0",
         "browserify": "^17.0.1",
@@ -104,9 +104,9 @@
         "nodemon": "^3.1.10",
         "rimraf": "^6.0.1",
         "ts-interface-builder": "^0.3.3",
-        "tsx": "^4.19.3",
+        "tsx": "^4.19.4",
         "typescript": "^5.8.3",
-        "typescript-eslint": "^8.31.0"
+        "typescript-eslint": "^8.31.1"
     },
     "scripts": {
         "build-checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts && tsx bin/ts-interface-post.ts ./src/ti",

@@ -70,7 +70,7 @@ body:
         - Homebridge version (output of `npm -g ls homebridge`)
       placeholder: |
         - OS: e.g. Ubuntu 24.04.1 LTS or macOS Ventura 13.5
-        - Node: e.g. v18.20.4
+        - Node: e.g. v22.15.0
         - Homebridge: e.g. 1.8.5
     validations:
       required: true
