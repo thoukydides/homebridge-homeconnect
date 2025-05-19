@@ -358,6 +358,12 @@ export type DryingTargetAdjustment = // (undocumented)
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2'
   | 'LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3';
+export type DryingTargetWD = // (undocumented)
+    'LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry'
+  | 'LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry'
+  | 'LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry'
+  | 'LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus'
+  | 'LaundryCare.WasherDryer.EnumType.DryingTargetWD.ExtraDry';
 export type EstimationState = // (undocumented)
     'BSH.Common.EnumType.EstimationState.Inactive';
 export type FanStage =
@@ -475,7 +481,8 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Washing';
 export type ProgramMode = // (undocumented)
-    'LaundryCare.WasherDryer.EnumType.ProgramMode.Washing'
+    'LaundryCare.WasherDryer.EnumType.ProgramMode.Drying'
+  | 'LaundryCare.WasherDryer.EnumType.ProgramMode.Washing'
   | 'LaundryCare.WasherDryer.EnumType.ProgramMode.WashingAndDrying';
 export type PyrolysisLevel = // (undocumented)
     'Cooking.Oven.EnumType.PyrolysisLevel.Level01'
@@ -871,8 +878,10 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.Temperature'?:                               WasherTemperature;
     'LaundryCare.Washer.Option.WaterAndRinsePlus1'?:                        boolean; // (undocumented)
     'LaundryCare.Washer.Option.WaterPlus'?:                                 boolean;
+    'LaundryCare.WasherDryer.Option.DryingTarget'?:                         DryingTargetWD; // (unrecognised)
     'LaundryCare.WasherDryer.Option.LowTemperatureHygiene'?:                boolean; // (undocumented)
     'LaundryCare.WasherDryer.Option.ProgramMode'?:                          ProgramMode; // (undocumented)
+    'LaundryCare.WasherDryer.Option.WrinkleGuardBoost'?:                    boolean; // (unrecognised)
 }
 
 // Statuses
