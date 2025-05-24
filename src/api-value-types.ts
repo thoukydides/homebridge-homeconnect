@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023-2024 Alexander Thoukydides
+// Copyright © 2023-2025 Alexander Thoukydides
 
 // Program keys (not a comprehensive list)
 export type ProgramKey =

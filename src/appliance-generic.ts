@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023 Alexander Thoukydides
+// Copyright © 2025 Alexander Thoukydides
 
 import { CharacteristicSetHandler, CharacteristicValue, HAPStatus,
          Logger, PlatformAccessory, Service } from 'homebridge';

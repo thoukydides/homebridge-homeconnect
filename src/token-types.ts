@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023 Alexander Thoukydides
+// Copyright © 2023-2025 Alexander Thoukydides
 
 // Refresh token (Base64 decoded)
 export interface RefreshToken {

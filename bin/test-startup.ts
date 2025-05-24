@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2024 Alexander Thoukydides
+// Copyright © 2024-2025 Alexander Thoukydides
 
 import assert from 'node:assert';
 import { spawn, ChildProcessWithoutNullStreams } from 'node:child_process';

@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023 Alexander Thoukydides
+// Copyright © 2023-2025 Alexander Thoukydides
 
 // Most options, settings, events, etc, can be of any type
 export type Value = string | number | boolean;
