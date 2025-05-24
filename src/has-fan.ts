@@ -155,7 +155,7 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             service.getCharacteristic(this.Characteristic.TargetFanState)
                 .setProps(this.fanSupportsAuto ? { minValue: MANUAL, maxValue: AUTO,   validValues: [MANUAL, AUTO] }
                                                : { minValue: MANUAL, maxValue: MANUAL, validValues: [MANUAL]})
-                .onSet(this.onSetNumber(value => updateHC({ auto: value })));
+                .onSet(this.onSetNumber(value => updateHC(value === AUTO ? { auto: value, active: ACTIVE } : { auto: value })));
 
             // Add a rotation speed characteristic
             service.getCharacteristic(this.Characteristic.RotationSpeed)
@@ -165,7 +165,6 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             // Update the status
             const newLevel = <Key extends OptionKey>(key: Key, value: OptionValue<Key>): void => {
                 const percent = this.toFanSpeedPercent({ key, value });
-                if (!percent) return;
                 this.log.info(`Fan ${percent}%`);
                 service.updateCharacteristic(this.Characteristic.RotationSpeed, percent);
             };
@@ -174,8 +173,7 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             this.device.on('Cooking.Common.Option.Hood.IntensiveLevel',
                            level => { newLevel('Cooking.Common.Option.Hood.IntensiveLevel', level); });
             this.device.on('BSH.Common.Root.ActiveProgram', programKey => {
-                if (!programKey) return;
-                const manual = programKey === FAN_PROGRAM_MANUAL;
+                const manual = !programKey || programKey === FAN_PROGRAM_MANUAL;
                 this.log.info(`Fan ${manual ? 'manual' : 'automatic'} control`);
                 service.updateCharacteristic(this.Characteristic.TargetFanState, manual ? MANUAL : AUTO);
             });
