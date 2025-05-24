@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.4.1] - 2025-05-24
+### Changed
+* **WasherDryer:** Added undocumented program options. (#344)
+* **Hood:** Improved behaviour when switching fan off or enabling auto mode.
+* Updated dependencies to latest versions.
+
 ## [v1.4.0] - 2025-04-30
 ### Added
 * **Hood:** Added a `Switch` service to control boost function. (#338)
@@ -750,7 +756,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.4.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.4.1...HEAD
+[v1.4.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.4.0...v1.4.1
 [v1.4.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.3.0...v1.4.0
 [v1.3.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.9...v1.3.0
 [v1.2.9]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.2.8...v1.2.9
