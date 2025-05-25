@@ -1,6 +1,11 @@
 name: Build and Lint
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 9 * * *'
 
 jobs:
   build:
