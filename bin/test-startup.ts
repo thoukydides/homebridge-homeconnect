@@ -8,10 +8,18 @@ import { spawn, ChildProcessWithoutNullStreams } from 'node:child_process';
 const SPAWN_COMMAND = 'homebridge';
 const SPAWN_ARGS = '-D -I -P .. --strict-plugin-resolution'.split(' ');
 
-// Log messages indicating success
-const SUCCESS_TESTS: { name: string, regexp: RegExp }[] = [
+// Log messages indicating success or failure
+interface Test {
+    name:   string,
+    regexp: RegExp
+}
+const SUCCESS_TESTS: Test[] = [
     // eslint-disable-next-line max-len
-    { name: 'Startup', regexp: /\[HomeConnect\] (Please authorise access to your appliances(.*) using the associated Home Connect or SingleKey ID email address by visiting:|Starting events stream for all appliances)/ }
+    { name: 'Startup',      regexp: /\[HomeConnect\] (Please authorise access to your appliances(.*) using the associated Home Connect or SingleKey ID email address by visiting:|Starting events stream for all appliances)/ }
+];
+const FAILURE_TESTS: Test[] = [
+    { name: 'API Checker',  regexp: / Received response \(reformatted\):/ },
+    { name: 'Value Type',   regexp: / in Home Connect API:/}
 ];
 
 // Length of time to wait
@@ -28,6 +36,7 @@ async function testPlugin(): Promise<void> {
 
     // Monitor stdout and stderr until they close
     let remainingTests = SUCCESS_TESTS;
+    let failureTest: Test | undefined;
     const testOutputStream = async (
         child: ChildProcessWithoutNullStreams,
         streamName: 'stdout' | 'stderr'
@@ -39,7 +48,8 @@ async function testPlugin(): Promise<void> {
             const cleanChunk = chunk.toString();
             rawOutput += cleanChunk;
 
-            // Check for all of the expected log messages
+            // Check for any of the success or failure log messages
+            failureTest ??= FAILURE_TESTS.find(({ regexp }) => regexp.test(cleanChunk));
             remainingTests = remainingTests.filter(({ regexp }) => !regexp.test(cleanChunk));
             if (remainingTests.length === 0) child.kill('SIGTERM');
         }
@@ -54,6 +64,9 @@ async function testPlugin(): Promise<void> {
     //if (child.exitCode !== null) {
     //    throw new Error(`Process exited with code ${child.exitCode}`);
     //}
+    if (failureTest) {
+        throw new Error(`Process terminated with test failure: ${failureTest.name}`);
+    }
     if (remainingTests.length) {
         const failures = remainingTests.map(t => t.name).join(', ');
         throw new Error(`Process terminated with test failures: ${failures}`);
