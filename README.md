@@ -9,9 +9,10 @@
 [![npm](https://badgen.net/npm/dt/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
 [![npm](https://badgen.net/npm/dw/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
 [![Build and Lint](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml/badge.svg)](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml)
+[![Test](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/test.yml/badge.svg)](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/test.yml)
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
-Home Connect home appliances plugin for [Homebridge](https://github.com/homebridge/homebridge).
+A [Homebridge](https://github.com/homebridge/homebridge) plugin that connects [Home Connect](https://www.home-connect.com) appliances to [Apple HomeKit](https://www.apple.com/home-app/).
 
 </div>
 
@@ -195,7 +196,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 
 ## Changelog
 
-All notable changes to this project are documented in the [`CHANGELOG.md`](CHANGELOG.md) file.
+All notable changes to this project are documented in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Reporting Issues
           
@@ -203,7 +204,7 @@ If you have discovered an issue or have an idea for how to improve this project,
 
 ### Pull Requests
 
-This project does **NOT** accept pull requests. Any PRs submitted will be closed without discussion. For more details refer to the [`CONTRIBUTING.md`](https://github.com/thoukydides/.github/blob/master/CONTRIBUTING.md) file.
+As explained in [`CONTRIBUTING.md`](https://github.com/thoukydides/.github/blob/master/CONTRIBUTING.md), this project does **NOT** accept pull requests. Any PRs submitted will be closed without discussion.
 
 ## ISC License (ISC)
 
