@@ -2,7 +2,7 @@
 // Copyright © 2023-2025 Alexander Thoukydides
 
 import { Logger } from 'homebridge';
-import { IHomebridgeUiFormHelper, PluginConfig, PluginFormSchema } from '@homebridge/plugin-ui-utils/dist/ui.interface.js';
+import { IHomebridgeUiFormHelper, PluginConfig, PluginFormSchema } from '@homebridge/plugin-ui-utils/ui.interface';
 
 import { ClientIPC } from './client-ipc.js';
 import { Config } from './config.js';

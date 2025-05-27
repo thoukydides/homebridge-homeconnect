@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2025 Alexander Thoukydides
 
-import { IHomebridgeUiToastHelper } from '@homebridge/plugin-ui-utils/dist/ui.interface.js';
+import { IHomebridgeUiToastHelper } from '@homebridge/plugin-ui-utils/ui.interface';
 import { Logger } from 'homebridge';
 
 import { ClientIPC } from './client-ipc.js';

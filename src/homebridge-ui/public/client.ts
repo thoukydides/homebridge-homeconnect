@@ -1,7 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2025 Alexander Thoukydides
 
-import '@homebridge/plugin-ui-utils/dist/ui.interface.js';
 import { LogLevel, Logger } from 'homebridge';
 
 import { ClientLogger, ServerLogger } from './logger.js';
