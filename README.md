@@ -16,8 +16,6 @@ A [Homebridge](https://github.com/homebridge/homebridge) plugin that connects [H
 
 </div>
 
-[Home Connect](https://www.home-connect.com), [Balay](https://www.balay.es/), [Bosch](https://www.bosch-home.com/), [Constructa](https://www.constructa.com/), [Gaggenau](https://www.gaggenau.com/), [NEFF](https://www.neff-home.com/), [Pitsos](https://www.pitsos.gr/), [Profilo](https://www.profilo.com/), [Siemens](https://www.siemens-home.bsh-group.com/), and [Thermador](https://www.thermador.com/), are trademarks of [BSH Home Appliances](https://www.bsh-group.com).
-
 ## Installation
 
 ### Step 1 - Setup Home Connect Appliances
@@ -206,7 +204,11 @@ If you have discovered an issue or have an idea for how to improve this project,
 
 As explained in [`CONTRIBUTING.md`](https://github.com/thoukydides/.github/blob/master/CONTRIBUTING.md), this project does **NOT** accept pull requests. Any PRs submitted will be closed without discussion.
 
-## ISC License (ISC)
+## Legal
+
+[Home Connect](https://www.home-connect.com), [Balay](https://www.balay.es/), [Bosch](https://www.bosch-home.com/), [Constructa](https://www.constructa.com/), [Gaggenau](https://www.gaggenau.com/), [NEFF](https://www.neff-home.com/), [Pitsos](https://www.pitsos.gr/), [Profilo](https://www.profilo.com/), [Siemens](https://www.siemens-home.bsh-group.com/), and [Thermador](https://www.thermador.com/), are trademarks of [BSH Home Appliances](https://www.bsh-group.com).
+
+### ISC License (ISC)
 
 <details>
 <summary>Copyright © 2019-2025 Alexander Thoukydides</summary>
