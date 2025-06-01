@@ -1,4 +1,7 @@
 name: Validate 'api keys/values' Issue
+permissions:
+  contents: read
+  issues: write
 
 on:
   issues:
