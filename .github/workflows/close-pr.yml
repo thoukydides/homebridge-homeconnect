@@ -13,10 +13,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    permissions:
-      issues: write
-      pull-requests: write
-
     steps:
     - name: Close pull request
       uses: actions/github-script@v7
