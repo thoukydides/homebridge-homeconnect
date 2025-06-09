@@ -258,6 +258,7 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.Cotton'
   | 'LaundryCare.WasherDryer.Program.DarkWash.DarkWash.DarkWash' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.DelicatesSilk.DelicatesSilk.DelicatesSilk' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.DelicatesSilk' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.DrumCleanDry.DrumCare.DrumCare' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.EasyCare'
@@ -268,6 +269,7 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.MyTime.MyTime.MyTime' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Rinse.Rinse.Rinse' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.Rinse' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Sensitive.Sensitive.Sensitive' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses.ShirtsBlouses' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.SportShoes.SportShoes.SportShoes' // (undocumented)
