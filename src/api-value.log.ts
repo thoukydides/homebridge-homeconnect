@@ -65,12 +65,14 @@ export interface APIGroup {
 // Persistent key-value data
 interface APIKeyValuePersist {
     keys:       {
-        group:  string;
-        key:    string;
+        group:      string;
+        key:        string;
+        report?:    boolean;
     }[];
     values:     {
-        key:    string;
-        value:  Value;
+        key:        string;
+        value:      Value;
+        report?:    boolean;
     }[];
     version?:   string;
 }
@@ -120,7 +122,7 @@ export class APIKeyValuesLog {
     }
 
     // Add a key that has been seen
-    addKey(haid: string, group: string, subGroup: string | undefined, key: string, report: boolean): void {
+    addKey(haid: string, group: string, subGroup: string | undefined, key: string, report: boolean, restored = false): void {
         // Generate a simple PascalCase group name
         if (subGroup) group += subGroup.charAt(0).toUpperCase() + subGroup.slice(1).toLowerCase();
 
@@ -131,13 +133,15 @@ export class APIKeyValuesLog {
         // Add to the pending report
         if (report) {
             thisKey.report = true;
-            this.applianceReports.add(haid);
-            this.scheduleSummary(group, key);
+            if (!restored) {
+                this.applianceReports.add(haid);
+                this.scheduleSummary(group, key);
+            }
         }
     }
 
     // Add a value that has been seen (also used for ProgramKey values)
-    addValue(haid: string, key: string, value: Value | null, report: boolean): void {
+    addValue(haid: string, key: string, value: Value | null, report: boolean, restored = false): void {
         // Exclude null values
         if (value === null) return;
 
@@ -150,8 +154,10 @@ export class APIKeyValuesLog {
         if (report) {
             thisKey.report = true;
             thisLiteral.report = true;
-            this.applianceReports.add(haid);
-            this.scheduleSummary(key, `${value}`);
+            if (!restored) {
+                this.applianceReports.add(haid);
+                this.scheduleSummary(key, `${value}`);
+            }
         }
     }
 
@@ -444,8 +450,8 @@ export class APIKeyValuesLog {
             const persist = await this.persist.getItem(this.persistKey) as APIKeyValuePersist | undefined;
             if (persist?.version && semver.satisfies(PLUGIN_VERSION, `^${persist.version}`)) {
                 const haid = 'Restored from previous session';
-                for (const { group, key } of persist.keys)   this.addKey(haid, group, undefined, key, false);
-                for (const { key, value } of persist.values) this.addValue(haid, key, value, false);
+                for (const { group, key, report } of persist.keys)   this.addKey(haid, group, undefined, key, report ?? false, true);
+                for (const { key, value, report } of persist.values) this.addValue(haid, key, value, report ?? false, true);
                 this.log.debug(`Restored ${plural(persist.keys.length, 'key')} and ${plural(persist.values.length, 'value')}`);
             }
         } catch (err) {
@@ -458,9 +464,9 @@ export class APIKeyValuesLog {
         try {
             await this.persist.setItem(this.persistKey, {
                 keys:       Object.entries(this.groups).flatMap(([group, groupDetail]) =>
-                    Object.values(groupDetail.keys).map(({ key }) => ({ group, key }))),
+                    Object.values(groupDetail.keys).map(({ key, report }) => ({ group, key, report }))),
                 values:     Object.values(this.keys).flatMap(key =>
-                    Object.values(key.value?.values ?? {}).map(({ value }) => ({ key: key.key, value }))),
+                    Object.values(key.value?.values ?? {}).map(({ value, report }) => ({ key: key.key, value, report }))),
                 version:    PLUGIN_VERSION
             });
         } catch (err) {
