@@ -2,21 +2,22 @@
 // Copyright © 2023-2025 Alexander Thoukydides
 
 // Authorisation scopes
-export type Scope =     'Monitor'               | 'Control'               | 'Settings'               | 'Images'
-    | 'Oven'          | 'Oven-Monitor'          | 'Oven-Control'          | 'Oven-Settings'
-    | 'Dishwasher'    | 'Dishwasher-Monitor'    | 'Dishwasher-Control'    | 'Dishwasher-Settings'
-    | 'Washer'        | 'Washer-Monitor'        | 'Washer-Control'        | 'Washer-Settings'
-    | 'Dryer'         | 'Dryer-Monitor'         | 'Dryer-Control'         | 'Dryer-Settings'
-    | 'WasherDryer'   | 'WasherDryer-Monitor'   | 'WasherDryer-Control'   | 'WasherDryer-Settings'
-    | 'FridgeFreezer' | 'FridgeFreezer-Monitor' | 'FridgeFreezer-Control' | 'FridgeFreezer-Settings' | 'FridgeFreezer-Images'
-    | 'Refrigerator'  | 'Refrigerator-Monitor'  | 'Refrigerator-Control'  | 'Refrigerator-Settings'
-    | 'Freezer'       | 'Freezer-Monitor'       | 'Freezer-Control'       | 'Freezer-Settings'
-    | 'WineCooler'    | 'WineCooler-Monitor'    | 'WineCooler-Control'    | 'WineCooler-Settings'
-    | 'CoffeeMaker'   | 'CoffeeMaker-Monitor'   | 'CoffeeMaker-Control'   | 'CoffeeMaker-Settings'
-    | 'Hob'           | 'Hob-Monitor'           | 'Hob-Control'           | 'Hob-Settings'
-    | 'Hood'          | 'Hood-Monitor'          | 'Hood-Control'          | 'Hood-Settings'
-    | 'CleaningRobot' | 'CleaningRobot-Monitor' | 'CleaningRobot-Control' | 'CleaningRobot-Settings'
-    | 'CookProcessor' | 'CookProcessor-Monitor' | 'CookProcessor-Control' | 'CookProcessor-Settings';
+export type Scope =       'Monitor'                 | 'Control'                 | 'Settings'                | 'Images'
+    | 'AirConditioner'  | 'AirConditioner-Monitor'  | 'AirConditioner-Control'  | 'AirConditioner-Settings'
+    | 'CleaningRobot'   | 'CleaningRobot-Monitor'   | 'CleaningRobot-Control'   | 'CleaningRobot-Settings'
+    | 'CoffeeMaker'     | 'CoffeeMaker-Monitor'     | 'CoffeeMaker-Control'     | 'CoffeeMaker-Settings'
+    | 'CookProcessor'   | 'CookProcessor-Monitor'   | 'CookProcessor-Control'   | 'CookProcessor-Settings'
+    | 'Dishwasher'      | 'Dishwasher-Monitor'      | 'Dishwasher-Control'      | 'Dishwasher-Settings'
+    | 'Dryer'           | 'Dryer-Monitor'           | 'Dryer-Control'           | 'Dryer-Settings'
+    | 'Freezer'         | 'Freezer-Monitor'         | 'Freezer-Control'         | 'Freezer-Settings'
+    | 'FridgeFreezer'   | 'FridgeFreezer-Monitor'   | 'FridgeFreezer-Control'   | 'FridgeFreezer-Settings'  | 'FridgeFreezer-Images'
+    | 'Hob'             | 'Hob-Monitor'             | 'Hob-Control'             | 'Hob-Settings'
+    | 'Hood'            | 'Hood-Monitor'            | 'Hood-Control'            | 'Hood-Settings'
+    | 'Oven'            | 'Oven-Monitor'            | 'Oven-Control'            | 'Oven-Settings'
+    | 'Refrigerator'    | 'Refrigerator-Monitor'    | 'Refrigerator-Control'    | 'Refrigerator-Settings'
+    | 'Washer'          | 'Washer-Monitor'          | 'Washer-Control'          | 'Washer-Settings'
+    | 'WasherDryer'     | 'WasherDryer-Monitor'     | 'WasherDryer-Control'     | 'WasherDryer-Settings'
+    | 'WineCooler'      | 'WineCooler-Monitor'      | 'WineCooler-Control'      | 'WineCooler-Settings';
 
 // Authorisation Code Grant Flow
 
