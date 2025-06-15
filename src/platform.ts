@@ -30,6 +30,7 @@ import { HOMEBRIDGE_LANGUAGES } from './api-languages.js';
 import { HomeAppliance } from './api-types.js';
 import { MockAPI } from './mock/index.js';
 import { typeSuite, checkers } from './ti/config-types.js';
+import { ApplianceAirConditioner } from './appliance-ventialation.js';
 
 // Interval between updating the list of appliances
 // (only 1000 API calls allowed per day, so only check once an hour)
@@ -222,7 +223,9 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
                 Freezer:        ApplianceFreezer,
                 FridgeFreezer:  ApplianceFridgeFreezer,
                 Refrigerator:   ApplianceRefrigerator,
-                WineCooler:     ApplianceWineCooler
+                WineCooler:     ApplianceWineCooler,
+                // Air conditioner appliances
+                AirConditioner: ApplianceAirConditioner
             }[ha.type];
             if (!applianceConstructor) {
                 this.log.warn(`Appliance type '${ha.type}' not currently supported`);

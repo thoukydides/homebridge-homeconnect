@@ -170,6 +170,7 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.QuickD' // (undocumented)
   | 'Dishcare.Dishwasher.Program.SteamFresh'
   | 'Dishcare.Dishwasher.Program.Super60'
+  | 'HeatingVentilationAirConditioning.AirConditioner.Program.Cool' // (undocumented)
   | 'LaundryCare.Dryer.Program.AntiShrink'
   | 'LaundryCare.Dryer.Program.Bedlinens' // (undocumented)
   | 'LaundryCare.Dryer.Program.Blankets'
@@ -368,6 +369,10 @@ export type DryingTargetWD = // (undocumented)
   | 'LaundryCare.WasherDryer.EnumType.DryingTargetWD.ExtraDry';
 export type EstimationState = // (undocumented)
     'BSH.Common.EnumType.EstimationState.Inactive';
+export type FanSpeed = // (undocumented)
+    'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedLevel.Level1'
+  | 'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedLevel.Level2'
+  | 'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedLevel.Level3';
 export type FanStage =
     'Cooking.Hood.EnumType.Stage.FanOff'
   | 'Cooking.Hood.EnumType.Stage.FanStage01'
@@ -767,278 +772,280 @@ export enum EventPresentState {
 
 // Program options
 export interface OptionValues {
-    'BSH.Common.Option.BaseProgram'?:                                       ProgramKey; // (undocumented)
-    'BSH.Common.Option.Duration'?:                                          number;
-    'BSH.Common.Option.ElapsedProgramTime'?:                                number;
-    'BSH.Common.Option.EnergyForecast'?:                                    number; // (undocumented)
-    'BSH.Common.Option.EstimatedTotalProgramTime'?:                         number;
-    'BSH.Common.Option.FinishInRelative'?:                                  number;
-    'BSH.Common.Option.ProgramName'?:                                       string; // (undocumented)
-    'BSH.Common.Option.ProgramProgress'?:                                   number;
-    'BSH.Common.Option.RemainingProgramTime.AutoCounting'?:                 boolean; // (undocumented)
-    'BSH.Common.Option.RemainingProgramTime'?:                              number;
-    'BSH.Common.Option.RemainingProgramTimeEstimationState'?:               EstimationState; // (undocumented)
-    'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                   boolean;
-    'BSH.Common.Option.StartInRelative'?:                                   number;
-    'BSH.Common.Option.WaterForecast'?:                                     number; // (undocumented)
-    'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                  CleaningMode;
-    'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                  ProcessPhaseCleaningRobot;
-    'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                ReferenceMapID;
-    'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                     AromaSelect; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                      BeanAmount;
-    'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:          BeanContainerSelection;
-    'ConsumerProducts.CoffeeMaker.Option.BeverageSize'?:	                  BeverageSize; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.BeveragesRemaining'?:              number; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.Coarsness.Recommendation'?:	      CoarsnessExtended; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                       CoarsnessExtended; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                 CoffeeMilkRatio;
-    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength.Recommendation'?:	  CoffeeStrength; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength'?:                  CoffeeStrength; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature.Recommendation'?:CoffeeTemperature; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature'?:               CoffeeTemperature;
-    'ConsumerProducts.CoffeeMaker.Option.FillQuantity.Recommendation'?:	    number; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.FillQuantity'?:                    number;
-    'ConsumerProducts.CoffeeMaker.Option.FlowRate.Recommendation'?:	        FlowRate; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                        FlowRate;
-    'ConsumerProducts.CoffeeMaker.Option.HotWaterTemperature'?:             HotWaterTemperature;
-    'ConsumerProducts.CoffeeMaker.Option.MultipleBeverages'?:               boolean;
-    'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                      CoffeeShots; // (undocumented)
-    'Cooking.Common.Option.Hood.Boost'?:                                    boolean; // (undocumented)
-    'Cooking.Common.Option.Hood.IntensiveLevel'?:                           IntensiveStage;
-    'Cooking.Common.Option.Hood.VentingLevel'?:                             FanStage;
-    'Cooking.Oven.Option.AirExchange'?:                                     boolean; // (undocumented)
-    'Cooking.Oven.Option.CavitySelector'?:                                  CavitySelector; // (undocumented)
-    'Cooking.Oven.Option.FastPreHeat'?:                                     boolean;
-    'Cooking.Oven.Option.HeatupProgress'?:                                  number; // (undocumented)
-    'Cooking.Oven.Option.MeatProbeTemperatureV2'?:                          MeatProbeTemperatureV2; // (undocumented)
-    'Cooking.Oven.Option.MicrowavePower'?:                                  MicrowavePower; // (undocumented)
-    'Cooking.Oven.Option.PyrolysisLevel'?:                                  PyrolysisLevel; // (undocumented)
-    'Cooking.Oven.Option.SetpointTemperature'?:                             number;
-    'Cooking.Oven.Option.SteamAssistLevel'?:                                AddedSteam; // (undocumented)
-    'Cooking.Oven.Option.SteamBoost'?:                                      boolean; // (undocumented)
-    'Cooking.Oven.Option.WarmingLevel'?:                                    WarmingLevel;
-    'Dishcare.Dishwasher.Option.BrillianceDry'?:                            boolean;
-    'Dishcare.Dishwasher.Option.DelicateBasket'?:                           boolean; // (undocumented)
-    'Dishcare.Dishwasher.Option.EcoDry'?:                                   boolean;
-    'Dishcare.Dishwasher.Option.EnergySafe'?:                               boolean; // (undocumented)
-    'Dishcare.Dishwasher.Option.ExtraDry'?:                                 boolean;
-    'Dishcare.Dishwasher.Option.ExtraRinse'?:                               boolean; // (undocumented)
-    'Dishcare.Dishwasher.Option.FlexSpray.BackLeft'?:                       FlexSprayIntensity; // (undocumented)
-    'Dishcare.Dishwasher.Option.FlexSpray.BackRight'?:                      FlexSprayIntensity; // (undocumented)
-    'Dishcare.Dishwasher.Option.FlexSpray.FrontLeft'?:                      FlexSprayIntensity; // (undocumented)
-    'Dishcare.Dishwasher.Option.FlexSpray.FrontRight'?:                     FlexSprayIntensity; // (undocumented)
-    'Dishcare.Dishwasher.Option.FlexSpray.Type'?:                           FlexSprayType; // (undocumented)
-    'Dishcare.Dishwasher.Option.HalfLoad'?:                                 boolean;
-    'Dishcare.Dishwasher.Option.HygienePlus'?:                              boolean;
-    'Dishcare.Dishwasher.Option.IntensivZone'?:                             boolean;
-    'Dishcare.Dishwasher.Option.LearningDishwasher.CleaningLevel'?:         LearningDishwasherCleaningLevel; // (undocumented)
-    'Dishcare.Dishwasher.Option.LearningDishwasher.DryingLevel'?:           LearningDishwasherDryingLevel; // (undocumented)
-    'Dishcare.Dishwasher.Option.LearningDishwasher.DurationLevel'?:         LearningDishwasherDurationLevel; // (undocumented)
-    'Dishcare.Dishwasher.Option.SanitationUC'?:                             boolean; // (undocumented)
-    'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                          boolean;
-    'Dishcare.Dishwasher.Option.StorageFunction'?:                          boolean; // (undocumented)
-    'Dishcare.Dishwasher.Option.Turbo'?:                                    boolean; // (undocumented)
-    'Dishcare.Dishwasher.Option.VarioSpeed'?:                               boolean; // (undocumented)
-    'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                           boolean;
-    'Dishcare.Dishwasher.Option.ZeoliteDry'?:                               boolean;
-    'LaundryCare.Common.Option.LoadRecommendation'?:                        number; // (undocumented)
-    'LaundryCare.Common.Option.LowTemperatureHygiene'?:                     boolean; // (undocumented)
-    'LaundryCare.Common.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
-    'LaundryCare.Common.Option.ReferToProgram'?:                            ProgramKey | number; // (undocumented)
-    'LaundryCare.Common.Option.SilentMode'?:                                boolean; // (undocumented)
-    'LaundryCare.Common.Option.SpeedPerfect'?:                              boolean; // (undocumented)
-    'LaundryCare.Common.Option.VarioPerfect'?:                              VarioPerfect;
-    'LaundryCare.Dryer.Option.ConnectedDry.OriginalProgramTime'?:           number; // (undocumented)
-    'LaundryCare.Dryer.Option.DryingTarget'?:                               DryingTarget;
-    'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                     DryingTargetAdjustment; // (undocumented)
-    'LaundryCare.Dryer.Option.Gentle'?:                                     boolean; // (undocumented)
-    'LaundryCare.Dryer.Option.HalfLoad'?:                                   boolean; // (undocumented)
-    'LaundryCare.Dryer.Option.ProcessPhase'?:                               ProcessPhaseLaundryCare; // (undocumented)
-    'LaundryCare.Dryer.Option.Refresher'?:                                  Refresher; // (undocumented)
-    'LaundryCare.Dryer.Option.WrinkleGuard'?:                               WrinkleGuard; // (undocumented)
-    'LaundryCare.Washer.Option.EISA'?:                                      boolean; // (undocumented)
-    'LaundryCare.Washer.Option.IDos1.Active'?:                              boolean; // (undocumented)
-    'LaundryCare.Washer.Option.IDos1Active'?:                               boolean;
-    'LaundryCare.Washer.Option.IDos1DosingLevel'?:                          IDosingLevel; // (undocumented)
-    'LaundryCare.Washer.Option.IDos2.Active'?:                              boolean; // (undocumented)
-    'LaundryCare.Washer.Option.IDos2Active'?:                               boolean;
-    'LaundryCare.Washer.Option.IDos2DosingLevel'?:                          IDosingLevel; // (undocumented)
-    'LaundryCare.Washer.Option.IntensivePlus'?:                             boolean; // (undocumented)
-    'LaundryCare.Washer.Option.LessIroning'?:                               boolean; // (undocumented)
-    'LaundryCare.Washer.Option.MiniLoad'?:                                  boolean; // (undocumented)
-    'LaundryCare.Washer.Option.MultipleSoak'?:                              MultipleSoak; // (undocumented)
-    'LaundryCare.Washer.Option.Prewash'?:                                   boolean; // (undocumented)
-    'LaundryCare.Washer.Option.ProcessPhase'?:                              ProcessPhaseLaundryCare; // (undocumented)
-    'LaundryCare.Washer.Option.RinseHold'?:                                 boolean; // (undocumented)
-    'LaundryCare.Washer.Option.RinsePlus'?:                                 RinsePlus; // (undocumented)
-    'LaundryCare.Washer.Option.RinsePlus1'?:                                boolean; // (undocumented)
-    'LaundryCare.Washer.Option.SilentWash'?:                                boolean; // (undocumented)
-    'LaundryCare.Washer.Option.Soak'?:                                      boolean; // (undocumented)
-    'LaundryCare.Washer.Option.SpeedPerfect'?:                              boolean; // (undocumented)
-    'LaundryCare.Washer.Option.SpinSpeed'?:                                 SpinSpeed;
-    'LaundryCare.Washer.Option.Stains'?:                                    Stains; // (undocumented)
-    'LaundryCare.Washer.Option.Temperature'?:                               WasherTemperature;
-    'LaundryCare.Washer.Option.WaterAndRinsePlus1'?:                        boolean; // (undocumented)
-    'LaundryCare.Washer.Option.WaterPlus'?:                                 boolean;
-    'LaundryCare.WasherDryer.Option.DryingTarget'?:                         DryingTargetWD; // (unrecognised)
-    'LaundryCare.WasherDryer.Option.LowTemperatureHygiene'?:                boolean; // (undocumented)
-    'LaundryCare.WasherDryer.Option.ProgramMode'?:                          ProgramMode; // (undocumented)
-    'LaundryCare.WasherDryer.Option.WrinkleGuardBoost'?:                    boolean; // (unrecognised)
+    'BSH.Common.Option.BaseProgram'?:                                               ProgramKey; // (undocumented)
+    'BSH.Common.Option.Duration'?:                                                  number;
+    'BSH.Common.Option.ElapsedProgramTime'?:                                        number;
+    'BSH.Common.Option.EnergyForecast'?:                                            number; // (undocumented)
+    'BSH.Common.Option.EstimatedTotalProgramTime'?:                                 number;
+    'BSH.Common.Option.FinishInRelative'?:                                          number;
+    'BSH.Common.Option.ProgramName'?:                                               string; // (undocumented)
+    'BSH.Common.Option.ProgramProgress'?:                                           number;
+    'BSH.Common.Option.RemainingProgramTime.AutoCounting'?:                         boolean; // (undocumented)
+    'BSH.Common.Option.RemainingProgramTime'?:                                      number;
+    'BSH.Common.Option.RemainingProgramTimeEstimationState'?:                       EstimationState; // (undocumented)
+    'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                           boolean;
+    'BSH.Common.Option.StartInRelative'?:                                           number;
+    'BSH.Common.Option.WaterForecast'?:                                             number; // (undocumented)
+    'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                          CleaningMode;
+    'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                          ProcessPhaseCleaningRobot;
+    'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                        ReferenceMapID;
+    'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                             AromaSelect; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                              BeanAmount;
+    'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:                  BeanContainerSelection;
+    'ConsumerProducts.CoffeeMaker.Option.BeverageSize'?:	                          BeverageSize; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.BeveragesRemaining'?:                      number; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.Coarsness.Recommendation'?:	              CoarsnessExtended; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                               CoarsnessExtended; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                         CoffeeMilkRatio;
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength.Recommendation'?:	          CoffeeStrength; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength'?:                          CoffeeStrength; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature.Recommendation'?:        CoffeeTemperature; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature'?:                       CoffeeTemperature;
+    'ConsumerProducts.CoffeeMaker.Option.FillQuantity.Recommendation'?:	            number; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.FillQuantity'?:                            number;
+    'ConsumerProducts.CoffeeMaker.Option.FlowRate.Recommendation'?:	                FlowRate; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                                FlowRate;
+    'ConsumerProducts.CoffeeMaker.Option.HotWaterTemperature'?:                     HotWaterTemperature;
+    'ConsumerProducts.CoffeeMaker.Option.MultipleBeverages'?:                       boolean;
+    'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                              CoffeeShots; // (undocumented)
+    'Cooking.Common.Option.Hood.Boost'?:                                            boolean; // (undocumented)
+    'Cooking.Common.Option.Hood.IntensiveLevel'?:                                   IntensiveStage;
+    'Cooking.Common.Option.Hood.VentingLevel'?:                                     FanStage;
+    'Cooking.Oven.Option.AirExchange'?:                                             boolean; // (undocumented)
+    'Cooking.Oven.Option.CavitySelector'?:                                          CavitySelector; // (undocumented)
+    'Cooking.Oven.Option.FastPreHeat'?:                                             boolean;
+    'Cooking.Oven.Option.HeatupProgress'?:                                          number; // (undocumented)
+    'Cooking.Oven.Option.MeatProbeTemperatureV2'?:                                  MeatProbeTemperatureV2; // (undocumented)
+    'Cooking.Oven.Option.MicrowavePower'?:                                          MicrowavePower; // (undocumented)
+    'Cooking.Oven.Option.PyrolysisLevel'?:                                          PyrolysisLevel; // (undocumented)
+    'Cooking.Oven.Option.SetpointTemperature'?:                                     number;
+    'Cooking.Oven.Option.SteamAssistLevel'?:                                        AddedSteam; // (undocumented)
+    'Cooking.Oven.Option.SteamBoost'?:                                              boolean; // (undocumented)
+    'Cooking.Oven.Option.WarmingLevel'?:                                            WarmingLevel;
+    'Dishcare.Dishwasher.Option.BrillianceDry'?:                                    boolean;
+    'Dishcare.Dishwasher.Option.DelicateBasket'?:                                   boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.EcoDry'?:                                           boolean;
+    'Dishcare.Dishwasher.Option.EnergySafe'?:                                       boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.ExtraDry'?:                                         boolean;
+    'Dishcare.Dishwasher.Option.ExtraRinse'?:                                       boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.BackLeft'?:                               FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.BackRight'?:                              FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.FrontLeft'?:                              FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.FrontRight'?:                             FlexSprayIntensity; // (undocumented)
+    'Dishcare.Dishwasher.Option.FlexSpray.Type'?:                                   FlexSprayType; // (undocumented)
+    'Dishcare.Dishwasher.Option.HalfLoad'?:                                         boolean;
+    'Dishcare.Dishwasher.Option.HygienePlus'?:                                      boolean;
+    'Dishcare.Dishwasher.Option.IntensivZone'?:                                     boolean;
+    'Dishcare.Dishwasher.Option.LearningDishwasher.CleaningLevel'?:                 LearningDishwasherCleaningLevel; // (undocumented)
+    'Dishcare.Dishwasher.Option.LearningDishwasher.DryingLevel'?:                   LearningDishwasherDryingLevel; // (undocumented)
+    'Dishcare.Dishwasher.Option.LearningDishwasher.DurationLevel'?:                 LearningDishwasherDurationLevel; // (undocumented)
+    'Dishcare.Dishwasher.Option.SanitationUC'?:                                     boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                                  boolean;
+    'Dishcare.Dishwasher.Option.StorageFunction'?:                                  boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.Turbo'?:                                            boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.VarioSpeed'?:                                       boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                                   boolean;
+    'Dishcare.Dishwasher.Option.ZeoliteDry'?:                                       boolean;
+    'HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeed'?:            FanSpeed; // (undocumented)
+    'HeatingVentilationAirConditioning.AirConditioner.Option.SetpointTemperature'?: number; // (undocumented)
+    'LaundryCare.Common.Option.LoadRecommendation'?:                                number; // (undocumented)
+    'LaundryCare.Common.Option.LowTemperatureHygiene'?:                             boolean; // (undocumented)
+    'LaundryCare.Common.Option.ProcessPhase'?:                                      ProcessPhaseLaundryCare; // (undocumented)
+    'LaundryCare.Common.Option.ReferToProgram'?:                                    ProgramKey | number; // (undocumented)
+    'LaundryCare.Common.Option.SilentMode'?:                                        boolean; // (undocumented)
+    'LaundryCare.Common.Option.SpeedPerfect'?:                                      boolean; // (undocumented)
+    'LaundryCare.Common.Option.VarioPerfect'?:                                      VarioPerfect;
+    'LaundryCare.Dryer.Option.ConnectedDry.OriginalProgramTime'?:                   number; // (undocumented)
+    'LaundryCare.Dryer.Option.DryingTarget'?:                                       DryingTarget;
+    'LaundryCare.Dryer.Option.DryingTargetAdjustment'?:                             DryingTargetAdjustment; // (undocumented)
+    'LaundryCare.Dryer.Option.Gentle'?:                                             boolean; // (undocumented)
+    'LaundryCare.Dryer.Option.HalfLoad'?:                                           boolean; // (undocumented)
+    'LaundryCare.Dryer.Option.ProcessPhase'?:                                       ProcessPhaseLaundryCare; // (undocumented)
+    'LaundryCare.Dryer.Option.Refresher'?:                                          Refresher; // (undocumented)
+    'LaundryCare.Dryer.Option.WrinkleGuard'?:                                       WrinkleGuard; // (undocumented)
+    'LaundryCare.Washer.Option.EISA'?:                                              boolean; // (undocumented)
+    'LaundryCare.Washer.Option.IDos1.Active'?:                                      boolean; // (undocumented)
+    'LaundryCare.Washer.Option.IDos1Active'?:                                       boolean;
+    'LaundryCare.Washer.Option.IDos1DosingLevel'?:                                  IDosingLevel; // (undocumented)
+    'LaundryCare.Washer.Option.IDos2.Active'?:                                      boolean; // (undocumented)
+    'LaundryCare.Washer.Option.IDos2Active'?:                                       boolean;
+    'LaundryCare.Washer.Option.IDos2DosingLevel'?:                                  IDosingLevel; // (undocumented)
+    'LaundryCare.Washer.Option.IntensivePlus'?:                                     boolean; // (undocumented)
+    'LaundryCare.Washer.Option.LessIroning'?:                                       boolean; // (undocumented)
+    'LaundryCare.Washer.Option.MiniLoad'?:                                          boolean; // (undocumented)
+    'LaundryCare.Washer.Option.MultipleSoak'?:                                      MultipleSoak; // (undocumented)
+    'LaundryCare.Washer.Option.Prewash'?:                                           boolean; // (undocumented)
+    'LaundryCare.Washer.Option.ProcessPhase'?:                                      ProcessPhaseLaundryCare; // (undocumented)
+    'LaundryCare.Washer.Option.RinseHold'?:                                         boolean; // (undocumented)
+    'LaundryCare.Washer.Option.RinsePlus'?:                                         RinsePlus; // (undocumented)
+    'LaundryCare.Washer.Option.RinsePlus1'?:                                        boolean; // (undocumented)
+    'LaundryCare.Washer.Option.SilentWash'?:                                        boolean; // (undocumented)
+    'LaundryCare.Washer.Option.Soak'?:                                              boolean; // (undocumented)
+    'LaundryCare.Washer.Option.SpeedPerfect'?:                                      boolean; // (undocumented)
+    'LaundryCare.Washer.Option.SpinSpeed'?:                                         SpinSpeed;
+    'LaundryCare.Washer.Option.Stains'?:                                            Stains; // (undocumented)
+    'LaundryCare.Washer.Option.Temperature'?:                                       WasherTemperature;
+    'LaundryCare.Washer.Option.WaterAndRinsePlus1'?:                                boolean; // (undocumented)
+    'LaundryCare.Washer.Option.WaterPlus'?:                                         boolean;
+    'LaundryCare.WasherDryer.Option.DryingTarget'?:                                 DryingTargetWD; // (unrecognised)
+    'LaundryCare.WasherDryer.Option.LowTemperatureHygiene'?:                        boolean; // (undocumented)
+    'LaundryCare.WasherDryer.Option.ProgramMode'?:                                  ProgramMode; // (undocumented)
+    'LaundryCare.WasherDryer.Option.WrinkleGuardBoost'?:                            boolean; // (unrecognised)
 }
 
 // Statuses
 export interface StatusValues {
-    'BSH.Common.Status.BatteryChargingState'?:                              BatteryChargingState;
-    'BSH.Common.Status.BatteryLevel'?:                                      number;
-    'BSH.Common.Status.ChargingConnection'?:                                ChargingConnection;
-    'BSH.Common.Status.DoorState'?:                                         DoorState;
-    'BSH.Common.Status.LocalControlActive'?:                                boolean;
-    'BSH.Common.Status.OperationState'?:                                    OperationState;
-    'BSH.Common.Status.RemoteControlActive'?:                               boolean;
-    'BSH.Common.Status.RemoteControlStartAllowed'?:                         boolean;
-    'BSH.Common.Status.Video.CameraState'?:                                 CameraState;
-    'ConsumerProducts.CleaningRobot.Status.DustBoxInserted'?:               boolean;
-    'ConsumerProducts.CleaningRobot.Status.LastSelectedMap'?:               ReferenceMapID;
-    'ConsumerProducts.CleaningRobot.Status.Lifted'?:                        boolean;
-    'ConsumerProducts.CleaningRobot.Status.Lost'?:                          boolean;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffee'?:           number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffeeAndMilk'?:    number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterFrothyMilk'?:       number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterHotMilk'?:          number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterHotWater'?:         number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterHotWaterCups'?:     number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterMilk'?:             number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterPowderCoffee'?:     number;
-    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterRistrettoEspresso'?:number;
-    'Cooking.Oven.Status.CurrentCavityTemperature'?:                        number; // (undocumented)
-    'Refrigeration.Common.Status.Door.BottleCooler'?:                       DoorStateBottleCooler;
-    'Refrigeration.Common.Status.Door.Chiller'?:                            DoorStateRefrigerator;
-    'Refrigeration.Common.Status.Door.ChillerCommon'?:                      DoorStateRefrigerator;
-    'Refrigeration.Common.Status.Door.ChillerLeft'?:                        DoorStateRefrigerator;
-    'Refrigeration.Common.Status.Door.ChillerRight'?:                       DoorStateRefrigerator;
-    'Refrigeration.Common.Status.Door.FlexCompartment'?:                    DoorStateFlexCompartment;
-    'Refrigeration.Common.Status.Door.Freezer'?:                            DoorStateFreezer;
-    'Refrigeration.Common.Status.Door.Refrigerator'?:                       DoorStateRefrigerator;
-    'Refrigeration.Common.Status.Door.Refrigerator2'?:                      DoorStateRefrigerator;
-    'Refrigeration.Common.Status.Door.Refrigerator3'?:                      DoorStateRefrigerator;
-    'Refrigeration.Common.Status.Door.WineCompartment'?:                    DoorStateWineCompartment;
+    'BSH.Common.Status.BatteryChargingState'?:                                      BatteryChargingState;
+    'BSH.Common.Status.BatteryLevel'?:                                              number;
+    'BSH.Common.Status.ChargingConnection'?:                                        ChargingConnection;
+    'BSH.Common.Status.DoorState'?:                                                 DoorState;
+    'BSH.Common.Status.LocalControlActive'?:                                        boolean;
+    'BSH.Common.Status.OperationState'?:                                            OperationState;
+    'BSH.Common.Status.RemoteControlActive'?:                                       boolean;
+    'BSH.Common.Status.RemoteControlStartAllowed'?:                                 boolean;
+    'BSH.Common.Status.Video.CameraState'?:                                         CameraState;
+    'ConsumerProducts.CleaningRobot.Status.DustBoxInserted'?:                       boolean;
+    'ConsumerProducts.CleaningRobot.Status.LastSelectedMap'?:                       ReferenceMapID;
+    'ConsumerProducts.CleaningRobot.Status.Lifted'?:                                boolean;
+    'ConsumerProducts.CleaningRobot.Status.Lost'?:                                  boolean;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffee'?:                   number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffeeAndMilk'?:            number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterFrothyMilk'?:               number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterHotMilk'?:                  number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterHotWater'?:                 number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterHotWaterCups'?:             number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterMilk'?:                     number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterPowderCoffee'?:             number;
+    'ConsumerProducts.CoffeeMaker.Status.BeverageCounterRistrettoEspresso'?:        number;
+    'Cooking.Oven.Status.CurrentCavityTemperature'?:                                number; // (undocumented)
+    'Refrigeration.Common.Status.Door.BottleCooler'?:                               DoorStateBottleCooler;
+    'Refrigeration.Common.Status.Door.Chiller'?:                                    DoorStateRefrigerator;
+    'Refrigeration.Common.Status.Door.ChillerCommon'?:                              DoorStateRefrigerator;
+    'Refrigeration.Common.Status.Door.ChillerLeft'?:                                DoorStateRefrigerator;
+    'Refrigeration.Common.Status.Door.ChillerRight'?:                               DoorStateRefrigerator;
+    'Refrigeration.Common.Status.Door.FlexCompartment'?:                            DoorStateFlexCompartment;
+    'Refrigeration.Common.Status.Door.Freezer'?:                                    DoorStateFreezer;
+    'Refrigeration.Common.Status.Door.Refrigerator'?:                               DoorStateRefrigerator;
+    'Refrigeration.Common.Status.Door.Refrigerator2'?:                              DoorStateRefrigerator;
+    'Refrigeration.Common.Status.Door.Refrigerator3'?:                              DoorStateRefrigerator;
+    'Refrigeration.Common.Status.Door.WineCompartment'?:                            DoorStateWineCompartment;
 }
 
 // Settings
 export interface SettingValues {
-    'BSH.Common.Setting.AlarmClock'?:                                       number;
-    'BSH.Common.Setting.AmbientLightBrightness'?:                           number;
-    'BSH.Common.Setting.AmbientLightColor'?:                                AmbientLightColor;
-    'BSH.Common.Setting.AmbientLightCustomColor'?:                          string;
-    'BSH.Common.Setting.AmbientLightEnabled'?:                              boolean;
-    'BSH.Common.Setting.ChildLock'?:                                        boolean;
-    'BSH.Common.Setting.LiquidVolumeUnit'?:                                 LiquidVolumeUnit;
-    'BSH.Common.Setting.PowerState'?:                                       PowerState;
-    'BSH.Common.Setting.TemperatureUnit'?:                                  TemperatureUnit;
-    'ConsumerProducts.CleaningRobot.Setting.CurrentMap'?:                   ReferenceMapID;
-    'ConsumerProducts.CleaningRobot.Setting.NameOfMap1'?:                   string;
-    'ConsumerProducts.CleaningRobot.Setting.NameOfMap2'?:                   string;
-    'ConsumerProducts.CleaningRobot.Setting.NameOfMap3'?:                   string;
-    'ConsumerProducts.CleaningRobot.Setting.NameOfMap4'?:                   string;
-    'ConsumerProducts.CleaningRobot.Setting.NameOfMap5'?:                   string;
-    'ConsumerProducts.CoffeeMaker.Setting.CupWarmer'?:                      boolean;
-    'Cooking.Common.Setting.Lighting'?:                                     boolean;
-    'Cooking.Common.Setting.LightingBrightness'?:                           number;
-    'Cooking.Hood.Setting.ColorTemperaturePercent'?:                        number;
-    'Cooking.Hood.Setting.ColorTemperature'?:                               ColorTemperature;
-    'Cooking.Oven.Setting.SabbathMode'?:                                    boolean;
-    'LaundryCare.Washer.Setting.IDos1BaseLevel'?:                           number;
-    'LaundryCare.Washer.Setting.IDos2BaseLevel'?:                           number;
-    'Refrigeration.Common.Setting.BottleCooler.SetpointTemperature'?:       number;
-    'Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature'?:      number;
-    'Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature'?:        number;
-    'Refrigeration.Common.Setting.ChillerRight.SetpointTemperature'?:       number;
-    'Refrigeration.Common.Setting.Dispenser.Enabled'?:                      boolean;
-    'Refrigeration.Common.Setting.Door.AssistantForceFreezer'?:             AssistantForce;
-    'Refrigeration.Common.Setting.Door.AssistantForceFridge'?:              AssistantForce;
-    'Refrigeration.Common.Setting.Door.AssistantFreezer'?:                  boolean;
-    'Refrigeration.Common.Setting.Door.AssistantFridge'?:                   boolean;
-    'Refrigeration.Common.Setting.Door.AssistantTimeoutFreezer'?:           number;
-    'Refrigeration.Common.Setting.Door.AssistantTimeoutFridge'?:            number;
-    'Refrigeration.Common.Setting.Door.AssistantTriggerFreezer'?:           AssistantTrigger;
-    'Refrigeration.Common.Setting.Door.AssistantTriggerFridge'?:            AssistantTrigger;
-    'Refrigeration.Common.Setting.EcoMode'?:                                boolean;
-    'Refrigeration.Common.Setting.FreshMode'?:                              boolean;
-    'Refrigeration.Common.Setting.Light.External.Brightness'?:              number; // (undocumented)
-    'Refrigeration.Common.Setting.Light.External.Power'?:                   boolean; // (undocumented)
-    'Refrigeration.Common.Setting.Light.Internal.Brightness'?:              number; // (undocumented)
-    'Refrigeration.Common.Setting.Light.Internal.Power'?:                   boolean; // (undocumented)
-    'Refrigeration.Common.Setting.SabbathMode'?:                            boolean;
-    'Refrigeration.Common.Setting.VacationMode'?:                           boolean;
-    'Refrigeration.Common.Setting.WineCompartment.SetpointTemperature'?:    number;
-    'Refrigeration.Common.Setting.WineCompartment2.SetpointTemperature'?:   number;
-    'Refrigeration.Common.Setting.WineCompartment3.SetpointTemperature'?:   number;
-    'Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer'?:      number;
-    'Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator'?: number;
-    'Refrigeration.FridgeFreezer.Setting.SuperModeFreezer'?:                boolean;
-    'Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator'?:           boolean;
+    'BSH.Common.Setting.AlarmClock'?:                                               number;
+    'BSH.Common.Setting.AmbientLightBrightness'?:                                   number;
+    'BSH.Common.Setting.AmbientLightColor'?:                                        AmbientLightColor;
+    'BSH.Common.Setting.AmbientLightCustomColor'?:                                  string;
+    'BSH.Common.Setting.AmbientLightEnabled'?:                                      boolean;
+    'BSH.Common.Setting.ChildLock'?:                                                boolean;
+    'BSH.Common.Setting.LiquidVolumeUnit'?:                                         LiquidVolumeUnit;
+    'BSH.Common.Setting.PowerState'?:                                               PowerState;
+    'BSH.Common.Setting.TemperatureUnit'?:                                          TemperatureUnit;
+    'ConsumerProducts.CleaningRobot.Setting.CurrentMap'?:                           ReferenceMapID;
+    'ConsumerProducts.CleaningRobot.Setting.NameOfMap1'?:                           string;
+    'ConsumerProducts.CleaningRobot.Setting.NameOfMap2'?:                           string;
+    'ConsumerProducts.CleaningRobot.Setting.NameOfMap3'?:                           string;
+    'ConsumerProducts.CleaningRobot.Setting.NameOfMap4'?:                           string;
+    'ConsumerProducts.CleaningRobot.Setting.NameOfMap5'?:                           string;
+    'ConsumerProducts.CoffeeMaker.Setting.CupWarmer'?:                              boolean;
+    'Cooking.Common.Setting.Lighting'?:                                             boolean;
+    'Cooking.Common.Setting.LightingBrightness'?:                                   number;
+    'Cooking.Hood.Setting.ColorTemperaturePercent'?:                                number;
+    'Cooking.Hood.Setting.ColorTemperature'?:                                       ColorTemperature;
+    'Cooking.Oven.Setting.SabbathMode'?:                                            boolean;
+    'LaundryCare.Washer.Setting.IDos1BaseLevel'?:                                   number;
+    'LaundryCare.Washer.Setting.IDos2BaseLevel'?:                                   number;
+    'Refrigeration.Common.Setting.BottleCooler.SetpointTemperature'?:               number;
+    'Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature'?:              number;
+    'Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature'?:                number;
+    'Refrigeration.Common.Setting.ChillerRight.SetpointTemperature'?:               number;
+    'Refrigeration.Common.Setting.Dispenser.Enabled'?:                              boolean;
+    'Refrigeration.Common.Setting.Door.AssistantForceFreezer'?:                     AssistantForce;
+    'Refrigeration.Common.Setting.Door.AssistantForceFridge'?:                      AssistantForce;
+    'Refrigeration.Common.Setting.Door.AssistantFreezer'?:                          boolean;
+    'Refrigeration.Common.Setting.Door.AssistantFridge'?:                           boolean;
+    'Refrigeration.Common.Setting.Door.AssistantTimeoutFreezer'?:                   number;
+    'Refrigeration.Common.Setting.Door.AssistantTimeoutFridge'?:                    number;
+    'Refrigeration.Common.Setting.Door.AssistantTriggerFreezer'?:                   AssistantTrigger;
+    'Refrigeration.Common.Setting.Door.AssistantTriggerFridge'?:                    AssistantTrigger;
+    'Refrigeration.Common.Setting.EcoMode'?:                                        boolean;
+    'Refrigeration.Common.Setting.FreshMode'?:                                      boolean;
+    'Refrigeration.Common.Setting.Light.External.Brightness'?:                      number; // (undocumented)
+    'Refrigeration.Common.Setting.Light.External.Power'?:                           boolean; // (undocumented)
+    'Refrigeration.Common.Setting.Light.Internal.Brightness'?:                      number; // (undocumented)
+    'Refrigeration.Common.Setting.Light.Internal.Power'?:                           boolean; // (undocumented)
+    'Refrigeration.Common.Setting.SabbathMode'?:                                    boolean;
+    'Refrigeration.Common.Setting.VacationMode'?:                                   boolean;
+    'Refrigeration.Common.Setting.WineCompartment.SetpointTemperature'?:            number;
+    'Refrigeration.Common.Setting.WineCompartment2.SetpointTemperature'?:           number;
+    'Refrigeration.Common.Setting.WineCompartment3.SetpointTemperature'?:           number;
+    'Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer'?:              number;
+    'Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator'?:         number;
+    'Refrigeration.FridgeFreezer.Setting.SuperModeFreezer'?:                        boolean;
+    'Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator'?:                   boolean;
 }
 
 // Events
 export interface EventConnectedValues {
-    'BSH.Common.Appliance.Connected'?:                                      true;
+    'BSH.Common.Appliance.Connected'?:                                              true;
 }
 export interface EventDisconnectedValues {
-    'BSH.Common.Appliance.Disconnected'?:                                   true;
+    'BSH.Common.Appliance.Disconnected'?:                                           true;
 }
 export interface EventPairedValues {
-    'BSH.Common.Appliance.Paired'?:                                         true;
+    'BSH.Common.Appliance.Paired'?:                                                 true;
 }
 export interface EventDepairedValues {
-    'BSH.Common.Appliance.Depaired'?:                                       true;
+    'BSH.Common.Appliance.Depaired'?:                                               true;
 }
 export interface EventNotifyValues extends OptionValues, SettingValues {
     // Program changes
-    'BSH.Common.Root.SelectedProgram'?:                                     ProgramKey | null;
-    'BSH.Common.Root.ActiveProgram'?:                                       ProgramKey | null;
+    'BSH.Common.Root.SelectedProgram'?:                                             ProgramKey | null;
+    'BSH.Common.Root.ActiveProgram'?:                                               ProgramKey | null;
 }
 export type EventStatusValues = StatusValues;
 export interface EventEventValues {
     // Program progress events
-    'BSH.Common.Event.AlarmClockElapsed'?:                                  EventPresentState;
-    'BSH.Common.Event.ProgramAborted'?:                                     EventPresentState;
-    'BSH.Common.Event.ProgramFinished'?:                                    EventPresentState;
-    'Cooking.Oven.Event.PreheatFinished'?:                                  EventPresentState;
-    'Cooking.Oven.Event.RegularPreheatFinished'?:                           EventPresentState;
+    'BSH.Common.Event.AlarmClockElapsed'?:                                          EventPresentState;
+    'BSH.Common.Event.ProgramAborted'?:                                             EventPresentState;
+    'BSH.Common.Event.ProgramFinished'?:                                            EventPresentState;
+    'Cooking.Oven.Event.PreheatFinished'?:                                          EventPresentState;
+    'Cooking.Oven.Event.RegularPreheatFinished'?:                                   EventPresentState;
     // Home appliance state changes
-    'ConsumerProducts.CleaningRobot.Event.DockingStationNotFound'?:         EventPresentState;
-    'ConsumerProducts.CleaningRobot.Event.EmptyDustBoxAndCleanFilter'?:     EventPresentState;
-    'ConsumerProducts.CleaningRobot.Event.RobotIsStuck'?:                   EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty'?:               EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn10Cups'?:               EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn15Cups'?:               EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn20Cups'?:               EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn5Cups'?:                EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DescalingIn10Cups'?:                EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DescalingIn15Cups'?:                EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DescalingIn20Cups'?:                EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DescalingIn5Cups'?:                 EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanBlockage'?:         EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanOverdue'?:          EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceCleaningOverdue'?:            EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceDescalingBlockage'?:          EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceDescalingOverdue'?:           EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCalcNCleaned'?:       EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCleaned'?:            EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeDescaled'?:           EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.DripTrayFull'?:                     EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.KeepMilkTankCool'?:                 EventPresentState;
-    'ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty'?:                   EventPresentState;
-    'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationNearlyReached'?:    EventPresentState;
-    'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationReached'?:          EventPresentState;
-    'Dishcare.Dishwasher.Event.RinseAidNearlyEmpty'?:                       EventPresentState;
-    'Dishcare.Dishwasher.Event.SaltNearlyEmpty'?:                           EventPresentState;
-    'LaundryCare.Dryer.Event.DryingProcessFinished'?:                       EventPresentState; // (undocumented)
-    'LaundryCare.Washer.Event.IDos1FillLevelPoor'?:                         EventPresentState;
-    'LaundryCare.Washer.Event.IDos2FillLevelPoor'?:                         EventPresentState;
-    'Refrigeration.FridgeFreezer.Event.DoorAlarmFreezer'?:                  EventPresentState;
-    'Refrigeration.FridgeFreezer.Event.DoorAlarmRefrigerator'?:             EventPresentState;
-    'Refrigeration.FridgeFreezer.Event.TemperatureAlarmFreezer'?:           EventPresentState;
+    'ConsumerProducts.CleaningRobot.Event.DockingStationNotFound'?:                 EventPresentState;
+    'ConsumerProducts.CleaningRobot.Event.EmptyDustBoxAndCleanFilter'?:             EventPresentState;
+    'ConsumerProducts.CleaningRobot.Event.RobotIsStuck'?:                           EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty'?:                       EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn10Cups'?:                       EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn15Cups'?:                       EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn20Cups'?:                       EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn5Cups'?:                        EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn10Cups'?:                        EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn15Cups'?:                        EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn20Cups'?:                        EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DescalingIn5Cups'?:                         EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanBlockage'?:                 EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceCalcNCleanOverdue'?:                  EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceCleaningOverdue'?:                    EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceDescalingBlockage'?:                  EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceDescalingOverdue'?:                   EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCalcNCleaned'?:               EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeCleaned'?:                    EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DeviceShouldBeDescaled'?:                   EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.DripTrayFull'?:                             EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.KeepMilkTankCool'?:                         EventPresentState;
+    'ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty'?:                           EventPresentState;
+    'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationNearlyReached'?:            EventPresentState;
+    'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationReached'?:                  EventPresentState;
+    'Dishcare.Dishwasher.Event.RinseAidNearlyEmpty'?:                               EventPresentState;
+    'Dishcare.Dishwasher.Event.SaltNearlyEmpty'?:                                   EventPresentState;
+    'LaundryCare.Dryer.Event.DryingProcessFinished'?:                               EventPresentState; // (undocumented)
+    'LaundryCare.Washer.Event.IDos1FillLevelPoor'?:                                 EventPresentState;
+    'LaundryCare.Washer.Event.IDos2FillLevelPoor'?:                                 EventPresentState;
+    'Refrigeration.FridgeFreezer.Event.DoorAlarmFreezer'?:                          EventPresentState;
+    'Refrigeration.FridgeFreezer.Event.DoorAlarmRefrigerator'?:                     EventPresentState;
+    'Refrigeration.FridgeFreezer.Event.TemperatureAlarmFreezer'?:                   EventPresentState;
 }
 export interface EventMapValues {
     CONNECTED:    EventConnectedValues;
@@ -1055,9 +1062,9 @@ export type EventValues =
 
 // Commands
 export interface CommandValues {
-    'BSH.Common.Command.AcknowledgeEvent'?:                                 true; // (undocumented)
-    'BSH.Common.Command.OpenDoor'?:                                         true;
-    'BSH.Common.Command.PartlyOpenDoor'?:                                   true;
-    'BSH.Common.Command.PauseProgram'?:                                     true;
-    'BSH.Common.Command.ResumeProgram'?:                                    true;
+    'BSH.Common.Command.AcknowledgeEvent'?:                                         true; // (undocumented)
+    'BSH.Common.Command.OpenDoor'?:                                                 true;
+    'BSH.Common.Command.PartlyOpenDoor'?:                                           true;
+    'BSH.Common.Command.PauseProgram'?:                                             true;
+    'BSH.Common.Command.ResumeProgram'?:                                            true;
 }
