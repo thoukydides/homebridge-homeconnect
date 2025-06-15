@@ -191,6 +191,14 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor power and door.
 
 </details>
+<details>
+<summary>Heating and Ventilation Appliances</summary>
+
+  * **AirConditioner:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-airconditioner.svg">
+    * Monitor power.
+
+</details>
 
 ## Changelog
 
