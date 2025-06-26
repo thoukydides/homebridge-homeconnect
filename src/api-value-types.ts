@@ -304,7 +304,8 @@ export type BeanAmount =
 export type BeanContainerSelection =
     'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right'
   | 'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left';
-export type BeverageSize = never; // (undocumented)
+export type BeverageSize = // (undocumented)
+    'ConsumerProducts.CoffeeMaker.EnumType.BeverageSize.Medium';
 export type CavitySelector = // (undocumented)
     'Cooking.Oven.EnumType.CavitySelector.Main';
 export type CleaningMode =
