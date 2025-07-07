@@ -13,25 +13,38 @@ export function logError<Type>(log: Logger, when: string, err: Type): Type {
         if (lastLoggedError === err) return err;
         lastLoggedError = err;
 
-        // Log the error message itself
-        log.error(`[${when}] ${String(err)}`);
+        // Log the top-level error message
+        const message = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+        log.error(`[${when}] ${message}`);
+        const prefix = ' '.repeat(when.length + 3);
 
         // Log the request details for API errors
         if (err instanceof APIError) {
             log.error(`${err.request.method} ${err.request.path}`);
         }
 
-        // Log any history of causes for the error
-        let cause: unknown = err;
-        let prefix = ' '.repeat(when.length + 3);
-        while ((cause instanceof APIError) && cause.errCause) {
-            cause = cause.errCause;
-            log.error(`${prefix}└─ ${String(cause)}`);
-            prefix += '   ';
-        }
+        // Log any history of causes or sub-errors
+        logSubErrors(log, prefix, err);
 
-        // Log any stack backtrace
+        // Log any stack backtrace (for the top-level error only)
         if (err instanceof Error && err.stack) log.debug(err.stack);
     } catch { /* empty */ }
     return err;
+}
+
+// Log any sub-errors (causes or aggregates) of an error, formatted as a tree
+function logSubErrors(log: Logger, prefix: string, err: unknown): void {
+    // Collect all aggregate or causal errors
+    const subErrs: unknown[] = [];
+    if (err instanceof APIError && err.errCause) subErrs.push(err.errCause);
+    if (err instanceof Error && err.cause) subErrs.push(err.cause);
+    if (err instanceof AggregateError && Array.isArray(err.errors)) subErrs.push(...(err.errors as unknown[]));
+
+    // Log the collected errors formatted as a tree
+    subErrs.forEach((subErr, index) => {
+        const subPrefix = index < subErrs.length - 1 ? ['├─', '│ '] : ['└─', '  '];
+        const message = subErr instanceof Error ? `${subErr.name}: ${subErr.message}` : String(subErr);
+        log.error(`${prefix}${subPrefix[0]} ${message}`);
+        logSubErrors(log, `${prefix}${subPrefix[1]} `, subErr);
+    });
 }
