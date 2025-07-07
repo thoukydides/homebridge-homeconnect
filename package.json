@@ -72,7 +72,7 @@
     "type": "module",
     "main": "dist/index.js",
     "engines": {
-        "node": "^24.2.0 || ^22.16.0 || ^20.19.2",
+        "node": "^24.3.0 || ^22.17.0 || ^20.19.3",
         "homebridge": "^1.10.0 || ^2.0.0-beta.0"
     },
     "dependencies": {
@@ -81,33 +81,33 @@
         "node-persist": "^3.1.3",
         "semver": "^7.7.2",
         "ts-interface-checker": "^1.0.2",
-        "undici": "^7.10.0"
+        "undici": "^7.11.0"
     },
     "devDependencies": {
         "@actions/core": "^1.11.1",
         "@actions/github": "^6.0.1",
         "@eslint/eslintrc": "^3.3.1",
-        "@eslint/js": "^9.29.0",
+        "@eslint/js": "^9.30.1",
         "@octokit/core": "^7.0.2",
         "@octokit/plugin-rest-endpoint-methods": "^16.0.0",
         "@tsconfig/node20": "^20.1.6",
         "@types/eslint__js": "^8.42.3",
-        "@types/node": "^20.19.0",
+        "@types/node": "^20.19.4",
         "@types/node-persist": "^3.1.8",
         "@types/semver": "^7.7.0",
         "browserify": "^17.0.1",
         "copyfiles": "^2.4.1",
-        "eslint": "^9.29.0",
+        "eslint": "^9.30.1",
         "esmify": "^2.1.1",
-        "globals": "^16.2.0",
+        "globals": "^16.3.0",
         "homebridge": "^2.0.0-beta.29",
-        "homebridge-config-ui-x": "^5.0.0-beta.93",
+        "homebridge-config-ui-x": "^5.0.0-beta.111",
         "nodemon": "^3.1.10",
         "rimraf": "^6.0.1",
         "ts-interface-builder": "^0.3.3",
         "tsx": "^4.20.3",
         "typescript": "^5.8.3",
-        "typescript-eslint": "^8.34.0"
+        "typescript-eslint": "^8.36.0"
     },
     "scripts": {
         "build-checkers": "mkdir -p ./src/ti && ts-interface-builder -c -o ./src/ti ./src/*-types.ts && tsx bin/ts-interface-post.ts ./src/ti",
