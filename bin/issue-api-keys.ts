@@ -36,7 +36,6 @@ const IGNORE_VALUES: string[] = [
     'number | string',
     'unknown',
     "''",
-    "'BSH.Common.EnumType.PowerState.Undefined'",
     "'Micha: Caffè Grande'",
     "'Unknown'"
 ];

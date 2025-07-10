@@ -752,7 +752,8 @@ export enum PowerState {
     MainsOff                = 'BSH.Common.EnumType.PowerState.MainsOff', // (undocumented)
     Off                     = 'BSH.Common.EnumType.PowerState.Off',
     On                      = 'BSH.Common.EnumType.PowerState.On',
-    Standby                 = 'BSH.Common.EnumType.PowerState.Standby'
+    Standby                 = 'BSH.Common.EnumType.PowerState.Standby',
+    Undefined               = 'BSH.Common.EnumType.PowerState.Undefined' // (undocumented)
 }
 export enum TemperatureUnit {
     Celsius                 = 'BSH.Common.EnumType.TemperatureUnit.Celsius',
@@ -841,6 +842,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.LearningDishwasher.CleaningLevel'?:                 LearningDishwasherCleaningLevel; // (undocumented)
     'Dishcare.Dishwasher.Option.LearningDishwasher.DryingLevel'?:                   LearningDishwasherDryingLevel; // (undocumented)
     'Dishcare.Dishwasher.Option.LearningDishwasher.DurationLevel'?:                 LearningDishwasherDurationLevel; // (undocumented)
+    'Dishcare.Dishwasher.Option.Pretreatment'?:	                                    boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.SanitationUC'?:                                     boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.SilenceOnDemand'?:                                  boolean;
     'Dishcare.Dishwasher.Option.StorageFunction'?:                                  boolean; // (undocumented)
