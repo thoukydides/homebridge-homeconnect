@@ -8,7 +8,7 @@ contact_links:
     about: "If you are seeking support or have questions then please start a discussion here instead of raising an issue."
   - name: 🤖 Ask Dosu
     url: https://github.dosu.com/thoukydides/homebridge-homeconnect
-    about: "Ask an AI agent any questions about this project."
+    about: "Ask an AI agent any question about this project. (Requires a free https://dosu.dev/ account.)"
   - name: 🚦 Home Connect Server Status (unofficial)
     url: https://homeconnect.thouky.co.uk
     about: "Check the unofficial Home Connect server status if you are experiencing communication issues or connectivity problems with appliances."  
