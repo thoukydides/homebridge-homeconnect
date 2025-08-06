@@ -290,7 +290,7 @@ export class ApplianceBase {
     async getCached<Type>(key: string, operation: () => Promise<Type>): Promise<Type> {
         // Check that the operation matches any other use of the same key
         const previousOperation = this.cachedOperation[key];
-        if (previousOperation && previousOperation.toString() !== operation.toString()) {
+        if (previousOperation && previousOperation !== operation.toString()) {
             this.log.error(`Mismatched "${key}" cache operations:`);
             this.log.error(`    ${previousOperation}`);
             this.log.error(`!== ${String(operation)}`);

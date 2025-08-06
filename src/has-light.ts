@@ -416,7 +416,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             // Convert the RGB value to hex
             const [r, g, b] = rgb.map(v => Math.round(v)) as [number, number, number];
             const numeric = 0x1000000 + r * 0x10000 + g * 0x100 + b;
-            return '#' + Number(numeric).toString(16).substring(1);
+            return '#' + numeric.toString(16).substring(1);
         }
 
         // Convert a colour from RGB to hue/saturation
