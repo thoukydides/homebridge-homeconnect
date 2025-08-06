@@ -16,6 +16,20 @@ A [Homebridge](https://github.com/homebridge/homebridge) plugin that connects [H
 
 </div>
 
+## 📣 Home Connect Developer Survey 2025
+
+The Home Connect team are currently running a survey to gather feedback on their Developer Portal and public API. If you use this plugin or any other third-party integration, this is a valuable opportunity to influence future improvements.
+
+Your feedback could help address issues such as:
+* Unreliable or inconsistent API behaviour
+* Missing appliance features or program options
+* Remote start limitations and usability problems
+* Complexity of the initial setup process
+
+Even brief responses highlighting recurring problems or user pain points are helpful; they show that these issues affect more than just a single project.
+
+📝 [Take the survey](https://forms.office.com/e/7tdf0LTPc2) *(approx. 10-15 minutes)*
+
 ## Installation
 
 ### Step 1 - Setup Home Connect Appliances
