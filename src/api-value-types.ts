@@ -891,10 +891,10 @@ export interface OptionValues {
     'LaundryCare.Washer.Option.Temperature'?:                                       WasherTemperature;
     'LaundryCare.Washer.Option.WaterAndRinsePlus1'?:                                boolean; // (undocumented)
     'LaundryCare.Washer.Option.WaterPlus'?:                                         boolean;
-    'LaundryCare.WasherDryer.Option.DryingTarget'?:                                 DryingTargetWD; // (unrecognised)
+    'LaundryCare.WasherDryer.Option.DryingTarget'?:                                 DryingTargetWD; // (undocumented)
     'LaundryCare.WasherDryer.Option.LowTemperatureHygiene'?:                        boolean; // (undocumented)
     'LaundryCare.WasherDryer.Option.ProgramMode'?:                                  ProgramMode; // (undocumented)
-    'LaundryCare.WasherDryer.Option.WrinkleGuardBoost'?:                            boolean; // (unrecognised)
+    'LaundryCare.WasherDryer.Option.WrinkleGuardBoost'?:                            boolean; // (undocumented)
 }
 
 // Statuses
@@ -903,6 +903,7 @@ export interface StatusValues {
     'BSH.Common.Status.BatteryLevel'?:                                              number;
     'BSH.Common.Status.ChargingConnection'?:                                        ChargingConnection;
     'BSH.Common.Status.DoorState'?:                                                 DoorState;
+    'BSH.Common.Status.InteriorIlluminationActive'?:                                boolean; // (undocumented)
     'BSH.Common.Status.LocalControlActive'?:                                        boolean;
     'BSH.Common.Status.OperationState'?:                                            OperationState;
     'BSH.Common.Status.RemoteControlActive'?:                                       boolean;
