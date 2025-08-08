@@ -233,14 +233,28 @@ function parseTypes(description: string, source: string): APITypes {
         if (core.isDebug()) core.debug(`Parsed literal-like '${typeName}': ${[...values].join(', ')}`);
     };
 
-    // Parse string literal type definitions
-    for (const match of source.matchAll(literalRegex)) {
-        processLiteralType(match, '|');
-    }
-
     // Parse enum type definitions (treating them as string literals)
     for (const match of source.matchAll(enumRegex)) {
         processLiteralType(match, ',');
+    }
+
+    // Parse string literal type definitions
+    for (const match of source.matchAll(literalRegex)) {
+        const [, typeName, aliasName] = match;
+        if (/^\w+$/.test(aliasName)) {
+            // Special case for type aliases
+            const aliasInterface = interfaces.get(aliasName);
+            const aliasLiteral = literals.get(aliasName);
+            if (aliasInterface) {
+                interfaces.set(typeName, aliasInterface);
+                if (core.isDebug()) core.debug(`Parsed interface alias '${typeName}' = '${aliasName}'`);
+            } else if (aliasLiteral) {
+                literals.set(typeName, aliasLiteral);
+                if (core.isDebug()) core.debug(`Parsed literal-like alias '${typeName}' = '${aliasName}'`);
+            }
+        } else {
+            processLiteralType(match, '|');
+        }
     }
 
     // Return the parsed types
