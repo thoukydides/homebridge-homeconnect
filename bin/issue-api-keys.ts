@@ -17,7 +17,7 @@ interface APITypes {
 }
 
 // Issue description returned by GitHub REST API
-type Issue = components['schemas']['issue'];
+type Issue = Omit<components['schemas']['issue'], 'performed_via_github_app'>;
 
 // Source file defining API types
 const SOURCE_FILE = './src/api-value-types.ts';
