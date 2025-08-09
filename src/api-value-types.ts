@@ -84,6 +84,7 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.MyCoffee.MyCoffee8' // (undocumented)
   | 'Cooking.Common.Program.Hood.Automatic'
   | 'Cooking.Common.Program.Hood.DelayedShutOff'
+  | 'Cooking.Common.Program.Hood.Interval' // (undocumented)
   | 'Cooking.Common.Program.Hood.Venting'
   | 'Cooking.Hob.Program.FryingSensorMode' // (undocumented)
   | 'Cooking.Hob.Program.PowerLevelMode' // (undocumented)
@@ -108,6 +109,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.Defrost'
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
   | 'Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial'
+  | 'Cooking.Oven.Program.HeatingMode.FullSurfaceGrill' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.GrillLargeArea' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.GrillSmallArea' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.HotAir'
