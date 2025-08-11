@@ -42,6 +42,8 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.Beverage.XLCoffee'
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOffRinsing' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOnRinsing' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.AutoClean' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.AutoDescale' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CalcNClean' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.Clean' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.CleanBrewingUnitManually' // (undocumented)
@@ -93,6 +95,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Cleaning.Drying' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Ecolysis' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
+  | 'Cooking.Oven.Program.CleaningModes.AutoSteamCalibration' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Conv.Steam.BonelessPorkNeckJoint' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.GefluegelteileAuftauen' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
@@ -101,6 +104,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.MeatProbe.BonelessPorkNeckJoint' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.MeatProbe.TurkeyBreast' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.PartCookedBreadRollsOrBaguette' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.FullSteam.Broccoli' // (undocumented)
   | 'Cooking.Oven.Program.Dish.SubsequentCooking' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.2DHotAir' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.3DHotAir' // (undocumented)
@@ -141,6 +145,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Microwave.Max'
   | 'Cooking.Oven.Program.SteamModes.DoughProving' // (undocumented)
   | 'Cooking.Oven.Program.SteamModes.Reheat' // (undocumented)
+  | 'Cooking.Oven.Program.SteamModes.Steam' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.ContinueCooking' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.KeepWarm' // (undocumented)
   | 'Cooking.Oven.Program.SubsequentMode.LeaveToRest' // (undocumented)
@@ -778,6 +783,7 @@ export enum EventPresentState {
 // Program options
 export interface OptionValues {
     'BSH.Common.Option.BaseProgram'?:                                               ProgramKey; // (undocumented)
+    'BSH.Common.Option.CurrentStepRemainingTime'?:                                  number; // (undocumented)
     'BSH.Common.Option.Duration'?:                                                  number;
     'BSH.Common.Option.ElapsedProgramTime'?:                                        number;
     'BSH.Common.Option.EnergyForecast'?:                                            number; // (undocumented)
