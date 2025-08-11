@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.5.5] - 2025-08-11
+### Changed
+* **CoffeeMaker/Oven:** Added undocumented programs and options. (#357)
+
 ## [v1.5.4] - 2025-08-09
 ### Changed
 * **Hood/Oven:** Added undocumented programs. (#356)
@@ -790,7 +794,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.5...HEAD
+[v1.5.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.4...v1.5.5
 [v1.5.4]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.3...v1.5.4
 [v1.5.3]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.2...v1.5.3
 [v1.5.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.1...v1.5.2
