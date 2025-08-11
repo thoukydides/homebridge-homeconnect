@@ -1,7 +1,7 @@
 {
     "name": "homebridge-homeconnect",
     "displayName": "HomeConnect",
-    "version": "1.5.4",
+    "version": "1.5.5",
     "description": "A Homebridge plugin that connects Home Connect appliances to Apple HomeKit",
     "license": "ISC",
     "keywords": [
