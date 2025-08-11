@@ -16,8 +16,8 @@ import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
          ApplianceWasher, ApplianceWasherDryer } from './appliance-cleaning.js';
 import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
          ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance-cooking.js';
-import { ApplianceFreezer, ApplianceFridgeFreezer, ApplianceRefrigerator,
-         ApplianceWineCooler } from './appliance-cooling.js';
+import { ApplianceAirConditioner, ApplianceFreezer, ApplianceFridgeFreezer,
+         ApplianceRefrigerator, ApplianceWineCooler } from './appliance-cooling.js';
 import { ConfigSchemaData } from './homebridge-ui/schema-data.js';
 import { PLUGIN_NAME, PLATFORM_NAME, DEFAULT_CONFIG, DEFAULT_CLIENTID } from './settings.js';
 import { PrefixLogger } from './logger.js';
@@ -30,7 +30,6 @@ import { HOMEBRIDGE_LANGUAGES } from './api-languages.js';
 import { HomeAppliance } from './api-types.js';
 import { MockAPI } from './mock/index.js';
 import { typeSuite, checkers } from './ti/config-types.js';
-import { ApplianceAirConditioner } from './appliance-ventialation.js';
 
 // Interval between updating the list of appliances
 // (only 1000 API calls allowed per day, so only check once an hour)
@@ -220,12 +219,11 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
                 Washer:         ApplianceWasher,
                 WasherDryer:    ApplianceWasherDryer,
                 // Cooling appliances
+                AirConditioner: ApplianceAirConditioner,
                 Freezer:        ApplianceFreezer,
                 FridgeFreezer:  ApplianceFridgeFreezer,
                 Refrigerator:   ApplianceRefrigerator,
-                WineCooler:     ApplianceWineCooler,
-                // Air conditioner appliances
-                AirConditioner: ApplianceAirConditioner
+                WineCooler:     ApplianceWineCooler
             }[ha.type];
             if (!applianceConstructor) {
                 this.log.warn(`Appliance type '${ha.type}' not currently supported`);

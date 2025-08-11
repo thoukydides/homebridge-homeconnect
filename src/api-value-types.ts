@@ -178,7 +178,12 @@ export type ProgramKey =
   | 'Dishcare.Dishwasher.Program.QuickD' // (undocumented)
   | 'Dishcare.Dishwasher.Program.SteamFresh'
   | 'Dishcare.Dishwasher.Program.Super60'
-  | 'HeatingVentilationAirConditioning.AirConditioner.Program.Cool' // (undocumented)
+  | 'HeatingVentilationAirConditioning.AirConditioner.Program.ActiveClean'
+  | 'HeatingVentilationAirConditioning.AirConditioner.Program.Auto'
+  | 'HeatingVentilationAirConditioning.AirConditioner.Program.Cool'
+  | 'HeatingVentilationAirConditioning.AirConditioner.Program.Dry'
+  | 'HeatingVentilationAirConditioning.AirConditioner.Program.Fan'
+  | 'HeatingVentilationAirConditioning.AirConditioner.Program.Heat'
   | 'LaundryCare.Dryer.Program.AntiShrink'
   | 'LaundryCare.Dryer.Program.Bedlinens' // (undocumented)
   | 'LaundryCare.Dryer.Program.Blankets'
@@ -378,10 +383,9 @@ export type DryingTargetWD = // (undocumented)
   | 'LaundryCare.WasherDryer.EnumType.DryingTargetWD.ExtraDry';
 export type EstimationState = // (undocumented)
     'BSH.Common.EnumType.EstimationState.Inactive';
-export type FanSpeed = // (undocumented)
-    'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedLevel.Level1'
-  | 'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedLevel.Level2'
-  | 'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedLevel.Level3';
+export type FanSpeedMode =
+    'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedMode.Automatic'
+  | 'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedMode.Manual';
 export type FanStage =
     'Cooking.Hood.EnumType.Stage.FanOff'
   | 'Cooking.Hood.EnumType.Stage.FanStage01'
@@ -858,8 +862,8 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.VarioSpeed'?:                                       boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.VarioSpeedPlus'?:                                   boolean;
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                                       boolean;
-    'HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeed'?:            FanSpeed; // (undocumented)
-    'HeatingVentilationAirConditioning.AirConditioner.Option.SetpointTemperature'?: number; // (undocumented)
+    'HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeedMode'?:        FanSpeedMode;
+    'HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeedPercentage'?:  number;
     'LaundryCare.Common.Option.LoadRecommendation'?:                                number; // (undocumented)
     'LaundryCare.Common.Option.LowTemperatureHygiene'?:                             boolean; // (undocumented)
     'LaundryCare.Common.Option.ProcessPhase'?:                                      ProcessPhaseLaundryCare; // (undocumented)

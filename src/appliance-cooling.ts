@@ -11,6 +11,9 @@ import { HasModes } from './has-modes.js';
 import { HasRefrigerationLight } from './has-light.js';
 import { Constructor } from './utils.js';
 
+// A Homebridge accessory for a Home Connect air conditioner
+export class ApplianceAirConditioner extends ApplianceGeneric {}
+
 // Add cooling appliance mode settings to an accessory
 function HasCoolingModes<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
     return class HasCoolingModes extends HasModes(Base, 'cooling') {
