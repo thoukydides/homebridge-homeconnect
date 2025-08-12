@@ -139,6 +139,7 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.Microwave.1000Watt'
   | 'Cooking.Oven.Program.Microwave.180Watt'
   | 'Cooking.Oven.Program.Microwave.360Watt'
+  | 'Cooking.Oven.Program.Microwave.450Watt'
   | 'Cooking.Oven.Program.Microwave.600Watt'
   | 'Cooking.Oven.Program.Microwave.900Watt'
   | 'Cooking.Oven.Program.Microwave.90Watt'

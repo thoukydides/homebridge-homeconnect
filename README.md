@@ -129,6 +129,14 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Monitor remote control and general operation status.
     * Automation triggers for finished, grease filter nearly saturated, and grease filter saturated.
 
+  * **Microwave:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-microwave.svg">
+    * Switch on/off and start/stop programs with preset options.
+    * Open or partly open the door.
+    * Control child lock.
+    * Monitor door, programs, program time remaining, remote control, and general operation status.
+    * Automation triggers for finished, and aborted.
+
   * **Oven:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-oven.svg">
     * Switch on/off and start/stop programs with preset options.
@@ -187,6 +195,11 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 <details>
 <summary>Cooling Appliances</summary>
 
+  * **AirConditioner:**
+    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-airconditioner.svg">
+    * Switch on/off.
+    * Switch fan on/off, set fan speed, and select manual/auto mode.
+
   * **Freezer / FridgeFreezer / Refrigerator:**
     <img align="right" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-refrigerator.svg">
     <img align="right" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-fridgefreezer.svg">
@@ -203,14 +216,6 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Set sabbath mode.
     * Control child lock.
     * Monitor power and door.
-
-</details>
-<details>
-<summary>Heating and Ventilation Appliances</summary>
-
-  * **AirConditioner:**
-    <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-airconditioner.svg">
-    * Monitor power.
 
 </details>
 

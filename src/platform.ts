@@ -15,7 +15,8 @@ import { ApplianceBase } from './appliance-generic.js';
 import { ApplianceCleaningRobot, ApplianceDishwasher, ApplianceDryer,
          ApplianceWasher, ApplianceWasherDryer } from './appliance-cleaning.js';
 import { ApplianceCoffeeMaker, ApplianceCookProcessor, ApplianceHob,
-         ApplianceHood, ApplianceOven, ApplianceWarmingDrawer } from './appliance-cooking.js';
+         ApplianceHood, ApplianceMicrowave, ApplianceOven,
+         ApplianceWarmingDrawer } from './appliance-cooking.js';
 import { ApplianceAirConditioner, ApplianceFreezer, ApplianceFridgeFreezer,
          ApplianceRefrigerator, ApplianceWineCooler } from './appliance-cooling.js';
 import { ConfigSchemaData } from './homebridge-ui/schema-data.js';
@@ -210,6 +211,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
                 CookProcessor:  ApplianceCookProcessor,
                 Hob:            ApplianceHob,
                 Hood:           ApplianceHood,
+                Microwave:      ApplianceMicrowave,
                 Oven:           ApplianceOven,
                 WarmingDrawer:  ApplianceWarmingDrawer,
                 // Cleaning appliances

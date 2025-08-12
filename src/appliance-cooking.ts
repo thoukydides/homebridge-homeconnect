@@ -113,6 +113,26 @@ export class ApplianceHood extends
     }
 }
 
+// A Homebridge accessory for a Home Connect microwave
+export class ApplianceMicrowave extends
+    HasChildLock(
+    HasPrograms(
+    HasRemoteControl(
+    HasRemainingTime(
+    HasEvents(
+    HasLockableDoor(
+    HasActive(
+    ApplianceGeneric))))))) {
+
+    constructor(...args: ConstructorParameters<typeof ApplianceGeneric>) {
+        super(...args);
+
+        // Add Microwave events
+        this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
+        this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
+    }
+}
+
 // A Homebridge accessory for a Home Connect oven
 export class ApplianceOven extends
     HasChildLock(
