@@ -7,12 +7,16 @@ import { ApplianceBase, ApplianceGeneric } from './appliance-generic.js';
 import { HasChildLock } from './has-childlock.js';
 import { HasDoor } from './has-door.js';
 import { HasEvents } from './has-events.js';
+import { HasFanAC } from './has-fan-ac.js';
 import { HasModes } from './has-modes.js';
 import { HasRefrigerationLight } from './has-light.js';
 import { Constructor } from './utils.js';
 
 // A Homebridge accessory for a Home Connect air conditioner
-export class ApplianceAirConditioner extends ApplianceGeneric {}
+export class ApplianceAirConditioner extends
+    HasFanAC(
+    ApplianceGeneric) {
+}
 
 // Add cooling appliance mode settings to an accessory
 function HasCoolingModes<TBase extends Constructor<ApplianceBase>>(Base: TBase) {

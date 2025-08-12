@@ -8,6 +8,7 @@
     ],
     "eslint.enable": true,
     "cSpell.words": [
+        "ACHC",
         "addprograms",
         "aegapi",
         "aeiou",

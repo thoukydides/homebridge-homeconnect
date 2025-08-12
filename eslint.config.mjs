@@ -11,7 +11,7 @@ const srcDir = 'src';
 const srcFiles = await readdir(srcDir);
 const mixinNames = [];
 for (const srcFile of srcFiles) {
-    if (!/^(appliance|has)-\w+.ts$/.test(srcFile)) continue;
+    if (!/^(appliance|has)-[-\w]+.ts$/.test(srcFile)) continue;
     const text = await readFile(path.join(srcDir, srcFile), 'utf8');
     const matches = [
         ...text.matchAll(/function\s+(\w+)\s*<TBase/g),
