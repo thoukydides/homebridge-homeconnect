@@ -25,9 +25,9 @@ const LINE_SPLIT_REGEX = /\r\n|(?<!\r)\n|\r(?!\n)/;
 // eslint-disable-next-line no-control-regex
 const ANSI_ESCAPE = /\x1B\[[0-9;]*[msuK]/g;
 
-// ANSI colour codes used for warnings and errors
+// ANSI colour codes used for warnings and errors (ignoring Homebridge 2.0 info)
 // eslint-disable-next-line no-control-regex
-const ANSI_WARNING = /\x1B\[3[13]m/;
+const ANSI_WARNING = /\x1B\[3[13]m(?!(?:>.*|NOTICE.*|\s*)\x1B)/;
 
 // Length of time to wait
 const TIMEOUT_HOMEBRIDGE_MS = 15 * 1000; // 15 seconds
@@ -55,7 +55,7 @@ async function testPlugin(): Promise<void> {
             // Check for any of the success or failure log messages
             for (const line of chunk.split(LINE_SPLIT_REGEX)) {
                 const cleanLine = line.replace(ANSI_ESCAPE, '');
-                if (ANSI_WARNING.test(line)) failureTests.add(`Log warning: ${cleanLine}`);
+                if (ANSI_WARNING.test(line)) failureTests.add(`Log warning: %${cleanLine}%`);
                 Object.entries(FAILURE_TESTS).filter(([, regexp]) => regexp.test(cleanLine))
                     .forEach(([name]) => failureTests.add(`${name}: ${cleanLine}`));
                 successTests = successTests.filter(name => !SUCCESS_TESTS[name].test(cleanLine));
