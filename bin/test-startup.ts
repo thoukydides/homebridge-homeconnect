@@ -5,7 +5,6 @@ import * as core from '@actions/core';
 import assert from 'node:assert';
 import { spawn, ChildProcessWithoutNullStreams } from 'node:child_process';
 import { once } from 'node:events';
-import chalk from 'chalk';
 
 // Command to use to launch Homebridge
 const SPAWN_COMMAND = 'homebridge';
@@ -26,8 +25,9 @@ const LINE_SPLIT_REGEX = /\r\n|(?<!\r)\n|\r(?!\n)/;
 // eslint-disable-next-line no-control-regex
 const ANSI_ESCAPE = /\x1B\[[0-9;]*[msuK]/g;
 
-// ANSI colour codes used for errors
-const ANSI_WARNING = new RegExp(chalk.red('.*').replaceAll('[', '\\['));
+// ANSI colour codes used for warnings and errors
+// eslint-disable-next-line no-control-regex
+const ANSI_WARNING = /\x1B\[3[13]m/;
 
 // Length of time to wait
 const TIMEOUT_HOMEBRIDGE_MS = 15 * 1000; // 15 seconds
