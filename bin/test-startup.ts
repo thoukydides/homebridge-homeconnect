@@ -33,7 +33,6 @@ const ANSI_WARNING = /\x1B\[3[13]m(?!(?:>.*|NOTICE.*|\s*)\x1B)/;
 const TIMEOUT_HOMEBRIDGE_MS = 15 * 1000; // 15 seconds
 
 // Run the plugin test
-let rawOutput = '';
 async function testPlugin(): Promise<void> {
     // Launch Homebridge, piping stdout and stderr for monitoring
     const child = spawn(SPAWN_COMMAND, SPAWN_ARGS, { stdio: 'pipe' });
@@ -48,20 +47,31 @@ async function testPlugin(): Promise<void> {
     ): Promise<void> => {
         const stream = child[streamName];
         stream.setEncoding('utf8');
+
+        const currentWarning: string[] = [];
+        const flushWarning = (): void => {
+            if (currentWarning.length) {
+                failureTests.add(`Log warning: ${currentWarning.join('\n')}`);
+                currentWarning.length = 0;
+            }
+        };
+
         for await (const chunk of stream) {
             assert(typeof chunk === 'string');
-            rawOutput += chunk;
-
-            // Check for any of the success or failure log messages
             for (const line of chunk.split(LINE_SPLIT_REGEX)) {
+                if (line.trim().length) console.log(line);
+
+                // Check for any of the success or failure log messages
                 const cleanLine = line.replace(ANSI_ESCAPE, '');
-                if (ANSI_WARNING.test(line)) failureTests.add(`Log warning: %${cleanLine}%`);
+                if (ANSI_WARNING.test(line) || streamName === 'stderr') currentWarning.push(cleanLine);
+                else flushWarning();
                 Object.entries(FAILURE_TESTS).filter(([, regexp]) => regexp.test(cleanLine))
                     .forEach(([name]) => failureTests.add(`${name}: ${cleanLine}`));
                 successTests = successTests.filter(name => !SUCCESS_TESTS[name].test(cleanLine));
                 if (successTests.length === 0) child.kill('SIGTERM');
             }
         }
+        flushWarning();
     };
     await Promise.all([
         testOutputStream(child, 'stdout'),
@@ -84,8 +94,9 @@ void (async (): Promise<void> => {
     try {
 
         // Run the test
-        console.log('🔍 Running Homebridge plugin test...');
-        await testPlugin();
+        await core.group(
+            '🔍 Running Homebridge plugin test...',
+            testPlugin);
 
         // If this point is reached, the test was successful
         console.log('🟢 Test successful');
@@ -93,7 +104,6 @@ void (async (): Promise<void> => {
     } catch (err) {
 
         // The test failed so log the command output
-        console.log(rawOutput);
         console.error('🔴 Test failed');
 
         // Extract and log the individual error messages
