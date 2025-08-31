@@ -27,8 +27,9 @@ const ANSI_ESCAPE = /\x1B\[[0-9;]*[msuK]/g;
 
 // ANSI colour codes used for warnings and errors (ignoring Homebridge 2.0 info)
 // eslint-disable-next-line no-control-regex
-const ANSI_WARNING = /\x1B\[3[13]m.*\S.*\x1B/;
-const HOMEBRIDGE2_WARNING = /^(> |NOTICE TO USERS AND PLUGIN DEVELOPERS)/;
+const ANSI_WARNING = /\x1B\[3[13]m/;
+const BLANK_WARNING = /^(?:\[[^\]]+\])?\s*$/;
+const HOMEBRIDGE2_WARNING = /^(?:NOTICE TO USERS AND PLUGIN DEVELOPERS|> )/;
 
 // Length of time to wait
 const TIMEOUT_HOMEBRIDGE_MS = 15 * 1000; // 15 seconds
@@ -64,7 +65,9 @@ async function testPlugin(): Promise<void> {
 
                 // Check for any of the success or failure log messages
                 const cleanLine = line.replace(ANSI_ESCAPE, '');
-                if ((ANSI_WARNING.test(line) || streamName === 'stderr') && !HOMEBRIDGE2_WARNING.test(cleanLine)) {
+                if ((ANSI_WARNING.test(line) || streamName === 'stderr')
+                    && !HOMEBRIDGE2_WARNING.test(cleanLine)
+                    && (currentWarning.length || !BLANK_WARNING.test(cleanLine))) {
                     currentWarning.push(cleanLine);
                 } else flushWarning();
                 Object.entries(FAILURE_TESTS).filter(([, regexp]) => regexp.test(cleanLine))
