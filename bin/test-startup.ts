@@ -27,7 +27,7 @@ const ANSI_ESCAPE = /\x1B\[[0-9;]*[msuK]/g;
 
 // ANSI colour codes used for warnings and errors (ignoring Homebridge 2.0 info)
 // eslint-disable-next-line no-control-regex
-const ANSI_WARNING = /\x1B\[3[13]m/;
+const ANSI_WARNING = /\x1B\[3[13]m.*\S/;
 const HOMEBRIDGE2_WARNING = /^(> |NOTICE TO USERS AND PLUGIN DEVELOPERS)/;
 
 // Length of time to wait
