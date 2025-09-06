@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.6.2] - 2025-09-06
+### Changed
+* Updated dependencies to latest versions.
+
 ## [v1.6.1] - 2025-08-23
 ### Changed
 * Updated dependencies to latest versions.
@@ -803,7 +807,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.2...HEAD
+[v1.6.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.1...v1.6.2
 [v1.6.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.0...v1.6.1
 [v1.6.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.5...v1.6.0
 [v1.5.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.5.4...v1.5.5
