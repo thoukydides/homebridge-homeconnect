@@ -2,6 +2,7 @@
 /* eslint-disable max-len */
 import globals from 'globals';
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -21,7 +22,7 @@ for (const srcFile of srcFiles) {
 }
 
 // ESLint options
-export default tseslint.config(
+export default defineConfig(
     // ESLint recommended rules
     eslint.configs.recommended,
     // typescript-eslint strict and stylistic rules
