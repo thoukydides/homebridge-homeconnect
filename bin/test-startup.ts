@@ -61,7 +61,8 @@ async function testPlugin(): Promise<void> {
         for await (const chunk of stream) {
             assert(typeof chunk === 'string');
             for (const line of chunk.split(LINE_SPLIT_REGEX)) {
-                if (line.trim().length) console.log(line);
+                if (!line.trim().length) continue;
+                console.log(line);
 
                 // Check for any of the success or failure log messages
                 const cleanLine = line.replace(ANSI_ESCAPE, '');
