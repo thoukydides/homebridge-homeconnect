@@ -290,7 +290,8 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.SportShoes.SportShoes.SportShoes' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.WashAndDry.60'
   | 'LaundryCare.WasherDryer.Program.Wool.Wool.Wool' // (undocumented)
-  | 'LaundryCare.WasherDryer.Program.WashAndDry.90';
+  | 'LaundryCare.WasherDryer.Program.WashAndDry.90'
+  | 'Unknown';
 
 // Program option enumerated types
 export type AromaSelect = // (undocumented)
