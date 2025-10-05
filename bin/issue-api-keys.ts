@@ -37,7 +37,8 @@ const IGNORE_VALUES: string[] = [
     'unknown',
     "''",
     "'Micha: Caffè Grande'",
-    "'Unknown'"
+    "'Unknown'",
+    'DoorStates' // (reported instead of DoorState*)
 ];
 
 // Prepare an Octokit client
