@@ -449,9 +449,14 @@ export class APIKeyValuesLog {
         try {
             const persist = await this.persist.getItem(this.persistKey) as APIKeyValuePersist | undefined;
             if (persist?.version && semver.satisfies(PLUGIN_VERSION, `^${persist.version}`)) {
+                const canReport = semver.eq(PLUGIN_VERSION, persist.version);
                 const haid = 'Restored from previous session';
-                for (const { group, key, report } of persist.keys)   this.addKey(haid, group, undefined, key, report ?? false, true);
-                for (const { key, value, report } of persist.values) this.addValue(haid, key, value, report ?? false, true);
+                for (const { group, key, report } of persist.keys) {
+                    this.addKey(haid, group, undefined, key, canReport && Boolean(report), true);
+                }
+                for (const { key, value, report } of persist.values) {
+                    this.addValue(haid, key, value, canReport && Boolean(report), true);
+                }
                 this.log.debug(`Restored ${plural(persist.keys.length, 'key')} and ${plural(persist.values.length, 'value')}`);
             }
         } catch (err) {
