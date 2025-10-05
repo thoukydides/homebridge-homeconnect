@@ -37,7 +37,6 @@ const IGNORE_VALUES: string[] = [
     'unknown',
     "''",
     "'Micha: Caffè Grande'",
-    "'Unknown'",
     'DoorStates' // (reported instead of DoorState*)
 ];
 
