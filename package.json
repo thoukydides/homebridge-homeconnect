@@ -73,7 +73,7 @@
     "type": "module",
     "main": "dist/index.js",
     "engines": {
-        "node": "^24.4.0 || ^22.18.0 || ^20.19.4",
+        "node": "^24.9.0 || ^22.19.0 || ^20.19.5",
         "homebridge": "^1.11.0 || ^2.0.0-beta.0"
     },
     "dependencies": {
@@ -98,7 +98,7 @@
         "@types/semver": "^7.7.1",
         "browserify": "^17.0.1",
         "copyfiles": "^2.4.1",
-        "eslint": "^9.36.0",
+        "eslint": "^9.37.0",
         "esmify": "^2.1.1",
         "globals": "^16.4.0",
         "homebridge": "^2.0.0-beta.30",
