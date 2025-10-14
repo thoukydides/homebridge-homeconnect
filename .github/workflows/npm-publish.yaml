@@ -1,6 +1,7 @@
 name: Publish Package to npmjs
 permissions:
   contents: read
+  id-token: write
 
 on:
   release:
@@ -24,5 +25,3 @@ jobs:
 
       - name: Publish the module
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
