@@ -74,7 +74,7 @@ const MIREK_COLD =  50; // 20,000K = 100% (clear blue sky)
 // Enumerated colour temperatures to percentages
 const COLOUR_TEMP_PERCENTAGE: Partial<Record<ColorTemperature, number>> = {
     [ColorTemperature.Warm]:          0,
-    [ColorTemperature.WarnNeutral]:  25,
+    [ColorTemperature.WarmNeutral]:  25,
     [ColorTemperature.Neutral]:      50,
     [ColorTemperature.ColdNeutral]:  75,
     [ColorTemperature.Cold]:        100

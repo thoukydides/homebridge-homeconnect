@@ -752,7 +752,7 @@ export enum AssistantTrigger {
 export enum ColorTemperature {
     Individual              = 'Cooking.Hood.EnumType.ColorTemperature.custom',
     Warm                    = 'Cooking.Hood.EnumType.ColorTemperature.warm', // 0%
-    WarnNeutral             = 'Cooking.Hood.EnumType.ColorTemperature.warmToNeutral',
+    WarmNeutral             = 'Cooking.Hood.EnumType.ColorTemperature.warmToNeutral',
     Neutral                 = 'Cooking.Hood.EnumType.ColorTemperature.neutral',
     ColdNeutral             = 'Cooking.Hood.EnumType.ColorTemperature.neutralToCold',
     Cold                    = 'Cooking.Hood.EnumType.ColorTemperature.cold' // 100%
