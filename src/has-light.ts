@@ -8,6 +8,7 @@ import { Constructor, Optional, assertIsDefined, assertIsNumber } from './utils.
 import { AmbientLightColor, ColorTemperature } from './api-value-types.js';
 import { SettingKV } from './api-value.js';
 import { SerialisedOperation } from './serialised.js';
+import { ConstraintsNumber } from './api-types.js';
 
 // HomeKit HSV representation of a colour
 export interface HSV {
@@ -330,6 +331,7 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
 
             // Convert from reciprocal megakelvin to Home Connect's percentage
             service.getCharacteristic(this.Characteristic.ColorTemperature)
+                .setProps({ minValue: MIREK_COLD, maxValue: MIREK_WARM })
                 .onSet(this.onSetNumber(value => updateLightHC({ mirek: value })));
         }
 
@@ -340,14 +342,15 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             const percent = 100.0 * (mirek - MIREK_WARM) / (MIREK_COLD - MIREK_WARM);
             if (settings.colourtempperc) {
                 // Set a custom colour temperature
-                this.log.info(`SET Light ${type} ${percent}% cold (${mirek}MK^-1)`);
+                const percentConstrained = constrainNumber(percent, settings.colourtempperc.constraints);
+                this.log.info(`SET Light ${type} ${percentConstrained}% cold (${mirek}MK^-1)`);
                 if (settings.colourtempenum) await this.device.setSetting(settings.colourtempenum.key, ColorTemperature.Individual);
-                await this.device.setSetting(settings.colourtempperc.key, percent);
+                await this.device.setSetting(settings.colourtempperc.key, percentConstrained);
             } else if (settings.colourtempenum) {
                 // Map to the closest supported colour temperature
                 const values = settings.colourtempenum.constraints?.allowedvalues ?? [];
                 const best = values.reduce<[ColorTemperature, number] | null>((acc, value) => {
-                    if (COLOUR_TEMP_PERCENTAGE[value]) {
+                    if (COLOUR_TEMP_PERCENTAGE[value] !== undefined) {
                         const error = Math.abs(percent - COLOUR_TEMP_PERCENTAGE[value]);
                         if (!acc || error < acc[1]) return [value, error];
                     }
@@ -450,6 +453,15 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             };
         }
     };
+}
+
+// Apply constraints to a numeric value
+function constrainNumber(value: number, constraints?: ConstraintsNumber): number {
+    const { min, max, stepsize } = constraints ?? {};
+    if (min !== undefined && value < min) value = min;
+    if (max !== undefined && max < value) value = max;
+    if (stepsize) value = Math.round(value / stepsize) * stepsize;
+    return value;
 }
 
 // Limit the types of light for different appliances
