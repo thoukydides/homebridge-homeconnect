@@ -108,9 +108,20 @@ async function reviewIssue(issue: Issue, addComment = false): Promise<string[] |
     if (!countTypes(issueTypes)) {
         core.warning(`⚠️ No API keys/values in log file: ${html_url}`);
         if (addComment) {
-            const body = '⚠️ This does **not** appear to be an API key/value report. The supplied log file does not list any types.';
+            /* eslint-disable max-len */
+            const body =
+`⚠️ **This does not appear to be an API key/value report.**
+
+The supplied log file does not contain any API types that the plugin has identified as unrecognised or mismatched. Reports filed using this template are processed automatically for API schema updates only. Therefore, this issue will be closed automatically.
+
+If appropriate, please open a new issue using one of the templates below:
+* **🐞 [Bug Report](https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=bug_report.yml)** for anything not working as expected
+* **🚧 [Feature Request](https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=feature_request.yml)** for proposed improvements or new functionality
+
+Using the correct template ensures your issue includes the information required for a timely response and resolution.`;
+            /* eslint-enable max-len */
             await octokit.rest.issues.createComment({ ...repo, issue_number, body });
-            await octokit.rest.issues.setLabels({ ...repo, issue_number, labels: [{ name: LABEL_INVALID }] });
+            await octokit.rest.issues.update({ ...repo, issue_number, state: 'closed', labels: [LABEL_INVALID] });
         }
         return;
     }

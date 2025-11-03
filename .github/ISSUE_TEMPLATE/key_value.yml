@@ -1,5 +1,5 @@
-name: 🚫 Do NOT raise general issues using this template
-description: "This is only for reports generated using links displayed in the plugin log file."
+name: 🚫 [AUTOMATED] Internal API report; not for user issues
+description: "⚠️ Not for manual use. This template is reserved for automated API diagnostics. Submissions created manually will be closed without investigation."
 title: HomeConnect API unexpected values or mismatched types
 labels: ["api keys/values"]
 
