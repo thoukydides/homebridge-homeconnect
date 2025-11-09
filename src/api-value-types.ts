@@ -480,6 +480,7 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.Heating'
   | 'LaundryCare.Common.EnumType.ProcessPhase.IntermediateSpin'
   | 'LaundryCare.Common.EnumType.ProcessPhase.IronDryReached'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.LessIroning'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Prewash'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Rinsing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener'
@@ -544,9 +545,10 @@ export type SpinSpeed =
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlMedium'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlOff';
 export type Stains = // (undocumented)
-    'LaundryCare.Washer.EnumType.Stains.Off'
+    'LaundryCare.Washer.EnumType.Stains.Blood'
+  | 'LaundryCare.Washer.EnumType.Stains.ButterOil'
+  | 'LaundryCare.Washer.EnumType.Stains.Off'
   | 'LaundryCare.Washer.EnumType.Stains.On'
-  | 'LaundryCare.Washer.EnumType.Stains.Blood'
   | 'LaundryCare.Washer.EnumType.Stains.Perspiration';
 export type VarioPerfect =
     'LaundryCare.Common.EnumType.VarioPerfect.Off'
