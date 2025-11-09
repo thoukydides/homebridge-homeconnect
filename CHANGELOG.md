@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.6.6] - 2025-11-09
+### Changed
+* **Dryer/Washer/WasherDryer:** Added undocumented program options. (#369)
+* Updated dependencies to latest versions.
+
 ## [v1.6.5] - 2025-10-22
 ### Fixed
 * **Hood:** Apply functional light colour temperature percentage constraints. (#366)
@@ -822,7 +827,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.5...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.6...HEAD
+[v1.6.6]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.5...v1.6.6
 [v1.6.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.4...v1.6.5
 [v1.6.4]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.3...v1.6.4
 [v1.6.3]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.2...v1.6.3
