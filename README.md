@@ -5,12 +5,12 @@
 
 # homebridge-homeconnect
 
-[![npm](https://badgen.net/npm/v/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
-[![npm](https://badgen.net/npm/dt/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
-[![npm](https://badgen.net/npm/dw/homebridge-homeconnect)](https://www.npmjs.com/package/homebridge-homeconnect)
+[![npm](https://img.shields.io/npm/v/homebridge-homeconnect?label=Latest)](https://www.npmjs.com/package/homebridge-homeconnect)
+[![npm](https://img.shields.io/npm/dt/homebridge-homeconnect?logo=npm&label=Downloads)](https://www.npmjs.com/package/homebridge-homeconnect)
+[![npm](https://img.shields.io/npm/dw/homebridge-homeconnect?label=)](https://www.npmjs.com/package/homebridge-homeconnect)
 [![Build and Lint](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml/badge.svg)](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/build.yml)
 [![Test](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/test.yml/badge.svg)](https://github.com/thoukydides/homebridge-homeconnect/actions/workflows/test.yml)
-[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-purple?color=%23491F59&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
 A [Homebridge](https://github.com/homebridge/homebridge) plugin that connects [Home Connect](https://www.home-connect.com) appliances to [Apple HomeKit](https://www.apple.com/home-app/).
 
