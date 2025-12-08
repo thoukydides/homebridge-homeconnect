@@ -7,10 +7,13 @@ export const HOMEBRIDGE_LANGUAGES = {
         'Bulgaria': 'bg-BG'
     },
     'Chinese (Simplified)': {
-        'China': 'zh-CN',
-        'Hong Kong': 'zh-HK',
-        'Taiwan, Province of China': 'zh-TW'
+        'China': 'zh-CN'
     },
+    'Chinese (Traditional)': {
+        'Hong Kong': 'zh-HK',
+        'Taiwan': 'zh-TW'
+    },
+    
     'Croatian': {
         'Croatia': 'hr-HR'
     },
