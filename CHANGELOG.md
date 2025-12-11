@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.6.7] - 2025-12-11
+### Changed
+* **AirConditioner/CleaningRobot/CoffeeMaker/CookProcessor/Dishwasher/Dryer/Freezer/FridgeFreezer/Hob/Hood/Microwave/Oven/Refrigerator/WarmingDrawer/Washer/WasherDryer/WineCooler:** Added undocumented program options. (#372)
+* Updated dependencies to latest versions.
+
 ## [v1.6.6] - 2025-11-09
 ### Changed
 * **Dryer/Washer/WasherDryer:** Added undocumented program options. (#369)
@@ -827,7 +832,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2025 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.6...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.7...HEAD
+[v1.6.7]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.6...v1.6.7
 [v1.6.6]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.5...v1.6.6
 [v1.6.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.4...v1.6.5
 [v1.6.4]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.3...v1.6.4
