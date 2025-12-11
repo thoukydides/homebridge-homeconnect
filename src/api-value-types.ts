@@ -803,6 +803,7 @@ export interface OptionValues {
     'BSH.Common.Option.RemainingProgramTime'?:                                      number;
     'BSH.Common.Option.RemainingProgramTimeEstimationState'?:                       EstimationState; // (undocumented)
     'BSH.Common.Option.RemainingProgramTimeIsEstimated'?:                           boolean;
+    'BSH.Common.Option.SmartEnergyService.SmartStartEnabled'?:                      boolean; // (undocumented)
     'BSH.Common.Option.StartInRelative'?:                                           number;
     'BSH.Common.Option.WaterForecast'?:                                             number; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                          CleaningMode;
