@@ -61,6 +61,8 @@ export interface FormItemCommon<Type = SchemaProgramOptionValue> {
     placeholder?:           Type;
     condition?: {
         functionBody:       string;
+    } | {
+        functionBodyRaw:    string;
     };
     expandable?:            boolean;
     expanded?:              boolean;
@@ -475,7 +477,7 @@ export class ConfigSchema extends ConfigSchemaData {
 
         // Add per-program options to the form
         for (const program of appliance.programs) {
-            const programCondition = `${keyConditionPrefix}.key == "${program.key}"`;
+            const programCondition = `${keyConditionPrefix}.key === "${program.key}"`;
 
             // Add form items to customise the schema for this program
             for (let option of program.options ?? []) {
@@ -606,7 +608,7 @@ export class ConfigSchema extends ConfigSchemaData {
             }
         };
         const programListCondition = {
-            functionBody: 'try { return model.addprograms == "custom"; } catch (err) { return true; }'
+            functionBody: 'try { return model.addprograms === "custom"; } catch (err) { return true; }'
         };
         const form: FormItem[] = [{
             key:            'addprograms',
@@ -626,7 +628,7 @@ export class ConfigSchema extends ConfigSchemaData {
 
         // Delete the programs member or set an empty array if appropriate
         // (workaround homebridge-config-ui-x / angular6-json-schema-form)
-        const code = 'switch (model.addprograms) { case "none": model.programs = []; break; case "auto": delete model.programs; break; }';
+        const code = 'switch (model.addprograms) { case "none": Object.assign(model, { programs: []}); break; case "auto": delete model.programs; break; }';
 
         return { schema, form, code };
     }
