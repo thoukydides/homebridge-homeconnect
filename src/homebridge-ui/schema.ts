@@ -34,6 +34,7 @@ export interface JSONSchemaValue {
     type:                   SchemaProgramOptionType;
     default?:               SchemaProgramOptionValue;
     enum?:                  SchemaProgramOptionValue[];
+    enumNames?:             string[];
     oneOf?:                 JSONSchemaEnumValue<SchemaProgramOptionValue>[];
     minimum?:               number;
     maximum?:               number;
@@ -165,11 +166,15 @@ export class ConfigSchema extends ConfigSchemaData {
             },
             simulator: {
                 type:       'boolean',
+                enum:       [true, false],
+                enumNames:  ['Simulated Appliances (test server)', 'Physical Appliances (production server)'],
                 default:    false,
                 required:   true
             },
             china: {
                 type:       'boolean',
+                enum:       [true, false],
+                enumNames:  ['China', 'Worldwide (excluding China)'],
                 default:    false,
                 required:   true
             },
@@ -183,11 +188,7 @@ export class ConfigSchema extends ConfigSchemaData {
         const form: FormItem[] = [{
             key:            'simulator',
             title:          'Client Type',
-            type:           'select',
-            titleMap: {
-                false:      'Physical Appliances (production server)',
-                true:       'Simulated Appliances (test server)'
-            }
+            type:           'select'
         }, {
             type:           'help',
             helpvalue:      '<div class="help-block">Create an application via the <a href="https://developer.home-connect.com/applications">Home Connect Developer Program</a>, ensuring that:'
@@ -229,10 +230,6 @@ export class ConfigSchema extends ConfigSchemaData {
             title:          'Server Location',
             description:    'Separate Home Connect API servers are operated within China.',
             type:           'select',
-            titleMap: {
-                false:      'Worldwide (excluding China)',
-                true:       'China'
-            },
             condition: {
                 functionBody: 'return !model.simulator'
             }
@@ -301,16 +298,16 @@ export class ConfigSchema extends ConfigSchemaData {
                 items: [{
                     key:            `names.prefix.${key}`,
                     title:          title,
-                    default:        enabledByDefault,
-                    description:    `e.g. "<i>${name}</i>"`,
+                    default:        enabledByDefault
+                }, {
+                    type:           'help',
+                    helpvalue:      `e.g. "<i>${name}</i>"`,
                     condition: {
                         functionBody:   `return !model.names.prefix.${key};`
                     }
                 }, {
-                    key:            `names.prefix.${key}`,
-                    title:          title,
-                    default:        enabledByDefault,
-                    description:    `e.g. "<i>${appliance.name} ${name}</i>"`,
+                    type:           'help',
+                    helpvalue:      `e.g. "<i>${appliance.name} ${name}</i>"`,
                     condition: {
                         functionBody:   `return model.names.prefix.${key};`
                     }
@@ -432,11 +429,7 @@ export class ConfigSchema extends ConfigSchemaData {
             items: [{
                 key:            `${keyArrayPrefix}.selectonly`,
                 title:          'Action',
-                type:           'select',
-                titleMap: {
-                    false:      'Start program',
-                    true:       'Select program'
-                }
+                type:           'select'
             }, {
                 key:            `${keyArrayPrefix}.key`,
                 title:          'Appliance Program'
@@ -477,7 +470,10 @@ export class ConfigSchema extends ConfigSchemaData {
 
         // Add per-program options to the form
         for (const program of appliance.programs) {
-            const programCondition = `${keyConditionPrefix}.key === "${program.key}"`;
+            // HERE - Need to avoid '.' in program.key
+            // (workaround homebridge-config-ui-x / @ng-formworks/core)
+            const escapedProgramKey = program.key.replaceAll('.', '\\u002E');
+            const programCondition = `${keyConditionPrefix}.key === "${escapedProgramKey}"`;
 
             // Add form items to customise the schema for this program
             for (let option of program.options ?? []) {
@@ -596,6 +592,8 @@ export class ConfigSchema extends ConfigSchemaData {
                         },
                         selectonly: {
                             type:       'boolean',
+                            enum:       [true, false],
+                            enumNames:  ['Select program', 'Start program'],
                             required:   true,
                             default:    false
                         },
@@ -627,7 +625,7 @@ export class ConfigSchema extends ConfigSchemaData {
         }];
 
         // Delete the programs member or set an empty array if appropriate
-        // (workaround homebridge-config-ui-x / angular6-json-schema-form)
+        // (workaround homebridge-config-ui-x / @ng-formworks/core)
         const code = 'switch (model.addprograms) { case "none": Object.assign(model, { programs: []}); break; case "auto": delete model.programs; break; }';
 
         return { schema, form, code };
