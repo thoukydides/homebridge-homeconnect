@@ -470,7 +470,6 @@ export class ConfigSchema extends ConfigSchemaData {
 
         // Add per-program options to the form
         for (const program of appliance.programs) {
-            // HERE - Need to avoid '.' in program.key
             // (workaround homebridge-config-ui-x / @ng-formworks/core)
             const escapedProgramKey = program.key.replaceAll('.', '\\u002E');
             const programCondition = `${keyConditionPrefix}.key === "${escapedProgramKey}"`;
