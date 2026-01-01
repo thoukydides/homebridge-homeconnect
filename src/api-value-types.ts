@@ -505,6 +505,7 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Rinsing'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.RinsingSpinning'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.RinsingWithAquaSensor'
+  | 'LaundryCare.Washer.EnumType.ProcessPhase.Softening'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Washer.EnumType.ProcessPhase.Washing';
 export type ProgramMode = // (undocumented)
