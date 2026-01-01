@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2026 Alexander Thoukydides
+// Copyright © 2023-2026 Alexander Thoukydides
 
 import { Logger } from 'homebridge';
 
