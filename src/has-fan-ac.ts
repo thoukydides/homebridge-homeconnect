@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2025 Alexander Thoukydides
+// Copyright © 2026 Alexander Thoukydides
 
 import { Characteristic, Service, WithUUID } from 'homebridge';
 

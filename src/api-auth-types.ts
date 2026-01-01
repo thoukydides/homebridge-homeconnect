@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023-2025 Alexander Thoukydides
+// Copyright © 2023-2026 Alexander Thoukydides
 
 // Authorisation scopes
 export type Scope =       'Monitor'                 | 'Control'                 | 'Settings'                | 'Images'

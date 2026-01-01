@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2024-2025 Alexander Thoukydides
+// Copyright © 2024-2026 Alexander Thoukydides
 
 import * as core from '@actions/core';
 import assert from 'node:assert';

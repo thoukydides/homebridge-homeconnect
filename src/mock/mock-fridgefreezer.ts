@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023 Alexander Thoukydides
+// Copyright © 2026 Alexander Thoukydides
 
 import { SettingKV, StatusKV } from '../api-value.js';
 import { DoorState, PowerState, DoorStateRefrigeration } from '../api-value-types.js';

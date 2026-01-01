@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2023-2025 Alexander Thoukydides
+// Copyright © 2023-2026 Alexander Thoukydides
 
 import { PluginConfig } from '@homebridge/plugin-ui-utils/ui.interface';
 import { Logger, PlatformConfig } from 'homebridge';

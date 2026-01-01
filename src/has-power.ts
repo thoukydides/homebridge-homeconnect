@@ -1,5 +1,5 @@
 // Homebridge plugin for Home Connect home appliances
-// Copyright © 2019-2025 Alexander Thoukydides
+// Copyright © 2019-2026 Alexander Thoukydides
 
 import { HAPStatus, Perms, Service } from 'homebridge';
 
