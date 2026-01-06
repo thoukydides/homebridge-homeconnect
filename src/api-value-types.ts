@@ -817,12 +817,12 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                             AromaSelect; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                              BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:                  BeanContainerSelection;
-    'ConsumerProducts.CoffeeMaker.Option.BeverageSize'?:	                          BeverageSize; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.BeverageSize'?:	                        BeverageSize; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeveragesRemaining'?:                      number; // (undocumented)
-    'ConsumerProducts.CoffeeMaker.Option.Coarsness.Recommendation'?:	              CoarsnessExtended; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.Coarsness.Recommendation'?:	            CoarsnessExtended; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.Coarsness'?:                               CoarsnessExtended; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeMilkRatio'?:                         CoffeeMilkRatio;
-    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength.Recommendation'?:	          CoffeeStrength; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength.Recommendation'?:	        CoffeeStrength; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeStrength'?:                          CoffeeStrength; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature.Recommendation'?:        CoffeeTemperature; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature'?:                       CoffeeTemperature;
@@ -859,6 +859,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.FlexSpray.FrontRight'?:                             FlexSprayIntensity; // (undocumented)
     'Dishcare.Dishwasher.Option.FlexSpray.Type'?:                                   FlexSprayType; // (undocumented)
     'Dishcare.Dishwasher.Option.HalfLoad'?:                                         boolean;
+    'Dishcare.Dishwasher.Option.HolidayMode'?:                                      boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.HygienePlus'?:                                      boolean;
     'Dishcare.Dishwasher.Option.IntensivZone'?:                                     boolean;
     'Dishcare.Dishwasher.Option.LearningDishwasher.CleaningLevel'?:                 LearningDishwasherCleaningLevel; // (undocumented)
