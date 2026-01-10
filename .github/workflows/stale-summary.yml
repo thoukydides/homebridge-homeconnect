@@ -1,6 +1,7 @@
 name: AI Stale Issue Summary
 permissions:
   issues: write
+  contents: read
   models: read
 
 on:
@@ -11,106 +12,15 @@ on:
       issue_number:
         description: 'Issue number'
         required: true
-        type: string
-
-env:
-    ISSUE_NUMBER: ${{ inputs.issue_number || github.event.issue.number }}
+        type: number
+      dry_run:
+        description: 'Dry run (do not modify issue)'
+        type: boolean
+        default: false
 
 jobs:
-  summarise:
-    if: (github.event_name == 'issues' && github.event.label.name == 'stale') || github.event_name == 'workflow_dispatch'
-
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Fetch context
-        id: context
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const repo_issue = {
-                owner:          context.repo.owner,
-                repo:           context.repo.repo,
-                issue_number:   parseInt(process.env.ISSUE_NUMBER, 10)
-            };
-            const { data: issue } = await github.rest.issues.get(repo_issue);
-            const comments = await github.paginate(
-                github.rest.issues.listComments,
-                repo_issue
-            );
-
-            // GitHub models free tier limits input context to 8000 tokens (approx 32K characters)
-            const maxBody = 5000;
-            comments.splice(0, comments.length - 10); // (last 10 comments only)
-            const maxComment = 24000 / comments.length;
-            const truncate = (body, limit) => body.length < limit ? body : body.substring(0, limit / 2) + '\n...\n' + body.substring(body.length - limit / 2);
-
-            return {
-                title:      issue.title,
-                user:       issue.user.login,
-                body:       truncate(issue.body, maxBody),
-                comments:   comments.map(comment => ({
-                    user:       comment.user.login,
-                    body:       truncate(comment.body, maxComment)
-                }))
-            };
-
-      - name: Generate summary
-        id: ai
-        uses: actions/ai-inference@v1
-        with:
-          model: openai/gpt-4.1-mini
-          max-tokens: 4000
-          prompt: |
-            You are an AI assistant helping @thoukydides manage a technically sophisticated open-source project.
-
-            A GitHub issue has been marked as stale due to inactivity. Generate a concise summary to help determine if it remains relevant.
-
-            CRITICAL REQUIREMENTS:
-            1. Be technically specific; include exact version numbers, device models, error codes, API endpoints when mentioned
-            2. Identify blockers clearly; distinguish between "waiting for user to test v1.2.3" vs "waiting for Home Connect API feature" vs "needs more debugging info"
-            3. Track resolution status; if the issue appears resolved, state that explicitly
-            4. Keep each bullet point to 1-2 sentences maximum
-            5. Use past tense for completed actions, present tense for current state
-      
-            AVOID:
-            - Generic summaries like "user reported a problem"
-            - Repeating the issue title
-            - Speculation about what might help
-            - Unnecessary politeness or filler text
-
-            OUTPUT FORMAT (follow exactly, including the HTML comment):
-            > <!-- ai-stale-summary -->
-            > Hi @${{ fromJson(steps.context.outputs.result).user }}. I am an AI assistant marking this issue as stale.
-            > 
-            > **AI Generated Issue Summary:**
-            > - [Specific device/feature and the exact problem or request]
-            > - [Key debugging steps, version changes, or technical discoveries]
-            > - [Current blocker or status; be explicit about who needs to do what]
-            > 
-            > **Next Steps:**
-            > - Please confirm if this issue remains relevant by commenting here.
-            > - If there is no activity within 7 days, this issue may be closed automatically.
-            > 
-            > Thank you for your contribution!
-
-            If the current status is genuinely unclear from the discussion, replace the third bullet with: "The current status is unclear from recent discussion."
-      
-            CONTEXT (structured JSON - extract facts only, do not invent):
-            ```json
-            ${{ steps.context.outputs.result }}
-            ```
-
-      - name: Post comment
-        if: steps.ai.outputs.response != ''
-        uses: actions/github-script@v7
-        env:
-          COMMENT: ${{ steps.ai.outputs.response }}
-        with:
-          script: |
-            await github.rest.issues.createComment({
-                owner:        context.repo.owner,
-                repo:         context.repo.repo,
-                issue_number: parseInt(process.env.ISSUE_NUMBER, 10),
-                body:         process.env.COMMENT
-            })
+  ai-stale-summary:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'stale'
+    uses: thoukydides/github-actions/.github/workflows/stale-summary.yml@v1
+    with:
+      issue_number: ${{ github.event.issue.number || fromJson(inputs.issue_number) }}

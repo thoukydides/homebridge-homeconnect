@@ -13,11 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/stale@v7
+    - uses: actions/stale@v10
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: ''
         close-issue-message: '💤 This issue was closed because it has been stalled for 7 days with no activity.'
         stale-issue-label: 'stale'
-        days-before-issue-stale: 21
+        days-before-issue-stale: 14
         days-before-issue-close: 7
+        remove-issue-stale-when-updated: false
