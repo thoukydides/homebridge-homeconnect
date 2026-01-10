@@ -16,7 +16,7 @@ on:
       dry_run:
         description: 'Dry run (do not modify issue)'
         type: boolean
-        default: false
+        default: true
 
 jobs:
   ai-stale-summary:
