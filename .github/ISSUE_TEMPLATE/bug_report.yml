@@ -68,10 +68,12 @@ body:
         - Operating System type and version (output of `lsb_release -d` on Linux)
         - Node.js version (output of `node -v`)
         - Homebridge version (output of `npm -g ls homebridge`)
+        - Homebridge UI version (output of `npm -g list homebridge-config-ui-x`)
       placeholder: |
         - OS: e.g. Ubuntu 24.04.1 LTS or macOS Ventura 13.5
         - Node: e.g. v22.15.0
-        - Homebridge: e.g. 1.8.5
+        - Homebridge: e.g. 1.11.1
+        - Homebridge UI: e.g. 5.14.0
     validations:
       required: true
   
