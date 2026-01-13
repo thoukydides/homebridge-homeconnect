@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.8.0] - 2026-01-13
+### Changed
+* Simultaneous sets of multiple program `Switch` services are coalesced to minimise Home Connect API errors. (#378)
+* Updated dependencies to latest versions.
+
 ## [v1.7.2] - 2026-01-06
 ### Changed
 * **Dishwasher:** Added undocumented program option. (#377)
@@ -853,7 +858,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.7.2...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.8.0...HEAD
+[v1.8.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.7.2...v1.8.0
 [v1.7.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.7.1...v1.7.2
 [v1.7.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.7.0...v1.7.1
 [v1.7.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.6.8...v1.7.0
