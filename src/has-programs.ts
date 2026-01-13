@@ -14,12 +14,24 @@ import { CommandKey, OptionDefinitionKV, OptionKey, OptionValue,
 import { Value } from './api-types.js';
 import { ApplianceProgramConfig, ConfigAppliances } from './config-types.js';
 import { SchemaProgramOption } from './homebridge-ui/schema-data.js';
+import { SerialisedOperation } from './serialised.js';
 
 // A program configuration that has passed sanity checks
 export interface CheckedProgramConfig extends Omit<ApplianceProgramConfig, 'options'> {
     key:        ProgramKey;
     options?:   OptionValues;
 }
+
+// Coalesced HomeKit program control values
+// (unusual encoding used to detect conflicting requests)
+export interface UpdateProgramHCValue {
+    startCurrent?:  true;
+    startNamed?:    { name: string, key: ProgramKey, options: OptionValues };
+    selectNamed?:   { name: string, key: ProgramKey, options: OptionValues };
+    stop?:          true;
+    pause?:         boolean;
+}
+type UpdateProgramHC = SerialisedOperation<UpdateProgramHCValue>;
 
 // Relative time option keys that can be configured as absolute times
 const RELATIVE_OPTION_KEY = ['BSH.Common.Option.StartInRelative', 'BSH.Common.Option.FinishInRelative'] as const;
@@ -64,12 +76,16 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             await this.initPrograms();
             this.device.on('BSH.Common.Root.SelectedProgram', programKey => this.updateSelectedProgram(programKey));
 
+            // Control the programs
+            const updateHC = this.makeSerialisedObject<UpdateProgramHCValue>(
+                value => this.updateProgramHC(value));
+
             // Add the appropriate services depending on the configuration
             const config = this.config.programs;
             if (config && Array.isArray(config)) {
-                this.addConfiguredPrograms(config);
+                this.addConfiguredPrograms(config, updateHC);
             } else {
-                this.addAllPrograms();
+                this.addAllPrograms(updateHC);
             }
 
             // Add start, stop, pause, and resume if supported by the appliance
@@ -84,7 +100,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 else if (supportsResume)             this.log.info('Can resume (but not pause) programs');
 
                 // Add start, stop, pause, and resume support as appropriate
-                this.addActiveProgramControl(supportsPause, supportsResume);
+                this.addActiveProgramControl(supportsPause, supportsResume, updateHC);
             }
         }
 
@@ -363,7 +379,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Add all supported programs
-        addAllPrograms(): void {
+        addAllPrograms(updateProgramHC: UpdateProgramHC): void {
             // Convert the API response to the configuration format
             const config = this.programs.map(program => ({
                 name:   this.simpleName(program.name, program.key),
@@ -371,11 +387,11 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             }));
 
             // Add a service for each supported program
-            this.addPrograms(config);
+            this.addPrograms(config, updateProgramHC);
         }
 
         // Add the programs specified in the configuration file
-        addConfiguredPrograms(config: ApplianceProgramConfig[]): void {
+        addConfiguredPrograms(config: ApplianceProgramConfig[], updateProgramHC: UpdateProgramHC): void {
             // Treat a single invalid entry as being an empty array
             // (workaround for homebridge-config-ui-x / angular6-json-schema-form)
             if (config.length === 1 && !config[0]?.name && !config[0]?.key) {
@@ -422,7 +438,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             }
 
             // Add a service for each configured program
-            this.addPrograms(checkedConfig);
+            this.addPrograms(checkedConfig, updateProgramHC);
         }
 
         // Test whether a program key is supported by the appliance
@@ -481,7 +497,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Add a list of programs
-        addPrograms(programs: CheckedProgramConfig[]): void {
+        addPrograms(programs: CheckedProgramConfig[], updateProgramHC: UpdateProgramHC): void {
             // Add a service for each program
             this.log.info(`Adding services for ${programs.length} programs`);
             const fields = programs.map(program => [program.name || '?', `(${program.key})`, program.selectonly ? 'select only' : '']);
@@ -495,7 +511,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     this.log.info(`        ${key}=${options[key]}`);
 
                 // Add the service for this program
-                const service = this.addProgram(program);
+                const service = this.addProgram(program, updateProgramHC);
                 this.programService.push(service);
 
                 // Link the program services
@@ -522,8 +538,36 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             }
         }
 
+        // Deferred update of Home Connect state from HomeKit characteristics
+        async updateProgramHC(value: UpdateProgramHCValue): Promise<void> {
+            // Guard against multiple Switch services being set simultaneously
+            if (1 < Object.keys(value).length) {
+                throw new Error(`Conflicting program control requests from HomeKit: ${formatList(Object.keys(value))}`);
+            }
+
+            // Control the program as required
+            if (value.startCurrent) {
+                this.log.info('START Program');
+                await this.device.startProgram();
+            } else if (value.startNamed) {
+                const { name, key, options } = value.startNamed;
+                this.log.info(`START Program '${name}' (${key})`);
+                await this.device.startProgram(key, options);
+            } else if (value.selectNamed) {
+                const { name, key, options } = value.selectNamed;
+                this.log.info(`SELECT Program '${name}' (${key})`);
+                await this.device.setSelectedProgram(key, options);
+            } else if (value.stop) {
+                this.log.info('STOP Program');
+                await this.device.stopProgram();
+            } else if (value.pause !== undefined) {
+                this.log.info(`${value.pause ? 'PAUSE' : 'RESUME'} Program`);
+                await this.device.pauseProgram(value.pause);
+            }
+        }
+
         // Add a single program
-        addProgram({ name, key, selectonly, options }: CheckedProgramConfig): Service {
+        addProgram({ name, key, selectonly, options }: CheckedProgramConfig, updateProgramHC: UpdateProgramHC): Service {
             // Add a switch service for this program
             const service = this.makeService(this.Service.Switch, name, `program v2 ${name}`);
 
@@ -546,19 +590,13 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     if (selectonly) {
                         // Select this program and its options
                         if (value) {
-                            this.log.info(`SELECT Program '${name}' (${key})`);
-                            await this.device.setSelectedProgram(key, fixedOptions);
+                            await updateProgramHC({ selectNamed: { name, key, options: fixedOptions }});
                             setImmediate(() => service.updateCharacteristic(this.Characteristic.On, false));
                         }
                     } else {
                         // Attempt to start or stop the program
-                        if (value) {
-                            this.log.info(`START Program '${name}' (${key})`);
-                            await this.device.startProgram(key, fixedOptions);
-                        } else {
-                            this.log.info(`STOP Program '${name}' (${key})`);
-                            await this.device.stopProgram();
-                        }
+                        if (value) await updateProgramHC({ startNamed: { name, key, options: fixedOptions }});
+                        else await updateProgramHC({ stop: true });
                     }
                 }));
 
@@ -579,7 +617,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Add the ability to pause and resume programs
-        addActiveProgramControl(supportsPause = false, supportsResume = false): void {
+        addActiveProgramControl(supportsPause = false, supportsResume = false, updateProgramHC: UpdateProgramHC): void {
             // Make the (Operation State) active On characteristic writable
             // (status update is performed by the normal Operation State handler)
             assertIsDefined(this.activeService);
@@ -589,15 +627,12 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     // Use pause and resume if supported in the current state
                     if (!value && supportsPause
                         && this.device.isOperationState('DelayedStart', 'Run', 'ActionRequired')) {
-                        this.log.info('PAUSE Program');
-                        await this.device.pauseProgram(true);
+                        await updateProgramHC({ pause: true });
                     } else if (value && supportsResume && this.device.isOperationState('Pause')) {
-                        this.log.info('RESUME Program');
-                        await this.device.pauseProgram(false);
+                        await updateProgramHC({ pause: false });
                     } else {
-                        this.log.info(`${value ? 'START' : 'STOP'} Program`);
-                        if (value) await this.device.startProgram();
-                        else await this.device.stopProgram();
+                        if (value) await updateProgramHC({ startCurrent: true });
+                        else await updateProgramHC({ stop: true });
                     }
                 }));
         }
