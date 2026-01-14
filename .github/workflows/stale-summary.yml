@@ -20,8 +20,12 @@ on:
 
 jobs:
   ai-stale-summary:
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'stale'
-    uses: thoukydides/github-actions/.github/workflows/stale-summary.yml@v1
-    with:
-      issue_number: ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
-      dry_run: ${{ inputs.dry_run }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: AI stale issue summary
+      if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'stale'
+      uses: thoukydides/action-stale-issue-comment@v1
+      with:
+        issue_number: ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
+        dry_run: ${{ inputs.dry_run }}
