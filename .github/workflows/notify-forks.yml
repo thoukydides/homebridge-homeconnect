@@ -1,0 +1,20 @@
+name: Downstream Fork Notification
+permissions:
+  contents: read
+  actions: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 8 * * *'
+
+jobs:
+  downstream-forks:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Notify of new commits to downstream forks
+      uses: thoukydides/action-notify-downstream-forks@v1
+      with:
+        email_smtp_url: ${{ secrets.EMAIL_SMTP_URL }}
+        email_to: ${{ secrets.EMAIL_TO }}
