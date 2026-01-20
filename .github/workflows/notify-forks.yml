@@ -1,7 +1,5 @@
 name: Downstream Fork Notification
-permissions:
-  contents: read
-  actions: write
+permissions: {}
 
 on:
   workflow_dispatch:
@@ -18,3 +16,4 @@ jobs:
       with:
         email_smtp_url: ${{ secrets.EMAIL_SMTP_URL }}
         email_to: ${{ secrets.EMAIL_TO }}
+        github_token: ${{ secrets.PAT_NOTIFY_FORKS }}
