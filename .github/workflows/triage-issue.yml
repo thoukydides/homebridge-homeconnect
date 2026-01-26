@@ -20,6 +20,7 @@ on:
 
 jobs:
   test:
+    if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
     runs-on: ubuntu-latest
     outputs:
       name: Plugin Test (${{ steps.context.outputs.version }})
@@ -63,6 +64,7 @@ jobs:
             /(?<!\w)v?\d+\.\d+\.\d+/
 
   api-status:
+    if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
     runs-on: ubuntu-latest
     outputs:
       name: Home Connect API status
@@ -119,6 +121,7 @@ jobs:
             return entries.slice(0, process.env.MAX_ENTRIES);
 
   homebridge-releases:
+    if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
     runs-on: ubuntu-latest
     outputs:
       name: Homebridge recent releases
@@ -132,6 +135,7 @@ jobs:
           max_tokens: 1000
 
   homebridge-ui-releases:
+    if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
     runs-on: ubuntu-latest
     outputs:
       name: Homebridge UI recent releases
