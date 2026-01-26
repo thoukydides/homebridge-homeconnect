@@ -75,6 +75,7 @@
         "notitle",
         "npmjs",
         "optionless",
+        "PIPESTATUS",
         "Pitsos",
         "PKCE",
         "postbuild",
