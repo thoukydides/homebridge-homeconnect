@@ -35,6 +35,9 @@ jobs:
       LOG_FILE: ${{ github.workspace }}/test.log
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - name: Use Node.js ${{ matrix.node-version }} 
         uses: actions/setup-node@v4
         with:
