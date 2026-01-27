@@ -178,7 +178,7 @@ jobs:
 
   collate:
     runs-on: ubuntu-latest
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && (contains(needs.*.result, 'success') || contains(needs.*.result, 'failure')) }}
     needs:
     - plugin-test
     - homeconnect-api-status
