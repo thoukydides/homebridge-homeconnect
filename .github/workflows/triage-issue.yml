@@ -20,11 +20,13 @@ on:
         default: true
 
 jobs:
-  test:
+  plugin-test:
     if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
     runs-on: ubuntu-latest
     outputs:
-      name: Plugin Test (${{ steps.context.outputs.version }})
+      name: Plugin Test
+      name_md: >- # markdown
+        Plugin Test [${{ steps.context.outputs.version_description }}](${{ steps.context.outputs.version_url }})
       value: ${{ steps.context.outputs.value }}
       prompt: |-
         Automated test of HEAD (latest development version) start-up against Homebridge and the live Home Connect API.
@@ -67,11 +69,13 @@ jobs:
           log_regexps: |
             /(?<!\w)v?\d+\.\d+\.\d+/
 
-  api-status:
+  homeconnect-api-status:
     if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
     runs-on: ubuntu-latest
     outputs:
       name: Home Connect API status
+      name_md: >- # markdown
+        Home Connect [API status](https://homeconnect.thouky.co.uk)
       prompt: |-
         Live monitoring of Home Connect cloud API availability and errors.
         States prefixed with 'maybe-' indicate uncertainty about fault location, not lower severity.
@@ -87,10 +91,12 @@ jobs:
           STATUS=$(curl -s -H "Authorization: $AUTHORIZATION" "$URL")
           printf 'status=%s\n' "$STATUS" >> "$GITHUB_OUTPUT"
 
-  api-changelog:
+  homeconnect-api-changelog:
     runs-on: ubuntu-latest
     outputs:
       name: Home Connect API changelog
+      name_md: >- # markdown
+        Home Connect [API changelog](https://developer.home-connect.com/changelog)
       prompt: |-
         Official changelog for the Home Connect cloud API.
         Only relevant if the issue could be caused by API changes (new appliance types, new programs/options, API behaviour changes).
@@ -129,6 +135,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       name: Homebridge recent releases
+      name_md: >- # markdown
+        [Homebridge](https://github.com/homebridge/homebridge) releases
       value: ${{ steps.fetch.outputs.releases }}
     steps:
       - name: Retrieve Homebridge releases
@@ -143,6 +151,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       name: Homebridge UI recent releases
+      name_md: >- # markdown
+        [Homebridge UI](https://github.com/homebridge/homebridge-config-ui-x) releases
       value: ${{ steps.fetch.outputs.releases }}
     steps:
       - name: Retrieve Homebridge UI releases
@@ -157,6 +167,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       name: HAP-NodeJS recent releases
+      name_md: >- # markdown
+        [HAP-NodeJS](https://github.com/homebridge/HAP-NodeJS) releases
       value: ${{ steps.fetch.outputs.releases }}
     steps:
       - name: Retrieve HAP-NodeJS releases
@@ -169,9 +181,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !cancelled() }}
     needs:
-    - test
-    - api-status
-    - api-changelog
+    - plugin-test
+    - homeconnect-api-status
+    - homeconnect-api-changelog
     - homebridge-releases
     - homebridge-ui-releases
     - hap-nodejs-releases
