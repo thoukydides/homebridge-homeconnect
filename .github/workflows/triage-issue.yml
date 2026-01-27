@@ -26,11 +26,10 @@ jobs:
     outputs:
       name: Plugin Test
       name_md: >- # markdown
-        Plugin Test [${{ steps.context.outputs.version_description }}](${{ steps.context.outputs.version_url }})
+        Plugin Test ${{ steps.context.outputs.version_md }}
       value: ${{ steps.context.outputs.value }}
       prompt: |-
         Automated test of HEAD (latest development version) start-up against Homebridge and the live Home Connect API.
-        This tests basic start-up and connectivity.
         If the test only shows routine start-up with no related commits or errors, assess applicability based on whether start-up testing can diagnose the specific issue type.
         Ignore any errors that might be due to appliances being off-line.
         Check for commit messages or log highlights that might indicate fixes or changes related to the reported issue.
