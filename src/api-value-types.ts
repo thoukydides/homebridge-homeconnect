@@ -241,6 +241,7 @@ export type ProgramKey =
   | 'LaundryCare.Washer.Program.DelicatesSilk'
   | 'LaundryCare.Washer.Program.Dessous'
   | 'LaundryCare.Washer.Program.DownDuvet.Duvet'
+  | 'LaundryCare.Washer.Program.DrumClean.DrumClean70.DrumClean70' // (undocumented)
   | 'LaundryCare.Washer.Program.DrumClean'
   | 'LaundryCare.Washer.Program.EasyCare'
   | 'LaundryCare.Washer.Program.HygienePlus' // (undocumented)
