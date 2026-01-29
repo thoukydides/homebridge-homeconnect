@@ -99,35 +99,18 @@ jobs:
       prompt: |-
         Official changelog for the Home Connect cloud API.
         Only relevant if the issue could be caused by API changes (new appliance types, new programs/options, API behaviour changes).
-      value: ${{ steps.fetch.outputs.result }}
+      value: ${{ steps.fetch.outputs.releases }}
     steps:
       - name: Retrieve Home Connect API changelog
         id: fetch
-        uses: actions/github-script@v7
-        env:
-          URL: https://developer.home-connect.com/changelog
-          MAX_ENTRIES: 10
+        uses: thoukydides/action-releases-context@v1
         with:
-          script: | # javascript
-            // Fetch the changelog
-            const response = await fetch(process.env.URL);
-            if (!response.ok) throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
-            const page = await response.text();
-
-            // Extract the individual changelog entries from the page
-            const CHANGELOG_ENTRY_RE = /<div class="field__item">.*?<header[^>]*>(.*?)<\/header>\s*<div[^>]*>(.*?)<\/div>/gs
-            const matches = [...page.matchAll(CHANGELOG_ENTRY_RE)];
-            if (matches.length === 0) throw new Error('Regex did not match any changelog entries');
-
-            // Tidy up and return the changelog entries
-            const entries = matches.map(([, heading, body]) => ({
-                heading:    heading
-                    .replaceAll(/<[^>]+>/g, '').trim(),                     // Remove HTML tags
-                body:       body
-                    .replace(/<a [^>]*href="[^"]*"[^>]*>(.*?)<\/a>/g, '$1') // Remove links
-                    .replaceAll(/\s+/g, ' ').trim()                         // Collapse whitespace
-            }));
-            return entries.slice(0, process.env.MAX_ENTRIES);
+          html_url: https://developer.home-connect.com/changelog
+          html_regexps: |
+            /<(\/?)header[^>]*>/i '<$1h1>'
+            /<\/article>.*$/s
+          md_release_regexp: |
+            /^#\s+(?<date>\w+ \d\d?, \d\d\d\d)\s*$/m
 
   homebridge-releases:
     if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
