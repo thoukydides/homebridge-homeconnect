@@ -126,7 +126,6 @@ jobs:
         uses: thoukydides/action-releases-context@v1
         with:
           repository: homebridge/homebridge
-          max_tokens: 1000
 
   homebridge-ui-releases:
     if: github.event_name != 'issues' || !contains(github.event.issue.labels.*.name, 'api keys/values')
@@ -142,7 +141,6 @@ jobs:
         uses: thoukydides/action-releases-context@v1
         with:
           repository: homebridge/homebridge-config-ui-x
-          max_tokens: 1000
 
   hap-nodejs-releases:
     if: false
