@@ -3,21 +3,64 @@
 
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { components } from '@octokit/openapi-types';
+import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 import { readFile } from 'node:fs/promises';
 
+// Possible outcomes
+type Status = 'done' | 'updates' | 'invalid';
+interface ContextList {
+    count:                      number;
+    keys_or_values:             string[];
+}
+interface Context {
+    latest_release_version?:    string;
+    user_reported_version?:     string;
+    required_key_value_updates: {
+        documented_in_api_docs: ContextList;
+        undocumented:           ContextList;
+    };
+}
+
+// Discrepancy report for one or more issues
+interface IssueDiscrepancies {
+    version?:       string;     // Reported plugin version (single issues only)
+    valid:          number;     // Number of valid issues
+    updates:        number;     // Number of issues requiring updates
+    discrepancies:  APITypes;   // All identified API discrepancies
+}
+
 // Parsed API key/value types
-type APIInterface = Map<string, string>;
-type APIInterfaces = Map<string, APIInterface>;
-type APILiteral = Set<string>; // (string literal or enum)
-type APILiterals = Map<string, APILiteral>;
+type APIInterface   = Map<string, string>;
+type APIInterfaces  = Map<string, APIInterface>;
+type APILiteral     = Set<string>; // (string literal or enum)
+type APILiterals    = Map<string, APILiteral>;
 interface APITypes {
     interfaces: APIInterfaces;
     literals:   APILiterals;
 }
 
 // Issue description returned by GitHub REST API
-type Issue = Omit<components['schemas']['issue'], 'performed_via_github_app'>;
+type Issue = RestEndpointMethodTypes['issues']['get']['response']['data'];
+
+// An API document
+interface APIDocument {
+    url:        string;
+    title:      string;
+    content:    string;
+}
+
+// Home Connect API documentation URLs
+const API_DOCUMENTATION_URLS = [
+    'https://api-docs.home-connect.com/programs-and-options/',
+    'https://api-docs.home-connect.com/states/',
+    'https://api-docs.home-connect.com/settings/',
+    'https://api-docs.home-connect.com/events/',
+    'https://api-docs.home-connect.com/commands/'
+];
+
+// Pattern to match API documentation anchor links
+// eslint-disable-next-line max-len
+const API_DOCUMENTATION_REGEXP = /<h\d>(?<title>(?:(?!<\/?h\d>).)*?)<a data-testid="LinkingSymbol-anchor" href="(?:[^"#]*)#(?<anchor>[^"#]*)" (?:(?!<\/?h\d>).)*?<\/h\d>/gs;
 
 // Source file defining API types
 const SOURCE_FILE = './src/api-value-types.ts';
@@ -27,7 +70,6 @@ const PACKAGE_JSON_FILE = './package.json';
 
 // Issue labels
 const LABEL_KEY_VALUE = 'api keys/values';
-const LABEL_INVALID = 'invalid';
 
 // API values and types to ignore when reported (they are likely to be spurious)
 const IGNORE_VALUES: string[] = [
@@ -50,40 +92,46 @@ const { repo } = github.context; // (uses env.GITHUB_REPOSITORY)
 const sourceFile = await readFile(SOURCE_FILE, 'utf8');
 const sourceTypes = parseTypes(SOURCE_FILE, sourceFile);
 const sourceVersion = await getCurrentVersion();
-core.info(`Current plugin version: ${sourceVersion}`);
+debugLog(`Current plugin version: ${sourceVersion}`);
+
+// Retrieve API documentation
+const apiDocuments = await fetchAPIDocumentation(API_DOCUMENTATION_URLS);
 
 // Action depends on whether a particular issue was specified
-const issue_number = github.context.issue.number as number | undefined;
-if (issue_number === undefined) {
-    // Check all issues with the appropriate label, but do not comment on them
-    const summary: string[] = [];
-    for await (const response of octokit.paginate.iterator(octokit.rest.issues.listForRepo, {
-        ...repo, labels: LABEL_KEY_VALUE, state: 'all', sort: 'created', direction: 'asc'
-    })) {
-        for (const issue of response.data) {
-            const { number, state } = issue;
-            core.startGroup(`Issue #${number}`);
-            const issueSummary = await reviewIssue(issue, false);
-            if (issueSummary) {
-                summary.push(...issueSummary.map(line => `${line} // #${number} [${state}]`));
-            }
-            core.endGroup();
-        }
-    }
-
-    // Display a final summary
-    core.info('='.repeat(80));
-    if (summary.length) {
-        core.info(`🔴 ${summary.length} key/value updates required:`);
-        for (const line of summary.sort()) core.info(line);
-    } else {
-        core.notice('🟢 No updates required');
-    }
+const issue_number = Number(process.env.ISSUE_NUMBER ?? '');
+let result: IssueDiscrepancies;
+if (issue_number) {
+    // Triage mode (single issue)
+    const issue = (await octokit.rest.issues.get({ ...repo, issue_number })).data;
+    result = checkSingleIssue(issue);
 } else {
-    // Check a single issue and add a comment
-    const { data } = await octokit.rest.issues.get({ ...repo, issue_number });
-    reviewIssue(data, true);
+    // Interactive use (batch mode)
+    const issues = await octokit.paginate(octokit.rest.issues.listForRepo, {
+        ...repo, labels: LABEL_KEY_VALUE, state: 'all', sort: 'created', direction: 'asc'
+    });
+    result = checkMultipleIssues(issues);
+    core.info(`Processed ${result.valid} of ${issues.length} '${LABEL_KEY_VALUE}' issues`);
 }
+
+// Generate the comment and overall status
+const apiDocumentation = findDocumentation(result.discrepancies);
+const comment = makeComment(result, apiDocumentation.documents);
+const status: Status = result.updates ? 'updates' : result.valid ? 'done' : 'invalid';
+const contextList = (keys_or_values: string[]): ContextList => ({ count: keys_or_values.length, keys_or_values });
+const context: Context = {
+    latest_release_version:     sourceVersion,
+    user_reported_version:      result.version,
+    required_key_value_updates: {
+        documented_in_api_docs: contextList(apiDocumentation.found),
+        undocumented:           contextList(apiDocumentation.missing)
+    }
+};
+
+// Output results for GitHub Actions workflow
+core.setOutput('status',    status);
+core.setOutput('context',   context);
+core.setOutput('comment',   comment);
+core.info(`Comment:\n${comment}`);
 
 // Read the current source code version
 async function getCurrentVersion(): Promise<string> {
@@ -92,57 +140,29 @@ async function getCurrentVersion(): Promise<string> {
     return packageJSON.version;
 }
 
-// Review a single issue
-async function reviewIssue(issue: Issue, addComment = false): Promise<string[] | undefined> {
-    const { number: issue_number, html_url, title, state, body } = issue;
-    core.info(`Issue #${issue_number}: ${title} [${state}]`);
-    core.info(html_url);
+// Draft a comment for issue discrepancies
+function makeComment(issueDiscrepancies: IssueDiscrepancies, documents: APIDocument[]): string {
+    const { version, valid, discrepancies } = issueDiscrepancies;
 
-    // Parse the issue into its component fields
-    const issueFields = parseIssueBody(body ?? '');
-    core.info(`Appliance(s): ${issueFields.get('Home Connect Appliance(s)') ?? '(not specified)'}`);
-
-    // Parse the types from the provided log file
-    const issueTypes = parseTypes(`#${issue_number}`, issueFields.get('Log File') ?? '');
-    const countTypes = (types: APITypes): number => types.interfaces.size + types.literals.size;
-    if (!countTypes(issueTypes)) {
-        core.warning(`⚠️ No API keys/values in log file: ${html_url}`);
-        if (addComment) {
-            /* eslint-disable max-len */
-            const body =
-`⚠️ **This does not appear to be an API key/value report.**
-
-The supplied log file does not contain any API types that the plugin has identified as unrecognised or mismatched. Reports filed using this template are processed automatically for API schema updates only. Therefore, this issue will be closed automatically.
-
-If appropriate, please open a new issue using one of the templates below:
-* **🐞 [Bug Report](https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=bug_report.yml)** for anything not working as expected
-* **🚧 [Feature Request](https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=feature_request.yml)** for proposed improvements or new functionality
-
-Using the correct template ensures your issue includes the information required for a timely response and resolution.`;
-            /* eslint-enable max-len */
-            await octokit.rest.issues.createComment({ ...repo, issue_number, body });
-            await octokit.rest.issues.update({ ...repo, issue_number, state: 'closed', labels: [LABEL_INVALID] });
-        }
-        return;
+    // First check whether the issue was a valid report
+    if (!valid) {
+        core.warning('⚠️ No API keys/values in log file');
+        return '';
     }
 
-    // Generate a comment to add to the issue
+    // Generate a comment for valid reports
     let comment = 'Thank you for taking the time to report this issue. 👍';
     comment += '\n\n---\n\n';
 
     // Check for discrepancies between the current source and the issue log
-    const discrepancies = checkDiscrepancies(sourceTypes, issueTypes);
-    let summary: string[] | undefined;
-    if (countTypes(discrepancies)) {
-        core.notice(`🔴 Updates required to API key/value types: ${html_url}`);
+    if (0 < discrepancies.interfaces.size || 0 < discrepancies.literals.size) {
+        core.notice('🔴 Updates required to API key/value types');
         comment += '🔴 The following key/value updates appear to be required:\n';
-        summary = [];
         if (discrepancies.interfaces.size) {
             comment += '\nInterface | Property | Type\n--- | --- | ---\n';
             for (const [interfaceName, fields] of sortMapByKey(discrepancies.interfaces)) {
                 const sortedFields = sortMapByKey(fields);
                 for (const [key, type] of sortedFields) {
-                    summary.push(`interface ${interfaceName} { ${key}?: ${type}; }`);
                     comment += [interfaceName, key, type].map(v => `\`${v}\``).join(' | ') + '\n';
                 }
             }
@@ -152,31 +172,78 @@ Using the correct template ensures your issue includes the information required 
             for (const [typeName, values] of sortMapByKey(discrepancies.literals)) {
                 const sortedValues = Array.from(values).sort((a, b) => a.localeCompare(b));
                 for (const value of sortedValues) {
-                    summary.push(`enum ${typeName} = ${value}`);
                     comment += [typeName, value].map(v => `\`${v}\``).join(' | ') + '\n';
                 }
             }
         }
-        comment += '\nThese should be included in the next release.';
+
+        // Check whether there is any relevant API documentation
+        if (documents.length) {
+            comment += '\nThe following Home Connect API documentation might be relevant:\n';
+            for (const doc of documents) {
+                comment += `* [${doc.title}](${doc.url})\n`;
+            }
+        } else {
+            comment += '\nThe Home Connect API documentation does not appear to include anything relevant.\n';
+        }
     } else {
         comment += '🟢 The current source code appears to include all required key/value updates.';
     }
 
     // Warn if the report is not for the current plugin version
-    const issueVersion = issueFields.get('Plugin Version');
-    if (issueVersion && issueVersion !== sourceVersion) {
-        core.info(`Not current plugin version (${issueVersion} ≠ ${sourceVersion})`);
+    if (version && version !== sourceVersion) {
+        core.warning(`💡 Not current plugin version (${version} ≠ ${sourceVersion})`);
         comment += '\n\n---\n\n';
         comment += '💡 This report is for an out-of-date version of the plugin.';
-        comment += ` The current version is \`${sourceVersion}\`, but the issue is for \`${issueVersion}\`.`;
+        comment += ` The current version is \`${sourceVersion}\`, but the issue is for \`${version}\`.`;
     }
 
-    // Add a comment to the issue, if required
-    core.info(`Comment:\n${comment.replace(/^/gm, '    ')}`);
-    if (addComment) {
-        await octokit.rest.issues.createComment({ ...repo, issue_number, body: comment });
+    // Return the final comment
+    return comment;
+}
+
+// Check multiple issues
+function checkMultipleIssues(issues: Issue[]): IssueDiscrepancies {
+    const interfaces = new Map<string, APIInterface>();
+    const literals   = new Map<string, APILiteral>();
+    let valid = 0, updates = 0;
+    for (const issue of issues) {
+        // Check this issue
+        const issueData = checkSingleIssue(issue);
+
+        // Merge the issue data into the overall discrepancies
+        valid   += issueData.valid;
+        updates += issueData.updates;
+        for (const [interfaceName, fields] of issueData.discrepancies.interfaces) {
+            const existing = interfaces.get(interfaceName) ?? new Map<string, string>();
+            for (const [key, type] of fields) existing.set(key, type);
+            interfaces.set(interfaceName, existing);
+        }
+        for (const [typeName, values] of issueData.discrepancies.literals) {
+            const existing = literals.get(typeName) ?? new Set<string>();
+            for (const value of values) existing.add(value);
+            literals.set(typeName, existing);
+        }
     }
-    return summary;
+    return { valid, updates, discrepancies: { interfaces, literals } };
+}
+
+// Check a single issue
+function checkSingleIssue(issue: Issue): IssueDiscrepancies {
+    const { number: issueNumber, html_url: issue_url, title, state, body } = issue;
+    core.info(`Issue #${issueNumber}: ${title} [${state}]`);
+    debugLog(issue_url);
+
+    // Parse the issue into its component fields
+    const issueFields = parseIssueBody(body ?? '');
+    const issueTypes = parseTypes(`#${issueNumber}`, issueFields.get('Log File') ?? '');
+    const version = issueFields.get('Plugin Version');
+    const valid = (0 < issueTypes.interfaces.size || 0 < issueTypes.literals.size) ? 1 : 0;
+
+    // Check for discrepancies between the current source and the issue log
+    const discrepancies = checkDiscrepancies(sourceTypes, issueTypes);
+    const updates = (0 < discrepancies.interfaces.size || 0 < discrepancies.literals.size) ? 1 : 0;
+    return { version, valid, updates, discrepancies };
 }
 
 // Parse the issue body
@@ -193,7 +260,7 @@ function parseIssueBody(body: string): Map<string, string> {
         } else if (currentValue) {
             currentValue.push(line);
         } else {
-            core.debug(`Ignoring line: ${line}`);
+            core.info(`Ignoring line: ${line}`);
         }
     }
 
@@ -229,7 +296,7 @@ function parseTypes(description: string, source: string): APITypes {
             if (key && type) properties.set(key.trim(), type.trim());
         }
         if (properties.size) interfaces.set(interfaceName, properties);
-        if (core.isDebug()) core.debug(`Parsed interface '${interfaceName}': ${JSON.stringify(Object.fromEntries(properties))}`);
+        debugLog(`Parsed interface '${interfaceName}': ${JSON.stringify(Object.fromEntries(properties))}`);
     }
 
     // Process literal-like type definitions
@@ -241,7 +308,7 @@ function parseTypes(description: string, source: string): APITypes {
             .filter(Boolean)
         );
         if (values.size) literals.set(typeName, values);
-        if (core.isDebug()) core.debug(`Parsed literal-like '${typeName}': ${[...values].join(', ')}`);
+        debugLog(`Parsed literal-like '${typeName}': ${[...values].join(', ')}`);
     };
 
     // Parse enum type definitions (treating them as string literals)
@@ -258,10 +325,10 @@ function parseTypes(description: string, source: string): APITypes {
             const aliasLiteral = literals.get(aliasName);
             if (aliasInterface) {
                 interfaces.set(typeName, aliasInterface);
-                if (core.isDebug()) core.debug(`Parsed interface alias '${typeName}' = '${aliasName}'`);
+                debugLog(`Parsed interface alias '${typeName}' = '${aliasName}'`);
             } else if (aliasLiteral) {
                 literals.set(typeName, aliasLiteral);
-                if (core.isDebug()) core.debug(`Parsed literal-like alias '${typeName}' = '${aliasName}'`);
+                debugLog(`Parsed literal-like alias '${typeName}' = '${aliasName}'`);
             }
         } else {
             processLiteralType(match, '|');
@@ -316,4 +383,85 @@ function checkDiscrepancies(sourceTypes: APITypes, issueTypes: APITypes): APITyp
 // Convert a Map to entries and sort lexicographically by key
 function sortMapByKey<T>(map: Map<string, T>): [string, T][] {
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+}
+
+// Attempt to find documents that include a particular string
+function findDocumentation(discrepancies: APITypes): { documents: APIDocument[], found: string[], missing: string[] } {
+    // Lists of keys/values to search for
+    const interfaceKeys = [...discrepancies.interfaces.values()].flatMap(p => [...p.keys()]);
+    const enumLiterals = [...discrepancies.literals.values()].flatMap(l => [...l]);
+    const strippedValues = [...interfaceKeys, ...enumLiterals].map(l => l.replace(/^'|'$/g, ''));
+    const uniqueValues = [...new Set(strippedValues)].sort();
+    if (!uniqueValues.length) return { documents: [], found: [], missing: [] };
+
+    // Build a regular expression and find matching documents
+    const uniqueValuesRe = createIdentifierMatcher(uniqueValues);
+    const documents = apiDocuments.filter(d => uniqueValuesRe.test(d.content));
+
+    // Check whether an identifier occurs in any of the selected documents
+    const isDocumented = (value: string): boolean => {
+        const valueRe = createIdentifierMatcher([value]);
+        return documents.some(d => valueRe.test(d.content));
+    };
+
+    // Return the results lexicographically sorted
+    return {
+        documents:  documents.sort((a, b) => a.title.localeCompare(b.title)),
+        found:      uniqueValues.filter(v =>  isDocumented(v)).sort(),
+        missing:    uniqueValues.filter(v => !isDocumented(v)).sort()
+    };
+}
+
+// Create a regular expression to test whether identifiers are included
+function createIdentifierMatcher(patterns: string[]): RegExp {
+    if (!patterns.length) return /\b\B/; // (never match if no identifiers)
+    const escaped = patterns.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    return new RegExp(`\\b(${escaped.join('|')})\\b`);
+}
+
+// Retrieve the API documentation
+async function fetchAPIDocumentation(urls: string[]): Promise<APIDocument[]> {
+    const documents: APIDocument[] = [];
+    for (const url of urls) {
+        debugLog(`Fetching API documentation from ${url}...`);
+        try {
+            // Retrieve the page
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const page = await response.text();
+
+            // Split the page into sections by anchor
+            const matches = [...page.matchAll(API_DOCUMENTATION_REGEXP)];
+            if (matches.length) {
+                matches.forEach((match, index) => {
+                    const { title, anchor } = match.groups ?? {};
+                    if (!title || !anchor) throw Error('Missing capture groups in API documentation regexp');
+                    const startIndex = match.index + match.length;
+                    const endIndex = matches[index + 1]?.index ?? page.length;
+                    documents.push({
+                        title,
+                        url:        new URL(anchor, url).href,
+                        content:    page.substring(startIndex, endIndex)
+                    });
+                });
+            } else {
+                core.warning(`No anchors found in ${url}; treating entire page as a single document`);
+                documents.push({
+                    title:      new URL(url).pathname.split('/').filter(Boolean).pop() ?? url,
+                    url,
+                    content:    page
+                });
+            }
+        } catch (err) {
+            const message = err instanceof Error ? err.message : String(err);
+            core.error(`Failed to fetch API documentation from ${url}: ${message}`);
+        }
+    }
+    core.info(`Retrieved ${documents.length} documents from ${urls.length} pages`);
+    return documents;
+}
+
+// Debug logging
+function debugLog(message: string): void {
+    if (core.isDebug()) core.debug(message);
 }
