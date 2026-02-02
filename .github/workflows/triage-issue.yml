@@ -267,12 +267,13 @@ jobs:
       - name: AI issue triage
         uses: thoukydides/action-triage-issue-comment@v1
         with:
-          gemini_api_key:   ${{ secrets.GEMINI_API_KEY_TRIAGE }}
-          issue_number:     ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
-          include_comments: ${{ inputs.include_comments != false }}
-          guidance_file:    ./.github/prompts/issue-quality-guidance.md
-          needs:            ${{ needs.general-collate.outputs.needs }}
-          dry_run:          ${{ inputs.dry_run }}
+          gemini_api_key:       ${{ secrets.GEMINI_API_KEY_TRIAGE }}
+          issue_number:         ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
+          include_comments:     ${{ inputs.include_comments != false }}
+          guidance_file:        ./.github/prompts/issue-quality-guidance.md
+          guidance_file_tokens: 650
+          needs:                ${{ needs.general-collate.outputs.needs }}
+          dry_run:              ${{ inputs.dry_run }}
 
   keys-values-comment:
     needs:
