@@ -1,0 +1,43 @@
+name: AI Comment Triage
+run-name: >-
+  AI Comment Triage:
+  ${{  github.event.issue.title  || github.event_name }}
+  #${{ github.event.issue.number || inputs.issue_number || '-' }}
+  (${{ github.event.comment.id   || inputs.comment_id   || '-' }})
+permissions:
+  issues: write
+  contents: read
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number'
+        required: true
+        type: number
+      comment_id:
+        description: 'Comment identifier'
+        required: false
+        type: number
+      dry_run:
+        description: 'Dry run (do not modify issue)'
+        type: boolean
+        default: true
+
+jobs:
+  triage-comment:
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.issue.pull_request }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: AI issue comment triage
+        uses: thoukydides/action-triage-comment-comment@v1
+        with:
+          gemini_api_key:       ${{ secrets.GEMINI_API_KEY_TRIAGE3 }}
+          issue_number:         ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
+          comment_id:           ${{ github.event.comment.id || fromJson(inputs.comment_id) }}
+          guidance_file:        ./.github/prompts/issue-quality-guidance.md
+          guidance_file_tokens: 650
+          dry_run:              ${{ inputs.dry_run }}
