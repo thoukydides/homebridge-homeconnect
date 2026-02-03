@@ -1,9 +1,11 @@
 {
     "recommendations": [
         "amazonwebservices.amazon-q-vscode",
+        "bierner.markdown-mermaid",
         "bierner.markdown-preview-github-styles",
         "dbaeumer.vscode-eslint",
         "github.vscode-github-actions",
+        "harrydowning.yaml-embedded-languages",
         "streetsidesoftware.code-spell-checker",
         "tyriar.sort-lines"
     ]

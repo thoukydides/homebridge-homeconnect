@@ -27,7 +27,7 @@ on:
         default: true
 
 jobs:
-  triage-logic:
+  triage-logic-pre:
     outputs:
       issue_number: ${{ steps.triage.outputs.issue_number }}
       type:         ${{ steps.triage.outputs.type }}
@@ -37,7 +37,6 @@ jobs:
         id: triage
         uses: actions/github-script@v7
         with:
-          result-encoding: string
           script: | #javascript
             core.debug(`Event payload:\n${JSON.stringify(context.payload, null, 4)}`);
 
@@ -63,13 +62,51 @@ jobs:
                     [context.eventName, `#${issue_number || '—'}`, type],
                 ]).write();
 
+  triage-logic-post:
+    outputs:
+      issue_number: ${{ needs.triage-logic-pre.outputs.issue_number }}
+      type:         ${{ steps.triage.outputs.result }}
+      labels_set:   ${{ steps.triage.outputs.labels_set }}
+      close_issue:  ${{ steps.triage.outputs.close_issue }}
+    needs:
+      - triage-logic-pre
+      - keys-values-validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine triage comment type
+        id: triage
+        uses: actions/github-script@v7
+        env:
+          PRE_TYPE: ${{ needs.triage-logic-pre.outputs.type }}
+          STATUS:   ${{ needs.keys-values-validate.outputs.status }}
+        with:
+          result-encoding: string
+          script: | #javascript
+            const type = process.env.PRE_TYPE;
+
+            // If validation failed then process as a general wrong template 
+            if (type === 'keys-values' && process.env.STATUS === 'invalid') {
+                core.setOutput('labels_set',    ['invalid']);
+                core.setOutput('close_issue',   true);
+                return 'general';
+            }
+
+            // Otherwise use the originally selected triage path
+            core.setOutput('close_issue', false);
+            return type;
+
   keys-values-validate:
-    needs: [triage-logic]
-    if: contains(fromJson('["keys-values", "keys-values-batch"]'), needs.triage-logic.outputs.type)
+    needs: [triage-logic-pre]
+    if: contains(fromJson('["keys-values", "keys-values-batch"]'), needs.triage-logic-pre.outputs.type)
     runs-on: ubuntu-latest
     outputs:
+      name:     API Keys/Values Issue Validator
+      value:    ${{ steps.validate.outputs.context }}
+      prompt: |-
+        Automated validation: This issue was filed using the 'HomeConnect API unexpected values' template, but no unrecognised API types were found.
+        This template is only valid when triggered by plugin logs.
+        Treat this as high-confidence evidence that the wrong template was used.
       status:   ${{ steps.validate.outputs.status }}
-      context:  ${{ steps.validate.outputs.context }}
       comment:  ${{ steps.validate.outputs.comment }}
     steps:
       - uses: actions/checkout@v4
@@ -83,12 +120,12 @@ jobs:
         id: validate
         run: npx tsx bin/issue-api-keys.ts
         env:
-          ISSUE_NUMBER: ${{ needs.triage-logic.outputs.issue_number }}
+          ISSUE_NUMBER: ${{ needs.triage-logic-pre.outputs.issue_number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   plugin-test:
-    needs: [triage-logic]
-    if: needs.triage-logic.outputs.type == 'general'
+    needs: [triage-logic-pre]
+    if: needs.triage-logic-pre.outputs.type == 'general'
     runs-on: ubuntu-latest
     outputs:
       name: Plugin Test
@@ -137,8 +174,8 @@ jobs:
             /(?<!\w)v?\d+\.\d+\.\d+/
 
   homeconnect-api-status:
-    needs: [triage-logic]
-    if: needs.triage-logic.outputs.type == 'general'
+    needs: [triage-logic-pre]
+    if: needs.triage-logic-pre.outputs.type == 'general'
     runs-on: ubuntu-latest
     outputs:
       name: Home Connect API status
@@ -159,11 +196,17 @@ jobs:
           STATUS=$(curl -s -H "Authorization: $AUTHORIZATION" "$URL")
           printf 'status=%s\n' "$STATUS" >> "$GITHUB_OUTPUT"
 
-  homeconnect-api-changelog-fetch:
-    needs: [triage-logic]
-    if: needs.triage-logic.outputs.type != 'keys-values-batch'
+  homeconnect-api-changelog:
+    needs: [triage-logic-pre]
+    if: needs.triage-logic-pre.outputs.type != 'keys-values-batch'
     runs-on: ubuntu-latest
     outputs:
+      name: Home Connect API changes
+      name_md: >- # markdown
+        Home Connect [API changes](https://developer.home-connect.com/changelog)
+      prompt: |-
+        Official changelog for the Home Connect cloud API.
+        Only relevant if the issue could be caused by API changes (new appliance types, new programs/options, API behaviour changes).
       value: ${{ steps.fetch.outputs.releases }}
     steps:
       - name: Retrieve Home Connect API changelog
@@ -177,25 +220,9 @@ jobs:
           md_release_regexp: |
             /^#\s+(?<date>\w+ \d\d?, \d\d\d\d)\s*$/m
 
-  homeconnect-api-changelog:
-    needs: [triage-logic, homeconnect-api-changelog-fetch]
-    if: ${{ !cancelled() && needs.homeconnect-api-changelog-fetch.result != 'skipped' && needs.triage-logic.outputs.type == 'general' }}
-    runs-on: ubuntu-latest
-    outputs:
-      name: Home Connect API changes
-      name_md: >- # markdown
-        Home Connect [API changes](https://developer.home-connect.com/changelog)
-      prompt: |-
-        Official changelog for the Home Connect cloud API.
-        Only relevant if the issue could be caused by API changes (new appliance types, new programs/options, API behaviour changes).
-      value: ${{ needs.homeconnect-api-changelog-fetch.outputs.value }}
-    steps:
-      - run: | #shell
-          [[ "${{ needs.homeconnect-api-changelog-fetch.result }}" == "success" ]] || false
-
   homebridge-releases:
-    needs: [triage-logic]
-    if: needs.triage-logic.outputs.type == 'general'
+    needs: [triage-logic-pre]
+    if: needs.triage-logic-pre.outputs.type == 'general'
     runs-on: ubuntu-latest
     outputs:
       name: Homebridge recent releases
@@ -210,8 +237,8 @@ jobs:
           repository: homebridge/homebridge
 
   homebridge-ui-releases:
-    needs: [triage-logic]
-    if: needs.triage-logic.outputs.type == 'general'
+    needs: [triage-logic-pre]
+    if: needs.triage-logic-pre.outputs.type == 'general'
     runs-on: ubuntu-latest
     outputs:
       name: Homebridge UI recent releases
@@ -226,7 +253,7 @@ jobs:
           repository: homebridge/homebridge-config-ui-x
 
   hap-nodejs-releases:
-    needs: [triage-logic]
+    needs: [triage-logic-pre]
     if: false
     runs-on: ubuntu-latest
     outputs:
@@ -251,6 +278,7 @@ jobs:
       - homebridge-releases
       - homebridge-ui-releases
       - hap-nodejs-releases
+      - keys-values-validate
     outputs:
       needs: ${{ toJSON(needs) }}
     steps:
@@ -258,9 +286,9 @@ jobs:
 
   general-comment:
     needs:
-      - triage-logic
+      - triage-logic-post
       - general-collate
-    if: ${{ !cancelled() && needs.triage-logic.outputs.type == 'general' }}
+    if: ${{ !cancelled() && needs.triage-logic-post.outputs.type == 'general' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -269,19 +297,21 @@ jobs:
         with:
           gemini_api_key:       ${{ secrets.GEMINI_API_KEY_TRIAGE }}
           gemini_api_key2:      ${{ secrets.GEMINI_API_KEY_TRIAGE2 }}
-          issue_number:         ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
+          issue_number:         ${{ needs.triage-logic-post.outputs.issue_number }}
           include_comments:     ${{ inputs.include_comments != false }}
           guidance_file:        ./.github/prompts/issue-quality-guidance.md
           guidance_file_tokens: 650
           needs:                ${{ needs.general-collate.outputs.needs }}
+          labels_set:           ${{ needs.triage-logic-post.outputs.labels_set }}
+          close_issue:          ${{ needs.triage-logic-post.outputs.close_issue }}
           dry_run:              ${{ inputs.dry_run }}
 
   keys-values-comment:
     needs:
-      - triage-logic
+      - triage-logic-post
       - keys-values-validate
-      - homeconnect-api-changelog-fetch
-    if: needs.triage-logic.outputs.type == 'keys-values'
+      - homeconnect-api-changelog
+    if: needs.triage-logic-post.outputs.type == 'keys-values'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -291,16 +321,16 @@ jobs:
         uses: thoukydides/action-issue-ai-summary@v1
         with:
           gemini_api_key:       ${{ secrets.GEMINI_API_KEY_TRIAGE }}
-          issue_number:         ${{ needs.triage-logic.outputs.issue_number }}
+          issue_number:         ${{ needs.triage-logic-post.outputs.issue_number }}
           include_comments:     ${{ inputs.include_comments != false }}
           prompt_file:          ${{ format('.github/prompts/issue-api-keys-{0}.prompt.yml', needs.keys-values-validate.outputs.status) }}
           input_prompt_tokens:  900 # Measured using https://aistudio.google.com/prompts/new_chat
           prompt_vars: |
             review: >-
-              ${{ needs.keys-values-validate.outputs.context }}
+              ${{ needs.keys-values-validate.outputs.value }}
             comment: ${{ toJSON(needs.keys-values-validate.outputs.comment) }}
             releases: >-
-              ${{ needs.homeconnect-api-changelog-fetch.outputs.value }}
+              ${{ needs.homeconnect-api-changelog.outputs.value }}
 
       - name: Process the model's output
         id: post
@@ -333,13 +363,6 @@ jobs:
                 if (response.close_issue) close_issue = true;
                 else core.warning('Not closing done issue automatically');
                 break;
-            case 'invalid':
-                // Wrong issue template used
-                if (response.close_issue) {
-                    close_issue = true;
-                    core.setOutput('labels_set', ['invalid']);
-                } else core.warning('Not closing invalid issue automatically');
-                break;
             default:
                 core.setFailed(`Invalid status: ${process.env.STATUS}`);
             }
@@ -353,9 +376,8 @@ jobs:
         if: ${{ steps.post.outputs.post_comment }}
         uses: thoukydides/action-post-issue-comment@v1
         with:
-          issue_number: ${{ needs.triage-logic.outputs.issue_number }}
+          issue_number: ${{ needs.triage-logic-post.outputs.issue_number }}
           body:         ${{ steps.post.outputs.comment }}
-          labels_set:   ${{ steps.post.outputs.labels_set }}
           close_issue:  ${{ steps.post.outputs.close_issue }}
           marker:       '<!-- ai-triage-analysis -->'
           dry_run:      ${{ inputs.dry_run }}
