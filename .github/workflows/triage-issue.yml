@@ -71,6 +71,7 @@ jobs:
     needs:
       - triage-logic-pre
       - keys-values-validate
+    if: ${{ !cancelled() && needs.triage-logic-pre.result == 'success' && needs.keys-values-validate.result != 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - name: Determine triage comment type
