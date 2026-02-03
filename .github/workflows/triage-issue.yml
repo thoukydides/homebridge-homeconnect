@@ -103,9 +103,11 @@ jobs:
       name:     API Keys/Values Issue Validator
       value:    ${{ steps.validate.outputs.context }}
       prompt: |-
-        Automated validation: This issue was filed using the 'HomeConnect API unexpected values' template, but no unrecognised API types were found.
-        This template is only valid when triggered by plugin logs.
-        Treat this as high-confidence evidence that the wrong template was used.
+        Automated validation of issue filed using the 'HomeConnect API unexpected values' template.
+        No unrecognised API types were found.
+      guidance: |-
+        This issue was filed using the 'HomeConnect API unexpected values' template, but the report did not include any logs that could be parsed as unrecognised API types.
+        **Treat this as high-confidence evidence that the wrong issue template was used.**
       status:   ${{ steps.validate.outputs.status }}
       comment:  ${{ steps.validate.outputs.comment }}
     steps:
