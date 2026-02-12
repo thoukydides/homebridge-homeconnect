@@ -1,0 +1,11 @@
+{
+    "servers": {
+        "dosu-mcp": {
+            "type": "http",
+            "url": "https://api.dosu.dev/v1/mcp",
+            "headers": {
+                "X-Deployment-ID": "368c6666-8714-4a52-9538-2c4ae5129231"
+            }
+        }
+    }
+}
