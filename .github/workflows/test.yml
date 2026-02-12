@@ -21,8 +21,8 @@ jobs:
         node-version: [20.x, 22.x, 24.x]
         homebridge-version: ['^1.10.0', 'beta']
         exclude:
-          - node-version: 24.x
-            homebridge-version: '^1.10.0'
+          - node-version: 20.x
+            homebridge-version: 'beta'
 
     steps:
       - uses: actions/checkout@v4
