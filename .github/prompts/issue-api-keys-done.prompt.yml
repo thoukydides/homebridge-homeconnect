@@ -56,29 +56,25 @@ responseFormat: json_schema
 
 jsonSchema: |- # json
   {
-    "name": "Reply comment and actions",
-    "strict": true,
-    "schema": {
-      "type": "object",
-      "properties": {
-        "revised_comment": {
-          "type": "string",
-          "description": "The revised Markdown comment"
-        },
-        "post_comment": {
-          "type": "boolean",
-          "description": "Should the comment be posted automatically? Set to true unless manual review by the maintainer is required"
-        },
-        "close_issue": {
-          "type": "boolean",
-          "description": "Should the issue be closed automatically? Set to true if only type mismatches were reported and they are resolved"
-        }
+    "type": "object",
+    "properties": {
+      "revised_comment": {
+        "type": "string",
+        "description": "The revised Markdown comment"
       },
-      "additionalProperties": false,
-      "required": [
-        "revised_comment",
-        "post_comment",
-        "close_issue"
-      ]
-    }
+      "post_comment": {
+        "type": "boolean",
+        "description": "Should the comment be posted automatically? Set to true unless manual review by the maintainer is required"
+      },
+      "close_issue": {
+        "type": "boolean",
+        "description": "Should the issue be closed automatically? Set to true if only type mismatches were reported and they are resolved"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "revised_comment",
+      "post_comment",
+      "close_issue"
+    ]
   }
