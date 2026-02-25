@@ -470,7 +470,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     value = this.timeToSeconds(value);
                 } catch (err) {
                     const message = err instanceof Error ? err.message : String(err);
-                    throw new Error(`Unable to parse '${value}' as a time ${description}: ${message}`);
+                    throw new Error(`Unable to parse '${value}' as a time ${description}: ${message}`, { cause: err });
                 }
             }
 
