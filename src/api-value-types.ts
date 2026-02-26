@@ -303,6 +303,13 @@ export type AromaSelect = // (undocumented)
     'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.balanced'
   | 'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.distinctive'
   | 'ConsumerProducts.CoffeeMaker.EnumType.AromaSelect.fine';
+export type AvailableMaps =
+    'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.TempMap'
+  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map1'
+  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map2'
+  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map3'
+  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map4'
+  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map5';
 export type BeanAmount =
     'ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryMild'
   | 'ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Mild'
@@ -329,7 +336,7 @@ export type CavitySelector = // (undocumented)
     'Cooking.Oven.EnumType.CavitySelector.Main'
   | 'Cooking.Oven.EnumType.CavitySelector.Bottom'
   | 'Cooking.Oven.EnumType.CavitySelector.Top';
-export type CleaningMode =
+export type CleaningModes =
     'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Silent'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Standard'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Power';
@@ -354,9 +361,6 @@ export type CoffeeMilkRatio =
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.80Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.85Percent'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio.90Percent';
-export type CoffeeShots = // (undocumented)
-    'ConsumerProducts.CoffeeMaker.EnumType.Shots.Double'
-  | 'ConsumerProducts.CoffeeMaker.EnumType.Shots.Undefined';
 export type CoffeeStrength = // (undocumented)
     'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength1'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength2'
@@ -441,7 +445,7 @@ export type HotWaterTemperature =
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.203F'
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.Max';
 export type IDosingLevel = // (undocumented)
-  | 'LaundryCare.Washer.EnumType.IDosingLevel.High'
+    'LaundryCare.Washer.EnumType.IDosingLevel.High'
   | 'LaundryCare.Washer.EnumType.IDosingLevel.Light'
   | 'LaundryCare.Washer.EnumType.IDosingLevel.Normal'
   | 'LaundryCare.Washer.EnumType.IDosingLevel.Off'
@@ -465,7 +469,7 @@ export type MeatProbeTemperatureV2 = // (undocumented)
 export type MicrowavePower = // (undocumented)
     'Cooking.Oven.EnumType.MicrowavePower.Off';
 export type MultipleSoak = // (undocumented)
-  | 'LaundryCare.Washer.EnumType.MultipleSoak.Off'
+    'LaundryCare.Washer.EnumType.MultipleSoak.Off'
   | 'LaundryCare.Washer.EnumType.MultipleSoak.On';
 export type ProcessPhaseCleaningRobot =
     'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MovingToTarget'
@@ -520,13 +524,6 @@ export type PyrolysisLevel = // (undocumented)
     'Cooking.Oven.EnumType.PyrolysisLevel.Level01'
   | 'Cooking.Oven.EnumType.PyrolysisLevel.Level02'
   | 'Cooking.Oven.EnumType.PyrolysisLevel.Level03';
-export type ReferenceMapID =
-    'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.TempMap'
-  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map1'
-  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map2'
-  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map3'
-  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map4'
-  | 'ConsumerProducts.CleaningRobot.EnumType.AvailableMaps.Map5';
 export type Refresher = // (undocumented)
     'LaundryCare.Dryer.EnumType.Refresher.Shirt1';
 export type RinsePlus = // (undocumented)
@@ -534,6 +531,9 @@ export type RinsePlus = // (undocumented)
   | 'LaundryCare.Washer.EnumType.RinsePlus.Plus1'
   | 'LaundryCare.Washer.EnumType.RinsePlus.Plus2'
   | 'LaundryCare.Washer.EnumType.RinsePlus.Plus3';
+export type Shots = // (undocumented)
+    'ConsumerProducts.CoffeeMaker.EnumType.Shots.Double'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.Shots.Undefined';
 export type SpinSpeed =
     'LaundryCare.Washer.EnumType.SpinSpeed.Auto' // (undocumented)
   | 'LaundryCare.Washer.EnumType.SpinSpeed.Max' // (undocumented)
@@ -585,7 +585,7 @@ export type WasherTemperature =
   | 'LaundryCare.Washer.EnumType.Temperature.UlHot'
   | 'LaundryCare.Washer.EnumType.Temperature.UlExtraHot';
 export type WaterAndRinsePlus = // (undocumented)
-  | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Off'
+    'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Off'
   | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus1'
   | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2'
   | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3';
@@ -599,15 +599,6 @@ export enum BatteryChargingState {
     Discharging             = 'BSH.Common.EnumType.BatteryChargingState.Discharging',
     Charging                = 'BSH.Common.EnumType.BatteryChargingState.Charging'
 }
-export enum CameraState {
-    Disabled                = 'BSH.Common.EnumType.Video.CameraState.Disabled',
-    Sleeping                = 'BSH.Common.EnumType.Video.CameraState.Sleeping',
-    Ready                   = 'BSH.Common.EnumType.Video.CameraState.Ready',
-    StreamingLocal          = 'BSH.Common.EnumType.Video.CameraState.StreamingLocal',
-    StreamingCloud          = 'BSH.Common.EnumType.Video.CameraState.StreamingCloud',
-    StreamingLocalAndCloud  = 'BSH.Common.EnumType.Video.CameraState.StreamingLocalAndCloud',
-    Error                   = 'BSH.Common.EnumType.Video.CameraState.Error'
-}
 export enum ChargingConnection {
     Disconnected            = 'BSH.Common.EnumType.ChargingConnection.Disconnected',
     Connected               = 'BSH.Common.EnumType.ChargingConnection.Connected'
@@ -618,8 +609,8 @@ export enum DoorState {
     Locked                  = 'BSH.Common.EnumType.DoorState.Locked'
 }
 export enum DoorStateRefrigeration {
-    Open                      = 'Refrigeration.Common.EnumType.Door.States.Open', // (undocumented)
-    Closed                    = 'Refrigeration.Common.EnumType.Door.States.Closed' // (undocumented)
+    Open                    = 'Refrigeration.Common.EnumType.Door.States.Open', // (undocumented)
+    Closed                  = 'Refrigeration.Common.EnumType.Door.States.Closed' // (undocumented)
 }
 export type DoorStateBottleCooler    = DoorStateRefrigeration;
 export type DoorStateFlexCompartment = DoorStateRefrigeration;
@@ -749,16 +740,6 @@ export enum AmbientLightColor {
     Color98                 = 'BSH.Common.EnumType.AmbientLightColor.Color98',
     Color99                 = 'BSH.Common.EnumType.AmbientLightColor.Color99'
 }
-export enum AssistantForce {
-    LowForce                = 'Refrigeration.Common.EnumType.Door.AssistantForce.LowForce',
-    MiddleForce             = 'Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce',
-    HighForce               = 'Refrigeration.Common.EnumType.Door.AssistantForce.HighForce'
-}
-export enum AssistantTrigger {
-    Push                    = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.Push',
-    Pull                    = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull',
-    PushPull                = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.PushPull'
-}
 export enum ColorTemperature {
     Individual              = 'Cooking.Hood.EnumType.ColorTemperature.custom',
     Warm                    = 'Cooking.Hood.EnumType.ColorTemperature.warm', // 0%
@@ -766,6 +747,16 @@ export enum ColorTemperature {
     Neutral                 = 'Cooking.Hood.EnumType.ColorTemperature.neutral',
     ColdNeutral             = 'Cooking.Hood.EnumType.ColorTemperature.neutralToCold',
     Cold                    = 'Cooking.Hood.EnumType.ColorTemperature.cold' // 100%
+}
+export enum DoorAssistantForce {
+    LowForce                = 'Refrigeration.Common.EnumType.Door.AssistantForce.LowForce',
+    MiddleForce             = 'Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce',
+    HighForce               = 'Refrigeration.Common.EnumType.Door.AssistantForce.HighForce'
+}
+export enum DoorAssistantTrigger {
+    Push                    = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.Push',
+    Pull                    = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull',
+    PushPull                = 'Refrigeration.Common.EnumType.Door.AssistantTrigger.PushPull'
 }
 export enum LiquidVolumeUnit {
     FluidOunces             = 'BSH.Common.EnumType.LiquidVolumeUnit.FluidOunces',
@@ -781,6 +772,15 @@ export enum PowerState {
 export enum TemperatureUnit {
     Celsius                 = 'BSH.Common.EnumType.TemperatureUnit.Celsius',
     Fahrenheit              = 'BSH.Common.EnumType.TemperatureUnit.Fahrenheit'
+}
+export enum VideoCameraState {
+    Disabled                = 'BSH.Common.EnumType.Video.CameraState.Disabled',
+    Sleeping                = 'BSH.Common.EnumType.Video.CameraState.Sleeping',
+    Ready                   = 'BSH.Common.EnumType.Video.CameraState.Ready',
+    StreamingLocal          = 'BSH.Common.EnumType.Video.CameraState.StreamingLocal',
+    StreamingCloud          = 'BSH.Common.EnumType.Video.CameraState.StreamingCloud',
+    StreamingLocalAndCloud  = 'BSH.Common.EnumType.Video.CameraState.StreamingLocalAndCloud',
+    Error                   = 'BSH.Common.EnumType.Video.CameraState.Error'
 }
 export enum ZoneSelector { // (undocumented)
     FrontLeft               = 'Cooking.Hob.EnumType.ZoneSelector.FrontLeft',
@@ -814,9 +814,9 @@ export interface OptionValues {
     'BSH.Common.Option.SmartEnergyService.SmartStartEnabled'?:                      boolean; // (undocumented)
     'BSH.Common.Option.StartInRelative'?:                                           number;
     'BSH.Common.Option.WaterForecast'?:                                             number; // (undocumented)
-    'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                          CleaningMode;
+    'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                          CleaningModes;
     'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                          ProcessPhaseCleaningRobot;
-    'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                        ReferenceMapID;
+    'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                        AvailableMaps;
     'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                             AromaSelect; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                              BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:                  BeanContainerSelection;
@@ -835,7 +835,7 @@ export interface OptionValues {
     'ConsumerProducts.CoffeeMaker.Option.FlowRate'?:                                FlowRate;
     'ConsumerProducts.CoffeeMaker.Option.HotWaterTemperature'?:                     HotWaterTemperature;
     'ConsumerProducts.CoffeeMaker.Option.MultipleBeverages'?:                       boolean;
-    'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                              CoffeeShots; // (undocumented)
+    'ConsumerProducts.CoffeeMaker.Option.Shot.Count'?:                              Shots; // (undocumented)
     'Cooking.Common.Option.Hood.Boost'?:                                            boolean; // (undocumented)
     'Cooking.Common.Option.Hood.IntensiveLevel'?:                                   IntensiveStage;
     'Cooking.Common.Option.Hood.VentingLevel'?:                                     FanStage;
@@ -934,9 +934,9 @@ export interface StatusValues {
     'BSH.Common.Status.OperationState'?:                                            OperationState;
     'BSH.Common.Status.RemoteControlActive'?:                                       boolean;
     'BSH.Common.Status.RemoteControlStartAllowed'?:                                 boolean;
-    'BSH.Common.Status.Video.CameraState'?:                                         CameraState;
+    'BSH.Common.Status.Video.CameraState'?:                                         VideoCameraState;
     'ConsumerProducts.CleaningRobot.Status.DustBoxInserted'?:                       boolean;
-    'ConsumerProducts.CleaningRobot.Status.LastSelectedMap'?:                       ReferenceMapID;
+    'ConsumerProducts.CleaningRobot.Status.LastSelectedMap'?:                       AvailableMaps;
     'ConsumerProducts.CleaningRobot.Status.Lifted'?:                                boolean;
     'ConsumerProducts.CleaningRobot.Status.Lost'?:                                  boolean;
     'ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffee'?:                   number;
@@ -973,7 +973,7 @@ export interface SettingValues {
     'BSH.Common.Setting.LiquidVolumeUnit'?:                                         LiquidVolumeUnit;
     'BSH.Common.Setting.PowerState'?:                                               PowerState;
     'BSH.Common.Setting.TemperatureUnit'?:                                          TemperatureUnit;
-    'ConsumerProducts.CleaningRobot.Setting.CurrentMap'?:                           ReferenceMapID;
+    'ConsumerProducts.CleaningRobot.Setting.CurrentMap'?:                           AvailableMaps;
     'ConsumerProducts.CleaningRobot.Setting.NameOfMap1'?:                           string;
     'ConsumerProducts.CleaningRobot.Setting.NameOfMap2'?:                           string;
     'ConsumerProducts.CleaningRobot.Setting.NameOfMap3'?:                           string;
@@ -992,14 +992,14 @@ export interface SettingValues {
     'Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature'?:                number;
     'Refrigeration.Common.Setting.ChillerRight.SetpointTemperature'?:               number;
     'Refrigeration.Common.Setting.Dispenser.Enabled'?:                              boolean;
-    'Refrigeration.Common.Setting.Door.AssistantForceFreezer'?:                     AssistantForce;
-    'Refrigeration.Common.Setting.Door.AssistantForceFridge'?:                      AssistantForce;
+    'Refrigeration.Common.Setting.Door.AssistantForceFreezer'?:                     DoorAssistantForce;
+    'Refrigeration.Common.Setting.Door.AssistantForceFridge'?:                      DoorAssistantForce;
     'Refrigeration.Common.Setting.Door.AssistantFreezer'?:                          boolean;
     'Refrigeration.Common.Setting.Door.AssistantFridge'?:                           boolean;
     'Refrigeration.Common.Setting.Door.AssistantTimeoutFreezer'?:                   number;
     'Refrigeration.Common.Setting.Door.AssistantTimeoutFridge'?:                    number;
-    'Refrigeration.Common.Setting.Door.AssistantTriggerFreezer'?:                   AssistantTrigger;
-    'Refrigeration.Common.Setting.Door.AssistantTriggerFridge'?:                    AssistantTrigger;
+    'Refrigeration.Common.Setting.Door.AssistantTriggerFreezer'?:                   DoorAssistantTrigger;
+    'Refrigeration.Common.Setting.Door.AssistantTriggerFridge'?:                    DoorAssistantTrigger;
     'Refrigeration.Common.Setting.EcoMode'?:                                        boolean;
     'Refrigeration.Common.Setting.FreshMode'?:                                      boolean;
     'Refrigeration.Common.Setting.Light.External.Brightness'?:                      number; // (undocumented)
