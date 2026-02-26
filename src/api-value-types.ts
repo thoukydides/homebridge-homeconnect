@@ -482,6 +482,7 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.CupboardDryReached'
   | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingTextile'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.FillingDetergent'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Fluffing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.GuardingWrinkle'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Heating'
@@ -551,7 +552,8 @@ export type SpinSpeed =
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlHigh'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlLow'
   | 'LaundryCare.Washer.EnumType.SpinSpeed.UlMedium'
-  | 'LaundryCare.Washer.EnumType.SpinSpeed.UlOff';
+  | 'LaundryCare.Washer.EnumType.SpinSpeed.UlOff'
+  | 'Pflegeleicht'; // (undocumented)
 export type Stains = // (undocumented)
     'LaundryCare.Washer.EnumType.Stains.Blood'
   | 'LaundryCare.Washer.EnumType.Stains.ButterOil'
@@ -616,8 +618,6 @@ export enum DoorState {
     Locked                  = 'BSH.Common.EnumType.DoorState.Locked'
 }
 export enum DoorStateRefrigeration {
-    //Open                    = 'BSH.Common.EnumType.DoorState.Open',
-    //Closed                  = 'BSH.Common.EnumType.DoorState.Closed',
     Open                      = 'Refrigeration.Common.EnumType.Door.States.Open', // (undocumented)
     Closed                    = 'Refrigeration.Common.EnumType.Door.States.Closed' // (undocumented)
 }

@@ -72,14 +72,17 @@ const PACKAGE_JSON_FILE = './package.json';
 const LABEL_KEY_VALUE = 'api keys/values';
 
 // API values and types to ignore when reported (they are likely to be spurious)
-const IGNORE_VALUES: string[] = [
+const IGNORE_TYPES: string[] = [
+    'number | string',
+    'string',
+    'unknown',
     'Espresso',
     'Micha: Caffè Grande',
-    'number | string',
-    'unknown',
-    "''",
-    "'Micha: Caffè Grande'",
     'DoorStates' // (reported instead of DoorState*)
+];
+const IGNORE_VALUES: string[] = [
+    "''",
+    "'Micha: Caffè Grande'"
 ];
 
 // Prepare an Octokit client
@@ -354,7 +357,7 @@ function checkDiscrepancies(sourceTypes: APITypes, issueTypes: APITypes): APITyp
         } else {
             // Check that individual properties exist and include the right type
             const mismatched = [...issueProperties].filter(([key, type]) =>
-                !IGNORE_VALUES.includes(type)
+                !IGNORE_TYPES.includes(type)
                 && !sourceProperties.get(key)?.includes(type));
             if (mismatched.length) {
                 interfaces.set(interfaceName, new Map(mismatched));
@@ -391,7 +394,9 @@ function findDocumentation(discrepancies: APITypes): { documents: APIDocument[],
     const interfaceKeys = [...discrepancies.interfaces.values()].flatMap(p => [...p.keys()]);
     const enumLiterals = [...discrepancies.literals.values()].flatMap(l => [...l]);
     const strippedValues = [...interfaceKeys, ...enumLiterals].map(l => l.replace(/^'|'$/g, ''));
-    const uniqueValues = [...new Set(strippedValues)].sort();
+    const filteredValues = strippedValues.filter(v => /\w\.\w/.test(v));
+    const uniqueValues = [...new Set(filteredValues)].sort();
+    console.log(uniqueValues);
     if (!uniqueValues.length) return { documents: [], found: [], missing: [] };
 
     // Build a regular expression and find matching documents
