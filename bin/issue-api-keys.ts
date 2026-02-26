@@ -440,7 +440,7 @@ async function fetchAPIDocumentation(urls: string[]): Promise<APIDocument[]> {
                     const endIndex = matches[index + 1]?.index ?? page.length;
                     documents.push({
                         title,
-                        url:        new URL(anchor, url).href,
+                        url:        new URL(`#${anchor}`, url).href,
                         content:    page.substring(startIndex, endIndex)
                     });
                 });
