@@ -40,4 +40,4 @@ jobs:
           comment_id:           ${{ github.event.comment.id || fromJson(inputs.comment_id) }}
           guidance_file:        ./.github/prompts/issue-quality-guidance.md
           guidance_file_tokens: 650
-          dry_run:              ${{ inputs.dry_run }}
+          dry_run:              ${{ inputs.dry_run == true }}

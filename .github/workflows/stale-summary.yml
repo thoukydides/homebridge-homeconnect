@@ -1,5 +1,8 @@
 name: AI Stale Issue Summary
-run-name: 'AI Stale Issue Summary: ${{ github.event.issue.title || github.event_name }} #${{ github.event.issue.number || inputs.issue_number }}'
+run-name: >-
+  AI Stale Issue Summary:
+  ${{ github.event.issue.title || github.event_name }}
+  #${{ github.event.issue.number || inputs.issue_number }}
 permissions:
   issues: write
   contents: read
@@ -29,5 +32,5 @@ jobs:
       uses: thoukydides/action-stale-issue-comment@v1
       with:
         gemini_api_key: ${{ secrets.GEMINI_API_KEY_STALE }}
-        issue_number: ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
-        dry_run: ${{ inputs.dry_run }}
+        issue_number:   ${{ github.event.issue.number || fromJson(inputs.issue_number) }}
+        dry_run:        ${{ inputs.dry_run == true }}

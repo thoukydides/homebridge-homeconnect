@@ -307,7 +307,7 @@ jobs:
           needs:                ${{ needs.general-collate.outputs.needs }}
           labels_set:           ${{ needs.triage-logic-post.outputs.labels_set }}
           close_issue:          ${{ needs.triage-logic-post.outputs.close_issue }}
-          dry_run:              ${{ inputs.dry_run }}
+          dry_run:              ${{ inputs.dry_run == true }}
 
   keys-values-comment:
     needs:
@@ -383,4 +383,4 @@ jobs:
           body:         ${{ steps.post.outputs.comment }}
           close_issue:  ${{ steps.post.outputs.close_issue }}
           marker:       '<!-- ai-triage-analysis -->'
-          dry_run:      ${{ inputs.dry_run }}
+          dry_run:      ${{ inputs.dry_run == true }}
