@@ -326,12 +326,17 @@ export class APIKeyValuesLog {
         const literalsType = this.getTypeof(value);
         if (literalsType === 'string') {
             const literals = Object.keys(value?.values ?? {});
+
+            // Treat program names specially; they don't follow usual pattern
             if (literals.every(literal => literal.includes('.Program.'))) return 'ProgramKey';
-            const isString = literals.some(literal => /[ :]/.test(literal));
-            const types = literals.map(literal => this.makeEnumName(literal.replace(/\.[^.]*$/, '')));
-            assertIsDefined(types[0]);
-            const isEnum = types.every(type => type === types[0]);
-            if (!isString && isEnum) return types[0];
+
+            // Attempt to find a common prefix (ignoring any oddities)
+            const enumTypes = literals
+                .filter(literal => /\w\./.test(literal) && !/[ :]/.test(literal))
+                .map(literal => this.makeEnumName(literal.replace(/\.[^.]*$/, '')));
+            if (enumTypes[0] && enumTypes.every(type => type === enumTypes[0])) {
+                return enumTypes[0];
+            }
         }
 
         // Fallback to the 'typeof' value
