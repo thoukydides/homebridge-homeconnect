@@ -1,5 +1,3 @@
-model: gemini-3-flash-preview
-
 messages:
 
   - role: system
