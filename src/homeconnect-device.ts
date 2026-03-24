@@ -200,7 +200,7 @@ export class HomeConnectDevice extends EventEmitter {
         try {
             this.requireSettings();
             this.requireRemoteControl();
-            await this.api.setSetting<Key>(this.ha.haId, settingKey, value);
+            await this.api.setSetting(this.ha.haId, settingKey, value);
             this.update([{ key: settingKey, value: value }]);
         } catch (err) {
             throw logError(this.log, `SET ${settingKey}=${String(value)}`, err);

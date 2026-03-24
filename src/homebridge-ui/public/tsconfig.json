@@ -5,7 +5,8 @@
         "lib": [ "ES2022", "DOM" ],
         "strict": true,
 		"noUncheckedIndexedAccess": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "rootDir": "../.."
     },
     "exclude": []
 }

@@ -425,7 +425,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
 
                         // Check that the option key is supported by the program
                         this.assertIsOptionKey<Key>(key, optionKey);
-                        this.assertIsOptionValue<Key>(key, optionKey, value);
+                        this.assertIsOptionValue(key, optionKey, value);
                         checkedOptions[optionKey] = value;
                     };
                     for (const option of Object.entries(options ?? {})) checkOption(option);
@@ -601,7 +601,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 }));
 
             // Update the status
-            const updateHK = this.makeSerialised<boolean>(active => {
+            const updateHK = this.makeSerialised(active => {
                 const prevActive = service.getCharacteristic(this.Characteristic.On).value;
                 if (active !== prevActive) {
                     this.log.info(`Program '${name}' (${key}) ${active ? 'active' : 'inactive'}`);
