@@ -179,6 +179,13 @@ export class Config {
 
     // Set updated global configuration
     async setAppliance(haid: string, config: ApplianceConfig): Promise<void> {
+        // Patch-up the programs list based on the addprograms setting
+        switch (config.addprograms) {
+        case 'none': config.programs = [];          break;
+        case 'auto': config.programs = undefined;   break;
+        }
+
+        // Update the appliance configuration if it has changed
         if (this.diffObject(config, await this.getAppliance(haid)).length) {
             this.log.debug(`setAppliance("${haid}", %O)`, config);
             this.appliances[haid] = config;

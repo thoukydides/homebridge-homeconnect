@@ -642,12 +642,9 @@ export class ConfigSchema extends ConfigSchemaData {
             items:          programForm,
             condition:      programListCondition
         }];
+        // The programs array is updated by setAppliance() based on addprograms
 
-        // Delete the programs member or set an empty array if appropriate
-        // (workaround homebridge-config-ui-x / @ng-formworks/core)
-        const code = 'switch (model.addprograms) { case "none": Object.assign(model, { programs: []}); break; case "auto": delete model.programs; break; }';
-
-        return { schema, form, code };
+        return { schema, form };
     }
 
     // Retrieve the active plugin configuration
