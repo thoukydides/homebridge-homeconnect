@@ -78,7 +78,7 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
 
             // The door starts stationary
             const { STOPPED } = this.Characteristic.PositionState;
-            service.setCharacteristic(this.Characteristic.PositionState, STOPPED);
+            service.updateCharacteristic(this.Characteristic.PositionState, STOPPED);
 
             // Add the lock current state characteristic
             const { UNSECURED, SECURED } = this.Characteristic.LockCurrentState;
@@ -103,7 +103,7 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
                     service.updateCharacteristic(this.Characteristic.CurrentPosition, isOpen ? 100 : 0);
                     service.updateCharacteristic(this.Characteristic.TargetPosition,  isOpen ? 100 : 0);
                 }
-                service.setCharacteristic(this.Characteristic.PositionState, STOPPED);
+                service.updateCharacteristic(this.Characteristic.PositionState, STOPPED);
 
                 // If the door can be locked then update its status
                 if (hasLock) {
@@ -130,8 +130,8 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
                         if (0 < value) {
                             const fullyOpen = !supportsPartly || 50 < value;
                             this.log.info(`${fullyOpen ? '' : 'PARTLY '}OPEN Door`);
-                            service.setCharacteristic(this.Characteristic.PositionState,
-                                                      this.Characteristic.PositionState.INCREASING);
+                            service.updateCharacteristic(this.Characteristic.PositionState,
+                                                         this.Characteristic.PositionState.INCREASING);
                             await this.device.openDoor(fullyOpen);
                         }
                     }));

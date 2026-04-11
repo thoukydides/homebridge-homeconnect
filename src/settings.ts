@@ -32,6 +32,7 @@ export const REQUIRED_HOMEBRIDGE_HAP = '>=0.9.0';
 // Default configuration options
 export const DEFAULT_CONFIG: Partial<ConfigPlugin> = {
     language:                   { api: 'en-GB' },
+    experimental:               [],
     debug:                      []
 };
 export const DEFAULT_CLIENTID = (simulator?: boolean): string | undefined =>

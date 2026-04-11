@@ -4,13 +4,13 @@
 import { Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor, formatSeconds } from './utils.js';
+import { assertIsDefined, Constructor, formatSeconds } from './utils.js';
 
 // Default maximum alarm clock duration (if unable to read from Home Connect API)
 const MAX_ALARM_DURATION = 38340; // (seconds)
 
 // Add an alarm clock to an accessory
-export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerService: Service }>>(Base: TBase) {
+export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerService?: Service }>>(Base: TBase) {
     return class HasAlarmClock extends Base {
 
         // Mixin constructor
@@ -23,6 +23,11 @@ export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerS
 
         // Asynchronous initialisation
         async initHasAlarmClock(): Promise<void> {
+            if (!this.powerService) {
+                this.log.info('Feature "Alarm Clock" implicitly disabled with "Power" feature');
+                return;
+            }
+
             // Check whether the appliance supports an alarm clock
             const allSettings = await this.getCached('settings', () => this.device.getSettings());
             if (!allSettings.some(s => s.key === 'BSH.Common.Setting.AlarmClock')) {
@@ -48,6 +53,7 @@ export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerS
 
             // Update the alarm clock status
             this.device.on('BSH.Common.Setting.AlarmClock', seconds => {
+                assertIsDefined(this.powerService);
                 if (seconds) this.log.info(`Alarm clock ${formatSeconds(seconds)} remaining`);
                 else this.log.info('Alarm clock inactive');
                 this.powerService.updateCharacteristic(this.Characteristic.SetDuration, seconds);

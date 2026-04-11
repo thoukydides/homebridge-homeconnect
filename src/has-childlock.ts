@@ -4,10 +4,10 @@
 import { Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor } from './utils.js';
+import { assertIsDefined, Constructor } from './utils.js';
 
 // Add a child lock to an accessory
-export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerService: Service }>>(Base: TBase) {
+export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerService?: Service }>>(Base: TBase) {
     return class HasChildLock extends Base {
 
         // Mixin constructor
@@ -20,6 +20,11 @@ export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerSe
 
         // Asynchronous initialisation
         async initHasChildLock(): Promise<void> {
+            if (!this.powerService) {
+                this.log.info('Feature "Child Lock" implicitly disabled with "Power" feature');
+                return;
+            }
+
             // Check whether the appliance supports a child lock
             const allSettings = await this.getCached('settings', () => this.device.getSettings());
             if (!allSettings.some(s => s.key === 'BSH.Common.Setting.ChildLock')) {
@@ -41,6 +46,7 @@ export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerSe
 
             // Update the child lock status
             this.device.on('BSH.Common.Setting.ChildLock', childLock => {
+                assertIsDefined(this.powerService);
                 this.log.info(`Child lock ${childLock ? 'enabled' : 'disabled'}`);
                 this.powerService.updateCharacteristic(this.Characteristic.LockPhysicalControls,
                                                        childLock ? CONTROL_LOCK_ENABLED : CONTROL_LOCK_DISABLED);

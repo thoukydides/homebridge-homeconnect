@@ -1,18 +1,18 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2026 Alexander Thoukydides
 
-import { HAPStatus, Perms, Service } from 'homebridge';
+import { Perms, Service } from 'homebridge';
 
 import { PowerState } from './api-value-types.js';
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor } from './utils.js';
+import { assertIsDefined, Constructor } from './utils.js';
 
 // Add a power switch to an accessory
 export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
     return class HasPower extends Base {
 
         // Accessory services
-        readonly powerService: Service;
+        readonly powerService?: Service;
 
         // The power off setting to use if the appliance reports multiple
         defaultOffValue?: PowerState;
@@ -20,6 +20,9 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         // Mixin constructor
         constructor(...args: any[]) {
             super(...args as ConstructorParameters<TBase>);
+
+            // Check whether a power switch should be supported
+            if (!this.hasOptionalFeature('Switch', 'Power')) return;
 
             // Add power Switch service to host the appliance's main characteristics
             this.powerService = this.makeService(this.Service.Switch, 'Power', 'power');
@@ -65,6 +68,7 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             }
 
             // Make the power state characteristic writable
+            assertIsDefined(this.powerService);
             if (powerStateOn === undefined) this.log.info('Cannot be switched on');
             this.log.info(`Can be ${this.defaultOffValue === PowerState.Standby ? 'placed in standby' : 'switched off'}`);
             this.powerService.getCharacteristic(this.Characteristic.On)
@@ -80,14 +84,14 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
 
         // Deferred update of HomeKit state from Home Connect events
         updatePowerHK(): void {
+            assertIsDefined(this.powerService);
             if (this.device.getItem('connected')) {
                 const powerOn = this.device.getItem('BSH.Common.Setting.PowerState') === PowerState.On;
                 this.log.info(powerOn ? 'On' : 'Off');
                 this.powerService.updateCharacteristic(this.Characteristic.On, powerOn);
             } else {
-                const powerOn = new this.platform.hb.hap.HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
-                this.log.info('Disconnected (setting On error status)');
-                this.powerService.updateCharacteristic(this.Characteristic.On, powerOn);
+                this.log.info('Off (disconnected)');
+                this.powerService.updateCharacteristic(this.Characteristic.On, false);
             }
         }
 

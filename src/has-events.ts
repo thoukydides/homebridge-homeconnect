@@ -85,7 +85,8 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
                 case EventPresentState.Present:
                 case DoorState.Open as unknown as EventPresentState: // (FridgeFreezer simulator workaround)
                     this.log.info(`Event ${name}`);
-                    service.updateCharacteristic(this.Characteristic.ProgrammableSwitchEvent, SINGLE);
+                    service.getCharacteristic(this.Characteristic.ProgrammableSwitchEvent)
+                        .sendEventNotification(SINGLE);
                     break;
                 case EventPresentState.Confirmed:
                     this.log.info(`Event ${name} confirmed (ignored)`);

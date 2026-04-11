@@ -1,8 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2025-2026 Alexander Thoukydides
 
-import { CharacteristicSetHandler, CharacteristicValue, HAPStatus,
-         Logger, PlatformAccessory, Service } from 'homebridge';
+import { Characteristic, CharacteristicSetHandler, CharacteristicValue, HAPStatus,
+         Logger, Nullable, PlatformAccessory, Service } from 'homebridge';
 
 import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers/promises';
 
@@ -58,6 +58,9 @@ export class ApplianceBase {
     // Accessory services
     readonly accessoryInformationService: Service;
     readonly obsoleteServices; // (removed after async initialisation)
+
+    // Has a HAP status error been returned due to appliance disconnection
+    disconnectedHapStatusError = false;
 
     // Initialise an appliance
     constructor(
@@ -161,6 +164,9 @@ export class ApplianceBase {
         } else {
             this.log.info(`All features successfully initialised in ${initDuration}`);
         }
+
+        // Register onGet handlers for all characteristics
+        this.registerDisconnectedOnGet();
 
         // Delete any obsolete services
         this.cleanupServices();
@@ -352,6 +358,42 @@ export class ApplianceBase {
         const options: SerialisedOptions = { reset: true };
         const serialised = new Serialised<Value, Returns>(this.log, operation, {} as Value, options);
         return (value?: Value) => serialised.trigger(value);
+    }
+
+    // Register handlers for all characteristics for appliance disconnection
+    registerDisconnectedOnGet(): void {
+        // No action required if disconnected state should be treated as off
+        if (this.platform.configPlugin.experimental?.includes('Disconnected as Off')) {
+            this.log.warn('Experimental feature enabled: Disconnection will be treated as Power Off');
+            return;
+        }
+
+        // Attach onGet handlers to all characteristics
+        for (const service of this.accessory.services) {
+            for (const characteristic of service.characteristics) {
+                characteristic.onGet(() => this.onGet(characteristic));
+            }
+        }
+    }
+
+    // Return error status of onGet handlers when the appliance is disconnected
+    onGet(characteristic: Characteristic): Nullable<CharacteristicValue> {
+        if (this.device.getItem('connected')) {
+            // Return the stored value or status for connected appliances
+            if (this.disconnectedHapStatusError) {
+                this.log.info('Appliance reconnected: clearing HAP error status');
+                this.disconnectedHapStatusError = false;
+            }
+            if (characteristic.statusCode === HAPStatus.SUCCESS) return characteristic.value;
+            throw new this.platform.hb.hap.HapStatusError(characteristic.statusCode);
+        } else {
+            // Return HAP status -70402 for disconnected appliances
+            if (!this.disconnectedHapStatusError) {
+                this.log.warn('Appliance is disconnected: returning HAP error status');
+                this.disconnectedHapStatusError = true;
+            }
+            throw new this.platform.hb.hap.HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+        }
     }
 
     // Wrap a Homebridge Characteristic.onSet handler

@@ -4,16 +4,20 @@
 import { Service } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor, formatList } from './utils.js';
+import { assertIsDefined, Constructor, formatList } from './utils.js';
 import { StatusKey, StatusValue } from './api-value.js';
 
 // Add local and remote control state to an accessory
-export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { powerService: Service }>>(Base: TBase) {
+export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { powerService?: Service }>>(Base: TBase) {
     return class HasRemoteControl extends Base {
 
         // Mixin constructor
         constructor(...args: any[]) {
             super(...args as ConstructorParameters<TBase>);
+            if (!this.powerService) {
+                this.log.info('Feature "Remote Control" implicitly disabled with "Power" feature');
+                return;
+            }
 
             // Use ProgramMode characteristic to indicate local and remote control
             this.powerService.addOptionalCharacteristic(this.Characteristic.ProgramMode);
@@ -28,6 +32,8 @@ export function HasRemoteControl<TBase extends Constructor<ApplianceBase & { pow
 
         // Deferred update of HomeKit state from Home Connect events
         updateRemoteControlHK(): void {
+            assertIsDefined(this.powerService);
+
             // Read the most recent state and generate a description
             const detailBits: string[] = [];
             const read = <Key extends StatusKey>(key: Key, values: Record<string, string>, prefix?: string):

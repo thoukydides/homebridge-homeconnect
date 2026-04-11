@@ -12,8 +12,12 @@ export interface ConfigPlugin {
     simulator?:             boolean;
     china?:                 boolean;
     language:               { api: string };
+    experimental?:          ExperimentalFeatures[];
     debug?:                 DebugFeatures[];
 }
+
+// Experimental feature flags
+export type ExperimentalFeatures = 'Disconnected as Off';
 
 // Debugging features
 export type DebugFeatures = 'Log API Headers' | 'Log API Bodies' | 'Log Appliance IDs' | 'Log Debug as Info' | 'Mock Appliances';

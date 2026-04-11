@@ -244,6 +244,26 @@ export class ConfigSchema extends ConfigSchemaData {
         return { schema, form };
     }
 
+    // Construct a schema for experimental feature flags
+    getSchemaFragmentExperimental(): SchemaFormFragment {
+        const schema: JSONSchemaProperties = {
+            experimental: {
+                type:           'array',
+                uniqueItems:    true,
+                items: {
+                    type:           'string',
+                    enum:           keyofChecker(typeSuite, typeSuite.ExperimentalFeatures)
+                }
+            }
+        };
+        const form: FormItem[] = [{
+            key:            'experimental',
+            notitle:        true,
+            description:    'These <a href="https://github.com/thoukydides/homebridge-homeconnect/wiki/Experimental-Features">experimental features</a> are not fully tested and may cause incorrect behaviour or other problems.  Issues that occur only when experimental features are enabled may be closed without investigation. Only enable them if you understand and accept these limitations.'
+        }];
+        return { schema, form };
+    }
+
     // Construct a schema for debug options
     getSchemaFragmentDebug(): SchemaFormFragment {
         const schema: JSONSchemaProperties = {
@@ -641,14 +661,15 @@ export class ConfigSchema extends ConfigSchemaData {
         await this.load(true);
 
         // Generate schema fragments for non-appliance configuration
-        const pluginSchema = this.getSchemaFragmentPlugin();
-        const clientSchema = this.getSchemaFragmentClient();
-        const debugSchema  = this.getSchemaFragmentDebug();
+        const pluginSchema          = this.getSchemaFragmentPlugin();
+        const clientSchema          = this.getSchemaFragmentClient();
+        const experimentalSchema    = this.getSchemaFragmentExperimental();
+        const debugSchema           = this.getSchemaFragmentDebug();
 
         // Combine the schema fragments
         const schema: JSONSchema = {
             type:       'object',
-            properties: { ...pluginSchema.schema, ...clientSchema.schema, ...debugSchema.schema }
+            properties: { ...pluginSchema.schema, ...clientSchema.schema, ...experimentalSchema.schema, ...debugSchema.schema }
         };
         const form: FormItem[] = [{
             type:       'fieldset',
@@ -666,6 +687,12 @@ export class ConfigSchema extends ConfigSchemaData {
             condition:  {
                 functionBody: 'try { return !model.debug.includes("Mock Appliances") } catch (err) { return true; }'
             }
+        }, {
+            type:       'fieldset',
+            title:      'Experimental Feature Flags',
+            expandable: true,
+            expanded:   false,
+            items:      experimentalSchema.form
         }, {
             type:       'fieldset',
             title:      'Debug Options',
