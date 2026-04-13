@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.9.1] - 2026-04-13
+### Added
+* **Freezer:** Allow `Refrigeration.Common.Status.Door.Freezer` to be used instead of `BSH.Common.Status.DoorState` to workaround API issue. (#385)
+
 ## [v1.9.0] - 2026-04-11
 ### Added
 * The HomeKit `Switch` service for the appliance power can be enabled or disabled via the `config.json` file. (#383)
@@ -895,7 +899,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.1...HEAD
+[v1.9.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.0...v1.9.1
 [v1.9.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.8.6...v1.9.0
 [v1.8.6]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.8.5...v1.8.6
 [v1.8.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.8.4...v1.8.5
