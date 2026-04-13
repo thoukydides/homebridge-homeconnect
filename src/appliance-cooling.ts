@@ -76,7 +76,7 @@ export class ApplianceFreezer extends
     HasCoolingModes(
     HasRefrigerationLight(
     HasEvents(
-    HasDoor(
+    HasCoolingDoors(
     ApplianceGeneric))))) {
 
     constructor(...args: ConstructorParameters<typeof ApplianceGeneric>) {
