@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.9.2] - 2026-04-17
+### Changed
+* Updated dependencies to latest versions.
+
 ## [v1.9.1] - 2026-04-13
 ### Added
 * **Freezer:** Allow `Refrigeration.Common.Status.Door.Freezer` to be used instead of `BSH.Common.Status.DoorState` to workaround API issue. (#385)
@@ -899,7 +903,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.2...HEAD
+[v1.9.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.1...v1.9.2
 [v1.9.1]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.0...v1.9.1
 [v1.9.0]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.8.6...v1.9.0
 [v1.8.6]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.8.5...v1.8.6
