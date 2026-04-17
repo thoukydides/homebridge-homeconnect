@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !github.event.issue.pull_request }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: AI issue comment triage
         uses: thoukydides/action-triage-comment-comment@v1
         with:

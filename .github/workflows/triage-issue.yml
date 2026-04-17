@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Determine triage type
         id: triage
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: | #javascript
             core.debug(`Event payload:\n${JSON.stringify(context.payload, null, 4)}`);
@@ -76,7 +76,7 @@ jobs:
     steps:
       - name: Determine triage comment type
         id: triage
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           PRE_TYPE: ${{ needs.triage-logic-pre.outputs.type }}
           STATUS:   ${{ needs.keys-values-validate.outputs.status }}
@@ -112,8 +112,8 @@ jobs:
       status:   ${{ steps.validate.outputs.status }}
       comment:  ${{ steps.validate.outputs.comment }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: 'npm'
@@ -144,12 +144,12 @@ jobs:
     env:
       LOG_FILE: ${{ github.workspace }}/test.log
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: 'npm'
@@ -294,7 +294,7 @@ jobs:
     if: ${{ !cancelled() && needs.triage-logic-post.outputs.type == 'general' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: AI issue triage
         uses: thoukydides/action-triage-issue-comment@v1
         with:
@@ -317,7 +317,7 @@ jobs:
     if: needs.triage-logic-post.outputs.type == 'keys-values'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: AI review of issue and API changelog
         id: inference
@@ -337,7 +337,7 @@ jobs:
 
       - name: Process the model's output
         id: post
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           STATUS:           ${{ needs.keys-values-validate.outputs.status }}
           ORIGINAL_COMMENT: ${{ needs.keys-values-validate.outputs.comment }}
