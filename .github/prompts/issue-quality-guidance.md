@@ -2,6 +2,9 @@ When assessing issue quality, use the following guidance to determine where user
 
 - **🐞 [Bug Report](https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=bug_report.yml)** issue template with `bug` label
   - Bug reports **must** use the Bug Report template; it collects essential diagnostic information (version, logs, device details) required to resolve most issues
+    - If a bug is reported without using the template at all: Close and request refiling
+    - If the template was used but fields are incomplete or low quality: Keep the issue open and request the missing information
+    - Do not treat poor-quality answers (e.g. "Latest", empty logs) as failure to use the template
   - Close the issue and ask the user to refile if they are clearly reporting a bug but have not used the Bug Report template
 
 - **🚧 [Feature Request](https://github.com/thoukydides/homebridge-homeconnect/issues/new?template=feature_request.yml)** issue template with `enhancement` label
