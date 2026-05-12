@@ -60,7 +60,7 @@ export class Config {
         const keyofConfigPlugin = keyofChecker(typeSuite, typeSuite.ConfigPlugin);
         const select = (predicate: ([key, value]: [string, unknown]) => boolean): Record<string, unknown> =>
             Object.fromEntries(Object.entries(this.savedConfig ?? {}).filter(predicate));
-        this.global     = select(([key]) =>  keyofConfigPlugin.includes(key)) as Partial<ConfigPlugin>;
+        this.global     = select(([key]) =>  keyofConfigPlugin.includes(key));
         this.appliances = select(([key]) => !keyofConfigPlugin.includes(key)) as ConfigAppliances;
         this.log.debug('getConfig() global %O appliances %O', this.global, this.appliances);
         this.onGlobal?.(this.global);

@@ -289,7 +289,7 @@ export abstract class MockAppliance {
 
     // Emit a STATUS event
     emitStatusEvent<Key extends StatusKey>(key: Key, value: StatusValue<Key>): void {
-        this.emitDataEvent('STATUS', key, value as EventValue<Key>);
+        this.emitDataEvent('STATUS', key, value);
     }
 
     // Emit an EVENT event
