@@ -73,7 +73,7 @@
     "type": "module",
     "main": "dist/index.js",
     "engines": {
-        "node": "^24.14.1 || ^22.22.2 || ^20.20.2",
+        "node": "^26.1.0 || ^24.14.1 || ^22.22.2 || ^20.20.2",
         "homebridge": "^1.11.4 || ^2.0.2"
     },
     "dependencies": {
