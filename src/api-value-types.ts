@@ -337,9 +337,21 @@ export type CavitySelector = // (undocumented)
   | 'Cooking.Oven.EnumType.CavitySelector.Bottom'
   | 'Cooking.Oven.EnumType.CavitySelector.Top';
 export type CleaningModes =
+    // Roxxter series
     'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Silent'
   | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Standard'
-  | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Power';
+  | 'ConsumerProducts.CleaningRobot.EnumType.CleaningModes.Power'
+    // Spotless series
+  | 'ConsumerProducts.CleaningRobot.EnumType.CleaningMode.IntelligentMode'
+  | 'ConsumerProducts.CleaningRobot.EnumType.CleaningMode.VacuumOnly'
+  | 'ConsumerProducts.CleaningRobot.EnumType.CleaningMode.MopOnly'
+  | 'ConsumerProducts.CleaningRobot.EnumType.CleaningMode.VacuumAndMop'
+  | 'ConsumerProducts.CleaningRobot.EnumType.CleaningMode.MopAfterVacuum';
+export type CleaningPasses = // (undocumented)
+    'ConsumerProducts.CleaningRobot.EnumType.CleaningPasses.Once';
+export type CleanSpeed = // (undocumented)
+    'ConsumerProducts.CleaningRobot.EnumType.CleanSpeed.Default'
+  | 'ConsumerProducts.CleaningRobot.EnumType.CleanSpeed.Intensive';
 export type CoarsnessExtended = // (undocumented)
     'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness1'
   | 'ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness2'
@@ -560,6 +572,10 @@ export type Stains = // (undocumented)
   | 'LaundryCare.Washer.EnumType.Stains.Off'
   | 'LaundryCare.Washer.EnumType.Stains.On'
   | 'LaundryCare.Washer.EnumType.Stains.Perspiration';
+export type SuctionPower =
+    'ConsumerProducts.CleaningRobot.EnumType.SuctionPower.Silent'
+  | 'ConsumerProducts.CleaningRobot.EnumType.SuctionPower.Standard'
+  | 'ConsumerProducts.CleaningRobot.EnumType.SuctionPower.Max';
 export type VarioPerfect =
     'LaundryCare.Common.EnumType.VarioPerfect.Off'
   | 'LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect'
@@ -589,6 +605,8 @@ export type WaterAndRinsePlus = // (undocumented)
   | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus1'
   | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2'
   | 'LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3';
+export type WaterFlowRate = // (undocumented)
+    'ConsumerProducts.CleaningRobot.EnumType.WaterFlowRate.Medium';
 export type WrinkleGuard = // (undocumented)
     'LaundryCare.Dryer.EnumType.WrinkleGuard.Off'
   | 'LaundryCare.Dryer.EnumType.WrinkleGuard.Min60'
@@ -597,7 +615,8 @@ export type WrinkleGuard = // (undocumented)
 // State enumerated types
 export enum BatteryChargingState {
     Discharging             = 'BSH.Common.EnumType.BatteryChargingState.Discharging',
-    Charging                = 'BSH.Common.EnumType.BatteryChargingState.Charging'
+    Charging                = 'BSH.Common.EnumType.BatteryChargingState.Charging',
+    KeepingBatteryLevel     = 'BSH.Common.EnumType.BatteryChargingState.KeepingBatteryLevel'
 }
 export enum ChargingConnection {
     Disconnected            = 'BSH.Common.EnumType.ChargingConnection.Disconnected',
@@ -801,6 +820,7 @@ export interface OptionValues {
     'BSH.Common.Option.BaseProgram'?:                                               ProgramKey; // (undocumented)
     'BSH.Common.Option.CurrentStepRemainingTime'?:                                  number; // (undocumented)
     'BSH.Common.Option.Duration'?:                                                  number;
+    'BSH.Common.Option.ElapsedProgramTime.AutoCounting'?:                           boolean; // (undocumented)
     'BSH.Common.Option.ElapsedProgramTime'?:                                        number;
     'BSH.Common.Option.EnergyForecast'?:                                            number; // (undocumented)
     'BSH.Common.Option.EstimatedTotalProgramTime'?:                                 number;
@@ -814,9 +834,15 @@ export interface OptionValues {
     'BSH.Common.Option.SmartEnergyService.SmartStartEnabled'?:                      boolean; // (undocumented)
     'BSH.Common.Option.StartInRelative'?:                                           number;
     'BSH.Common.Option.WaterForecast'?:                                             number; // (undocumented)
+    'ConsumerProducts.CleaningRobot.Option.CarpetBoostEnabled'?:                    boolean; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.CleaningMode'?:                          CleaningModes;
+    'ConsumerProducts.CleaningRobot.Option.CleaningPasses'?:                        CleaningPasses; // (undocumented)
+    'ConsumerProducts.CleaningRobot.Option.CleaningSpeed'?:                         CleanSpeed; // (undocumented)
+    'ConsumerProducts.CleaningRobot.Option.MopExtensionEnabled'?:                   boolean; // (undocumented)
     'ConsumerProducts.CleaningRobot.Option.ProcessPhase'?:                          ProcessPhaseCleaningRobot;
     'ConsumerProducts.CleaningRobot.Option.ReferenceMapId'?:                        AvailableMaps;
+    'ConsumerProducts.CleaningRobot.Option.SuctionPower'?:                          SuctionPower;
+    'ConsumerProducts.CleaningRobot.Option.WaterFlowRate'?:                         WaterFlowRate; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.AromaSelect'?:                             AromaSelect; // (undocumented)
     'ConsumerProducts.CoffeeMaker.Option.BeanAmount'?:                              BeanAmount;
     'ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection'?:                  BeanContainerSelection;
