@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.9.5] - 2026-05-17
+### Changed
+* **CleaningRobot:** Added documented and undocumented program options for Spotless models. (#391)
+* Updated dependencies to latest versions.
+
 ## [v1.9.4] - 2026-05-15
 ### Changed
 * Added Node.js 26 to supported versions.
@@ -912,7 +917,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.5...HEAD
+[v1.9.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.4...v1.9.5
 [v1.9.4]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.3...v1.9.4
 [v1.9.3]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.2...v1.9.3
 [v1.9.2]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.1...v1.9.2
