@@ -114,8 +114,8 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
   | 'Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial'
   | 'Cooking.Oven.Program.HeatingMode.FullSurfaceGrill' // (undocumented)
-  | 'Cooking.Oven.Program.HeatingMode.GrillLargeArea' // (undocumented)
-  | 'Cooking.Oven.Program.HeatingMode.GrillSmallArea' // (undocumented)
+  | 'Cooking.Oven.Program.HeatingMode.GrillLargeArea'
+  | 'Cooking.Oven.Program.HeatingMode.GrillSmallArea'
   | 'Cooking.Oven.Program.HeatingMode.HotAir'
   | 'Cooking.Oven.Program.HeatingMode.HotAir100Steam'
   | 'Cooking.Oven.Program.HeatingMode.HotAir30Steam'
@@ -430,6 +430,10 @@ export type FlowRate =
     'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Normal'
   | 'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Intense'
   | 'ConsumerProducts.CoffeeMaker.EnumType.FlowRate.IntensePlus';
+export type GrillLevel =
+    'Cooking.Oven.EnumType.Level.Level01' // Low power
+  | 'Cooking.Oven.EnumType.Level.Level02' // Medium power
+  | 'Cooking.Oven.EnumType.Level.Level03' // High power
 export type HotWaterTemperature =
     'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.WhiteTea'
   | 'ConsumerProducts.CoffeeMaker.EnumType.HotWaterTemperature.GreenTea'
@@ -792,6 +796,21 @@ export enum TemperatureUnit {
     Celsius                 = 'BSH.Common.EnumType.TemperatureUnit.Celsius',
     Fahrenheit              = 'BSH.Common.EnumType.TemperatureUnit.Fahrenheit'
 }
+export enum Ventilation {
+    Off                     = 'Cooking.Hob.EnumType.Ventilation.Off',
+    Level1                  = 'Cooking.Hob.EnumType.Ventilation.Level01',
+    Level2                  = 'Cooking.Hob.EnumType.Ventilation.Level03',
+    Level3                  = 'Cooking.Hob.EnumType.Ventilation.Level05',
+    Level4                  = 'Cooking.Hob.EnumType.Ventilation.Level07',
+    Level5                  = 'Cooking.Hob.EnumType.Ventilation.Level09',
+    Level6                  = 'Cooking.Hob.EnumType.Ventilation.Level11',
+    Level7                  = 'Cooking.Hob.EnumType.Ventilation.Level13',
+    Level8                  = 'Cooking.Hob.EnumType.Ventilation.Level15',
+    Level9                  = 'Cooking.Hob.EnumType.Ventilation.Level17',
+    Intensive1              = 'Cooking.Hob.EnumType.Ventilation.BoostLevel1',
+    Intensive2              = 'Cooking.Hob.EnumType.Ventilation.BoostLevel2',
+    RunOn                   = 'Cooking.Hob.EnumType.Ventilation.AfterRun'
+}
 export enum VideoCameraState {
     Disabled                = 'BSH.Common.EnumType.Video.CameraState.Disabled',
     Sleeping                = 'BSH.Common.EnumType.Video.CameraState.Sleeping',
@@ -869,6 +888,7 @@ export interface OptionValues {
     'Cooking.Oven.Option.CavitySelector'?:                                          CavitySelector; // (undocumented)
     'Cooking.Oven.Option.FastPreHeat'?:                                             boolean;
     'Cooking.Oven.Option.HeatupProgress'?:                                          number; // (undocumented)
+    'Cooking.Oven.Option.Level'?:                                                   GrillLevel;
     'Cooking.Oven.Option.MeatProbeTemperatureV2'?:                                  MeatProbeTemperatureV2; // (undocumented)
     'Cooking.Oven.Option.MicrowavePower'?:                                          MicrowavePower; // (undocumented)
     'Cooking.Oven.Option.PyrolysisLevel'?:                                          PyrolysisLevel; // (undocumented)
@@ -904,6 +924,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.ZeoliteDry'?:                                       boolean;
     'HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeedMode'?:        FanSpeedMode;
     'HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeedPercentage'?:  number;
+    'HeatingVentilationAirConditioning.AirConditioner.Option.SetpointTemperature'?: number;
     'LaundryCare.Common.Option.LoadRecommendation'?:                                number; // (undocumented)
     'LaundryCare.Common.Option.LowTemperatureHygiene'?:                             boolean; // (undocumented)
     'LaundryCare.Common.Option.ProcessPhase'?:                                      ProcessPhaseLaundryCare; // (undocumented)
@@ -955,7 +976,7 @@ export interface StatusValues {
     'BSH.Common.Status.BatteryLevel'?:                                              number;
     'BSH.Common.Status.ChargingConnection'?:                                        ChargingConnection;
     'BSH.Common.Status.DoorState'?:                                                 DoorState;
-    'BSH.Common.Status.InteriorIlluminationActive'?:                                boolean; // (undocumented)
+    'BSH.Common.Status.InteriorIlluminationActive'?:                                boolean;
     'BSH.Common.Status.LocalControlActive'?:                                        boolean;
     'BSH.Common.Status.OperationState'?:                                            OperationState;
     'BSH.Common.Status.RemoteControlActive'?:                                       boolean;
@@ -1008,6 +1029,7 @@ export interface SettingValues {
     'ConsumerProducts.CoffeeMaker.Setting.CupWarmer'?:                              boolean;
     'Cooking.Common.Setting.Lighting'?:                                             boolean;
     'Cooking.Common.Setting.LightingBrightness'?:                                   number;
+    'Cooking.Hob.Setting.Ventilation'?:                                             Ventilation;
     'Cooking.Hood.Setting.ColorTemperaturePercent'?:                                number;
     'Cooking.Hood.Setting.ColorTemperature'?:                                       ColorTemperature;
     'Cooking.Oven.Setting.SabbathMode'?:                                            boolean;
@@ -1028,10 +1050,10 @@ export interface SettingValues {
     'Refrigeration.Common.Setting.Door.AssistantTriggerFridge'?:                    DoorAssistantTrigger;
     'Refrigeration.Common.Setting.EcoMode'?:                                        boolean;
     'Refrigeration.Common.Setting.FreshMode'?:                                      boolean;
-    'Refrigeration.Common.Setting.Light.External.Brightness'?:                      number; // (undocumented)
-    'Refrigeration.Common.Setting.Light.External.Power'?:                           boolean; // (undocumented)
-    'Refrigeration.Common.Setting.Light.Internal.Brightness'?:                      number; // (undocumented)
-    'Refrigeration.Common.Setting.Light.Internal.Power'?:                           boolean; // (undocumented)
+    'Refrigeration.Common.Setting.Light.External.Brightness'?:                      number;
+    'Refrigeration.Common.Setting.Light.External.Power'?:                           boolean;
+    'Refrigeration.Common.Setting.Light.Internal.Brightness'?:                      number;
+    'Refrigeration.Common.Setting.Light.Internal.Power'?:                           boolean;
     'Refrigeration.Common.Setting.SabbathMode'?:                                    boolean;
     'Refrigeration.Common.Setting.VacationMode'?:                                   boolean;
     'Refrigeration.Common.Setting.WineCompartment.SetpointTemperature'?:            number;
@@ -1063,15 +1085,16 @@ export interface EventNotifyValues extends OptionValues, SettingValues {
 }
 export type EventStatusValues = StatusValues;
 export interface EventEventValues {
-    // Program progress events
+    'BSH.Common.EnumType.EventPresentState'?:                                       EventPresentState;
     'BSH.Common.Event.AlarmClockElapsed'?:                                          EventPresentState;
+    'BSH.Common.Event.Favorite.001.ExternalTrigger'?:                               EventPresentState;
+    'BSH.Common.Event.Favorite.002.ExternalTrigger'?:                               EventPresentState;
     'BSH.Common.Event.ProgramAborted'?:                                             EventPresentState;
     'BSH.Common.Event.ProgramFinished'?:                                            EventPresentState;
-    'Cooking.Oven.Event.PreheatFinished'?:                                          EventPresentState;
-    'Cooking.Oven.Event.RegularPreheatFinished'?:                                   EventPresentState;
-    // Home appliance state changes
     'ConsumerProducts.CleaningRobot.Event.DockingStationNotFound'?:                 EventPresentState;
+    'ConsumerProducts.CleaningRobot.Event.DustBin.NotInstalled'?:                   EventPresentState;
     'ConsumerProducts.CleaningRobot.Event.EmptyDustBoxAndCleanFilter'?:             EventPresentState;
+    'ConsumerProducts.CleaningRobot.Event.Robot.Lifted'?:                           EventPresentState;
     'ConsumerProducts.CleaningRobot.Event.RobotIsStuck'?:                           EventPresentState;
     'ConsumerProducts.CoffeeMaker.Event.BeanContainerEmpty'?:                       EventPresentState;
     'ConsumerProducts.CoffeeMaker.Event.CalcNCleanIn10Cups'?:                       EventPresentState;
@@ -1095,9 +1118,18 @@ export interface EventEventValues {
     'ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty'?:                           EventPresentState;
     'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationNearlyReached'?:            EventPresentState;
     'Cooking.Common.Event.Hood.GreaseFilterMaxSaturationReached'?:                  EventPresentState;
+    'Cooking.Oven.Event.PreheatFinished'?:                                          EventPresentState;
+    'Cooking.Oven.Event.RegularPreheatFinished'?:                                   EventPresentState;
+    'Dishcare.Dishwasher.Event.MachineCareAndFilterCleaningReminder'?:              EventPresentState;
+    'Dishcare.Dishwasher.Event.MachineCareAndLowMaintenanceFilterCleaningReminder'?:EventPresentState;
+    'Dishcare.Dishwasher.Event.MachineCareReminder'?:                               EventPresentState;
+    'Dishcare.Dishwasher.Event.ProgramBlockedSaltLack'?:                            EventPresentState;
+    'Dishcare.Dishwasher.Event.RinseAidLack'?:                                      EventPresentState;
     'Dishcare.Dishwasher.Event.RinseAidNearlyEmpty'?:                               EventPresentState;
+    'Dishcare.Dishwasher.Event.SaltLack'?:                                          EventPresentState;
     'Dishcare.Dishwasher.Event.SaltNearlyEmpty'?:                                   EventPresentState;
-    'LaundryCare.Dryer.Event.DryingProcessFinished'?:                               EventPresentState; // (undocumented)
+    'Dishcare.Dishwasher.Event.SmartFilterCleaningReminder'?:                       EventPresentState;
+    'LaundryCare.Dryer.Event.DryingProcessFinished'?:                               EventPresentState;
     'LaundryCare.Washer.Event.IDos1FillLevelPoor'?:                                 EventPresentState;
     'LaundryCare.Washer.Event.IDos2FillLevelPoor'?:                                 EventPresentState;
     'Refrigeration.FridgeFreezer.Event.DoorAlarmFreezer'?:                          EventPresentState;
