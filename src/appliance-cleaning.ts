@@ -1,6 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2026 Alexander Thoukydides
 
+/* eslint max-len: ["warn", { "ignorePattern": "hasEvent" }] */
 /* eslint indent: ["warn", 4, { "CallExpression": {"arguments": 0} }] */
 
 import { ApplianceGeneric } from './appliance-generic.js';
@@ -26,11 +27,13 @@ export class ApplianceCleaningRobot extends
         super(...args);
 
         // Add CleaningRobot events
-        this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
-        this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
-        this.hasEvent('ConsumerProducts.CleaningRobot.Event.EmptyDustBoxAndCleanFilter',    'Dust Box Full');
-        this.hasEvent('ConsumerProducts.CleaningRobot.Event.RobotIsStuck',                  'Stuck');
-        this.hasEvent('ConsumerProducts.CleaningRobot.Event.DockingStationNotFound',        'Lost');
+        this.hasEvent('BSH.Common.Event.ProgramFinished',                                               'Program Finished');
+        this.hasEvent('BSH.Common.Event.ProgramAborted',                                                'Program Aborted');
+        this.hasEvent('ConsumerProducts.CleaningRobot.Event.EmptyDustBoxAndCleanFilter',                'Dust Box Full');
+        this.hasEvent('ConsumerProducts.CleaningRobot.Event.RobotIsStuck',                              'Stuck');
+        this.hasEvent('ConsumerProducts.CleaningRobot.Event.DockingStationNotFound',                    'Lost');
+        this.hasEvent('ConsumerProducts.CleaningRobot.Event.DustBin.NotInstalled',                      'Dust Box Missing');
+        this.hasEvent('ConsumerProducts.CleaningRobot.Event.Robot.Lifted',                              'Lifted');
     }
 }
 
@@ -50,10 +53,17 @@ export class ApplianceDishwasher extends
         super(...args);
 
         // Add Dishwasher events
-        this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
-        this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
-        this.hasEvent('Dishcare.Dishwasher.Event.SaltNearlyEmpty',                          'Salt Low');
-        this.hasEvent('Dishcare.Dishwasher.Event.RinseAidNearlyEmpty',                      'Rinse Aid Low');
+        this.hasEvent('BSH.Common.Event.ProgramFinished',                                               'Program Finished');
+        this.hasEvent('BSH.Common.Event.ProgramAborted',                                                'Program Aborted');
+        this.hasEvent('Dishcare.Dishwasher.Event.SaltNearlyEmpty',                                      'Salt Low');
+        this.hasEvent('Dishcare.Dishwasher.Event.RinseAidNearlyEmpty',                                  'Rinse Aid Low');
+        this.hasEvent('Dishcare.Dishwasher.Event.SaltLack',                                             'Salt Empty');
+        this.hasEvent('Dishcare.Dishwasher.Event.ProgramBlockedSaltLack',                               'Program Blocked Salt Empty');
+        this.hasEvent('Dishcare.Dishwasher.Event.RinseAidLack',                                         'Rinse Aid Empty');
+        this.hasEvent('Dishcare.Dishwasher.Event.MachineCareReminder',                                  'Machine Care Recommended');
+        this.hasEvent('Dishcare.Dishwasher.Event.MachineCareAndFilterCleaningReminder',                 'Machine Care and Filter Cleaning Recommended');
+        this.hasEvent('Dishcare.Dishwasher.Event.MachineCareAndLowMaintenanceFilterCleaningReminder',   'Machine Care Recommended and Optional Filter Cleaning');
+        this.hasEvent('Dishcare.Dishwasher.Event.SmartFilterCleaningReminder',                          'Filter Cleaning Recommended');
     }
 }
 
@@ -76,9 +86,9 @@ export class ApplianceDryer extends ApplianceLaundry {
         super(...args);
 
         // Add Dryer events
-        this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
-        this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
-        this.hasEvent('LaundryCare.Dryer.Event.DryingProcessFinished',                      'Drying Finished');
+        this.hasEvent('BSH.Common.Event.ProgramFinished',                                               'Program Finished');
+        this.hasEvent('BSH.Common.Event.ProgramAborted',                                                'Program Aborted');
+        this.hasEvent('LaundryCare.Dryer.Event.DryingProcessFinished',                                  'Drying Finished');
     }
 }
 
@@ -89,10 +99,10 @@ export class ApplianceWasher extends ApplianceLaundry {
         super(...args);
 
         // Add Washer/WasherDryer events
-        this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
-        this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
-        this.hasEvent('LaundryCare.Washer.Event.IDos1FillLevelPoor',                        'i-Dos 1 Low');
-        this.hasEvent('LaundryCare.Washer.Event.IDos2FillLevelPoor',                        'i-Dos 2 Low');
+        this.hasEvent('BSH.Common.Event.ProgramFinished',                                               'Program Finished');
+        this.hasEvent('BSH.Common.Event.ProgramAborted',                                                'Program Aborted');
+        this.hasEvent('LaundryCare.Washer.Event.IDos1FillLevelPoor',                                    'i-Dos 1 Low');
+        this.hasEvent('LaundryCare.Washer.Event.IDos2FillLevelPoor',                                    'i-Dos 2 Low');
     }
 }
 
@@ -103,10 +113,10 @@ export class ApplianceWasherDryer extends ApplianceLaundry {
         super(...args);
 
         // Add Washer/WasherDryer events
-        this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
-        this.hasEvent('BSH.Common.Event.ProgramAborted',                                    'Program Aborted');
-        this.hasEvent('LaundryCare.Washer.Event.IDos1FillLevelPoor',                        'i-Dos 1 Low');
-        this.hasEvent('LaundryCare.Washer.Event.IDos2FillLevelPoor',                        'i-Dos 2 Low');
-        this.hasEvent('LaundryCare.Dryer.Event.DryingProcessFinished',                      'Drying Finished');
+        this.hasEvent('BSH.Common.Event.ProgramFinished',                                               'Program Finished');
+        this.hasEvent('BSH.Common.Event.ProgramAborted',                                                'Program Aborted');
+        this.hasEvent('LaundryCare.Washer.Event.IDos1FillLevelPoor',                                    'i-Dos 1 Low');
+        this.hasEvent('LaundryCare.Washer.Event.IDos2FillLevelPoor',                                    'i-Dos 2 Low');
+        this.hasEvent('LaundryCare.Dryer.Event.DryingProcessFinished',                                  'Drying Finished');
     }
 }

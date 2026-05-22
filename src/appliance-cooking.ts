@@ -91,6 +91,8 @@ export class ApplianceHob extends
         this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
         this.hasEvent('BSH.Common.Event.AlarmClockElapsed',                                 'Alarm Clock Finished');
         this.hasEvent('Cooking.Oven.Event.PreheatFinished',                                 'Preheat Finished');
+        this.hasEvent('BSH.Common.Event.Favorite.001.ExternalTrigger',                      'Smart Home Short Press');
+        this.hasEvent('BSH.Common.Event.Favorite.002.ExternalTrigger',                      'Smart Home Long Press');
     }
 }
 
@@ -110,6 +112,8 @@ export class ApplianceHood extends
         this.hasEvent('BSH.Common.Event.ProgramFinished',                                   'Program Finished');
         this.hasEvent('Cooking.Common.Event.Hood.GreaseFilterMaxSaturationNearlyReached',   'Filter Nearly Saturated');
         this.hasEvent('Cooking.Common.Event.Hood.GreaseFilterMaxSaturationReached',         'Filter Saturated');
+        this.hasEvent('BSH.Common.Event.Favorite.001.ExternalTrigger',                      'Smart Home Short Press');
+        this.hasEvent('BSH.Common.Event.Favorite.002.ExternalTrigger',                      'Smart Home Long Press');
     }
 }
 

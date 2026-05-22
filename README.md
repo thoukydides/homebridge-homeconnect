@@ -104,7 +104,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-hob.svg">
     * Control alarm clock and child lock.
     * Monitor power, remote control, and general operation status.
-    * Automation triggers for finished, alarm clock finished, and preheat finished.
+    * Automation triggers for finished, alarm clock finished, preheat finished, and short/long press favourite actions.
 
   * **Hood:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-hood.svg">
@@ -113,7 +113,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Switch functional light on/off, change brightness, and select colour temperature.
     * Switch ambient light on/off, change brightness, and select colour.
     * Monitor remote control and general operation status.
-    * Automation triggers for finished, grease filter nearly saturated, and grease filter saturated.
+    * Automation triggers for finished, grease filter nearly saturated, grease filter saturated, and short/long press favourite actions.
 
   * **Microwave:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-microwave.svg">
@@ -146,7 +146,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-cleaningrobot.svg">
     * Switch on/off and start/stop programs with preset options.
     * Monitor battery level, battery charging, dock, and general operation status.
-    * Automation triggers for finished, aborted, dust box full, stuck, and lost.
+    * Automation triggers for finished, aborted, dust box full/missing, stuck, lost, and lifted.
 
   * **Dishwasher:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-dishwasher.svg">
@@ -154,7 +154,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
     * Switch ambient light on/off, change brightness, and select colour.
     * Control child lock.
     * Monitor door, program time remaining, remote control, and general operation status.
-    * Automation triggers for finished, aborted, salt supply low, and rinse aid supply low.
+    * Automation triggers for finished, aborted, salt supply low/empty, rinse aid supply low/empty, and machine care and/or filter cleaning recommended.
 
   * **Dryer:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-dryer.svg">

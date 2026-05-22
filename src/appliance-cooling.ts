@@ -66,6 +66,8 @@ function HasCoolingDoors<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             this.hasDoor('Refrigeration.Common.Status.Door.Refrigerator',               'Refrigerator Door');
             this.hasDoor('Refrigeration.Common.Status.Door.Refrigerator2',              'Refrigerator Door 2');
             this.hasDoor('Refrigeration.Common.Status.Door.Refrigerator3',              'Refrigerator Door 3');
+            // WineCooler
+            this.hasDoor('Refrigeration.Common.Status.Door.WineCompartment',            'Wine Compartment Door');
         }
     };
 }
