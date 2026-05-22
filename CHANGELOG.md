@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.10.0] - 2026-05-22
+### Added
+* **CleaningRobot:** Added new event buttons (`Stateless Programmable Switch` services) that can trigger HomeKit automations for dust box missing or robot lifted.
+* **Dishwasher:** Added new event buttons (`Stateless Programmable Switch` services) that can trigger HomeKit automations for salt/rinse-aid empty and machine/filter cleaning recommendations.
+* **Hob/Hood:** Added new event buttons (`Stateless Programmable Switch` services) that can trigger HomeKit automations for short/long press favourite actions (Smart Home Trigger).
+* **WineCooler:** Allow `Refrigeration.Common.Status.Door.WineCompartment` to be used instead of `BSH.Common.Status.DoorState` to workaround API issue.
+### Changed
+* **AirConditioner/CleaningRobot/Dishwasher/Hob/Hood/Oven:** Added new documented settings, program options, and events.
+* Updated dependencies to latest versions.
+
 ## [v1.9.5] - 2026-05-17
 ### Changed
 * **CleaningRobot:** Added documented and undocumented program options for Spotless models. (#391)
@@ -917,7 +927,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.5...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.10.0...HEAD
+[v1.10.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.5...v1.10.0
 [v1.9.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.4...v1.9.5
 [v1.9.4]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.3...v1.9.4
 [v1.9.3]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.2...v1.9.3
