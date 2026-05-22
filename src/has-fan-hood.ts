@@ -3,10 +3,12 @@
 
 import { Characteristic, Service, WithUUID } from 'homebridge';
 
+import { setTimeout as setTimeoutP } from 'timers/promises';
+
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor, assertIsBoolean, assertIsDefined, assertIsNumber, plural } from './utils.js';
+import { Constructor, MS, assertIsBoolean, assertIsDefined, assertIsNumber, plural } from './utils.js';
 import { OptionDefinitionKV, OptionKey, OptionValue } from './api-value.js';
-import { OptionValues, ProgramKey } from './api-value-types.js';
+import { OptionValues, PowerState, ProgramKey } from './api-value-types.js';
 
 // Extractor fan programs
 const FAN_PROGRAM_MANUAL: ProgramKey = 'Cooking.Common.Program.Hood.Venting';
@@ -31,6 +33,10 @@ export interface UpdateFanHCValue {
     percent?:   number;
     boost?:     boolean;
 }
+
+// Timings for switching on appliance power
+const READY_TIMEOUT = 10 * MS;  // Maximum time for appliance to power on
+const READY_DELAY   = 100;      // Delay before (re)checking appliance state
 
 // Add an extractor fan to an accessory
 export function HasFanHood<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
@@ -238,28 +244,34 @@ export function HasFanHood<TBase extends Constructor<ApplianceBase>>(Base: TBase
                 // Turn the fan off
                 this.log.info('SET fan off');
                 await this.device.stopProgram();
-            } else if (auto) {
-                // Start the automatic program
+                return;
+            }
+
+            // Choose the program and options for the requested settings
+            let program: ProgramKey;
+            let options: OptionValues | undefined;
+            if (auto) {
                 this.log.info('SET fan automatic');
-                await this.device.startProgram(FAN_PROGRAM_AUTO);
+                program = FAN_PROGRAM_AUTO;
             } else {
                 const option = this.fromFanSpeedPercent(percent);
                 const snapPercent = this.toFanSpeedPercent(option);
-                this.log.info(`SET fan manual ${snapPercent}%${boost === true ? ' with boost' : ''}`);
-                if (this.device.isOperationState('Run')
-                    && this.device.getItem('BSH.Common.Root.ActiveProgram') === FAN_PROGRAM_MANUAL) {
-                    // Try changing the options for the current program
-                    await this.device.setActiveProgramOption(option.key, option.value);
-                    if (boost !== undefined) {
-                        await this.device.setActiveProgramOption('Cooking.Common.Option.Hood.Boost', boost);
-                    }
-                } else {
-                    // Start the manual program at the requested speed
-                    const options: OptionValues = { [option.key]: option.value };
-                    if (boost !== undefined) options['Cooking.Common.Option.Hood.Boost'] = boost;
-                    await this.device.startProgram(FAN_PROGRAM_MANUAL, options);
-                }
+                this.log.info(`SET fan manual ${snapPercent}%${boost ? ' with boost' : ''}`);
+                program = FAN_PROGRAM_MANUAL;
+                options = { [option.key]: option.value };
+                if (boost !== undefined) options['Cooking.Common.Option.Hood.Boost'] = boost;
             }
+
+            // Ensure that the appliance is on before starting a program
+            if (!this.device.isOperationState('Run')) {
+                await this.device.setSetting('BSH.Common.Setting.PowerState', PowerState.On);
+                await setTimeoutP(READY_DELAY);
+                await this.device.waitOperationState(['Run'], READY_TIMEOUT);
+                await setTimeoutP(READY_DELAY);
+            }
+
+            // Start the program with the requested options
+            await this.device.startOrModifyProgram(program, options);
         }
 
         // Convert from a rotation speed percentage to a program option

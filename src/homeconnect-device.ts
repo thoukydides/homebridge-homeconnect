@@ -359,6 +359,21 @@ export class HomeConnectDevice extends EventEmitter {
         }
     }
 
+    // Start or modify a program with the specified options
+    async startOrModifyProgram(programKey: ProgramKey, options: OptionValues = {}): Promise<void> {
+        if (this.isOperationState('Run')
+            && this.getItem('BSH.Common.Root.ActiveProgram') === programKey) {
+            // Modify the options for the current program
+            const programOptions = OptionsRecordToKV(options);
+            for (const { key, value } of programOptions) {
+                await this.setActiveProgramOption(key, value);
+            }
+        } else {
+            // No current or different program active, so start requested one
+            this.startProgram(programKey, options);
+        }
+    }
+
     // Stop a program
     async stopProgram(): Promise<void> {
         try {
