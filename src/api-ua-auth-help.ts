@@ -6,7 +6,7 @@ import { Logger } from 'homebridge';
 import chalk from 'chalk';
 
 import { APIStatusCodeError } from './api-errors.js';
-import { assertIsDefined, columns } from './utils.js';
+import { assertIsDefined, columns, plural } from './utils.js';
 
 // Components of help message
 export interface AuthHelpMessage {
@@ -144,7 +144,7 @@ export class AuthHelpDeviceFlow extends AuthHelp {
         case 'Invalid client id':
             if (clientid.length !== 64) {
                 prescript.push('The Client ID should be 64 hexadecimal characters,'
-                             + ` but the value specified for "clientid" is ${clientid.length} characters long.`);
+                             + ` but the value specified for "clientid" is ${plural(clientid.length, 'character')} long.`);
                 return 'set';
             } else if (!/^[0-9A-F]+$/i.test(clientid)) {
                 prescript.push('The Client ID should be 64 hexadecimal characters,'

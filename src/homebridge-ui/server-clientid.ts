@@ -9,7 +9,7 @@ import { CloudAPI, HomeConnectAPI } from '../api.js';
 import { HomeAppliance } from '../api-types.js';
 import { ConfigPlugin } from '../config-types.js';
 import { MockAPI } from '../mock/index.js';
-import { Constructor, assertIsDefined } from '../utils.js';
+import { Constructor, assertIsDefined, plural } from '../utils.js';
 import { logError } from '../log-error.js';
 import { AuthorisationStatus } from '../api-ua-auth.js';
 import { APIStatusCodeError } from '../api-errors.js';
@@ -107,7 +107,7 @@ export class ServerClientID {
         // Attempt to read the list of appliances
         try {
             client.status.appliances = await client.api.getAppliances();
-            this.log.info(`Authorised (${client.status.appliances.length} appliances)`);
+            this.log.info(`Authorised (${plural(client.status.appliances.length, 'appliance')})`);
             this.ipc.pushEvent('status', client.status);
         } catch (err) {
             logError(this.log, 'Reading appliances', err);

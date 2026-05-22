@@ -8,7 +8,7 @@ import { once } from 'node:events';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { APIStatusCodeError } from './api-errors.js';
-import { assertIsDefined, MS } from './utils.js';
+import { assertIsDefined, MS, plural } from './utils.js';
 import { logError } from './log-error.js';
 import { HomeConnectAPI } from './api.js';
 import { HomeAppliance } from './api-types.js';
@@ -528,7 +528,7 @@ export class HomeConnectDevice extends EventEmitter {
     // Abort refreshing appliance information when it disconnects
     onDisconnected(): void {
         if (this.readAllActions?.length) {
-            this.log.debug(`Appliance disconnected; abandoning ${this.readAllActions.length} pending reads`);
+            this.log.debug(`Appliance disconnected; abandoning ${plural(this.readAllActions.length, 'pending read')}`);
         }
         delete this.readAllActions;
     }

@@ -5,7 +5,7 @@ import { PluginConfig } from '@homebridge/plugin-ui-utils/ui.interface';
 import { Logger, PlatformConfig } from 'homebridge';
 
 import { ApplianceConfig, ConfigAppliances, ConfigPlugin } from '../../config-types.js';
-import { keyofChecker } from '../../utils.js';
+import { keyofChecker, plural } from '../../utils.js';
 import { ClientIPC } from './client-ipc.js';
 import { cloneTemplate, getElementById } from './utils-dom.js';
 import { typeSuite } from '../../ti/config-types.js';
@@ -48,7 +48,7 @@ export class Config {
             this.savedConfig = { platform: window.homebridge.plugin.displayName };
         } else {
             if (1 < configArray.length) {
-                this.log.error(`Using the first of ${configArray.length} plugin configurations`, configArray);
+                this.log.error(`Using the first of ${plural(configArray.length, 'plugin configuration')}`, configArray);
                 window.homebridge.toast.error('Only a single platform instance is supported; using the first',
                                               'Multiple Configuration Blocks');
             }

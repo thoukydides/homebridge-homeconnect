@@ -151,7 +151,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 const passiveKeys = availableKeys.filter(key => this.programs.some(p => p.key === key && !p.selected));
                 if (passiveKeys.length) {
                     // Update details of the selected programs
-                    this.log.info(`Passively reading options for ${passiveKeys.length} programs`);
+                    this.log.info(`Passively reading options for ${plural(passiveKeys.length, 'program')}`);
                     await this.updateProgramsWithoutSelecting(passiveKeys);
                 }
 
@@ -167,10 +167,11 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     if (this.device.getItem('BSH.Common.Status.RemoteControlActive') === false)
                         problems.push('remote control is not enabled');
                     if (problems.length) {
-                        this.log.warn(`Unable to actively read options for ${activeKeys.length} programs (${formatList(problems)})`);
+                        this.log.warn(`Unable to actively read options for ${plural(activeKeys.length, 'program')}`
+                                    + ` (${formatList(problems)})`);
                     } else {
                         // Update details of the selected programs
-                        this.log.info(`Actively reading options for ${activeKeys.length} programs`);
+                        this.log.info(`Actively reading options for ${plural(activeKeys.length, 'program')}`);
                         await this.updateProgramsSelectFirst(activeKeys);
                     }
                 }
@@ -499,7 +500,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Add a list of programs
         addPrograms(programs: CheckedProgramConfig[], updateProgramHC: UpdateProgramHC): void {
             // Add a service for each program
-            this.log.info(`Adding services for ${programs.length} programs`);
+            this.log.info(`Adding services for ${plural(programs.length, 'program')}`);
             const fields = programs.map(program => [program.name || '?', `(${program.key})`, program.selectonly ? 'select only' : '']);
             const descriptions = columns(fields);
             let prevService;
@@ -662,7 +663,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                     })
                 }
             };
-            this.log.info(`${this.programs.length} programs supported\n` + JSON.stringify(json, null, 4));
+            this.log.info(`${plural(this.programs.length, 'program')} supported\n` + JSON.stringify(json, null, 4));
         }
 
         // Convert a program option into the configuration file format

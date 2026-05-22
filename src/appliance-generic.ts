@@ -231,7 +231,7 @@ export class ApplianceBase {
                 .filter(c => powerService.testCharacteristic(c))
                 .map(c => powerService.getCharacteristic(c));
             if (removeCharacteristics.length) {
-                this.log.warn(`Removing ${removeCharacteristics.length} characteristics from HomeKit Switch`);
+                this.log.warn(`Removing ${plural(removeCharacteristics.length, 'characteristic')} from HomeKit Switch`);
                 for (const characteristic of removeCharacteristics)
                     powerService.removeCharacteristic(characteristic);
             }

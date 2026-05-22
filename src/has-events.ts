@@ -7,7 +7,7 @@ import { setImmediate as setImmediateP } from 'timers/promises';
 
 import { DoorState, EventPresentState } from './api-value-types.js';
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor } from './utils.js';
+import { Constructor, plural } from './utils.js';
 import { EventKey } from './api-value.js';
 import { columns } from './utils.js';
 
@@ -51,7 +51,7 @@ export function HasEvents<TBase extends Constructor<ApplianceBase>>(Base: TBase)
             }
 
             // Add a service for each event
-            this.log.info(`Adding services for ${this.events.length} events`);
+            this.log.info(`Adding services for ${plural(this.events.length, 'event')}`);
             const fields = this.events.map((event, index) => [`Button ${index + 1}:`, event.name, `(${event.event})`]);
             const descriptions = columns(fields);
             for (const event of this.events) {

@@ -3,6 +3,7 @@
 
 import path from 'node:path';
 import { readdir, readFile, writeFile, stat } from 'node:fs/promises';
+import { plural } from '../src/utils.js';
 
 // Suffix added by ts-interface-builder
 const TI_SUFFIX = '-ti.ts';
@@ -36,7 +37,7 @@ for (const tiFile of tiFiles) {
         continue;
     }
     const typeSuiteMembers = typeSuite[1].split(',').map(l => l.trim());
-    console.log(`${tiFile}: Found ${typeSuiteMembers.length} types`);
+    console.log(`${tiFile}: Found ${plural(typeSuiteMembers.length, 'type')}`);
 
     // Generate a type-safe interface
     const safeText =

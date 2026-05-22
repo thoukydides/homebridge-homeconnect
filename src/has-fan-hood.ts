@@ -4,7 +4,7 @@
 import { Characteristic, Service, WithUUID } from 'homebridge';
 
 import { ApplianceBase } from './appliance-generic.js';
-import { Constructor, assertIsBoolean, assertIsDefined, assertIsNumber } from './utils.js';
+import { Constructor, assertIsBoolean, assertIsDefined, assertIsNumber, plural } from './utils.js';
 import { OptionDefinitionKV, OptionKey, OptionValue } from './api-value.js';
 import { OptionValues, ProgramKey } from './api-value-types.js';
 
@@ -33,8 +33,8 @@ export interface UpdateFanHCValue {
 }
 
 // Add an extractor fan to an accessory
-export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
-    return class HasFan extends Base {
+export function HasFanHood<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
+    return class HasFanHood extends Base {
 
         // Accessory services
         readonly activeService: Service;
@@ -93,13 +93,14 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
             };
             const fanLevels = [...levels.venting, ...levels.intensive];
             if (!fanLevels.length) throw new Error('No fan speed levels');
-            this.log.info(`Fan supports ${levels.venting.length} venting levels + ${levels.intensive.length} intensive levels`
+            this.log.info(`Fan supports ${plural(levels.venting.length, 'venting level')}`
+                          + ` + ${plural(levels.intensive.length, 'intensive level')}`
                           + (this.fanSupportsAuto ? ' + auto mode' : ''));
 
             // Select an appropriate rotation speed step size (suitable for Siri)
             // (allow low=25%, medium=50%, and high=100% for Siri)
             this.fanPercentStep = fanLevels.length <= 2 ? 100 / fanLevels.length
-                                                              : (fanLevels.length <= 4 ? 25 : 5);
+                               : (fanLevels.length <= 4 ? 25 : 5);
 
             // Convert each rotation speed to a percentage
             this.fanLevels = fanLevels.map((level, index) => {
@@ -114,7 +115,8 @@ export function HasFan<TBase extends Constructor<ApplianceBase>>(Base: TBase) {
                 const option = this.fromFanSpeedPercent(percent);
                 const level = this.fanLevels.find(o => o.key === option.key && o.value === option.value);
                 assertIsDefined(level);
-                Object.assign(level, { siri, percent });
+                level.siri      = siri;
+                level.percent   = percent;
             }
 
             // Verify that the fan speed mapping is stable

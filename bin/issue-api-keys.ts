@@ -5,6 +5,7 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 import { readFile } from 'node:fs/promises';
+import { plural } from '../src/utils.js';
 
 // Possible outcomes
 type Status = 'done' | 'updates' | 'invalid';
@@ -113,7 +114,7 @@ if (issue_number) {
         ...repo, labels: LABEL_KEY_VALUE, state: 'all', sort: 'created', direction: 'asc'
     });
     result = checkMultipleIssues(issues);
-    core.info(`Processed ${result.valid} of ${issues.length} '${LABEL_KEY_VALUE}' issues`);
+    core.info(`Processed ${result.valid} of ${plural(issues.length, `'${LABEL_KEY_VALUE}' issue`)}`);
 }
 
 // Generate the comment and overall status
@@ -462,7 +463,7 @@ async function fetchAPIDocumentation(urls: string[]): Promise<APIDocument[]> {
             core.error(`Failed to fetch API documentation from ${url}: ${message}`);
         }
     }
-    core.info(`Retrieved ${documents.length} documents from ${urls.length} pages`);
+    core.info(`Retrieved ${plural(documents.length, 'document')} from ${plural(urls.length, 'page')}`);
     return documents;
 }
 

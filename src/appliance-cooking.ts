@@ -9,7 +9,8 @@ import { HasChildLock } from './has-childlock.js';
 import { HasDoor, HasLockableDoor } from './has-door.js';
 import { HasEvents } from './has-events.js';
 import { HasModes } from './has-modes.js';
-import { HasFan } from './has-fan.js';
+import { HasFanHob } from './has-fan-hob.js';
+import { HasFanHood } from './has-fan-hood.js';
 import { HasHoodLight } from './has-light.js';
 import { HasActive } from './has-active.js';
 import { HasPrograms } from './has-programs.js';
@@ -80,9 +81,10 @@ export class ApplianceHob extends
     HasChildLock(
     HasRemoteControl(
     HasAlarmClock(
+    HasFanHob(
     HasEvents(
     HasActive(
-    ApplianceGeneric))))) {
+    ApplianceGeneric)))))) {
 
     constructor(...args: ConstructorParameters<typeof ApplianceGeneric>) {
         super(...args);
@@ -101,7 +103,7 @@ export class ApplianceHood extends
     HasRemoteControl(
     HasRemainingTime(
     HasHoodLight(
-    HasFan(
+    HasFanHood(
     HasEvents(
     ApplianceGeneric))))) {
 
