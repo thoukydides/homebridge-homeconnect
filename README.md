@@ -102,7 +102,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
 
   * **Hob:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-hob.svg">
-    * Control alarm clock and child lock.
+    * Control alarm clock, child lock, and integrated ventilation.
     * Monitor power, remote control, and general operation status.
     * Automation triggers for finished, alarm clock finished, preheat finished, and short/long press favourite actions.
 
