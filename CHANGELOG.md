@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.11.0] - 2026-05-23
+### Added
+* **AirConditioner:** Added a `Thermostat` service to control setpoint temperature and program/mode. (#346)
+
 ## [v1.10.1] - 2026-05-22
 ### Added
 * **Hob:** Control of integrated ventilation level for appliances combining Hob and Hood functionality. (#363)
@@ -933,7 +937,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.10.1...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.0...HEAD
+[v1.11.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.10.1...v1.11.0
 [v1.10.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.10.0...v1.10.1
 [v1.10.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.5...v1.10.0
 [v1.9.5]:           https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.4...v1.9.5

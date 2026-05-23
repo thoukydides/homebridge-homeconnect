@@ -184,7 +184,7 @@ Apple's Home app does not support all of the features of this plugin. Some [thir
   * **AirConditioner:**
     <img align="right" width="100px" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-airconditioner.svg">
     * Switch on/off.
-    * Switch fan on/off, set fan speed, and select manual/auto mode.
+    * Select auto/cool/heat/off mode, set setpoint temperature, switch fan on/off, set fan speed, and select fan manual/auto mode.
 
   * **Freezer / FridgeFreezer / Refrigerator:**
     <img align="right" height="100px" src="https://raw.githubusercontent.com/thoukydides/homebridge-homeconnect/refs/heads/master/src/homebridge-ui/public/images/icon-refrigerator.svg">
