@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.11.1] - 2026-05-23
+### Changed
+* **CoffeeMaker:** Added undocumented program option values. (#393)
+* Updated dependencies to latest versions.
+
 ## [v1.11.0] - 2026-05-23
 ### Added
 * **AirConditioner:** Added a `Thermostat` service to control setpoint temperature and program/mode. (#346)
@@ -937,7 +942,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.0...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.1...HEAD
+[v1.11.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.0...v1.11.1
 [v1.11.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.10.1...v1.11.0
 [v1.10.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.10.0...v1.10.1
 [v1.10.0]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.9.5...v1.10.0
