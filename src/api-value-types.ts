@@ -331,7 +331,9 @@ export type BeanContainerSelection =
     'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right'
   | 'ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left';
 export type BeverageSize = // (undocumented)
-    'ConsumerProducts.CoffeeMaker.EnumType.BeverageSize.Medium';
+    'ConsumerProducts.CoffeeMaker.EnumType.BeverageSize.Medium'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.BeverageSize.Large'
+  | 'ConsumerProducts.CoffeeMaker.EnumType.BeverageSize.VeryLarge';
 export type CavitySelector = // (undocumented)
     'Cooking.Oven.EnumType.CavitySelector.Main'
   | 'Cooking.Oven.EnumType.CavitySelector.Bottom'
