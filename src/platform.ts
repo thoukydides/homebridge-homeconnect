@@ -24,7 +24,7 @@ import { PLUGIN_NAME, PLATFORM_NAME, DEFAULT_CONFIG, DEFAULT_CLIENTID } from './
 import { PrefixLogger } from './logger.js';
 import { assertIsDefined, deepMerge, formatList, getValidationTree,
          keyofChecker, MS, plural } from './utils.js';
-import { logError } from './log-error.js';
+import { detached, logError } from './log-error.js';
 import { ConfigAppliances, ConfigPlugin } from './config-types.js';
 import { checkDependencyVersions } from './check-versions.js';
 import { HOMEBRIDGE_LANGUAGES } from './api-languages.js';
@@ -77,7 +77,8 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         this.log = new PrefixLogger(log);
 
         // Wait for Homebridge to restore cached accessories
-        this.hb.on('didFinishLaunching', () => this.finishedLaunching());
+        this.hb.on('didFinishLaunching',
+                   detached(this.log, 'Plugin initialisation', () => this.finishedLaunching()));
     }
 
     // Restore a cached accessory
@@ -87,28 +88,24 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
 
     // Update list of Home Connect appliances after cache has been restored
     async finishedLaunching(): Promise<void> {
-        try {
-            const restored = this.accessories.size;
-            if (restored) this.log.info(`Restored ${restored} cached accessories`);
+        const restored = this.accessories.size;
+        if (restored) this.log.info(`Restored ${restored} cached accessories`);
 
-            // Check that the dependencies and configuration
-            checkDependencyVersions(this.log, this.hb);
-            [this.configPlugin, this.configAppliances] = this.checkConfig();
+        // Check that the dependencies and configuration
+        checkDependencyVersions(this.log, this.hb);
+        [this.configPlugin, this.configAppliances] = this.checkConfig();
 
-            // Prepare other resources required by this plugin
-            this.persist = await this.preparePersistentStorage();
-            this.schema = new ConfigSchemaData(this.log, this.persist);
-            this.schema.setConfig(this.platformConfig);
+        // Prepare other resources required by this plugin
+        this.persist = await this.preparePersistentStorage();
+        this.schema = new ConfigSchemaData(this.log, this.persist);
+        await this.schema.setConfig(this.platformConfig);
 
-            // Connect to the Home Connect cloud
-            const api = this.configPlugin.debug?.includes('Mock Appliances') ? MockAPI : CloudAPI;
-            this.homeconnect = new api(this.log, this.configPlugin, this.persist);
+        // Connect to the Home Connect cloud
+        const api = this.configPlugin.debug?.includes('Mock Appliances') ? MockAPI : CloudAPI;
+        this.homeconnect = new api(this.log, this.configPlugin, this.persist);
 
-            // Start polling the list of Home Connect appliances
-            this.updateAppliances();
-        } catch (err) {
-            logError(this.log, 'Plugin initialisation', err);
-        }
+        // Start polling the list of Home Connect appliances
+        detached(this.log, 'Update appliances', () => this.updateAppliances())();
     }
 
     // Check the user's configuration

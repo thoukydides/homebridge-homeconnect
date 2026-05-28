@@ -6,6 +6,7 @@ import { Logger } from 'homebridge';
 import { HomeAppliance } from '../../api-types.js';
 import { assertIsDefined, assertIsInstanceOf } from '../../utils.js';
 import { cloneTemplate, getElementById, getSlot } from './utils-dom.js';
+import { detached } from '../../log-error.js';
 
 
 // Description for a card
@@ -76,7 +77,8 @@ export class Cards {
         // Create a new card from the template
         detail ??= ' '; // (non-breaking space)
         const card = cloneTemplate('hc-appliance-card', { name, detail });
-        this.loadCardIcon(getSlot(card, 'icon'), `./images/icon-${icon}.svg`, id);
+        detached(this.log, 'Load card icon',
+                 () => this.loadCardIcon(getSlot(card, 'icon'), `./images/icon-${icon}.svg`, id))();
 
         // Handle card selection
         const element = card.children[0];
@@ -88,30 +90,26 @@ export class Cards {
 
     // Load the icon image for a card
     async loadCardIcon(element: HTMLElement, url: string, id: string): Promise<void> {
-        try {
-            // Load the icon and add it to the card
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Failed to fetch icon ${response.url}: ${response.statusText}`);
-            element.innerHTML = await response.text();
+        // Load the icon and add it to the card
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch icon ${response.url}: ${response.statusText}`);
+        element.innerHTML = await response.text();
 
-            // Change the group (layer) IDs to classes
-            element.querySelectorAll('g[id]').forEach(group => {
-                const id = group.getAttribute('id');
-                assertIsDefined(id);
-                group.removeAttribute('id');
-                group.classList.add(id);
-            });
+        // Change the group (layer) IDs to classes
+        element.querySelectorAll('g[id]').forEach(group => {
+            const id = group.getAttribute('id');
+            assertIsDefined(id);
+            group.removeAttribute('id');
+            group.classList.add(id);
+        });
 
-            // Assign unique IDs to gradient fills
-            element.querySelectorAll('defs [id]').forEach(def => {
-                const oldId = def.getAttribute('id');
-                const newId = `${id}-${oldId}`;
-                def.setAttribute('id', newId);
-                element.querySelectorAll(`[fill='url(#${oldId})']`).forEach(ref => { ref.setAttribute('fill', `url(#${newId})`); });
-            });
-        } catch (err) {
-            this.log.error(`loadCardIcon(${id}) =>`, err);
-        }
+        // Assign unique IDs to gradient fills
+        element.querySelectorAll('defs [id]').forEach(def => {
+            const oldId = def.getAttribute('id');
+            const newId = `${id}-${oldId}`;
+            def.setAttribute('id', newId);
+            element.querySelectorAll(`[fill='url(#${oldId})']`).forEach(ref => { ref.setAttribute('fill', `url(#${newId})`); });
+        });
     }
 
     // A card has been selected

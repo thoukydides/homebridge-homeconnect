@@ -58,7 +58,7 @@ export class ServerLogger extends ConsoleLogger {
 
         // Start receiving log events
         ipc.onEvent('log', messages => { this.logMessages(messages); });
-        try { ipc.request('/log', minLevel); } catch { /* empty */ }
+        ipc.request('/log', minLevel).catch(() => { /* empty */ });
     }
 
     // Log messages received from the server

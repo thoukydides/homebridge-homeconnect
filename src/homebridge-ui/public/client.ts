@@ -50,7 +50,7 @@ class Client {
         cards.onSelect      = (id?: string): void => { forms.showForm(id); };
 
         // Attempt to authorise a client when the configuration changes
-        config.onGlobal = (config): void => { client.setClient(config); };
+        config.onGlobal = (config): Promise<void> => client.setClient(config);
         client.onFail   = ():       void => { forms.showForm(FormId.Global); };
     }
 }

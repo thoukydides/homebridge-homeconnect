@@ -26,7 +26,7 @@ export class Config {
     // The configuration being edited
     global:         Partial<ConfigPlugin> = {};
     appliances:     ConfigAppliances = {};
-    onGlobal?:      (global: Partial<ConfigPlugin>) => void;
+    onGlobal?:      (global: Partial<ConfigPlugin>) => Promise<void>;
 
     // Promises for retrieving the current configurations
     readyPromise:   Promise<void>;
@@ -53,7 +53,7 @@ export class Config {
                                               'Multiple Configuration Blocks');
             }
             this.savedConfig = configArray[0];
-            this.checkIfModified(this.savedConfig);
+            await this.checkIfModified(this.savedConfig);
         }
 
         // Treat all unexpected properties as appliance configurations
@@ -63,7 +63,7 @@ export class Config {
         this.global     = select(([key]) =>  keyofConfigPlugin.includes(key));
         this.appliances = select(([key]) => !keyofConfigPlugin.includes(key)) as ConfigAppliances;
         this.log.debug('getConfig() global %O appliances %O', this.global, this.appliances);
-        this.onGlobal?.(this.global);
+        await this.onGlobal?.(this.global);
     }
 
     // Retrieve the most recently used configuration
@@ -90,7 +90,7 @@ export class Config {
         }
 
         // Check whether the configuration matches the active plugin
-        this.checkIfModified(config);
+        await this.checkIfModified(config);
     }
 
     // Compare two configuration objects
@@ -166,7 +166,7 @@ export class Config {
         if (this.diffObject(config, await this.getGlobal()).length) {
             this.log.debug('setGlobal(%O)', config);
             this.global = config;
-            this.onGlobal?.(config);
+            await this.onGlobal?.(config);
             await this.putConfig();
         }
     }

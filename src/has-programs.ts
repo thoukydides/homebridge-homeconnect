@@ -340,11 +340,11 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         // Update the configuration schema after updating the cached programs
         async savePrograms(): Promise<void> {
             // Programs can only be selected or started with Control scope
-            this.schema.setHasControl(this.device.ha.haId, this.device.hasScope('Control'));
+            await this.schema.setHasControl(this.device.ha.haId, this.device.hasScope('Control'));
 
             // Update the list of programs and their options in the schema
-            this.setSchemaPrograms(this.programs);
-            for (const program of this.programs) this.setSchemaProgramOptions(program);
+            await this.setSchemaPrograms(this.programs);
+            for (const program of this.programs) await this.setSchemaProgramOptions(program);
 
             // Cache the results
             await this.cache.set('Program details', this.programs);
@@ -610,8 +610,11 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
                 }
             }, false);
             this.device.on('BSH.Common.Root.ActiveProgram', programKey => updateHK(programKey === key));
-            this.device.on('BSH.Common.Status.OperationState', () =>
-                this.device.isOperationState('Inactive', 'Ready', 'Finished') && updateHK(false));
+            this.device.on('BSH.Common.Status.OperationState', async () => {
+                if (this.device.isOperationState('Inactive', 'Ready', 'Finished')) {
+                    await updateHK(false);
+                }
+            });
 
             // Return the service
             return service;
@@ -708,17 +711,17 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Update the configuration schema with the latest program list
-        setSchemaPrograms(allPrograms: ProgramDefinitionKV[]): void {
-            this.schema.setPrograms(this.device.ha.haId, allPrograms.map(program => ({
+        async setSchemaPrograms(allPrograms: ProgramDefinitionKV[]): Promise<void> {
+            await this.schema.setPrograms(this.device.ha.haId, allPrograms.map(program => ({
                 name:   this.makeName(program.name, program.key),
                 key:    program.key
             })));
         }
 
         // Update the configuration schema with the options for a single program
-        setSchemaProgramOptions<Key extends ProgramKey>(program: ProgramDefinitionKV<Key>): void {
+        async setSchemaProgramOptions<Key extends ProgramKey>(program: ProgramDefinitionKV<Key>): Promise<void> {
             const options = program.options?.map(o => this.makeSchemaOption(o)) ?? [];
-            this.schema.setProgramOptions(this.device.ha.haId, program.key, options);
+            await this.schema.setProgramOptions(this.device.ha.haId, program.key, options);
         }
 
         // Convert program options into the configuration schema format

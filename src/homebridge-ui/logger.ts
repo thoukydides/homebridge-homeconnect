@@ -46,17 +46,21 @@ export class ServerLogger {
 
     // Log a message at the specified level
     log(level: LogLevel, message: string, ...params: unknown[]): void {
+        if (!this.isEnabled(level)) return;
+
         // Send queued log message as an event to the client
         const send = async (): Promise<void> => {
-            await setImmediateP();
-            const ipc = await this.ipc;
-            const messages = this.queue.filter(log => this.isEnabled(log.level));
-            if (messages.length) ipc.pushEvent('log', messages);
-            this.queue.length = 0;
+            try {
+                await setImmediateP();
+                const ipc = await this.ipc;
+                const messages = this.queue.filter(log => this.isEnabled(log.level));
+                if (messages.length) ipc.pushEvent('log', messages);
+                this.queue.length = 0;
+            } catch { /* empty */ }
         };
-        if (!this.queue.length) send();
+        if (!this.queue.length) void send();
 
         // Add this message to the queue
-        if (this.isEnabled(level)) this.queue.push({ level, message, params });
+        this.queue.push({ level, message, params });
     }
 }

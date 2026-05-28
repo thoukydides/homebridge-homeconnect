@@ -14,6 +14,7 @@ import { CommandKV, CommandKey, EventApplianceConnectionEvent,
 import { OperationState, ProgramKey } from '../api-value-types.js';
 import { Request, Response } from '../api-ua.js';
 import { APIStatusCodeError } from '../api-errors.js';
+import { detached } from '../log-error.js';
 
 // Simplified event parameters
 export type MockEvent<Event extends EventMapKey = EventMapKey, Key extends EventKey<Event> = EventKey<Event>> =
@@ -301,7 +302,7 @@ export abstract class MockAppliance {
     emitDataEvent<Event extends EventApplianceDataEvent, Key extends EventKey<Event> = EventKey<Event>>
     (event: Event, key: Key, value: EventValue<Key, Event>): void {
         // Emit the event after collecting all pending data
-        const emitEvent = async (): Promise<void> => {
+        if (!this.dataEventQueue[event].length) detached(this.log, 'Emit event', async (): Promise<void> => {
             await setImmediateP();
             const eventWithData: EventApplianceDataKV<Event> = {
                 event,
@@ -312,8 +313,7 @@ export abstract class MockAppliance {
             };
             this.emitEventResolve(eventWithData as EventKV);
             this.dataEventQueue[event] = [];
-        };
-        if (!this.dataEventQueue[event].length) emitEvent();
+        })();
 
         // Queue the data
         this.dataEventQueue[event].push({

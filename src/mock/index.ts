@@ -23,6 +23,7 @@ import { MockCoffeeMaker } from './mock-coffeemaker.js';
 import { MockDryer } from './mock-dryer.js';
 import { MockWasher } from './mock-washer.js';
 import { AuthorisationStatus } from '../api-ua-auth.js';
+import { detached } from '../log-error.js';
 
 // Random delay before completing API requests
 const MOCK_MIN_DELAY =  1; // (milliseconds)
@@ -138,12 +139,12 @@ export class MockAPI implements HomeConnectAPI {
         // Receive the event streams from all of the selected appliances
         let eventPromise: Promise<EventKV>;
         let eventResolve: (event: EventKV) => void;
-        const receiveEvents = async (events: AsyncGenerator<EventKV, void, void>): Promise<void> => {
+        const receiveEvents = detached(this.log, 'Receive events', async (events: AsyncGenerator<EventKV, void, void>): Promise<void> => {
             for await (const event of events) {
                 await this.delay();
                 eventResolve(event);
             }
-        };
+        });
         for (const mockAppliance of appliances) {
             if (mockAppliance) receiveEvents(mockAppliance.getEvents());
         }

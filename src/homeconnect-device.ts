@@ -8,8 +8,8 @@ import { once } from 'node:events';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
 import { APIStatusCodeError } from './api-errors.js';
-import { assertIsDefined, MS, plural } from './utils.js';
-import { logError } from './log-error.js';
+import { assertIsDefined, MS, plural, MaybePromise } from './utils.js';
+import { detached, logError } from './log-error.js';
 import { HomeConnectAPI } from './api.js';
 import { HomeAppliance } from './api-types.js';
 import { OperationState, OptionValues, PowerState, ProgramKey } from './api-value-types.js';
@@ -61,10 +61,13 @@ function OptionsRecordToKV(options: OptionValues): OptionKV[] {
 }
 
 // Low-level access to the Home Connect API
-export class HomeConnectDevice extends EventEmitter {
+export class HomeConnectDevice {
 
     // Database of most recently reported key-value pairs
     readonly items: { [Key in DeviceKey]?: Item<Key>; } = {};
+
+    // Event emitter
+    private emitter = new EventEmitter;
 
     // Stop event stream when appliance is depaired
     private stopEvents = false;
@@ -86,25 +89,24 @@ export class HomeConnectDevice extends EventEmitter {
         readonly api:   HomeConnectAPI,
         readonly ha:    HomeAppliance
     ) {
-        super({ captureRejections: true });
-        super.on('error', (err: unknown) => logError(this.log, 'Device event', err));
+        this.emitter = new EventEmitter({ captureRejections: true });
+        this.emitter.on('error', (err: unknown) => logError(this.log, 'Device event', err));
+        this.emitter.setMaxListeners(0); // Disable warning for >10 listeners
 
         // Initial device state
         this.setConnectedState(this.ha.connected);
-
-        // Disable warning for more than 10 listeners on an event
-        this.setMaxListeners(0);
 
         // Workaround appliances not reliably indicating power state
         this.inferPowerState();
 
         // Start streaming events
-        this.processEvents();
+        detached(this.log, 'Device events', () => this.processEvents())();
     }
 
-    // Stop event stream (and any other autonomous activity)
+    // Stop event stream and remove all event listeners
     stop(): void {
         this.stopEvents = true;
+        this.emitter.removeAllListeners();
     }
 
     // Describe an item
@@ -127,7 +129,7 @@ export class HomeConnectDevice extends EventEmitter {
         // Notify listeners for each item
         for (const item of items) {
             const description = this.describe(item);
-            this.log.debug(`${description} (${this.listenerCount(item.key)} listeners)`);
+            this.log.debug(`${description} (${this.emitter.listenerCount(item.key)} listeners)`);
             try {
                 this.emit(item.key, item.value);
             } catch (err) {
@@ -370,7 +372,7 @@ export class HomeConnectDevice extends EventEmitter {
             }
         } else {
             // No current or different program active, so start requested one
-            this.startProgram(programKey, options);
+            await this.startProgram(programKey, options);
         }
     }
 
@@ -534,7 +536,7 @@ export class HomeConnectDevice extends EventEmitter {
         if (!this.readAllScheduled) {
             this.log.debug((this.ha.connected ? 'Connected' : 'Might be connected')
                            + ', so reading appliance state...');
-            this.readAllScheduled = setTimeout(() => this.readAll());
+            this.readAllScheduled = setTimeout(detached(this.log, 'Read all', () => this.readAll()));
         } else {
             this.log.debug('Connected, but appliance state read already pending...');
         }
@@ -585,7 +587,7 @@ export class HomeConnectDevice extends EventEmitter {
                 this.log.debug('Still connected, so retrying appliance state'
                              + ` read in ${readAllRetryDelay} seconds...`);
                 this.readAllScheduled =
-                    setTimeout(() => this.readAll(), readAllRetryDelay);
+                    setTimeout(detached(this.log, 'Read all', () => this.readAll()), readAllRetryDelay);
             } else {
                 const message = err instanceof Error ? err.message : String(err);
                 this.log.debug(`Ignoring appliance state read due to disconnection: ${message}`);
@@ -663,13 +665,9 @@ export class HomeConnectDevice extends EventEmitter {
 
     // Process received events
     async processEvents(): Promise<void> {
-        try {
-            for await (const event of this.api.getEvents(this.ha.haId)) {
-                this.eventListener(event);
-                if (this.stopEvents) break;
-            }
-        } catch (err) {
-            logError(this.log, 'Device events', err);
+        for await (const event of this.api.getEvents(this.ha.haId)) {
+            this.eventListener(event);
+            if (this.stopEvents) break;
         }
     }
 
@@ -720,23 +718,18 @@ export class HomeConnectDevice extends EventEmitter {
     }
 
     // Install a handler for a device key-value event
-    on<Key extends DeviceKey>(key: Key, listener: (value: DeviceValue<Key>) => void): this {
-        return super.on(key, listener);
-    }
-
-    // Uninstall a handler for a device key-value event
-    off<Key extends DeviceKey>(key: Key, listener: (value: DeviceValue<Key>) => void): this {
-        return super.off(key, listener);
+    on<Key extends DeviceKey>(key: Key, listener: (value: DeviceValue<Key>) => MaybePromise): void {
+        this.emitter.on(key, detached(this.log, 'Device event', listener));
     }
 
     // Wait (once) for a device key-value event
     async onceWait<Key extends DeviceKey>(key: Key): Promise<DeviceValue<Key>> {
-        const [value] = await once(this, key) as [DeviceValue<Key>];
+        const [value] = await once(this.emitter, key) as [DeviceValue<Key>];
         return value;
     }
 
     // Emit an event
     emit<Key extends DeviceKey>(key: Key, value: DeviceValue<Key>): boolean {
-        return super.emit(key, value);
+        return this.emitter.emit(key, value);
     }
 }

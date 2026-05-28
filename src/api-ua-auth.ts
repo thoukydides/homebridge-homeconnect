@@ -15,7 +15,7 @@ import { AbsoluteToken, PersistAbsoluteTokens,
          DeviceAuthorisationRequest, DeviceAuthorisationResponse } from './api-auth-types.js';
 import { APIUserAgent, Method, Request } from './api-ua.js';
 import { assertIsDefined, Copy, formatMilliseconds, formatSeconds, MS } from './utils.js';
-import { logError } from './log-error.js';
+import { detached, logError } from './log-error.js';
 import { APIAuthorisationError, APIError, APIStatusCodeError } from './api-errors.js';
 import { ConfigPlugin } from './config-types.js';
 import { API_SCOPES } from './settings.js';
@@ -93,7 +93,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     ) {
         super(log, config, language);
         this.isAuthorised = this.authoriseUserAgent();
-        this.maintainAccessToken();
+        detached(this.log, 'Maintain access token',
+                 () => this.maintainAccessToken())();
     }
 
     // Scopes that have (or will be) authorised
@@ -165,7 +166,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
                 this.log.info('Saved access token has expired');
                 const token = await this.accessTokenRefreshRequest(savedToken.refreshToken);
                 this.log.info('Successfully refreshed access token');
-                this.saveToken(token);
+                await this.saveToken(token);
             }
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
@@ -190,7 +191,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
                     throw err;
                 }
             }
-            this.saveToken(token);
+            await this.saveToken(token);
         }
     }
 
@@ -200,7 +201,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         for (;;) {
             try {
                 const token = await this.accessTokenRefreshRequest(this.token.refreshToken);
-                this.saveToken(token);
+                await this.saveToken(token);
                 return;
             } catch (cause) {
                 logError(this.log, 'API token refresh', cause);
@@ -315,8 +316,8 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
                      + ` (poll every ${formatMilliseconds(this.deviceFlowPollInterval)},`
                      + (response.expires_in ? ` expires in ${formatSeconds(response.expires_in)},` : '')
                      + ` device code ${response.device_code})...`);
+        detached(this.log, 'Display prompts', logPrompt)();
         try {
-            logPrompt();
             this.pollDeviceCode = response.device_code;
             const token = await Promise.race([this.deviceAccessTokenRequest(response.device_code),
                                               ...this.triggerAuthorisationRetry]);

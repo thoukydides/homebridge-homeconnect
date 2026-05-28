@@ -4,6 +4,7 @@
 import { Logger } from 'homebridge';
 
 import { APIError } from './api-errors.js';
+import { MaybePromise } from './utils.js';
 
 // Log an error
 let lastLoggedError: unknown;
@@ -30,6 +31,17 @@ export function logError<Type>(log: Logger, when: string, err: Type): Type {
         if (err instanceof Error && err.stack) log.debug(err.stack);
     } catch { /* empty */ }
     return err;
+}
+
+// Trap any detached promise rejections
+export function detached<Args extends unknown[]>(
+    log:    Logger,
+    when:   string,
+    fn:     (...args: Args) => MaybePromise
+): (...args: Args) => void {
+    return (...args: Args) => {
+        fn(...args)?.catch((err: unknown) => logError(log, when, err));
+    };
 }
 
 // Log any sub-errors (causes or aggregates) of an error, formatted as a tree

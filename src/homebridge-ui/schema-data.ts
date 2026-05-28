@@ -149,7 +149,7 @@ export class ConfigSchemaData {
             await setImmediateP();
 
             // Perform the write
-            this.exclusive(async () => {
+            await this.exclusive(async () => {
                 delete this.savePromise;
                 this.log.debug('Saving configuration schema data');
                 await this.trySet();

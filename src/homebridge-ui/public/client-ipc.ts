@@ -4,6 +4,7 @@
 import { Logger } from 'homebridge';
 
 import { ServerEvent, ServerEventData, ServerPath, ServerRequest, ServerResponse } from '../server-ipc.js';
+import { detached } from '../../log-error.js';
 
 // Client-side IPC implementation
 export class ClientIPC {
@@ -26,14 +27,10 @@ export class ClientIPC {
 
     // Add an event listener
     onEvent<Event extends ServerEvent>(event: Event, callback: (evt: ServerEventData<Event>) => Promise<void> | void): void {
-        window.homebridge.addEventListener(event, async (evt) => {
-            try {
-                const data = (evt as unknown as { data: ServerEventData<Event> }).data;
-                if (event !== 'log') this.log.debug(`onEvent("${event}") => callback`, data);
-                await callback(data);
-            } catch (err) {
-                this.log.error(`onEvent("${event}") =>`, err);
-            }
-        });
+        window.homebridge.addEventListener(event, detached(this.log, 'onEvent', async (evt) => {
+            const data = (evt as unknown as { data: ServerEventData<Event> }).data;
+            if (event !== 'log') this.log.debug(`onEvent("${event}") => callback`, data);
+            await callback(data);
+        }));
     }
 }

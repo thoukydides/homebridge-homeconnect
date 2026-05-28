@@ -10,7 +10,7 @@ import { HasPower } from './has-power.js';
 import { PersistCache } from './persist-cache.js';
 import { MS, assertIsBoolean, assertIsDefined, assertIsNumber, assertIsString,
          columns, formatList, formatMilliseconds, plural} from './utils.js';
-import { logError } from './log-error.js';
+import { detached, logError } from './log-error.js';
 import { ApplianceConfig } from './config-types.js';
 import { HomeConnectDevice } from './homeconnect-device.js';
 import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } from './serialised.js';
@@ -93,7 +93,7 @@ export class ApplianceBase {
         this.obsoleteServices = [...accessory.services];
 
         // Handle the identify request
-        accessory.on('identify', () => this.trap('Identify', this.identify()));
+        accessory.on('identify', detached(this.log, 'Identify', () => this.identify()));
 
         // Set the Accessory Information service characteristics
         this.accessoryInformationService = this.makeService(this.Service.AccessoryInformation);
@@ -109,7 +109,7 @@ export class ApplianceBase {
         });
 
         // Wait for asynchronous initialisation to complete
-        this.waitAsyncInitialisation();
+        detached(this.log, 'Async initialisation', () => this.waitAsyncInitialisation())();
     }
 
     // Add an asynchronous initialisation task
@@ -142,7 +142,7 @@ export class ApplianceBase {
         });
 
         // Wait for asynchronous initialisation to complete
-        const initMonitor = async (): Promise<void> => {
+        detached(this.log, 'Initialisation monitor', async () => {
             await Promise.race([setTimeoutP(INITIALISATION_WARN_FIRST)]);
             if (pendingNames.length) {
                 this.log.warn('Appliance initialisation is taking longer than expected;'
@@ -152,8 +152,7 @@ export class ApplianceBase {
                 this.log.warn(`Waiting for ${plural(pendingNames.length, 'feature')} to finish initialising: ${formatList(pendingNames)}`);
                 await Promise.race([setTimeoutP(INITIALISATION_WARN_INTERVAL)]);
             }
-        };
-        initMonitor();
+        })();
         await Promise.allSettled(promises);
 
         // Summarise the initialisation result
@@ -172,7 +171,7 @@ export class ApplianceBase {
         this.cleanupServices();
 
         // Update the configuration schema with any optional features
-        this.setOptionalFeatures();
+        await this.setOptionalFeatures();
     }
 
     // Get or add a service
@@ -241,7 +240,6 @@ export class ApplianceBase {
     // The appliance no longer exists so stop updating it
     unregister(): void {
         this.device.stop();
-        this.device.removeAllListeners();
     }
 
     // Identify this appliance
@@ -270,7 +268,7 @@ export class ApplianceBase {
     }
 
     // Update the configuration schema with any optional features
-    setOptionalFeatures(): void {
+    async setOptionalFeatures(): Promise<void> {
         // Log a summary of optional features
         const list = (description: string, predicate: (feature: SchemaOptionalFeature) => boolean): void => {
             const matched = this.optionalFeatures.filter(predicate);
@@ -289,7 +287,7 @@ export class ApplianceBase {
         list('enabled by default (unconfigured)',  feature => configured(feature) === undefined &&  feature.enableByDefault);
 
         // Update the configuration schema
-        this.schema.setOptionalFeatures(this.device.ha.haId, this.optionalFeatures);
+        await this.schema.setOptionalFeatures(this.device.ha.haId, this.optionalFeatures);
     }
 
     // Query the appliance when connected and cache the result
@@ -412,16 +410,6 @@ export class ApplianceBase {
     onSetBoolean(handler: OnSetHandler<boolean>): CharacteristicSetHandler { return this.onSet(handler, assertIsBoolean); }
     onSetNumber (handler: OnSetHandler<number>):  CharacteristicSetHandler { return this.onSet(handler, assertIsNumber); }
     onSetString (handler: OnSetHandler<string>):  CharacteristicSetHandler { return this.onSet(handler, assertIsString); }
-
-    // Wrap an operation with an error trap
-    async trap<Type>(when: string, promise: Promise<Type> | Type, canThrow?: boolean): Promise<Type | undefined> {
-        try {
-            return await promise;
-        } catch (err) {
-            logError(this.log, when, err);
-            if (canThrow) throw err;
-        }
-    }
 }
 
 //export type ApplianceConstructorArgs = [Logger, HomeConnectPlatform, HomeConnectDevice, PlatformAccessory];

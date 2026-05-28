@@ -11,6 +11,7 @@ import { MS } from '../../utils.js';
 import { AuthorisationStatusFailed, AuthorisationStatusUser } from '../../api-ua-auth.js';
 import { cloneTemplate, getElementById, setSlotText } from './utils-dom.js';
 import { HomeAppliance } from '../../api-types.js';
+import { detached } from '../../log-error.js';
 
 // Minimum time between duplicate toast notifications
 const TOAST_DEDUP_TIME = 5 * MS;
@@ -166,14 +167,16 @@ export class ClientClientID {
     }
 
     // Trigger authorisation retry
-    async retryAuthorisation(): Promise<void> {
-        try {
-            await this.ipc.request('/clientid/retry', null);
-            this.showToast('info', 'Requesting new authorisation code');
-        } catch (err) {
-            const message = err instanceof Error ? err.message : String(err);
-            this.showToast('error', `Unable to retry authorisation: ${message}`);
-        }
+    retryAuthorisation(): void {
+        detached(this.log, 'Retry authorisation', async () => {
+            try {
+                await this.ipc.request('/clientid/retry', null);
+                this.showToast('info', 'Requesting new authorisation code');
+            } catch (err) {
+                const message = err instanceof Error ? err.message : String(err);
+                this.showToast('error', `Unable to retry authorisation: ${message}`);
+            }
+        })();
     }
 
     // Show the specified element and hide all others

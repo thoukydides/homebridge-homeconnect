@@ -8,7 +8,7 @@ import NodePersist from 'node-persist';
 
 import { assertIsDefined, assertIsString, formatList, plural } from './utils.js';
 import { ApplianceBase } from './appliance-generic.js';
-import { logError } from './log-error.js';
+import { detached, logError } from './log-error.js';
 
 // Service name length in Unicode characters (code points, not octets or code units)
 const SERVICE_LENGTH_MIN = 1;
@@ -73,7 +73,7 @@ export class ServiceNames {
         let currentName = characteristic.value;
 
         // Set the initial value (asynchronously)
-        this.withCustomNames('read-only', () => {
+        detached(this.log, 'Initialising custom name', () => this.withCustomNames('read-only', () => {
             if (currentName === this.customNames.get(suffix)) {
                 // Name was set via HomeKit, so preserve it
                 this.log.debug(`Preserving ${description} name "${currentName}" set via HomeKit`);
@@ -86,7 +86,7 @@ export class ServiceNames {
                 characteristic.updateValue(defaultName);
                 currentName = defaultName;
             }
-        });
+        }))();
 
         // Monitor changes to the name
         characteristic.onSet(this.appliance.onSetString(async name => {

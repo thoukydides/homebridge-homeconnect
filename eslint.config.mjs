@@ -65,10 +65,7 @@ export default defineConfig(
             '@typescript-eslint/no-require-imports':            ['error', { allow: ['/package\\.json$'] }],
             '@typescript-eslint/no-explicit-any':               ['error', { ignoreRestArgs: true }],
             '@typescript-eslint/explicit-function-return-type': ['error', { allowedNames: [...mixinNames] }],
-            '@typescript-eslint/no-unnecessary-type-parameters':['off'],
-            // Temporarily disable some rules until the code has been cleaned up
-            '@typescript-eslint/no-misused-promises':           'off',
-            '@typescript-eslint/no-floating-promises':          'off'
+            '@typescript-eslint/no-unnecessary-type-parameters':['off']
         }
     }, {
         files: ['**/*-types.ts'],

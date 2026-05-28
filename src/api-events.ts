@@ -9,7 +9,7 @@ import { CheckerT, createCheckers } from 'ts-interface-checker';
 import { Event } from './api-types.js';
 import { APIAuthoriseUserAgent } from './api-ua-auth.js';
 import { formatMilliseconds } from './utils.js';
-import { logError } from './log-error.js';
+import { detached, logError } from './log-error.js';
 import { APIEventStreamError, APIValidationError } from './api-errors.js';
 import { Request, Response, SSE } from './api-ua.js';
 import apiTI from './ti/api-types-ti.js';
@@ -41,7 +41,8 @@ export class APIEventStream extends EventEmitter {
         super.on('error', (err: unknown) => logError(this.log, 'API event', err));
 
         // Start an event stream when the first listener registers
-        this.once('newListener', () => void this.startEventStream());
+        this.once('newListener',
+                  detached(this.log, 'Start event stream', () => this.startEventStream()));
     }
 
     // Emit events for a single appliance or all appliances

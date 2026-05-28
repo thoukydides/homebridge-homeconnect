@@ -11,7 +11,7 @@ import chalk from 'chalk';
 import { MS, assertIsDefined, columns, formatList, plural } from './utils.js';
 import { HomeAppliance, OptionDefinition, Setting, Status, Value } from './api-types.js';
 import { PLUGIN_VERSION } from './settings.js';
-import { logError } from './log-error.js';
+import { detached } from './log-error.js';
 
 // Delay before summary log (longer than 1 minute rate-limit interval)
 const SUMMARY_DELAY = 2 * 60 * MS;
@@ -100,7 +100,7 @@ export class APIKeyValuesLog {
                 readonly persist:   LocalStorage) {
         // Restore cache of previously seen keys and values
         this.persistKey = `key-value ${clientid}`;
-        this.readPersist();
+        detached(this.log, 'Read keys/values', () => this.readPersist())();
     }
 
     // Update the dictionary of appliance descriptions
@@ -172,30 +172,26 @@ export class APIKeyValuesLog {
 
         // Schedule (or reschedule) a summary report
         clearTimeout(this.pendingScheduled);
-        this.pendingScheduled = setTimeout(() => {
-            try {
-                // Save the cache of known keys and values
-                this.writePersist();
+        this.pendingScheduled = setTimeout(detached(this.log, 'Reporting unrecognised keys/values', async () => {
+            // Save the cache of known keys and values
+            await this.writePersist();
 
-                // Check whether the report is ready
-                const unknownKeys = this.getUnknownTypes();
-                if (unknownKeys.length) {
-                    // Wait for more details before reporting
-                    this.log.info('Delaying report of unrecognised keys/values until these types are known:');
-                    for (const key of unknownKeys) {
-                        this.log.info(`    ${key}`);
-                        this.log.debug(`    ${JSON.stringify(this.keys[key])}`);
-                    }
-                } else {
-                    // Generate the report
-                    this.logSummary();
-                    for (const id of this.pending) this.reported.add(id);
-                    this.pending.clear();
+            // Check whether the report is ready
+            const unknownKeys = this.getUnknownTypes();
+            if (unknownKeys.length) {
+                // Wait for more details before reporting
+                this.log.info('Delaying report of unrecognised keys/values until these types are known:');
+                for (const key of unknownKeys) {
+                    this.log.info(`    ${key}`);
+                    this.log.debug(`    ${JSON.stringify(this.keys[key])}`);
                 }
-            } catch (err) {
-                logError(this.log, 'Reporting unrecognised keys/values', err);
+            } else {
+                // Generate the report
+                this.logSummary();
+                for (const id of this.pending) this.reported.add(id);
+                this.pending.clear();
             }
-        }, SUMMARY_DELAY);
+        }), SUMMARY_DELAY);
     }
 
     // Generate a list of keys that currently have unknown types
@@ -451,36 +447,28 @@ export class APIKeyValuesLog {
 
     // Restore keys and values from previous sessions
     async readPersist(): Promise<void> {
-        try {
-            const persist = await this.persist.getItem(this.persistKey) as APIKeyValuePersist | undefined;
-            if (persist?.version && semver.satisfies(PLUGIN_VERSION, `^${persist.version}`)) {
-                const canReport = semver.eq(PLUGIN_VERSION, persist.version);
-                const haid = 'Restored from previous session';
-                for (const { group, key, report } of persist.keys) {
-                    this.addKey(haid, group, undefined, key, canReport && Boolean(report), true);
-                }
-                for (const { key, value, report } of persist.values) {
-                    this.addValue(haid, key, value, canReport && Boolean(report), true);
-                }
-                this.log.debug(`Restored ${plural(persist.keys.length, 'key')} and ${plural(persist.values.length, 'value')}`);
+        const persist = await this.persist.getItem(this.persistKey) as APIKeyValuePersist | undefined;
+        if (persist?.version && semver.satisfies(PLUGIN_VERSION, `^${persist.version}`)) {
+            const canReport = semver.eq(PLUGIN_VERSION, persist.version);
+            const haid = 'Restored from previous session';
+            for (const { group, key, report } of persist.keys) {
+                this.addKey(haid, group, undefined, key, canReport && Boolean(report), true);
             }
-        } catch (err) {
-            logError(this.log, 'Read keys/values', err);
+            for (const { key, value, report } of persist.values) {
+                this.addValue(haid, key, value, canReport && Boolean(report), true);
+            }
+            this.log.debug(`Restored ${plural(persist.keys.length, 'key')} and ${plural(persist.values.length, 'value')}`);
         }
     }
 
     // Save the keys and values that have been seen
     async writePersist(): Promise<void> {
-        try {
-            await this.persist.setItem(this.persistKey, {
-                keys:       Object.entries(this.groups).flatMap(([group, groupDetail]) =>
-                    Object.values(groupDetail.keys).map(({ key, report }) => ({ group, key, report }))),
-                values:     Object.values(this.keys).flatMap(key =>
-                    Object.values(key.value?.values ?? {}).map(({ value, report }) => ({ key: key.key, value, report }))),
-                version:    PLUGIN_VERSION
-            });
-        } catch (err) {
-            logError(this.log, 'Write keys/values', err);
-        }
+        await this.persist.setItem(this.persistKey, {
+            keys:       Object.entries(this.groups).flatMap(([group, groupDetail]) =>
+                Object.values(groupDetail.keys).map(({ key, report }) => ({ group, key, report }))),
+            values:     Object.values(this.keys).flatMap(key =>
+                Object.values(key.value?.values ?? {}).map(({ value, report }) => ({ key: key.key, value, report }))),
+            version:    PLUGIN_VERSION
+        });
     }
 }

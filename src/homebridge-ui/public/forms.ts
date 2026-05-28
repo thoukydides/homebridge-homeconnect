@@ -8,6 +8,7 @@ import { ClientIPC } from './client-ipc.js';
 import { Config } from './config.js';
 import { ConfigPlugin } from '../../config-types.js';
 import { elementWithAbsolutePaths, cloneTemplate, getHTML } from './utils-dom.js';
+import { detached } from '../../log-error.js';
 
 // A configuration form handler
 export abstract class Form {
@@ -152,22 +153,24 @@ export class Forms {
     }
 
     // Display the specified form (defaulting to the placeholder)
-    async showForm(formId?: string): Promise<void> {
-        try {
-            // The forms are retrieved from the server, so display a spinner
-            window.homebridge.showSpinner();
-
-            // Display the requested form, with fallback to the error form
+    showForm(formId?: string): void {
+        detached(this.log, 'Show form', async () => {
             try {
-                await this.constructAndShowForm(formId ?? FormId.Placeholder);
-            } catch (err) {
-                this.log.warn('Failed to display form', formId, err);
-                await this.constructAndShowForm(FormId.Unavailable);
+                // The forms are retrieved from the server, so display a spinner
+                window.homebridge.showSpinner();
+
+                // Display the requested form, with fallback to the error form
+                try {
+                    await this.constructAndShowForm(formId ?? FormId.Placeholder);
+                } catch (err) {
+                    this.log.warn('Failed to display form', formId, err);
+                    await this.constructAndShowForm(FormId.Unavailable);
+                }
+            } finally{
+                // Ensure that the spinner is always hidden
+                window.homebridge.hideSpinner();
             }
-        } finally{
-            // Ensure that the spinner is always hidden
-            window.homebridge.hideSpinner();
-        }
+        })();
     }
 
     // Try to create the requested form, with fallback to the placeholder

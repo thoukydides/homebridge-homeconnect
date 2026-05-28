@@ -7,6 +7,9 @@ import { CheckerT, ICheckerSuite, IErrorDetail, ITypeSuite, TType } from 'ts-int
 // Milliseconds in a second
 export const MS = 1000;
 
+// A value which may either be the value itself or a promise for the value
+export type MaybePromise<T = void> = Promise<T> | T;
+
 // Convert an interface to a type alias to make it indexable
 export type Copy<T> = { [K in keyof T]: T[K] };
 

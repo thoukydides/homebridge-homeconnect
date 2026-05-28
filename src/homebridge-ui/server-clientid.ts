@@ -10,7 +10,7 @@ import { HomeAppliance } from '../api-types.js';
 import { ConfigPlugin } from '../config-types.js';
 import { MockAPI } from '../mock/index.js';
 import { Constructor, assertIsDefined, plural } from '../utils.js';
-import { logError } from '../log-error.js';
+import { detached, logError } from '../log-error.js';
 import { AuthorisationStatus } from '../api-ua-auth.js';
 import { APIStatusCodeError } from '../api-errors.js';
 import { ServerIPC } from './server-ipc.js';
@@ -79,7 +79,7 @@ export class ServerClientID {
             this.clients.set(key, client);
 
             // Send authorisation status updates to the client
-            this.authorisationEvents(client);
+            detached(this.log, 'Authorisation events', (client: ClientIDAPI) => this.authorisationEvents(client))(client);
         } else {
             this.log.info(`Resurrecting Home Connect API client for ${description}`);
         }
