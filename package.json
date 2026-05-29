@@ -130,5 +130,9 @@
     },
     "optionalDependencies": {
         "fsevents": "^2.3.3"
+    },
+    "allowScripts": {
+        "core-js": true,
+        "esbuild": true
     }
 }
