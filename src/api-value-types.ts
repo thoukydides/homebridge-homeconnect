@@ -283,6 +283,7 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.LabelEU19.LabelEU19.Eco4060' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Mix.HHMix.HHMix' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Mix'
+  | 'LaundryCare.WasherDryer.Program.MoistRemove.DrumDry.DrumDry' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.MyTime.MyTime.MyTime' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Rinse.Rinse.Rinse' // (undocumented)
@@ -290,7 +291,9 @@ export type ProgramKey =
   | 'LaundryCare.WasherDryer.Program.Sensitive.Sensitive.Sensitive' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Sensitive' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses.ShirtsBlouses' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.ShirtsBlouses' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.Spin' // (undocumented)
+  | 'LaundryCare.WasherDryer.Program.SportFitness' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.SportShoes.SportShoes.SportShoes' // (undocumented)
   | 'LaundryCare.WasherDryer.Program.WashAndDry.60'
   | 'LaundryCare.WasherDryer.Program.WashAndDry.90'
