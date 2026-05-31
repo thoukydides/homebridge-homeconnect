@@ -312,6 +312,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
         };
 
         // Wait for the user to authorise access (or expiry of device code)
+        await setTimeoutP(this.deviceFlowPollInterval);
         this.log.debug('Waiting for completion of Home Connect authorisation'
                      + ` (poll every ${formatMilliseconds(this.deviceFlowPollInterval)},`
                      + (response.expires_in ? ` expires in ${formatSeconds(response.expires_in)},` : '')
