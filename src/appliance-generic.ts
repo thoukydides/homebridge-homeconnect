@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2025-2026 Alexander Thoukydides
 
-import { Characteristic, CharacteristicSetHandler, CharacteristicValue, HAPStatus,
+import { Characteristic, CharacteristicValue, HAPStatus,
          Logger, Nullable, PlatformAccessory, Service } from 'homebridge';
 
 import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers/promises';
@@ -382,8 +382,7 @@ export class ApplianceBase {
                 this.log.info('Appliance reconnected: clearing HAP error status');
                 this.disconnectedHapStatusError = false;
             }
-            if (characteristic.statusCode === HAPStatus.SUCCESS) return characteristic.value;
-            throw new this.platform.hb.hap.HapStatusError(characteristic.statusCode);
+            return characteristic.value;
         } else {
             // Return HAP status -70402 for disconnected appliances
             if (!this.disconnectedHapStatusError) {
@@ -395,21 +394,37 @@ export class ApplianceBase {
     }
 
     // Wrap a Homebridge Characteristic.onSet handler
-    onSet<Type>(handler: OnSetHandler<Type>, assertIsType: (value: unknown) => asserts value is Type): CharacteristicSetHandler {
-        return async (value: CharacteristicValue) => {
+    onSet<Type>(
+        assertIsType:   (value: unknown) => asserts value is Type,
+        characteristic: Characteristic,
+        handler:        OnSetHandler<Type>
+    ): Characteristic {
+        characteristic.onSet(async (value: CharacteristicValue) => {
             try {
+                // Call the handler function
                 assertIsType(value);
                 await handler(value);
             } catch (err) {
                 logError(this.log, `onSet(${JSON.stringify(value)})`, err);
-                throw new this.platform.hb.hap.HapStatusError(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+                detached(this.log, 'onSet restore', async () => {
+                    await setImmediateP();
+                    if (this.device.getItem('connected') || this.platform.configPlugin.experimental?.includes('Disconnected as Off')) {
+                        // Clear set error if appliance is connected
+                        characteristic.updateValue(characteristic.value);
+                    }
+                })();
+
+                // Return HAP status -70412 or -70402 depending on connectivity
+                throw new this.platform.hb.hap.HapStatusError(this.device.getItem('connected')
+                    ? HAPStatus.NOT_ALLOWED_IN_CURRENT_STATE : HAPStatus.SERVICE_COMMUNICATION_FAILURE);
             }
-        };
+        });
+        return characteristic;
     }
 
-    onSetBoolean(handler: OnSetHandler<boolean>): CharacteristicSetHandler { return this.onSet(handler, assertIsBoolean); }
-    onSetNumber (handler: OnSetHandler<number>):  CharacteristicSetHandler { return this.onSet(handler, assertIsNumber); }
-    onSetString (handler: OnSetHandler<string>):  CharacteristicSetHandler { return this.onSet(handler, assertIsString); }
+    onSetBoolean(...args: [Characteristic, OnSetHandler<boolean>]): Characteristic { return this.onSet(assertIsBoolean, ...args); }
+    onSetNumber (...args: [Characteristic, OnSetHandler<number>]):  Characteristic { return this.onSet(assertIsNumber,  ...args); }
+    onSetString (...args: [Characteristic, OnSetHandler<string>]):  Characteristic { return this.onSet(assertIsString,  ...args); }
 }
 
 //export type ApplianceConstructorArgs = [Logger, HomeConnectPlatform, HomeConnectDevice, PlatformAccessory];

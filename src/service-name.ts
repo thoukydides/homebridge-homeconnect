@@ -65,12 +65,12 @@ export class ServiceNames {
             service.setCharacteristic(this.Characteristic.Name, defaultName);
             service.setCharacteristic(this.Characteristic.ConfiguredName, defaultName);
         }
-        const characteristic = service.getCharacteristic(this.Characteristic.ConfiguredName);
-        characteristic.setProps({ perms: [Perms.NOTIFY, Perms.PAIRED_READ, Perms.PAIRED_WRITE] });
+        const configuredNameCharacteristic = service.getCharacteristic(this.Characteristic.ConfiguredName);
+        configuredNameCharacteristic.setProps({ perms: [Perms.NOTIFY, Perms.PAIRED_READ, Perms.PAIRED_WRITE] });
 
         // Current and default names
-        assertIsString(characteristic.value);
-        let currentName = characteristic.value;
+        assertIsString(configuredNameCharacteristic.value);
+        let currentName = configuredNameCharacteristic.value;
 
         // Set the initial value (asynchronously)
         detached(this.log, 'Initialising custom name', () => this.withCustomNames('read-only', () => {
@@ -83,13 +83,13 @@ export class ServiceNames {
                     if (currentName === '') this.log.debug(`Naming ${description} as "${defaultName}"`);
                     else this.log.info(`Renaming ${description} to "${defaultName}" (was "${currentName}")`);
                 }
-                characteristic.updateValue(defaultName);
+                configuredNameCharacteristic.updateValue(defaultName);
                 currentName = defaultName;
             }
         }))();
 
         // Monitor changes to the name
-        characteristic.onSet(this.appliance.onSetString(async name => {
+        this.appliance.onSetString(configuredNameCharacteristic, async name => {
             await this.withCustomNames('read-write', () => {
                 if (name !== currentName) {
                     this.log.info(`SET ${description} name to "${name}" (was "${currentName}")`);
@@ -103,7 +103,7 @@ export class ServiceNames {
                     }
                 }
             });
-        }));
+        });
     }
 
     // Construct the display name for a service

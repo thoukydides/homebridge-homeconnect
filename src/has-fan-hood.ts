@@ -157,24 +157,25 @@ export function HasFanHood<TBase extends Constructor<ApplianceBase>>(Base: TBase
             const { MANUAL, AUTO }          = this.Characteristic.TargetFanState;
 
             // Add the fan state characteristics
-            service.getCharacteristic(this.Characteristic.Active)
-                .onSet(this.onSetNumber(value => updateHC({ active: value })));
-            service.getCharacteristic(this.Characteristic.CurrentFanState);
-            service.getCharacteristic(this.Characteristic.TargetFanState)
-                .setProps(this.fanSupportsAuto ? { minValue: MANUAL, maxValue: AUTO,   validValues: [MANUAL, AUTO] }
-                                               : { minValue: MANUAL, maxValue: MANUAL, validValues: [MANUAL]})
-                .onSet(this.onSetNumber(value => updateHC(value === AUTO ? { auto: value, active: ACTIVE } : { auto: value })));
+            const activeCharacteristic          = service.getCharacteristic(this.Characteristic.Active);
+            const currentFanStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentFanState);
+            const targetFanStateCharacteristic  = service.getCharacteristic(this.Characteristic.TargetFanState);
+            const rotationSpeedCharacteristic   = service.getCharacteristic(this.Characteristic.RotationSpeed);
+            targetFanStateCharacteristic.setProps(this.fanSupportsAuto ? { minValue: MANUAL, maxValue: AUTO,   validValues: [MANUAL, AUTO] }
+                                               : { minValue: MANUAL, maxValue: MANUAL, validValues: [MANUAL]});
+            rotationSpeedCharacteristic.setProps({ minValue: 0, maxValue: 100, minStep: this.fanPercentStep });
 
-            // Add a rotation speed characteristic
-            service.getCharacteristic(this.Characteristic.RotationSpeed)
-                .setProps({ minValue: 0, maxValue: 100, minStep: this.fanPercentStep })
-                .onSet(this.onSetNumber(value => updateHC({ percent: value })));
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(activeCharacteristic,          value => updateHC({ active: value }));
+            this.onSetNumber(targetFanStateCharacteristic,  value =>
+                updateHC(value === AUTO ? { auto: value, active: ACTIVE } : { auto: value }));
+            this.onSetNumber(rotationSpeedCharacteristic,   value => updateHC({ percent: value }));
 
-            // Update the status
+            // Update from Home Connect to HomeKit
             const newLevel = <Key extends OptionKey>(key: Key, value: OptionValue<Key>): void => {
                 const percent = this.toFanSpeedPercent({ key, value });
                 this.log.info(`Fan ${percent}%`);
-                service.updateCharacteristic(this.Characteristic.RotationSpeed, percent);
+                rotationSpeedCharacteristic     .updateValue(percent);
             };
             this.device.on('Cooking.Common.Option.Hood.VentingLevel',
                            level => { newLevel('Cooking.Common.Option.Hood.VentingLevel',   level); });
@@ -183,13 +184,13 @@ export function HasFanHood<TBase extends Constructor<ApplianceBase>>(Base: TBase
             this.device.on('BSH.Common.Root.ActiveProgram', programKey => {
                 const manual = !programKey || programKey === FAN_PROGRAM_MANUAL;
                 this.log.info(`Fan ${manual ? 'manual' : 'automatic'} control`);
-                service.updateCharacteristic(this.Characteristic.TargetFanState, manual ? MANUAL : AUTO);
+                targetFanStateCharacteristic    .updateValue(manual ? MANUAL : AUTO);
             });
             this.device.on('BSH.Common.Status.OperationState', () => {
                 const active = this.device.isOperationState('Run');
                 this.log.info(`Fan ${active ? 'running' : 'off'}`);
-                service.updateCharacteristic(this.Characteristic.Active, active ? ACTIVE : OFF);
-                service.updateCharacteristic(this.Characteristic.CurrentFanState, active ? BLOWING_AIR : INACTIVE);
+                activeCharacteristic            .updateValue(active ? ACTIVE : OFF);
+                currentFanStateCharacteristic   .updateValue(active ? BLOWING_AIR : INACTIVE);
             });
         }
 
@@ -197,15 +198,15 @@ export function HasFanHood<TBase extends Constructor<ApplianceBase>>(Base: TBase
         addFanBoost(updateHC: (value?: UpdateFanHCValue) => Promise<void>): Service {
             // Add a switch service for the boost option
             const service = this.makeService(this.Service.Switch, 'Boost', 'boost');
+            const onCharacteristic = service.getCharacteristic(this.Characteristic.On);
 
-            // Add the boost characteristic
-            service.getCharacteristic(this.Characteristic.On)
-                .onSet(this.onSetBoolean(value => updateHC({ boost: value })));
+            // Update from HomeKit to Home Connect
+            this.onSetBoolean(onCharacteristic, value => updateHC({ boost: value }));
 
-            // Update the status
+            // Update from Home Connect to HomeKit
             this.device.on('Cooking.Common.Option.Hood.Boost', boost => {
                 this.log.info(`Boost ${boost ? 'on' : 'off'}`);
-                service.updateCharacteristic(this.Characteristic.On, boost);
+                onCharacteristic.updateValue(boost);
             });
             return service;
         }

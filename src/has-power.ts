@@ -71,15 +71,15 @@ export function HasPower<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             assertIsDefined(this.powerService);
             if (powerStateOn === undefined) this.log.info('Cannot be switched on');
             this.log.info(`Can be ${this.defaultOffValue === PowerState.Standby ? 'placed in standby' : 'switched off'}`);
-            this.powerService.getCharacteristic(this.Characteristic.On)
-                .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
-                .onSet(this.onSetBoolean(async value => {
-                    const powerState = value ? powerStateOn : powerStateOff;
-                    if (powerState !== undefined) {
-                        this.log.info(`SET ${value ? 'On' : 'Off'}`);
-                        await this.device.setSetting('BSH.Common.Setting.PowerState', powerState);
-                    }
-                }));
+            const onCharacteristic = this.powerService.getCharacteristic(this.Characteristic.On);
+            onCharacteristic.setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] });
+            this.onSetBoolean(onCharacteristic, async value => {
+                const powerState = value ? powerStateOn : powerStateOff;
+                if (powerState !== undefined) {
+                    this.log.info(`SET ${value ? 'On' : 'Off'}`);
+                    await this.device.setSetting('BSH.Common.Setting.PowerState', powerState);
+                }
+            });
         }
 
         // Deferred update of HomeKit state from Home Connect events

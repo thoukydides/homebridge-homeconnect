@@ -117,28 +117,28 @@ export function HasDoor<TBase extends Constructor<ApplianceBase>>(Base: TBase, h
         // Add the ability to open or partially open the door
         addDoorControl(service: Service, supportsOpen: boolean, supportsPartly: boolean): void {
             // Set the door position step size appropriately
+            const currentPositionCharacteristic = service.getCharacteristic(this.Characteristic.CurrentPosition);
+            const targetPositionCharacteristic = service.getCharacteristic(this.Characteristic.TargetPosition);
             const minStep = supportsPartly ? 50 : 100;
-            service.getCharacteristic(this.Characteristic.CurrentPosition).setProps({ minStep: minStep });
-            service.getCharacteristic(this.Characteristic.TargetPosition) .setProps({ minStep: minStep });
+            currentPositionCharacteristic.setProps({ minStep: minStep });
+            targetPositionCharacteristic.setProps({ minStep: minStep });
 
             // Allow the target position to be controlled, if supported
             if (supportsOpen || supportsPartly) {
                 // Door can be opened and/or partly opened
-                service.getCharacteristic(this.Characteristic.TargetPosition)
-                    .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
-                    .onSet(this.onSetNumber(async value => {
-                        if (0 < value) {
-                            const fullyOpen = !supportsPartly || 50 < value;
-                            this.log.info(`${fullyOpen ? '' : 'PARTLY '}OPEN Door`);
-                            service.updateCharacteristic(this.Characteristic.PositionState,
-                                                         this.Characteristic.PositionState.INCREASING);
-                            await this.device.openDoor(fullyOpen);
-                        }
-                    }));
+                targetPositionCharacteristic.setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] });
+                this.onSetNumber(targetPositionCharacteristic, async value => {
+                    if (0 < value) {
+                        const fullyOpen = !supportsPartly || 50 < value;
+                        this.log.info(`${fullyOpen ? '' : 'PARTLY '}OPEN Door`);
+                        service.updateCharacteristic(this.Characteristic.PositionState,
+                                                     this.Characteristic.PositionState.INCREASING);
+                        await this.device.openDoor(fullyOpen);
+                    }
+                });
             } else {
                 // Door cannot be opened remotely
-                service.getCharacteristic(this.Characteristic.TargetPosition)
-                    .setProps({ perms: [Perms.PAIRED_READ, Perms.NOTIFY] });
+                targetPositionCharacteristic.setProps({ perms: [Perms.PAIRED_READ, Perms.NOTIFY] });
             }
         }
     };

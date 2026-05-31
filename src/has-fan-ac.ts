@@ -128,29 +128,32 @@ export function HasFanAC<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             const { MANUAL, AUTO }          = this.Characteristic.TargetFanState;
 
             // Add the fan state characteristics
-            service.getCharacteristic(this.Characteristic.Active)
-                .onSet(this.onSetNumber(value => updateHC({ active: value })));
-            service.getCharacteristic(this.Characteristic.CurrentFanState);
-            service.getCharacteristic(this.Characteristic.TargetFanState)
-                .onSet(this.onSetNumber(value => updateHC(value === AUTO ? { fanAuto: value, active: ACTIVE } : { fanAuto: value })));
-            service.getCharacteristic(this.Characteristic.RotationSpeed)
-                .onSet(this.onSetNumber(value => updateHC({ fanPercent: value })));
+            const activeCharacteristic          = service.getCharacteristic(this.Characteristic.Active);
+            const currentFanStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentFanState);
+            const targetFanStateCharacteristic  = service.getCharacteristic(this.Characteristic.TargetFanState);
+            const rotationSpeedCharacteristic   = service.getCharacteristic(this.Characteristic.RotationSpeed);
 
-            // Update the status
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(activeCharacteristic,          value => updateHC({ active: value }));
+            this.onSetNumber(targetFanStateCharacteristic,  value =>
+                updateHC(value === AUTO ? { fanAuto: value, active: ACTIVE } : { fanAuto: value }));
+            this.onSetNumber(rotationSpeedCharacteristic,   value => updateHC({ fanPercent: value }));
+
+            // Update from Home Connect to HomeKit
             this.device.on('HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeedMode', mode => {
                 const manual = mode === 'HeatingVentilationAirConditioning.AirConditioner.EnumType.FanSpeedMode.Manual';
                 this.log.info(`Fan ${manual ? 'manual' : 'automatic'} control`);
-                service.updateCharacteristic(this.Characteristic.TargetFanState, manual ? MANUAL : AUTO);
+                targetFanStateCharacteristic    .updateValue(manual ? MANUAL : AUTO);
             });
             this.device.on('HeatingVentilationAirConditioning.AirConditioner.Option.FanSpeedPercentage', percent => {
                 this.log.info(`Fan ${percent}%`);
-                service.updateCharacteristic(this.Characteristic.RotationSpeed, percent);
+                rotationSpeedCharacteristic     .updateValue(percent);
             });
             this.device.on('BSH.Common.Status.OperationState', () => {
                 const active = this.device.isOperationState('Run');
                 this.log.info(`Fan ${active ? 'running' : 'off'}`);
-                service.updateCharacteristic(this.Characteristic.Active, active ? ACTIVE : OFF);
-                service.updateCharacteristic(this.Characteristic.CurrentFanState, active ? BLOWING_AIR : INACTIVE);
+                activeCharacteristic            .updateValue(active ? ACTIVE : OFF);
+                currentFanStateCharacteristic   .updateValue(active ? BLOWING_AIR : INACTIVE);
             });
         }
 
@@ -167,18 +170,24 @@ export function HasFanAC<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
             const temperatureMinStep = getTemperatureConstraint('stepsize').reduce(gcd);
 
             // Add the thermostat characteristics
-            service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
-                .setProps({ validValues: [...new Set(this.acPrograms.map(details => details.thermostatState))] })
-                .onSet(this.onSetNumber(value => updateHC({ state: value })));
-            service.getCharacteristic(this.Characteristic.TargetTemperature)
-                .setProps({ minValue: temperatureMinValue, maxValue: temperatureMaxValue, minStep: temperatureMinStep })
-                .onSet(this.onSetNumber(value => updateHC({ temperature: value })));
+            const currentHeatingCoolingStateCharacteristic  = service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState);
+            const targetHeatingCoolingStateCharacteristic   = service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState);
+            const currentTemperatureCharacteristic          = service.getCharacteristic(this.Characteristic.CurrentTemperature);
+            const targetTemperatureCharacteristic           = service.getCharacteristic(this.Characteristic.TargetTemperature);
+            targetHeatingCoolingStateCharacteristic.setProps(
+                { validValues: [...new Set(this.acPrograms.map(details => details.thermostatState))] });
+            targetTemperatureCharacteristic.setProps(
+                { minValue: temperatureMinValue, maxValue: temperatureMaxValue, minStep: temperatureMinStep });
 
-            // Update the status
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(targetHeatingCoolingStateCharacteristic,   value => updateHC({ state: value }));
+            this.onSetNumber(targetTemperatureCharacteristic,           value => updateHC({ temperature: value }));
+
+            // Update from Home Connect to HomeKit
             this.device.on('HeatingVentilationAirConditioning.AirConditioner.Option.SetpointTemperature', temperature => {
                 this.log.info(`Setpoint temperature ${temperature}°C`);
-                service.updateCharacteristic(this.Characteristic.CurrentTemperature,    temperature);
-                service.updateCharacteristic(this.Characteristic.TargetTemperature,     temperature);
+                currentTemperatureCharacteristic.updateValue(temperature);
+                targetTemperatureCharacteristic .updateValue(temperature);
             });
             this.device.on('BSH.Common.Root.ActiveProgram', programKey => {
                 const details = this.acPrograms.find(details => details.key === programKey);
@@ -186,12 +195,12 @@ export function HasFanAC<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
                     const { thermostatState } = details;
                     const currentState = thermostatState === ThermostatState.Auto ? ThermostatState.Cool : thermostatState;
                     this.log.info(`Target state ${ThermostatState[thermostatState]} (current state ${ThermostatState[currentState]})`);
-                    service.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState,     thermostatState);
-                    service.updateCharacteristic(this.Characteristic.CurrentHeatingCoolingState,    currentState);
+                    targetHeatingCoolingStateCharacteristic .updateValue(thermostatState);
+                    currentHeatingCoolingStateCharacteristic.updateValue(currentState);
 
                 } else {
                     this.log.info(programKey ? `Unsupported program: ${programKey}` : 'No active program');
-                    service.updateCharacteristic(this.Characteristic.CurrentHeatingCoolingState,    ThermostatState.Off);
+                    currentHeatingCoolingStateCharacteristic.updateValue(ThermostatState.Off);
                 }
             });
             return service;

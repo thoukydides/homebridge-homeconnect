@@ -104,23 +104,23 @@ export function HasFanHob<TBase extends Constructor<ApplianceBase>>(Base: TBase)
             const { INACTIVE, BLOWING_AIR } = this.Characteristic.CurrentFanState;
 
             // Add the fan state characteristics
-            service.getCharacteristic(this.Characteristic.Active)
-                .onSet(this.onSetNumber(value => updateHC({ active: value })));
-            service.getCharacteristic(this.Characteristic.CurrentFanState);
+            const activeCharacteristic          = service.getCharacteristic(this.Characteristic.Active);
+            const rotationSpeedCharacteristic   = service.getCharacteristic(this.Characteristic.RotationSpeed);
+            const currentFanStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentFanState);
+            rotationSpeedCharacteristic.setProps({ minValue: 0, maxValue: 100, minStep: this.fanPercentStep });
 
-            // Add a rotation speed characteristic
-            service.getCharacteristic(this.Characteristic.RotationSpeed)
-                .setProps({ minValue: 0, maxValue: 100, minStep: this.fanPercentStep })
-                .onSet(this.onSetNumber(value => updateHC({ percent: value })));
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(activeCharacteristic,          value => updateHC({ active: value }));
+            this.onSetNumber(rotationSpeedCharacteristic,   value => updateHC({ percent: value }));
 
-            // Update the status
+            // Update from Home Connect to HomeKit
             this.device.on('Cooking.Hob.Setting.Ventilation', level => {
                 const percent = this.toFanSpeedPercent(level);
                 const active = 0 < percent;
                 this.log.info(active ? `Fan ${percent}%` : 'Fan off');
-                service.updateCharacteristic(this.Characteristic.Active, active ? ACTIVE : OFF);
-                service.updateCharacteristic(this.Characteristic.CurrentFanState, active ? BLOWING_AIR : INACTIVE);
-                service.updateCharacteristic(this.Characteristic.RotationSpeed, percent);
+                activeCharacteristic            .updateValue(active ? ACTIVE : OFF);
+                currentFanStateCharacteristic   .updateValue(active ? BLOWING_AIR : INACTIVE);
+                rotationSpeedCharacteristic     .updateValue(percent);
             });
         }
 

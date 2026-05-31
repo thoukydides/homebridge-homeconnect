@@ -35,21 +35,20 @@ export function HasChildLock<TBase extends Constructor<ApplianceBase & { powerSe
             // Add the lock physical controls characteristic
             const { CONTROL_LOCK_DISABLED, CONTROL_LOCK_ENABLED } = this.Characteristic.LockPhysicalControls;
             this.powerService.addOptionalCharacteristic(this.Characteristic.LockPhysicalControls);
+            const lockPhysicalControlsCharacteristic = this.powerService.getCharacteristic(this.Characteristic.LockPhysicalControls);
 
-            // Change the child lock status
-            this.powerService.getCharacteristic(this.Characteristic.LockPhysicalControls)
-                .onSet(this.onSetNumber(async value => {
-                    const isEnabled = value === CONTROL_LOCK_ENABLED;
-                    this.log.info(`SET Child lock ${isEnabled ? 'enabled' : 'disabled'}`);
-                    await this.device.setSetting('BSH.Common.Setting.ChildLock', isEnabled);
-                }));
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(lockPhysicalControlsCharacteristic, async value => {
+                const isEnabled = value === CONTROL_LOCK_ENABLED;
+                this.log.info(`SET Child lock ${isEnabled ? 'enabled' : 'disabled'}`);
+                await this.device.setSetting('BSH.Common.Setting.ChildLock', isEnabled);
+            });
 
-            // Update the child lock status
+            // Update from Home Connect to HomeKit
             this.device.on('BSH.Common.Setting.ChildLock', childLock => {
                 assertIsDefined(this.powerService);
                 this.log.info(`Child lock ${childLock ? 'enabled' : 'disabled'}`);
-                this.powerService.updateCharacteristic(this.Characteristic.LockPhysicalControls,
-                                                       childLock ? CONTROL_LOCK_ENABLED : CONTROL_LOCK_DISABLED);
+                lockPhysicalControlsCharacteristic.updateValue(childLock ? CONTROL_LOCK_ENABLED : CONTROL_LOCK_DISABLED);
             });
         }
     };

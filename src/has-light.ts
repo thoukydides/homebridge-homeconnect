@@ -264,13 +264,15 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
 
         // Add on/off control of a light
         addLightOn(type: string, settings: LightSettings<'on'>, service: Service, updateLightHC: UpdateLightHC): void {
-            // Update whether the light is on or off
+            // Update from HomeKit to Home Connect
+            const onCharacteristic = service.getCharacteristic(this.Characteristic.On);
+            this.onSetBoolean(onCharacteristic, value => updateLightHC({ on: value }));
+
+            // Update from Home Connect to HomeKit
             this.device.on(settings.on.key, on => {
                 this.log.info(`Light ${type} ${on ? 'on' : 'off'}`);
                 service.updateCharacteristic(this.Characteristic.On, on);
             });
-            service.getCharacteristic(this.Characteristic.On)
-                .onSet(this.onSetBoolean(value => updateLightHC({ on: value })));
         }
 
         // Set whether a light is on
@@ -282,28 +284,27 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
         // Add brightness control of a light
         addLightBrightness(type: string, settings: LightSettings<'brightness'> | LightSettings<'colour' | 'custom'>,
                            service: Service, updateLightHC: UpdateLightHC): void {
+            const brightnessCharacteristic = service.getCharacteristic(this.Characteristic.Brightness);
             if (hasSettings(settings, 'brightness')) {
                 // The light has explicit brightness support
                 const constraints = settings.brightness.constraints;
-                service.getCharacteristic(this.Characteristic.Brightness)
+                brightnessCharacteristic
                     .updateValue(Math.round(settings.brightness.value ?? 100))
                     .setProps({ minValue: constraints?.min ?? 10, maxValue: constraints?.max ?? 100 });
 
-                // Update the brightness
+                // Update from Home Connect to HomeKit
                 this.device.on(settings.brightness.key, percent => {
                     percent = Math.round(percent);
                     this.log.info(`Light ${type} ${percent}% brightness`);
-                    service.updateCharacteristic(this.Characteristic.Brightness, percent);
+                    brightnessCharacteristic.updateValue(percent);
                 });
             } else {
                 // Using a custom colour to set arbitrary brightness
-                service.getCharacteristic(this.Characteristic.Brightness)
-                    .setProps({ minValue: 0, maxValue: 100 });
+                brightnessCharacteristic.setProps({ minValue: 0, maxValue: 100 });
             }
 
-            // Update the light's brightness when it changes in HomeKit
-            service.getCharacteristic(this.Characteristic.Brightness)
-                .onSet(this.onSetNumber(value => updateLightHC({ brightness: value })));
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(brightnessCharacteristic, value => updateLightHC({ brightness: value }));
         }
 
         // Set the brightness of a light
@@ -315,6 +316,13 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
         // Add colour temperature control of a light
         addLightColourTemp(type: string, settings: LightSettings<'colourtempperc'> | LightSettings<'colourtempenum'>,
                            service: Service, updateLightHC: UpdateLightHC): void {
+            const colorTemperatureCharacteristic = service.getCharacteristic(this.Characteristic.ColorTemperature);
+            colorTemperatureCharacteristic.setProps({ minValue: MIREK_COLD, maxValue: MIREK_WARM });
+
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(colorTemperatureCharacteristic, value => updateLightHC({ mirek: value }));
+
+            // Update from Home Connect to HomeKit
             const updateHK = this.makeSerialised(() => {
                 // Convert Home Connect colour temperature to a simple percentage
                 const colourtempenum = settings.colourtempenum && this.device.getItem(settings.colourtempenum.key);
@@ -328,11 +336,6 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
             });
             if (settings.colourtempenum) this.device.on(settings.colourtempenum.key, updateHK);
             if (settings.colourtempperc) this.device.on(settings.colourtempperc.key, updateHK);
-
-            // Convert from reciprocal megakelvin to Home Connect's percentage
-            service.getCharacteristic(this.Characteristic.ColorTemperature)
-                .setProps({ minValue: MIREK_COLD, maxValue: MIREK_WARM })
-                .onSet(this.onSetNumber(value => updateLightHC({ mirek: value })));
         }
 
         // Set the colour temperature of a light
@@ -364,22 +367,24 @@ export function HasLight<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
 
         // Add colour control of a light
         addLightColour(type: string, settings: LightSettings<'colour' | 'custom'>, service: Service, updateLightHC: UpdateLightHC): void {
+            const hueCharacteristic         = service.getCharacteristic(this.Characteristic.Hue);
+            const saturationCharacteristic  = service.getCharacteristic(this.Characteristic.Saturation);
+            const brightnessCharacteristic  = service.getCharacteristic(this.Characteristic.Brightness);
+
+            // Convert from HomeKit's hue and saturation to Home Connect's RGB
+            // (value is handled separately, as brightness)
+            this.onSetNumber(hueCharacteristic,         value => updateLightHC({ hue: value }));
+            this.onSetNumber(saturationCharacteristic,  value => updateLightHC({ saturation: value }));
+
             // Convert from Home Connect's RGB to HomeKit's hue and saturation
             // (ignore changes to 'BSH.Common.Setting.AmbientLightColor')
             this.device.on(settings.custom.key, rgb => {
                 const { hue, saturation, brightness: value } = this.fromRGB(rgb);
                 this.log.info(`Light ${type} ${rgb} (hue=${hue}, saturation=${saturation}%, value=${value}%)`);
-                service.updateCharacteristic(this.Characteristic.Hue, hue);
-                service.updateCharacteristic(this.Characteristic.Saturation, saturation);
-                service.updateCharacteristic(this.Characteristic.Brightness, value);
+                hueCharacteristic           .updateValue(hue);
+                saturationCharacteristic    .updateValue(saturation);
+                brightnessCharacteristic    .updateValue(value);
             });
-
-            // Convert from HomeKit's hue and saturation to Home Connect's RGB
-            // (value is handled separately, as brightness)
-            service.getCharacteristic(this.Characteristic.Hue)
-                .onSet(this.onSetNumber(value => updateLightHC({ hue: value })));
-            service.getCharacteristic(this.Characteristic.Saturation)
-                .onSet(this.onSetNumber(value => updateLightHC({ saturation: value })));
         }
 
         // Set the colour of a light

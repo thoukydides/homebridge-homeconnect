@@ -571,42 +571,42 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         addProgram({ name, key, selectonly, options }: CheckedProgramConfig, updateProgramHC: UpdateProgramHC): Service {
             // Add a switch service for this program
             const service = this.makeService(this.Service.Switch, name, `program v2 ${name}`);
+            const onCharacteristic = service.getCharacteristic(this.Characteristic.On);
 
             // Either select the program, or start/stop the active program
-            service.getCharacteristic(this.Characteristic.On)
-                .onSet(this.onSetBoolean(async value => {
-                    // Convert any absolute times to relative times in seconds
-                    const fixedOptions: OptionValues = {};
-                    const fixOption = <Key extends OptionKey>(key: Key): void => {
-                        assertIsDefined(options);
-                        if (this.isOptionRelative(key)) {
-                            fixedOptions[key] = this.timeToSeconds(options[key] ?? 0);
-                        } else {
-                            fixedOptions[key] = options[key];
-                        }
-                    };
-                    for (const key of Object.keys(options ?? {}) as OptionKey[]) fixOption(key);
-
-                    // Select or start/stop the program as appropriate
-                    if (selectonly) {
-                        // Select this program and its options
-                        if (value) {
-                            await updateProgramHC({ selectNamed: { name, key, options: fixedOptions }});
-                            setImmediate(() => service.updateCharacteristic(this.Characteristic.On, false));
-                        }
+            this.onSetBoolean(onCharacteristic, async value => {
+                // Convert any absolute times to relative times in seconds
+                const fixedOptions: OptionValues = {};
+                const fixOption = <Key extends OptionKey>(key: Key): void => {
+                    assertIsDefined(options);
+                    if (this.isOptionRelative(key)) {
+                        fixedOptions[key] = this.timeToSeconds(options[key] ?? 0);
                     } else {
-                        // Attempt to start or stop the program
-                        if (value) await updateProgramHC({ startNamed: { name, key, options: fixedOptions }});
-                        else await updateProgramHC({ stop: true });
+                        fixedOptions[key] = options[key];
                     }
-                }));
+                };
+                for (const key of Object.keys(options ?? {}) as OptionKey[]) fixOption(key);
 
-            // Update the status
+                // Select or start/stop the program as appropriate
+                if (selectonly) {
+                    // Select this program and its options
+                    if (value) {
+                        await updateProgramHC({ selectNamed: { name, key, options: fixedOptions }});
+                        setImmediate(() => service.updateCharacteristic(this.Characteristic.On, false));
+                    }
+                } else {
+                    // Attempt to start or stop the program
+                    if (value) await updateProgramHC({ startNamed: { name, key, options: fixedOptions }});
+                    else await updateProgramHC({ stop: true });
+                }
+            });
+
+            // Update from Home Connect to HomeKit
             const updateHK = this.makeSerialised(active => {
                 const prevActive = service.getCharacteristic(this.Characteristic.On).value;
                 if (active !== prevActive) {
                     this.log.info(`Program '${name}' (${key}) ${active ? 'active' : 'inactive'}`);
-                    service.updateCharacteristic(this.Characteristic.On, active);
+                    onCharacteristic.updateValue(active);
                 }
             }, false);
             this.device.on('BSH.Common.Root.ActiveProgram', programKey => updateHK(programKey === key));
@@ -625,20 +625,20 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
             // Make the (Operation State) active On characteristic writable
             // (status update is performed by the normal Operation State handler)
             assertIsDefined(this.activeService);
-            this.activeService.getCharacteristic(this.Characteristic.On)
-                .setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] })
-                .onSet(this.onSetBoolean(async value => {
-                    // Use pause and resume if supported in the current state
-                    if (!value && supportsPause
+            const onCharacteristic = this.activeService.getCharacteristic(this.Characteristic.On);
+            onCharacteristic.setProps({ perms: [Perms.PAIRED_READ, Perms.PAIRED_WRITE, Perms.NOTIFY] });
+            this.onSetBoolean(onCharacteristic, async value => {
+                // Use pause and resume if supported in the current state
+                if (!value && supportsPause
                         && this.device.isOperationState('DelayedStart', 'Run', 'ActionRequired')) {
-                        await updateProgramHC({ pause: true });
-                    } else if (value && supportsResume && this.device.isOperationState('Pause')) {
-                        await updateProgramHC({ pause: false });
-                    } else {
-                        if (value) await updateProgramHC({ startCurrent: true });
-                        else await updateProgramHC({ stop: true });
-                    }
-                }));
+                    await updateProgramHC({ pause: true });
+                } else if (value && supportsResume && this.device.isOperationState('Pause')) {
+                    await updateProgramHC({ pause: false });
+                } else {
+                    if (value) await updateProgramHC({ startCurrent: true });
+                    else await updateProgramHC({ stop: true });
+                }
+            });
         }
 
         // Read and log details of all available programs

@@ -53,18 +53,18 @@ export function HasModes<TBase extends Constructor<ApplianceBase>>(Base: TBase, 
         addModeSwitch(key: SettingKey, name: string): Service {
             // Add a switch service for this mode setting
             const service = this.makeService(this.Service.Switch, name, `${prefix} ${name}`);
+            const onCharacteristic = service.getCharacteristic(this.Characteristic.On);
 
-            // Change the setting
-            service.getCharacteristic(this.Characteristic.On)
-                .onSet(this.onSetBoolean(async value => {
-                    this.log.info(`SET ${name} ${value ? 'on' : 'off'}`);
-                    await this.device.setSetting(key, value);
-                }));
+            // Update from HomeKit to Home Connect
+            this.onSetBoolean(onCharacteristic, async value => {
+                this.log.info(`SET ${name} ${value ? 'on' : 'off'}`);
+                await this.device.setSetting(key, value);
+            });
 
-            // Update the status
+            // Update from Home Connect to HomeKit
             this.device.on(key, enabled => {
                 this.log.info(`${name} ${enabled ? 'on' : 'off'}`);
-                service.updateCharacteristic(this.Characteristic.On, enabled);
+                onCharacteristic.updateValue(enabled);
             });
             return service;
         }

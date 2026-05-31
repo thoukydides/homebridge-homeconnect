@@ -41,22 +41,21 @@ export function HasAlarmClock<TBase extends Constructor<ApplianceBase & { powerS
 
             // Add a set duration characteristic for the alarm clock
             this.powerService.addOptionalCharacteristic(this.Characteristic.SetDuration);
-            this.powerService.getCharacteristic(this.Characteristic.SetDuration)
-                .setProps({ maxValue: setting?.constraints?.max ?? MAX_ALARM_DURATION });
+            const setDurationCharacteristic = this.powerService.getCharacteristic(this.Characteristic.SetDuration);
+            setDurationCharacteristic.setProps({ maxValue: setting?.constraints?.max ?? MAX_ALARM_DURATION });
 
-            // Change the alarm clock value
-            this.powerService.getCharacteristic(this.Characteristic.SetDuration)
-                .onSet(this.onSetNumber(async (value: number) => {
-                    this.log.info(`SET Alarm clock ${value} seconds`);
-                    await this.device.setSetting('BSH.Common.Setting.AlarmClock', value);
-                }));
+            // Update from HomeKit to Home Connect
+            this.onSetNumber(setDurationCharacteristic, async value => {
+                this.log.info(`SET Alarm clock ${value} seconds`);
+                await this.device.setSetting('BSH.Common.Setting.AlarmClock', value);
+            });
 
-            // Update the alarm clock status
+            // Update from Home Connect to HomeKit
             this.device.on('BSH.Common.Setting.AlarmClock', seconds => {
                 assertIsDefined(this.powerService);
                 if (seconds) this.log.info(`Alarm clock ${formatSeconds(seconds)} remaining`);
                 else this.log.info('Alarm clock inactive');
-                this.powerService.updateCharacteristic(this.Characteristic.SetDuration, seconds);
+                setDurationCharacteristic.updateValue(seconds);
             });
         }
     };
