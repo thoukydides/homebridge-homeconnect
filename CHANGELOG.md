@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [v1.11.3] - 2026-06-01
+## [v1.11.4] - 2026-05-31
+### Fixed
+* **Hob:** Fan service is only created if ventilation is integrated and has not been disabled.
+### Changed
+* Errors for failed HomeKit attempts to set accessory state are now transient rather than persisting until a value changes.
+
+## [v1.11.3] - 2026-05-30
 ### Changed
 * **WasherDryer:** Added undocumented programs. (#394)
 
@@ -951,7 +957,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.3...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.4...HEAD
+[v1.11.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.3...v1.11.4
 [v1.11.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.2...v1.11.3
 [v1.11.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.1...v1.11.2
 [v1.11.1]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.11.0...v1.11.1
