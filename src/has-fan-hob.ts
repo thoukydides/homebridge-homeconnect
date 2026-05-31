@@ -25,7 +25,7 @@ export function HasFanHob<TBase extends Constructor<ApplianceBase>>(Base: TBase)
     return class HasFanHob extends Base {
 
         // Accessory services
-        readonly fanService: Service;
+        fanService?: Service;
 
         // Manual control fan speeds
         fanLevels: VentilationLevelPercent[] = [];
@@ -34,9 +34,6 @@ export function HasFanHob<TBase extends Constructor<ApplianceBase>>(Base: TBase)
         // Mixin constructor
         constructor(...args: any[]) {
             super(...args as ConstructorParameters<TBase>);
-
-            // Add a fan (v2) service for the hob ventilation
-            this.fanService = this.makeService(this.Service.Fanv2, 'Fan');
 
             // Continue initialisation asynchronously
             this.asyncInitialise('Fan', this.initHasVentilation());
@@ -50,6 +47,9 @@ export function HasFanHob<TBase extends Constructor<ApplianceBase>>(Base: TBase)
                 this.log.info('Does not support integrated ventilation');
                 return;
             }
+
+            // Check whether a ventilation fan should be supported
+            if (!this.hasOptionalFeature('Fan', 'Ventilation')) return;
 
             // Check the supported fan speeds
             const setting = await this.getCached(
@@ -90,26 +90,26 @@ export function HasFanHob<TBase extends Constructor<ApplianceBase>>(Base: TBase)
                 this.log.info(`    ${level.percent}% (${level.level})` + (level.siri ? ` = Siri '${level.siri}'` : ''));
             }
 
-            // Control the fan
-            const updateHC = this.makeSerialisedObject<UpdateVentilationHCValue>(value => this.updateFanHC(value));
-
             // Add the fan service
-            this.addFan(updateHC);
+            this.addFan();
         }
 
         // Add a fan
-        addFan(updateHC: (value?: UpdateVentilationHCValue) => Promise<void>): void {
-            const service = this.fanService;
+        addFan(): void {
             const { INACTIVE: OFF, ACTIVE } = this.Characteristic.Active;
             const { INACTIVE, BLOWING_AIR } = this.Characteristic.CurrentFanState;
 
+            // Add a fan (v2) service for the hob ventilation
+            this.fanService = this.makeService(this.Service.Fanv2, 'Fan');
+
             // Add the fan state characteristics
-            const activeCharacteristic          = service.getCharacteristic(this.Characteristic.Active);
-            const rotationSpeedCharacteristic   = service.getCharacteristic(this.Characteristic.RotationSpeed);
-            const currentFanStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentFanState);
+            const activeCharacteristic          = this.fanService.getCharacteristic(this.Characteristic.Active);
+            const rotationSpeedCharacteristic   = this.fanService.getCharacteristic(this.Characteristic.RotationSpeed);
+            const currentFanStateCharacteristic = this.fanService.getCharacteristic(this.Characteristic.CurrentFanState);
             rotationSpeedCharacteristic.setProps({ minValue: 0, maxValue: 100, minStep: this.fanPercentStep });
 
             // Update from HomeKit to Home Connect
+            const updateHC = this.makeSerialisedObject<UpdateVentilationHCValue>(value => this.updateFanHC(value));
             this.onSetNumber(activeCharacteristic,          value => updateHC({ active: value }));
             this.onSetNumber(rotationSpeedCharacteristic,   value => updateHC({ percent: value }));
 
@@ -128,6 +128,7 @@ export function HasFanHob<TBase extends Constructor<ApplianceBase>>(Base: TBase)
         async updateFanHC({ active, percent }: UpdateVentilationHCValue): Promise<void> {
             // Read missing Fan service values
             const read = (characteristic: WithUUID<new () => Characteristic>): number => {
+                assertIsDefined(this.fanService);
                 const value = this.fanService.getCharacteristic(characteristic).value;
                 assertIsNumber(value);
                 return value;
