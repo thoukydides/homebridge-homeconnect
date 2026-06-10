@@ -74,15 +74,15 @@
     "main": "dist/index.js",
     "engines": {
         "node": "^26.1.0 || ^24.14.1 || ^22.22.2 || ^20.20.2",
-        "homebridge": "^1.11.4 || ^2.0.2"
+        "homebridge": "^1.11.4 || ^2.1.0"
     },
     "dependencies": {
         "@homebridge/plugin-ui-utils": "^2.2.4",
         "chalk": "^4.1.2",
         "node-persist": "^3.1.3",
-        "semver": "^7.8.1",
+        "semver": "^7.8.4",
         "ts-interface-checker": "^1.0.2",
-        "undici": "^7.26.0"
+        "undici": "^7.27.2"
     },
     "devDependencies": {
         "@actions/core": "^3.0.1",
@@ -93,7 +93,7 @@
         "@octokit/plugin-rest-endpoint-methods": "^17.0.0",
         "@tsconfig/node20": "^20.1.9",
         "@types/eslint__js": "^8.42.3",
-        "@types/node": "^20.19.41",
+        "@types/node": "^20.19.42",
         "@types/node-persist": "^3.1.8",
         "@types/semver": "^7.7.1",
         "browserify": "^17.0.1",
@@ -101,13 +101,13 @@
         "eslint": "^10.4.1",
         "esmify": "^2.1.1",
         "globals": "^17.6.0",
-        "homebridge": "^2.0.2",
+        "homebridge": "^2.1.0",
         "nodemon": "^3.1.14",
         "rimraf": "^6.1.3",
         "ts-interface-builder": "^0.3.3",
-        "tsx": "^4.22.3",
+        "tsx": "^4.22.4",
         "typescript": "^6.0.3",
-        "typescript-eslint": "^8.60.0"
+        "typescript-eslint": "^8.61.0"
     },
     "overrides": {
         "typescript-eslint": {
