@@ -491,7 +491,8 @@ export type MicrowavePower = // (undocumented)
     'Cooking.Oven.EnumType.MicrowavePower.Off';
 export type MultipleSoak = // (undocumented)
     'LaundryCare.Washer.EnumType.MultipleSoak.Off'
-  | 'LaundryCare.Washer.EnumType.MultipleSoak.On';
+  | 'LaundryCare.Washer.EnumType.MultipleSoak.On'
+  | 'LaundryCare.Washer.EnumType.MultipleSoak.Plus3';
 export type ProcessPhaseCleaningRobot =
     'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MovingToTarget'
   | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Cleaning'
@@ -502,9 +503,12 @@ export type ProcessPhaseCleaningRobot =
   | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Exploring'
   | 'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.Localizing';
 export type ProcessPhaseLaundryCare = // (undocumented)
-    'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
+    'LaundryCare.Common.EnumType.ProcessPhase.AdditionalCoolingDown'
   | 'LaundryCare.Common.EnumType.ProcessPhase.CleaningHeatExchanger'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Cooldown'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.CoolingDown'
   | 'LaundryCare.Common.EnumType.ProcessPhase.CupboardDryReached'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad'
   | 'LaundryCare.Common.EnumType.ProcessPhase.DetectingTextile'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Drying'
   | 'LaundryCare.Common.EnumType.ProcessPhase.FillingDetergent'
@@ -517,6 +521,7 @@ export type ProcessPhaseLaundryCare = // (undocumented)
   | 'LaundryCare.Common.EnumType.ProcessPhase.Prewash'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Rinsing'
   | 'LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener'
+  | 'LaundryCare.Common.EnumType.ProcessPhase.Soaking'
   | 'LaundryCare.Common.EnumType.ProcessPhase.SpinningFinal'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Undefined'
   | 'LaundryCare.Common.EnumType.ProcessPhase.Washing'
