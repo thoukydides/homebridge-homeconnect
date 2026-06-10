@@ -492,6 +492,8 @@ export type MicrowavePower = // (undocumented)
 export type MultipleSoak = // (undocumented)
     'LaundryCare.Washer.EnumType.MultipleSoak.Off'
   | 'LaundryCare.Washer.EnumType.MultipleSoak.On'
+  | 'LaundryCare.Washer.EnumType.MultipleSoak.Plus1'
+  | 'LaundryCare.Washer.EnumType.MultipleSoak.Plus2'
   | 'LaundryCare.Washer.EnumType.MultipleSoak.Plus3';
 export type ProcessPhaseCleaningRobot =
     'ConsumerProducts.CleaningRobot.EnumType.ProcessPhase.MovingToTarget'
