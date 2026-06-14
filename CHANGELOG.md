@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v1.11.7] - 2026-06-14
 ### Changed
-* Dropped Node.js 18 support.
+* Dropped Node.js 20 support.
 * Updated dependencies to latest versions.
 
 ## [v1.11.6] - 2026-06-10
