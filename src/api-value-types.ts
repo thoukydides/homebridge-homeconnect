@@ -93,14 +93,20 @@ export type ProgramKey =
   | 'Cooking.Hob.Program.PowerMoveMode' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Draining' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Drying' // (undocumented)
+  | 'Cooking.Oven.Program.Cleaning.EasyClean' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Ecolysis' // (undocumented)
   | 'Cooking.Oven.Program.Cleaning.Pyrolysis' // (undocumented)
   | 'Cooking.Oven.Program.CleaningModes.AutoSteamCalibration' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Automatic.Conv.Microwave.PizzaThinCrust1Slice' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Conv.Steam.BonelessPorkNeckJoint' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.GefluegelteileAuftauen' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.Haehnchenteile' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Automatic.Microwave.PommesFrites' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.FreshLasagne' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.FruitTartOrCheesecakeWithPastryBase' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.MeatProbe.GooseBreast' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.PizzaChilled' // (undocumented)
+  | 'Cooking.Oven.Program.Dish.Recommendation.Conv.PotatoGratinRawIngredients4CmDeep' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.MeatProbe.BonelessPorkNeckJoint' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.MeatProbe.TurkeyBreast' // (undocumented)
   | 'Cooking.Oven.Program.Dish.Recommendation.Conv.Steam.PartCookedBreadRollsOrBaguette' // (undocumented)
@@ -110,8 +116,10 @@ export type ProgramKey =
   | 'Cooking.Oven.Program.HeatingMode.3DHotAir' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.AirFry' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.BottomHeating'
+  | 'Cooking.Oven.Program.HeatingMode.BreadBaking' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.Defrost'
   | 'Cooking.Oven.Program.HeatingMode.Desiccation'
+  | 'Cooking.Oven.Program.HeatingMode.DoughProving' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial'
   | 'Cooking.Oven.Program.HeatingMode.FullSurfaceGrill' // (undocumented)
   | 'Cooking.Oven.Program.HeatingMode.GrillLargeArea'
