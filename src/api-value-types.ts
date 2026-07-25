@@ -54,6 +54,7 @@ export type ProgramKey =
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.RemoveWaterFilter' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.ReplaceWaterFilter' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.RinseMilkSystem' // (undocumented)
+  | 'ConsumerProducts.CoffeeMaker.Program.CleaningModes.RinseWaterFilter' // (undocumented)
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Americano'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.BlackEye'
   | 'ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.CafeAuLait'
