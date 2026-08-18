@@ -95,13 +95,18 @@ export class ApplianceBase {
         // Handle the identify request
         accessory.on('identify', detached(this.log, 'Identify', () => this.identify()));
 
+        // Update the accessory name to match the appliance name
+        const name = device.ha.name.trim();
+        accessory.updateDisplayName(name);
+
         // Set the Accessory Information service characteristics
         this.accessoryInformationService = this.makeService(this.Service.AccessoryInformation);
         this.accessoryInformationService
-            .setCharacteristic(this.Characteristic.Manufacturer,     device.ha.brand)
-            .setCharacteristic(this.Characteristic.Model,            device.ha.enumber)
-            .setCharacteristic(this.Characteristic.SerialNumber,     device.ha.haId)
-            .setCharacteristic(this.Characteristic.FirmwareRevision, '0');
+            .updateCharacteristic(this.Characteristic.Name,             name)
+            .updateCharacteristic(this.Characteristic.Manufacturer,     device.ha.brand)
+            .updateCharacteristic(this.Characteristic.Model,            device.ha.enumber)
+            .updateCharacteristic(this.Characteristic.SerialNumber,     device.ha.haId)
+            .updateCharacteristic(this.Characteristic.FirmwareRevision, '0');
 
         // Log connection status changes
         device.on('connected', connected => {
@@ -169,6 +174,9 @@ export class ApplianceBase {
 
         // Delete any obsolete services
         this.cleanupServices();
+
+        // Save the accessory to disk so that name or service changes persist
+        this.platform.hb.updatePlatformAccessories([this.accessory]);
 
         // Update the configuration schema with any optional features
         await this.setOptionalFeatures();
