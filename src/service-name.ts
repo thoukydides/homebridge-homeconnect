@@ -12,7 +12,7 @@ import { detached, logError } from './log-error.js';
 
 // Service name length in Unicode characters (code points, not octets or code units)
 const SERVICE_LENGTH_MIN = 1;
-const SERVICE_LENGTH_MAX = 250; // (Name is limited to 64, but ConfiguredName can be longer)
+const SERVICE_LENGTH_MAX = 64; // (ConfiguredName doesn't have a maxLen, but Home app enforces 64 characters)
 
 // Characters allowed in a service name (requires RegExp with 'u' flag)
 const SERVICE_CHAR_END      = /\p{L}|\p{Nd}/u;          // (alphabetic or numeric)

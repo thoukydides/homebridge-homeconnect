@@ -61,8 +61,8 @@ export class ApplianceDishwasher extends
         this.hasEvent('Dishcare.Dishwasher.Event.ProgramBlockedSaltLack',                               'Program Blocked Salt Empty');
         this.hasEvent('Dishcare.Dishwasher.Event.RinseAidLack',                                         'Rinse Aid Empty');
         this.hasEvent('Dishcare.Dishwasher.Event.MachineCareReminder',                                  'Machine Care Recommended');
-        this.hasEvent('Dishcare.Dishwasher.Event.MachineCareAndFilterCleaningReminder',                 'Machine Care and Filter Cleaning Recommended');
-        this.hasEvent('Dishcare.Dishwasher.Event.MachineCareAndLowMaintenanceFilterCleaningReminder',   'Machine Care Recommended and Optional Filter Cleaning');
+        this.hasEvent('Dishcare.Dishwasher.Event.MachineCareAndFilterCleaningReminder',                 'Machine Care & Filter Recommended');
+        this.hasEvent('Dishcare.Dishwasher.Event.MachineCareAndLowMaintenanceFilterCleaningReminder',   'Machine Care & Optional Filter');
         this.hasEvent('Dishcare.Dishwasher.Event.SmartFilterCleaningReminder',                          'Filter Cleaning Recommended');
     }
 }
