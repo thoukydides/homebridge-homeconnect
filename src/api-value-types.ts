@@ -923,6 +923,7 @@ export interface OptionValues {
     'Dishcare.Dishwasher.Option.EnergySafe'?:                                       boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.ExtraDry'?:                                         boolean;
     'Dishcare.Dishwasher.Option.ExtraRinse'?:                                       boolean; // (undocumented)
+    'Dishcare.Dishwasher.Option.FixedZone'?:                                        boolean; // (undocumented)
     'Dishcare.Dishwasher.Option.FlexSpray.BackLeft'?:                               FlexSprayIntensity; // (undocumented)
     'Dishcare.Dishwasher.Option.FlexSpray.BackRight'?:                              FlexSprayIntensity; // (undocumented)
     'Dishcare.Dishwasher.Option.FlexSpray.FrontLeft'?:                              FlexSprayIntensity; // (undocumented)
