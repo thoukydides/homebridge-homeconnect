@@ -82,7 +82,6 @@ const IGNORE_TYPES: string[] = [
     'DoorStates' // (reported instead of DoorState*)
 ];
 const IGNORE_VALUES: string[] = [
-    "''",
     "'Micha: Caffè Grande'"
 ];
 
