@@ -113,7 +113,8 @@ export class ClientClientID {
         progress.classList.remove('hc-progress-zero');
         if (authorisation.expires !== null) {
             progress.style.transitionDuration = `${authorisation.expires - Date.now()}ms`;
-            void(progress.offsetHeight); // (force a reflow)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions -- Force synchronous reflow
+            progress.offsetHeight;
             progress.classList.add('hc-progress-zero');
         }
     }

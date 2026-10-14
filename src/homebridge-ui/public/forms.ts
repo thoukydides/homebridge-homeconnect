@@ -136,7 +136,7 @@ export enum FormId {
 
 // Type guard to check whether a string is a special form identifier
 function isFormId(value: string): value is FormId {
-    return Object.values(FormId).includes(value as FormId);
+    return Object.values<string>(FormId).includes(value);
 }
 
 // Manage the configuration forms

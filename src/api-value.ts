@@ -247,7 +247,7 @@ export class APICheckValues {
         this.isKey(typeSuite, typeSuite.StatusValues, context, status.key);
         this.isValue(checkers.StatusValues, context, status.key, status.value);
         this.isConstraints(checkers.StatusValues, context, status.key, status.constraints);
-        return status as StatusKV<Key>;
+        return status as unknown as StatusKV<Key>;
     }
 
     // Check a list of settings

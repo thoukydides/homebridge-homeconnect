@@ -11,12 +11,14 @@ import { OptionValues, PowerState, ProgramKey } from './api-value-types.js';
 import { ConstraintsNumber, OptionDefinitionNumber, OptionDefinitionString } from './api-types.js';
 
 // HomeKit Target/Current Heating Cooling State (matches Characteristic values)
-export enum ThermostatState {
-    Off     = 0,
-    Heat    = 1,
-    Cool    = 2,
-    Auto    = 3 // Maps to Cool for Current Heating Cooling State
-}
+const THERMOSTAT_STATE = {
+    OFF:        0,
+    HEAT:       1,
+    COOL:       2,
+    AUTO:       3
+} as const;
+type ThermostatState = typeof THERMOSTAT_STATE[keyof typeof THERMOSTAT_STATE];
+const THERMOSTAT_STATE_NAME = Object.fromEntries(Object.entries(THERMOSTAT_STATE).map(([key, value]) => [value, key] as [number, string]));
 
 // Coalesced HomeKit fan control characteristic values
 export interface UpdateFanACHCValue {
@@ -31,18 +33,18 @@ export interface UpdateFanACHCValue {
 
 // Preference order of AC programs and associated Target Heating Cooling States
 const THERMOSTAT_PROGRAMS = [
-    ['HeatingVentilationAirConditioning.AirConditioner.Program.Fan',            ThermostatState.Off],   // All controls available
-    ['HeatingVentilationAirConditioning.AirConditioner.Program.Cool',           ThermostatState.Cool],  // All controls available
-    ['HeatingVentilationAirConditioning.AirConditioner.Program.Heat',           ThermostatState.Heat],  // All controls available
-    ['HeatingVentilationAirConditioning.AirConditioner.Program.Auto',           ThermostatState.Auto],  // No manual fan speed
-    ['HeatingVentilationAirConditioning.AirConditioner.Program.Dry',            ThermostatState.Cool],  // No manual fan speed
-    ['HeatingVentilationAirConditioning.AirConditioner.Program.ActiveClean',    ThermostatState.Off]    // No fan or temperature control
+    ['HeatingVentilationAirConditioning.AirConditioner.Program.Fan',            THERMOSTAT_STATE.OFF],   // All controls available
+    ['HeatingVentilationAirConditioning.AirConditioner.Program.Cool',           THERMOSTAT_STATE.COOL],  // All controls available
+    ['HeatingVentilationAirConditioning.AirConditioner.Program.Heat',           THERMOSTAT_STATE.HEAT],  // All controls available
+    ['HeatingVentilationAirConditioning.AirConditioner.Program.Auto',           THERMOSTAT_STATE.AUTO],  // No manual fan speed
+    ['HeatingVentilationAirConditioning.AirConditioner.Program.Dry',            THERMOSTAT_STATE.COOL],  // No manual fan speed
+    ['HeatingVentilationAirConditioning.AirConditioner.Program.ActiveClean',    THERMOSTAT_STATE.OFF]    // No fan or temperature control
 ] as const satisfies [ProgramKey, ThermostatState][];
 
 // Simplified details of an air conditioner program
 export interface ACProgramDetails {
     key:                ProgramKey;
-    thermostatState:    ThermostatState;
+    thermostatState:    number; // = ThermostatState
     fanAuto?:           OptionDefinitionString;  // (all except ActiveClean)
     fanManual?:         OptionDefinitionNumber;  // (only Heat/Cool/Fan)
     temperature?:       OptionDefinitionNumber;  // (all except ActiveClean)
@@ -193,14 +195,15 @@ export function HasFanAC<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
                 const details = this.acPrograms.find(details => details.key === programKey);
                 if (details) {
                     const { thermostatState } = details;
-                    const currentState = thermostatState === ThermostatState.Auto ? ThermostatState.Cool : thermostatState;
-                    this.log.info(`Target state ${ThermostatState[thermostatState]} (current state ${ThermostatState[currentState]})`);
+                    const currentState = thermostatState === THERMOSTAT_STATE.AUTO ? THERMOSTAT_STATE.COOL : thermostatState;
+                    this.log.info(`Target state ${THERMOSTAT_STATE_NAME[thermostatState]}`
+                                + ` (current state ${THERMOSTAT_STATE_NAME[currentState]})`);
                     targetHeatingCoolingStateCharacteristic .updateValue(thermostatState);
                     currentHeatingCoolingStateCharacteristic.updateValue(currentState);
 
                 } else {
                     this.log.info(programKey ? `Unsupported program: ${programKey}` : 'No active program');
-                    currentHeatingCoolingStateCharacteristic.updateValue(ThermostatState.Off);
+                    currentHeatingCoolingStateCharacteristic.updateValue(THERMOSTAT_STATE.OFF);
                 }
             });
             return service;
@@ -230,7 +233,7 @@ export function HasFanAC<TBase extends Constructor<ApplianceBase>>(Base: TBase) 
         }
 
         // Configure the air conditioner for a particular mode and speed
-        async setAC(active: boolean, auto: boolean, percent: number, state?: ThermostatState, temperature?: number): Promise<void> {
+        async setAC(active: boolean, auto: boolean, percent: number, state?: number, temperature?: number): Promise<void> {
             if (!active) {
                 // Turn the fan off
                 this.log.info('SET A/C off');
