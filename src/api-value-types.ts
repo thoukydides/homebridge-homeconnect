@@ -207,6 +207,7 @@ export type ProgramKey =
   | 'LaundryCare.Dryer.Program.Cotton.CottonEco' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton.Eco4060' // (undocumented)
   | 'LaundryCare.Dryer.Program.Cotton'
+  | 'LaundryCare.Dryer.Program.CottonEco.CottonEco.EcoCottonEU23' // (undocumented)
   | 'LaundryCare.Dryer.Program.Delicates'
   | 'LaundryCare.Dryer.Program.Dessous'
   | 'LaundryCare.Dryer.Program.DownFeathers'
