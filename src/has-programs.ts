@@ -642,7 +642,7 @@ export function HasPrograms<TBase extends Constructor<ApplianceBase & { activeSe
         }
 
         // Read and log details of all available programs
-        async identify(): Promise<void> {
+        override async identify(): Promise<void> {
             await super.identify();
 
             // Read the supported programs and their options

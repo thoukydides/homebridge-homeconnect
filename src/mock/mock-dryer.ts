@@ -10,12 +10,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockDryer extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'Dryer';
-    readonly enumber    = 'HCS04DYR1/03';
-    readonly brand      = 'Bosch';
+    readonly type           = 'Dryer';
+    readonly enumber        = 'HCS04DYR1/03';
+    override readonly brand = 'Bosch';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.RemoteControlActive',
         value: true
     }, {
@@ -30,7 +30,7 @@ export class MockDryer extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.PowerState',
         type: 'BSH.Common.EnumType.PowerState',
         value: PowerState.On,
@@ -40,7 +40,7 @@ export class MockDryer extends MockAppliance {
     }];
 
     // Appliance programs
-    readonly programs: ProgramDefinitionKV[] = [{
+    override readonly programs: ProgramDefinitionKV[] = [{
         key: 'LaundryCare.Dryer.Program.Cotton',
         options: [{
             key: 'LaundryCare.Dryer.Option.DryingTarget',

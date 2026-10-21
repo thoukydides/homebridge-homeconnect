@@ -10,12 +10,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockOven extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'Oven';
-    readonly enumber    = 'HB678GBS6B/50';
-    readonly brand      = 'Siemens';
+    readonly type           = 'Oven';
+    readonly enumber        = 'HB678GBS6B/50';
+    override readonly brand = 'Siemens';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.LocalControlActive',
         value: false,
         name: 'Local operation active'
@@ -30,7 +30,7 @@ export class MockOven extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.ChildLock',
         type: 'Boolean',
         value: false,
@@ -63,13 +63,13 @@ export class MockOven extends MockAppliance {
     }];
 
     // Appliance commands
-    readonly commands: CommandKV[] = [{
+    override readonly commands: CommandKV[] = [{
         key: 'BSH.Common.Command.AcknowledgeEvent',
         name: 'OK'
     }];
 
     // Appliance programs
-    readonly programs: ProgramDefinitionKV[] = [{
+    override readonly programs: ProgramDefinitionKV[] = [{
         key: 'Cooking.Oven.Program.HeatingMode.HotAir',
         name: 'Hot air',
         options: [{

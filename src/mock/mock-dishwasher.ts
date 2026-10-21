@@ -10,12 +10,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockDishwasher extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'Dishwasher';
-    readonly enumber    = 'SN678D06TG/53';
-    readonly brand      = 'Siemens';
+    readonly type           = 'Dishwasher';
+    readonly enumber        = 'SN678D06TG/53';
+    override readonly brand = 'Siemens';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.DoorState',
         value: DoorState.Closed,
         name: 'Door'
@@ -42,7 +42,7 @@ export class MockDishwasher extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.PowerState',
         type: 'BSH.Common.EnumType.PowerState',
         value: PowerState.On,
@@ -55,13 +55,13 @@ export class MockDishwasher extends MockAppliance {
     }];
 
     // Appliance commands
-    readonly commands: CommandKV[] = [{
+    override readonly commands: CommandKV[] = [{
         key: 'BSH.Common.Command.AcknowledgeEvent',
         name: 'OK'
     }];
 
     // Appliance programs
-    readonly programs: ProgramDefinitionKV[] = [{
+    override readonly programs: ProgramDefinitionKV[] = [{
         key: 'Dishcare.Dishwasher.Program.Intensiv70',
         name: 'Intensive 70°C',
         options: []

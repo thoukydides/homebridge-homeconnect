@@ -10,12 +10,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockCoffeeMaker extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'CoffeeMaker';
-    readonly enumber    = 'HCS06COM1/03';
-    readonly brand      = 'Bosch';
+    readonly type           = 'CoffeeMaker';
+    readonly enumber        = 'HCS06COM1/03';
+    override readonly brand = 'Bosch';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.RemoteControlStartAllowed',
         value: true
     }, {
@@ -27,7 +27,7 @@ export class MockCoffeeMaker extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.PowerState',
         type: 'BSH.Common.EnumType.PowerState',
         value: PowerState.On,
@@ -37,7 +37,7 @@ export class MockCoffeeMaker extends MockAppliance {
     }];
 
     // Appliance programs
-    readonly programs: ProgramDefinitionKV[] = [{
+    override readonly programs: ProgramDefinitionKV[] = [{
         key: 'ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso',
         options: [{
             key: 'ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature',

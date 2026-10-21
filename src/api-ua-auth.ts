@@ -479,7 +479,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     }
 
     // Add an Authorisation header to request options
-    async prepareRequest(method: Method, path: string, options?: Partial<Request>): Promise<Request> {
+    override async prepareRequest(method: Method, path: string, options?: Partial<Request>): Promise<Request> {
         const request = await super.prepareRequest(method, path, options);
 
         // Wait for client to be authorised, unless this is an authorisation request
@@ -501,7 +501,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
     }
 
     // Restart authorisation if a request indicated an invalid token
-    canRetry(err: unknown): boolean {
+    override canRetry(err: unknown): boolean {
         // Authorisation issues take priority over other failure cases
         if (err instanceof APIStatusCodeError && err.response) {
             switch (err.response.statusCode) {

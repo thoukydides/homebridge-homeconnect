@@ -10,12 +10,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockHob extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'Hob';
-    readonly enumber    = 'EX677LYV1E/06';
-    readonly brand      = 'Siemens';
+    readonly type           = 'Hob';
+    readonly enumber        = 'EX677LYV1E/06';
+    override readonly brand = 'Siemens';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.DoorState',
         value: DoorState.Closed,
         name: 'Door'
@@ -34,7 +34,7 @@ export class MockHob extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.PowerState',
         type: 'BSH.Common.EnumType.PowerState',
         value: PowerState.On,
@@ -64,7 +64,7 @@ export class MockHob extends MockAppliance {
     }];
 
     // Appliance commands
-    readonly commands: CommandKV[] = [{
+    override readonly commands: CommandKV[] = [{
         key: 'BSH.Common.Command.AcknowledgeEvent',
         name: 'OK'
     }];

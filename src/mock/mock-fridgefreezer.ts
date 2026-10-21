@@ -10,12 +10,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockFridgeFreezer extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'FridgeFreezer';
-    readonly enumber    = 'HCS05FRF1/03';
-    readonly brand      = 'Siemens';
+    readonly type           = 'FridgeFreezer';
+    readonly enumber        = 'HCS05FRF1/03';
+    override readonly brand = 'Siemens';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.DoorState',
         value: DoorState.Closed
     }, {
@@ -39,7 +39,7 @@ export class MockFridgeFreezer extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.PowerState',
         type: 'BSH.Common.EnumType.PowerState',
         value: PowerState.On,

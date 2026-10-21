@@ -10,12 +10,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockWasher extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'Washer';
-    readonly enumber    = 'HCS03WCH1/03';
-    readonly brand      = 'Siemens';
+    readonly type           = 'Washer';
+    readonly enumber        = 'HCS03WCH1/03';
+    override readonly brand = 'Siemens';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         'key': 'BSH.Common.Status.RemoteControlActive',
         'value': true
     }, {
@@ -30,7 +30,7 @@ export class MockWasher extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.PowerState',
         type: 'BSH.Common.EnumType.PowerState',
         value: PowerState.On,
@@ -40,7 +40,7 @@ export class MockWasher extends MockAppliance {
     }];
 
     // Appliance programs
-    readonly programs: ProgramDefinitionKV[] = [{
+    override readonly programs: ProgramDefinitionKV[] = [{
         'key': 'LaundryCare.Washer.Program.Cotton',
         options: [{
             key: 'LaundryCare.Washer.Option.Temperature',

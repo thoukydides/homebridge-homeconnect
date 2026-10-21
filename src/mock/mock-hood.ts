@@ -11,12 +11,12 @@ import { MockAppliance } from './mock-appliance.js';
 export class MockHood extends MockAppliance {
 
     // Mandatory appliance details
-    readonly type       = 'Hood';
-    readonly enumber    = 'DWF97RW65/01';
-    readonly brand      = 'Bosch';
+    readonly type           = 'Hood';
+    readonly enumber        = 'DWF97RW65/01';
+    override readonly brand = 'Bosch';
 
     // Appliance status
-    readonly status: StatusKV[] = [{
+    override readonly status: StatusKV[] = [{
         key: 'BSH.Common.Status.LocalControlActive',
         value: false,
         name: 'Local operation active'
@@ -35,7 +35,7 @@ export class MockHood extends MockAppliance {
     }];
 
     // Appliance settings
-    readonly settings: SettingKV[] = [{
+    override readonly settings: SettingKV[] = [{
         key: 'BSH.Common.Setting.PowerState',
         type: 'BSH.Common.EnumType.PowerState',
         value: PowerState.On,
@@ -79,13 +79,13 @@ export class MockHood extends MockAppliance {
     }];
 
     // Appliance commands
-    readonly commands: CommandKV[] = [{
+    override readonly commands: CommandKV[] = [{
         key: 'BSH.Common.Command.AcknowledgeEvent',
         name: 'OK'
     }];
 
     // Appliance programs
-    readonly programs: ProgramDefinitionKV[] = [{
+    override readonly programs: ProgramDefinitionKV[] = [{
         key: 'Cooking.Common.Program.Hood.Automatic',
         name: 'Automatic mode',
         options: []
