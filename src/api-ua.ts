@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger, LogLevel } from 'homebridge';
+import { LogLevel } from 'homebridge';
 
 import { STATUS_CODES, IncomingHttpHeaders } from 'http';
 import { Client, Dispatcher } from 'undici';
@@ -13,6 +13,7 @@ import { PLUGIN_NAME, PLUGIN_VERSION } from './settings.js';
 import { APIError, APIStatusCodeError, APIValidationError } from './api-errors.js';
 import { assertIsDefined, assertIsString, columns, formatMilliseconds, getValidationTree, MS } from './utils.js';
 import { ConfigPlugin } from './config-types.js';
+import { LoggerLike } from './logger.js';
 
 export type Method     = Dispatcher.HttpMethod;
 export type Headers    = IncomingHttpHeaders;
@@ -52,7 +53,7 @@ export class APIUserAgent {
 
     // Create a new user agent
     constructor(
-        readonly log:       Logger,
+        readonly log:       LoggerLike,
         readonly config:    ConfigPlugin,
         readonly language:  string
     ) {

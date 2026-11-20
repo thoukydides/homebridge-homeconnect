@@ -1,10 +1,10 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2024-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
 import { MS, assertIsBoolean, assertIsNumber } from '../../utils.js';
 import { getElementById } from './utils-dom.js';
 import { detached } from '../../log-error.js';
+import { LoggerLike } from '../../logger.js';
 
 // URL for the server status image
 const STATUS_URL = 'https://homeconnect.thouky.co.uk/api/images/plugin-status.svg';
@@ -29,7 +29,7 @@ export class APIStatus {
     lastUpdated?: number;
 
     // Create a new API server status checker
-    constructor(readonly log: Logger) {
+    constructor(readonly log: LoggerLike) {
         detached(this.log, 'Poll status', () => this.pollStatus())();
     }
 

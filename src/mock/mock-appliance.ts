@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { setImmediate as setImmediateP } from 'timers/promises';
 
 import { ErrorResponse, HomeAppliance } from '../api-types.js';
@@ -15,6 +13,7 @@ import { OperationState, ProgramKey } from '../api-value-types.js';
 import { Request, Response } from '../api-ua.js';
 import { APIStatusCodeError } from '../api-errors.js';
 import { detached } from '../log-error.js';
+import { LoggerLike } from '../logger.js';
 
 // Simplified event parameters
 export type MockEvent<Event extends EventMapKey = EventMapKey, Key extends EventKey<Event> = EventKey<Event>> =
@@ -50,7 +49,7 @@ export abstract class MockAppliance {
     emitEventResolve!:              (event: EventKV) => void;
 
     // Create a new API object
-    constructor(readonly log: Logger) {
+    constructor(readonly log: LoggerLike) {
         this.emitEventPromise = new Promise(resolve => { this.emitEventResolve = resolve; });
     }
 

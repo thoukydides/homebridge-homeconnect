@@ -202,7 +202,7 @@ export class HomeConnectPlatform implements DynamicPlatformPlugin {
         const newAccessories: PlatformAccessory[] = [];
         uuidMap.forEach((ha, uuid) => {
             // Select a constructor for this appliance
-            const applianceConstructor = {
+            const applianceConstructor: typeof ApplianceBase | undefined = {
                 // Cooking appliances
                 CoffeeMaker:    ApplianceCoffeeMaker,
                 CookProcessor:  ApplianceCookProcessor,

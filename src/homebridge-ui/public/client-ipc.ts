@@ -1,16 +1,15 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { ServerEvent, ServerEventData, ServerPath, ServerRequest, ServerResponse } from '../server-ipc.js';
 import { detached } from '../../log-error.js';
+import { LoggerLike } from '../../logger.js';
 
 // Client-side IPC implementation
 export class ClientIPC {
 
     // Create a new client IPC instance
-    constructor(readonly log: Logger) {}
+    constructor(readonly log: LoggerLike) {}
 
     // Issue a request to the server
     async request<Path extends ServerPath>(path: Path, data: ServerRequest<Path>): Promise<ServerResponse<Path>> {

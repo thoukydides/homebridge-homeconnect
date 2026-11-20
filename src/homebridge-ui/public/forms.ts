@@ -1,7 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
 import { IHomebridgeUiFormHelper, PluginConfig, PluginFormSchema } from '@homebridge/plugin-ui-utils/ui.interface';
 
 import { ClientIPC } from './client-ipc.js';
@@ -9,6 +8,7 @@ import { Config } from './config.js';
 import { ConfigPlugin } from '../../config-types.js';
 import { elementWithAbsolutePaths, cloneTemplate, getHTML } from './utils-dom.js';
 import { detached } from '../../log-error.js';
+import { LoggerLike } from '../../logger.js';
 
 // A configuration form handler
 export abstract class Form {
@@ -17,7 +17,7 @@ export abstract class Form {
     form?: IHomebridgeUiFormHelper;
 
     // Create a configuration form
-    constructor(readonly log: Logger) {}
+    constructor(readonly log: LoggerLike) {}
 
     // Retrieve the configuration schema
     abstract getSchema(): Promise<PluginFormSchema>;
@@ -76,7 +76,7 @@ export abstract class Form {
 
 // A global configuration form handler
 export class GlobalForm extends Form {
-    constructor(log:                Logger,
+    constructor(log:                LoggerLike,
                 readonly ipc:       ClientIPC,
                 readonly config:    Config) {
         super(log);
@@ -89,7 +89,7 @@ export class GlobalForm extends Form {
 
 // An configuration form handler for a specific appliance
 export class ApplianceForm extends Form {
-    constructor(log:                Logger,
+    constructor(log:                LoggerLike,
                 readonly ipc:       ClientIPC,
                 readonly config:    Config,
                 readonly haid:      string) {
@@ -106,7 +106,7 @@ export class TemplateForm extends Form {
 
     readonly elementAsForm: Record<string, string>[];
 
-    constructor(log:        Logger,
+    constructor(log:        LoggerLike,
                 ...args:    Parameters<typeof cloneTemplate>) {
         super(log);
         this.elementAsForm = this.formFromTemplate(...args);
@@ -146,7 +146,7 @@ export class Forms {
     currentForm?:   Form;
 
     // Create a new form manager
-    constructor(readonly log:       Logger,
+    constructor(readonly log:       LoggerLike,
                 readonly ipc:       ClientIPC,
                 readonly config:    Config) {
         this.showForm();

@@ -2,13 +2,14 @@
 // Copyright © 2023-2026 Alexander Thoukydides
 
 import { PluginConfig } from '@homebridge/plugin-ui-utils/ui.interface';
-import { Logger, PlatformConfig } from 'homebridge';
+import { PlatformConfig } from 'homebridge';
 
 import { ApplianceConfig, ConfigAppliances, ConfigPlugin } from '../../config-types.js';
 import { keyofChecker, plural } from '../../utils.js';
 import { ClientIPC } from './client-ipc.js';
 import { cloneTemplate, getElementById } from './utils-dom.js';
 import { typeSuite } from '../../ti/config-types.js';
+import { LoggerLike } from '../../logger.js';
 
 // A delta between two configurations
 export interface ConfigDiff {
@@ -33,7 +34,7 @@ export class Config {
     activePromise:  Promise<PlatformConfig>;
 
     // Create a new configuration object
-    constructor(readonly log: Logger,
+    constructor(readonly log: LoggerLike,
                 readonly ipc: ClientIPC) {
         this.readyPromise  = this.getConfig();
         this.activePromise = this.getActiveConfig();

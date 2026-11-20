@@ -2,7 +2,6 @@
 // Copyright © 2023-2026 Alexander Thoukydides
 
 import { IHomebridgeUiToastHelper } from '@homebridge/plugin-ui-utils/ui.interface';
-import { Logger } from 'homebridge';
 
 import { ClientIPC } from './client-ipc.js';
 import { ClientIDStatus } from '../server-clientid.js';
@@ -12,6 +11,7 @@ import { AuthorisationStatusFailed, AuthorisationStatusUser } from '../../api-ua
 import { cloneTemplate, getElementById, setSlotText } from './utils-dom.js';
 import { HomeAppliance } from '../../api-types.js';
 import { detached } from '../../log-error.js';
+import { LoggerLike } from '../../logger.js';
 
 // Minimum time between duplicate toast notifications
 const TOAST_DEDUP_TIME = 5 * MS;
@@ -30,7 +30,7 @@ export class ClientClientID {
     onAppliances?:  (appliances?:   HomeAppliance[])    => void;
 
     // Create a new Home Connect client
-    constructor(readonly log: Logger, readonly ipc: ClientIPC) {
+    constructor(readonly log: LoggerLike, readonly ipc: ClientIPC) {
         this.ipc.onEvent('status', status => { this.onClientStatus(status); });
     }
 

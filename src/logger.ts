@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2025-2026 Alexander Thoukydides
 
-import { Logger, LogLevel } from 'homebridge';
+import { Logging, LogLevel } from 'homebridge';
 
 import { assertIsDefined, formatList, MS } from './utils.js';
 import { checkers } from './ti/token-types.js';
@@ -20,16 +20,19 @@ const filters: [(value: string) => string, RegExp][] = [
     [maskApplianceId,   new RegExp(`\\b${HAID_PATTERN}\\b`, 'g')]
 ];
 
+// A Logger with the same shape as Homebridge's, but not derived from it
+export type LoggerLike = Pick<Logging, 'info' | 'success' | 'warn' | 'error' | 'debug' | 'log'>;
+
 // A logger with filtering and support for an additional prefix
-export class PrefixLogger {
+export class PrefixLogger implements LoggerLike {
 
     // Log level used for debug messages
     debugLevel: LogLevel = LogLevel.DEBUG;
 
     // Create a new logger
     constructor(
-        readonly logger:    Logger,
-        readonly prefix?:   string
+        readonly logger: LoggerLike,
+        readonly prefix = ''
     ) {}
 
     // Wrappers around the standard Logger methods
@@ -46,7 +49,7 @@ export class PrefixLogger {
         message = PrefixLogger.filterSensitive(message);
 
         // Log each line of the message
-        const prefix = this.prefix?.length ? `[${this.prefix}] ` : '';
+        const prefix = this.prefix.length ? `[${this.prefix}] ` : '';
         for (const line of message.split('\n')) this.logger.log(level, prefix + line);
     }
 

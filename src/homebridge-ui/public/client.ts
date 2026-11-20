@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { LogLevel, Logger } from 'homebridge';
+import { LogLevel } from 'homebridge';
 
 import { ClientLogger, ServerLogger } from './logger.js';
 import { Config } from './config.js';
@@ -10,13 +10,14 @@ import { ClientClientID } from './client-clientid.js';
 import { FormId, Forms } from './forms.js';
 import { ClientIPC } from './client-ipc.js';
 import { APIStatus } from './api-status.js';
+import { LoggerLike } from '../../logger.js';
 
 // A Homebridge HomeConnect custom UI client
 class Client {
 
     // Custom loggers
-    readonly log:   Logger;
-    serverLog?:     Logger;
+    readonly log:   LoggerLike;
+    serverLog?:     LoggerLike;
 
     // Local resources
     readonly ipc: ClientIPC;

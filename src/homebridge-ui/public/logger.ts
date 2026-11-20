@@ -5,12 +5,13 @@ import { LogLevel } from 'homebridge';
 
 import { ClientIPC } from './client-ipc.js';
 import { ServerLogMessage } from '../server-ipc.js';
+import { LoggerLike } from '../../logger.js';
 
 // Prefix for client and server log messages
 const PLUGIN_PREFIX = window.homebridge.plugin.displayName ?? window.homebridge.plugin.name;
 
 // A logger that sends messages to the debugging console
-export class ConsoleLogger {
+export class ConsoleLogger implements LoggerLike {
 
     // Create a new console logger
     constructor(readonly prefix = '') {}

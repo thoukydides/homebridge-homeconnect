@@ -1,12 +1,11 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import chalk from 'chalk';
 
 import { APIStatusCodeError } from './api-errors.js';
 import { assertIsDefined, columns, plural } from './utils.js';
+import { LoggerLike } from './logger.js';
 
 // Components of help message
 export interface AuthHelpMessage {
@@ -75,7 +74,7 @@ export abstract class AuthHelp {
     }
 
     // Write the help message to the log
-    log(log: Logger): void {
+    log(log: LoggerLike): void {
         for (const line of this.getText(true)) log.warn(line);
     }
 }

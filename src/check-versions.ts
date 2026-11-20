@@ -1,16 +1,17 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2026 Alexander Thoukydides
 
-import { API, Logger } from 'homebridge';
+import { API } from 'homebridge';
 
 import semver from 'semver';
 
 import { ENGINES, PLUGIN_NAME, PLUGIN_VERSION,
          REQUIRED_HOMEBRIDGE_API,
          REQUIRED_HOMEBRIDGE_HAP} from './settings.js';
+import { LoggerLike } from './logger.js';
 
 // Log critical package and API versions
-export function checkDependencyVersions(log: Logger, hb: API): void {
+export function checkDependencyVersions(log: LoggerLike, hb: API): void {
     const versions: [string, string | number, string | undefined][] = [
         // Name             Current version             Required version
         [PLUGIN_NAME,       PLUGIN_VERSION,             undefined              ],

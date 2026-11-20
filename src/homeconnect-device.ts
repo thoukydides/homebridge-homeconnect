@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { EventEmitter } from 'events';
 import { once } from 'node:events';
 import { setTimeout as setTimeoutP } from 'timers/promises';
@@ -17,6 +15,7 @@ import { CommandKV, EventKey, EventKV, EventValue, KVKey, KVValue, OptionKey,
          OptionKV, OptionValue, ProgramDefinitionKV, ProgramKV, ProgramListKV,
          SettingKey, SettingKV, SettingValue, StatusKey, StatusKV, StatusValue } from './api-value.js';
 import { Scope } from './api-auth-types.js';
+import { LoggerLike } from './logger.js';
 
 // Minimum event stream interruption before treated as appliance disconnected
 const EVENT_DISCONNECT_DELAY = 3 * MS;
@@ -85,7 +84,7 @@ export class HomeConnectDevice {
 
     // Create a new API object
     constructor(
-        readonly log:   Logger,
+        readonly log:   LoggerLike,
         readonly api:   HomeConnectAPI,
         readonly ha:    HomeAppliance
     ) {

@@ -1,13 +1,14 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { LogLevel, Logger, PlatformConfig } from 'homebridge';
+import { LogLevel, PlatformConfig } from 'homebridge';
 import { HomebridgePluginUiServer, RequestError } from '@homebridge/plugin-ui-utils';
 
 import { FormSchema } from './schema.js';
 import { ConfigPlugin } from '../config-types.js';
 import { ClientIDStatus } from './server-clientid.js';
 import { logError } from '../log-error.js';
+import { LoggerLike } from '../logger.js';
 
 // Client to server requests and their responses
 export interface ServerRequests {
@@ -43,7 +44,7 @@ export interface ServerLogMessage {
 export class ServerIPC {
 
     // Create a new server IPC instance
-    constructor(readonly log: Logger, readonly server: HomebridgePluginUiServer) {}
+    constructor(readonly log: LoggerLike, readonly server: HomebridgePluginUiServer) {}
 
     // Register a new request handler for a given route
     onRequest<Path extends ServerPath>(path: Path, fn: (data: ServerRequest<Path>) => ServerResponseAsync<Path>): void {

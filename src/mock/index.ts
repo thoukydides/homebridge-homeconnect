@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { LocalStorage } from 'node-persist';
 import { setTimeout as setTimeoutP } from 'timers/promises';
 
@@ -24,6 +22,7 @@ import { MockDryer } from './mock-dryer.js';
 import { MockWasher } from './mock-washer.js';
 import { AuthorisationStatus } from '../api-ua-auth.js';
 import { detached } from '../log-error.js';
+import { LoggerLike } from '../logger.js';
 
 // Random delay before completing API requests
 const MOCK_MIN_DELAY =  1; // (milliseconds)
@@ -43,7 +42,7 @@ export class MockAPI implements HomeConnectAPI {
 
     // Create a new API object
     constructor(
-        readonly log:       Logger,
+        readonly log:       LoggerLike,
         readonly config:    ConfigPlugin,
         readonly persist:   LocalStorage
     ) {

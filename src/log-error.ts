@@ -1,14 +1,13 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { APIError } from './api-errors.js';
 import { MaybePromise } from './utils.js';
+import { LoggerLike } from './logger.js';
 
 // Log an error
 let lastLoggedError: unknown;
-export function logError<Type>(log: Logger, when: string, err: Type): Type {
+export function logError<Type>(log: LoggerLike, when: string, err: Type): Type {
     try {
         // Suppress duplicate reports
         if (lastLoggedError === err) return err;
@@ -35,7 +34,7 @@ export function logError<Type>(log: Logger, when: string, err: Type): Type {
 
 // Trap any detached promise rejections
 export function detached<Args extends unknown[]>(
-    log:    Logger,
+    log:    LoggerLike,
     when:   string,
     fn:     (...args: Args) => MaybePromise
 ): (...args: Args) => void {
@@ -45,7 +44,7 @@ export function detached<Args extends unknown[]>(
 }
 
 // Log any sub-errors (causes or aggregates) of an error, formatted as a tree
-function logSubErrors(log: Logger, prefix: string, err: unknown): void {
+function logSubErrors(log: LoggerLike, prefix: string, err: unknown): void {
     // Collect all aggregate or causal errors
     const subErrs: unknown[] = [];
     if (err instanceof APIError && err.errCause) subErrs.push(err.errCause);

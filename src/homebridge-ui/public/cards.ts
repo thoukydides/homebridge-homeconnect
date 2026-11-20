@@ -1,12 +1,11 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { HomeAppliance } from '../../api-types.js';
 import { assertIsDefined, assertIsInstanceOf } from '../../utils.js';
 import { cloneTemplate, getElementById, getSlot } from './utils-dom.js';
 import { detached } from '../../log-error.js';
+import { LoggerLike } from '../../logger.js';
 
 
 // Description for a card
@@ -32,7 +31,7 @@ export class Cards {
     onSelect?: (id?: string) => void;
 
     // Construct a new cards handler
-    constructor(readonly log: Logger) {
+    constructor(readonly log: LoggerLike) {
         this.parentElement = getElementById('hc-appliance-cards');
     }
 

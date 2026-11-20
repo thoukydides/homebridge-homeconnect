@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger, LogLevel } from 'homebridge';
+import { LogLevel } from 'homebridge';
 
 import { LocalStorage } from 'node-persist';
 import { setTimeout as setTimeoutP } from 'timers/promises';
@@ -21,6 +21,7 @@ import { ConfigPlugin } from './config-types.js';
 import { API_SCOPES } from './settings.js';
 import { AuthHelp, AuthHelpDeviceFlow, AuthHelpMessage } from './api-ua-auth-help.js';
 import { checkers } from './ti/api-auth-types.js';
+import { LoggerLike } from './logger.js';
 
 // Authorisation status update
 export interface AuthorisationStatusSuccess {
@@ -86,7 +87,7 @@ export class APIAuthoriseUserAgent extends APIUserAgent {
 
     // Create a new authorisation agent
     constructor(
-        log:                Logger,
+        log:                LoggerLike,
         config:             ConfigPlugin,
         readonly persist:   LocalStorage,
         language:           string

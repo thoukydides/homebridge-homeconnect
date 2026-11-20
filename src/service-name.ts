@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger, Perms, Service } from 'homebridge';
+import { Perms, Service } from 'homebridge';
 
 import assert from 'node:assert';
 import NodePersist from 'node-persist';
@@ -9,6 +9,7 @@ import NodePersist from 'node-persist';
 import { assertIsDefined, assertIsString, formatList, plural } from './utils.js';
 import { ApplianceBase } from './appliance-generic.js';
 import { detached, logError } from './log-error.js';
+import { LoggerLike } from './logger.js';
 
 // Service name length in Unicode characters (code points, not octets or code units)
 const SERVICE_LENGTH_MIN = 1;
@@ -32,7 +33,7 @@ export class ServiceNames {
     readonly Characteristic;
 
     // Logger
-    readonly log:   Logger;
+    readonly log:   LoggerLike;
 
     // Persistent storage
     persist:        NodePersist.LocalStorage;

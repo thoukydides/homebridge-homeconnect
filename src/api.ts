@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { on } from 'events';
 import { LocalStorage } from 'node-persist';
 
@@ -19,7 +17,7 @@ import { APICheckValues, CommandKey, CommandKV, EventKV, OptionKey, OptionKV,
 import { ProgramKey } from './api-value-types.js';
 import { checkers } from './ti/api-types.js';
 import { assertIsDefined } from './utils.js';
-import { PrefixLogger } from './logger.js';
+import { LoggerLike, PrefixLogger } from './logger.js';
 
 // Home Connect API methods
 export interface HomeConnectAPI {
@@ -68,7 +66,7 @@ export class CloudAPI implements HomeConnectAPI {
 
     // Create a new API object
     constructor(
-        readonly log:       Logger,
+        readonly log:       LoggerLike,
         readonly config:    ConfigPlugin,
         readonly persist:   LocalStorage
     ) {

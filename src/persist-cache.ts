@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { LocalStorage } from 'node-persist';
 import { setImmediate as setImmediateP } from 'timers/promises';
 import semver from 'semver';
@@ -10,6 +8,7 @@ import semver from 'semver';
 import { MS, formatList, formatMilliseconds } from './utils.js';
 import { logError } from './log-error.js';
 import { PLUGIN_VERSION } from './settings.js';
+import { LoggerLike } from './logger.js';
 
 // An individual cache entry
 interface CacheItem {
@@ -43,7 +42,7 @@ export class PersistCache {
 
     // Initialise a cache
     constructor(
-        public readonly log:        Logger,
+        public readonly log:        LoggerLike,
         public readonly persist:    LocalStorage,
         name:                       string,
         public readonly preferred:  string

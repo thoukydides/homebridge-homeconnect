@@ -1,9 +1,8 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2019-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { setImmediate as setImmediateP } from 'timers/promises';
+import { LoggerLike } from './logger.js';
 
 // An operation that can be serialised
 export type SerialisedValue = unknown;//object | string | number | boolean | null | undefined;
@@ -34,7 +33,7 @@ export class Serialised<Value extends SerialisedValue, Returns = void> {
 
     // Initialise a serialised operation manager
     constructor(
-        readonly log:           Logger,
+        readonly log:           LoggerLike,
         readonly operation:     SerialisedOperation<Value, Returns>,
         readonly defaultValue:  Value,
         readonly options:       SerialisedOptions = {}) {

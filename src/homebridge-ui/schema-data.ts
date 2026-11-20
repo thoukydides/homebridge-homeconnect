@@ -1,13 +1,14 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger, PlatformConfig } from 'homebridge';
+import { PlatformConfig } from 'homebridge';
 
 import { setImmediate as setImmediateP } from 'timers/promises';
 import NodePersist from 'node-persist';
 
 import { HomeAppliance } from '../api-types.js';
 import { logError } from '../log-error.js';
+import { LoggerLike } from '../logger.js';
 
 // Appliance programs and their options
 export interface SchemaProgram {
@@ -72,7 +73,7 @@ export class ConfigSchemaData {
 
     // Create a new schema generator
     constructor(
-        readonly log:       Logger,
+        readonly log:       LoggerLike,
         readonly persist:   NodePersist.LocalStorage
     ) {}
 

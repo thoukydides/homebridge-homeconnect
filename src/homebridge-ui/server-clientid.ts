@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { LocalStorage } from 'node-persist';
 
 import { CloudAPI, HomeConnectAPI } from '../api.js';
@@ -14,6 +12,7 @@ import { detached, logError } from '../log-error.js';
 import { AuthorisationStatus } from '../api-ua-auth.js';
 import { APIStatusCodeError } from '../api-errors.js';
 import { ServerIPC } from './server-ipc.js';
+import { LoggerLike } from '../logger.js';
 
 // API status
 export interface ClientIDStatus {
@@ -38,7 +37,7 @@ export class ServerClientID {
     selected?:  ClientIDAPI;
 
     constructor(
-        readonly log:       Logger,
+        readonly log:       LoggerLike,
         readonly ipc:       ServerIPC,
         readonly persist:   LocalStorage
     ) {}

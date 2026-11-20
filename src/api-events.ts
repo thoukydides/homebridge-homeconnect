@@ -1,7 +1,7 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger, LogLevel } from 'homebridge';
+import { LogLevel } from 'homebridge';
 
 import { EventEmitter } from 'events';
 import { CheckerT, createCheckers } from 'ts-interface-checker';
@@ -13,6 +13,7 @@ import { detached, logError } from './log-error.js';
 import { APIEventStreamError, APIValidationError } from './api-errors.js';
 import { Request, Response, SSE } from './api-ua.js';
 import apiTI from './ti/api-types-ti.js';
+import { LoggerLike } from './logger.js';
 
 // Checkers for API responses
 const checkers = createCheckers(apiTI) as {
@@ -34,7 +35,7 @@ export class APIEventStream extends EventEmitter {
 
     // Create a new event stream object
     constructor(
-        readonly log:    Logger,
+        readonly log:    LoggerLike,
         readonly ua:     APIAuthoriseUserAgent
     ) {
         super({ captureRejections: true });

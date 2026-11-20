@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { Checker, ITypeSuite, TType, TName } from 'ts-interface-checker';
 import assert from 'node:assert';
 import { LocalStorage } from 'node-persist';
@@ -19,6 +17,7 @@ import { MS, assertIsDefined, getValidationTree, keyofChecker } from './utils.js
 import { APIKeyValuesLog } from './api-value.log.js';
 import { ConfigPlugin } from './config-types.js';
 import { typeSuite, checkers } from './ti/api-value-types.js';
+import { LoggerLike } from './logger.js';
 
 // Known keys
 export type KVKey<Values> = keyof Values;
@@ -161,7 +160,7 @@ export class APICheckValues {
 
     // Create a key-value type checker
     constructor(
-        readonly log:       Logger,
+        readonly log:       LoggerLike,
         readonly config:    ConfigPlugin,
         readonly persist:   LocalStorage) {
         this.logValues = new APIKeyValuesLog(log, config.clientid, persist);

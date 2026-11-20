@@ -2,7 +2,7 @@
 // Copyright © 2025-2026 Alexander Thoukydides
 
 import { Characteristic, CharacteristicValue, HAPStatus,
-         Logger, Nullable, PlatformAccessory, Service } from 'homebridge';
+         Nullable, PlatformAccessory, Service } from 'homebridge';
 
 import { setImmediate as setImmediateP, setTimeout as setTimeoutP } from 'timers/promises';
 
@@ -17,7 +17,7 @@ import { Serialised, SerialisedOperation, SerialisedOptions, SerialisedValue } f
 import { HomeConnectPlatform } from './platform.js';
 import { ConfigSchemaData, SchemaOptionalFeature } from './homebridge-ui/schema-data.js';
 import { ServiceNames } from './service-name.js';
-import { PrefixLogger } from './logger.js';
+import { LoggerLike, PrefixLogger } from './logger.js';
 
 // A HAP Service constructor
 type ServiceConstructor = typeof Service & {
@@ -64,7 +64,7 @@ export class ApplianceBase {
 
     // Initialise an appliance
     constructor(
-        readonly log:           Logger,
+        readonly log:           LoggerLike,
         readonly platform:      HomeConnectPlatform,
         readonly device:        HomeConnectDevice,
         readonly accessory:     PlatformAccessory) {

@@ -1,8 +1,6 @@
 // Homebridge plugin for Home Connect home appliances
 // Copyright © 2023-2026 Alexander Thoukydides
 
-import { Logger } from 'homebridge';
-
 import { LocalStorage } from 'node-persist';
 import assert from 'node:assert';
 import semver from 'semver';
@@ -12,6 +10,7 @@ import { MS, assertIsDefined, columns, formatList, plural } from './utils.js';
 import { HomeAppliance, OptionDefinition, Setting, Status, Value } from './api-types.js';
 import { PLUGIN_VERSION } from './settings.js';
 import { detached } from './log-error.js';
+import { LoggerLike } from './logger.js';
 
 // Delay before summary log (longer than 1 minute rate-limit interval)
 const SUMMARY_DELAY = 2 * 60 * MS;
@@ -95,7 +94,7 @@ export class APIKeyValuesLog {
     private pendingScheduled?:  ReturnType<typeof setTimeout>;
 
     // Construct a key-value logger
-    constructor(readonly log:       Logger,
+    constructor(readonly log:       LoggerLike,
                 readonly clientid:  string,
                 readonly persist:   LocalStorage) {
         // Restore cache of previously seen keys and values
