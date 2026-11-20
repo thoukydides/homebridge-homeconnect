@@ -29,8 +29,9 @@ type ServiceConstructor = typeof Service & {
 export type OnSetHandler<Type> = (value: Type) => unknown;
 
 // Initialisation timeout
-const INITIALISATION_WARN_FIRST    =     10 * MS; // (10 seconds)
-const INITIALISATION_WARN_INTERVAL = 5 * 60 * MS; // (5 minutes)
+const INIT_WARN_FIRST           =      10 * MS; // (10 seconds)
+const INIT_WARN_INTERVAL_SHORT  =  5 * 60 * MS; // (5 minutes)
+const INIT_WARN_INTERVAL_LONG   = 60 * 60 * MS; // (1 hour)
 
 // A Homebridge accessory for a generic Home Connect home appliance
 export class ApplianceBase {
@@ -148,14 +149,19 @@ export class ApplianceBase {
 
         // Wait for asynchronous initialisation to complete
         detached(this.log, 'Initialisation monitor', async () => {
-            await Promise.race([setTimeoutP(INITIALISATION_WARN_FIRST)]);
+            // One-off message explaining delayed initialisation
+            await Promise.race([setTimeoutP(INIT_WARN_FIRST)]);
             if (pendingNames.length) {
                 this.log.warn('Appliance initialisation is taking longer than expected;'
                               + ' some functionality will be limited until all features are ready');
             }
+
+            // Periodic reminder message that functionality is still restricted
             while (pendingNames.length) {
                 this.log.warn(`Waiting for ${plural(pendingNames.length, 'feature')} to finish initialising: ${formatList(pendingNames)}`);
-                await Promise.race([setTimeoutP(INITIALISATION_WARN_INTERVAL)]);
+                const interval = this.platform.configPlugin.experimental?.includes('Quieter Delayed Initialisation')
+                    ? INIT_WARN_INTERVAL_LONG : INIT_WARN_INTERVAL_SHORT;
+                await Promise.race([setTimeoutP(interval)]);
             }
         })();
         await Promise.allSettled(promises);

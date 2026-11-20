@@ -17,10 +17,17 @@ export interface ConfigPlugin {
 }
 
 // Experimental feature flags
-export type ExperimentalFeatures = 'Disconnected as Off';
+export type ExperimentalFeatures =
+    'Disconnected as Off'
+  | 'Quieter Delayed Initialisation';
 
 // Debugging features
-export type DebugFeatures = 'Log API Headers' | 'Log API Bodies' | 'Log Appliance IDs' | 'Log Debug as Info' | 'Mock Appliances';
+export type DebugFeatures =
+    'Log API Headers'
+  | 'Log API Bodies'
+  | 'Log Appliance IDs'
+  | 'Log Debug as Info'
+  | 'Mock Appliances';
 
 // Appliance configurations indexed by haId
 export interface ConfigAppliances {
