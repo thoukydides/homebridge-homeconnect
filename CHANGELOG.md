@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.12.5] - 2026-11-20
+### Added
+* Experimental feature flag `Quieter Delayed Initialisation` increases interval between "Waiting for N feature(s) to finish initialising" messages from 5 minutes to 1 hour. (#412)
+### Changed
+* Updated dependencies to latest versions.
+
 ## [v1.12.4] - 2026-11-11
 ### Changed
 * **Oven:** Added undocumented programs. (#410)
@@ -1006,7 +1012,8 @@ All notable changes to this project will be documented in this file.
 
 Copyright © 2019-2026 Alexander Thoukydides
 
-[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.12.4...HEAD
+[Unreleased]:       https://github.com/thoukydides/homebridge-homeconnect/compare/v1.12.5...HEAD
+[v1.12.5]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.12.4...v1.12.5
 [v1.12.4]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.12.3...v1.12.4
 [v1.12.3]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.12.2...v1.12.3
 [v1.12.2]:          https://github.com/thoukydides/homebridge-homeconnect/compare/v1.12.1...v1.12.2
